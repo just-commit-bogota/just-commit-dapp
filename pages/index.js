@@ -17,14 +17,12 @@ export default function Home() {
       </Head>
 
       <div className="bg-gradient-to-b from-emerald-100 to-white-500 min-h-screen">
-        <div className="home-page mx-auto py-3">
-          <div className="container mx-auto flex items-center justify-between absolute mt-6 ml-6">
-            <div className="text-4xl cursor-default text-black font-semibold ml-6">
-              Productivity dApp
-            </div>
-            <div>
-              <ConnectButton className="mr-2 md:inline-flex hover:shadow-lg flex " />
-            </div>
+        <div className="container mx-auto flex items-center justify-between absolute mt-6 ml-6">
+          <div className="text-4xl cursor-default text-black font-semibold ml-6">
+            Productivity dApp
+          </div>
+          <div>
+            <ConnectButton className="mr-2 md:inline-flex hover:shadow-lg flex " />
           </div>
         </div>
       </div>
