@@ -21,7 +21,9 @@ export default function Home() {
       </Head>
 
       <div className="header header--absolute bg-white">
-        <img src="./logo.png" />
+        <a href="./">
+          <img src="./logo.png"/>
+        </a>
         <div>
           <ConnectButton className="mr-2 md:inline-flex hover:shadow-lg flex" />
         </div>

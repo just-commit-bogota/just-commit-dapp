@@ -49,6 +49,7 @@ a {
   background: linear-gradient(180deg, #F1F7F5 0%, rgba(241, 247, 245, 0) 100%);
   border-radius: 0px 0px 300px 300px;
   margin-top: 6rem;
+   max-width: 100rem;
 }
 
 .heading {
@@ -110,5 +111,9 @@ a {
 
   .container {
     min-height: unset;
+  }
+
+  .a {
+    display: none;
   }
 }
