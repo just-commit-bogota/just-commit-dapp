@@ -28,7 +28,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="container container--flex">
+      <div className="container container--flex container--one">
         <div className="heading text-3xl text-left">
           Make a Commitment
         </div>
@@ -79,6 +79,13 @@ export default function Home() {
         </Button>
         </form>
       </div>
+      
+      <div className="container container--flex container--two">
+        <div className="heading heading--two">
+          My Commitments     
+        </div>
+      </div>
+        
     </>
   )
 }

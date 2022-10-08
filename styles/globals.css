@@ -52,12 +52,15 @@ a {
 .container--flex {
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding: 2rem 2rem 0rem 2rem;
   align-items: center;
-  min-height: 100vh;
-  margin-top: 6rem;
+  min-height: 40vh;
+  background: white;
+}
+.container--one {
   background: linear-gradient(180deg, #F1F7F5 0%, rgba(241, 247, 245, 0) 100%);
   border-radius: 0px 0px 300px 300px;
+  margin-top: 6rem;
 }
 
 .heading {
@@ -65,10 +68,18 @@ a {
   margin-bottom: 2rem;
   font-family: 'Poppins';
   font-style: normal;
-  font-weight: 500;
+  font-weight: 550;
+  letter-spacing: 0.01em;
   font-size: 32px;
   width: 90%;
 }
+.heading--two {
+  margin-top: 1rem;
+  font-size: 16px;
+  font-weight: 550;
+  font-family: 'Satoshi';
+}
+
 
 .description {
   margin-bottom: 1rem;
