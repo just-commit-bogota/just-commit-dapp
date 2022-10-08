@@ -17,17 +17,20 @@ export default function Home() {
       </Head>
 
       <div className="header header--absolute bg-white">
-        <div className="text-4xl cursor-default text-black font-semibold ml-6">
+        <div className="header__name text-3xl">
           Just Commit
         </div>
         <div>
           <ConnectButton className="mr-2 md:inline-flex hover:shadow-lg flex" />
         </div>
       </div>
-      
-      <div className="container container--flex bg-gradient-to-b from-green-100 to-white-500">
+
+      <div className="container container--flex">
         <div className="heading text-3xl text-left">
-          Make a commitment
+          Make a Commitment
+        </div>
+        <div className="description">
+          Commit Description
         </div>
       </div>
     </>
@@ -38,9 +41,4 @@ export default function Home() {
 (TODO: update to include the @media overrides)
 (TODO: figure out how to do tailwindCSS for below header CSS code)
 (TODO: add "Home" and "Feed" tabs)
-
-
-// contains the h1 text, the form and the commits array render
-
-
 */}
