@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import TextField from '@mui/material/TextField';
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import toast, { Toaster } from 'react-hot-toast'
 
@@ -32,6 +33,14 @@ export default function Home() {
         <div className="description">
           Commit Description
         </div>
+        <form
+          className="form"
+          onSubmit={async (e) => {
+            e.preventDefault()
+          }
+        }
+        >
+        </form>
       </div>
     </>
   )
