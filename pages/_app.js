@@ -7,7 +7,7 @@ import { publicProvider } from 'wagmi/providers/public'
 import PlausibleProvider from 'next-plausible'
 
 const { chains, provider } = configureChains(
-  [chain.mainnet, chain.goerli],
+  [/*chain.mainnet,*/ chain.goerli],
   [alchemyProvider({ alchemyId: process.env.ALCHEMY_ID }), publicProvider()]
 );
 
