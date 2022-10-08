@@ -1,6 +1,7 @@
 import React  from 'react';
 import styled from 'styled-components';
 import Countdown from 'react-countdown';
+import moment from 'moment/moment';
 
 
 
@@ -9,10 +10,8 @@ import Countdown from 'react-countdown';
 // show countdown instead of date if in the future
 const CommitCardTimestamp = (props) => {
 
-    console.log(props.timeStamp*1000)
-    console.log(Date.now())
     return <>
-        {props.timeStamp*1000 > Date.now() ? <Countdown date={props.timeStamp*1000}></Countdown> : props.timeStamp   }
+        {props.timeStamp*1000 > Date.now() ? <Countdown date={props.timeStamp*1000}></Countdown> : moment(props.timeStamp*1000).fromNow()   }
     </>
 
 

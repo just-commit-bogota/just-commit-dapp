@@ -342,3 +342,19 @@ a {
 .card__status-pending__text{
   color: #4CBCD4;
 }
+
+.card__button {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 16px;
+    gap: 10px;
+
+    width: 81px;
+    height: 44px;
+
+    /* vi_green/green_default */
+    background: #1DD297;
+    border-radius: 8px;
+    color: white;
+}

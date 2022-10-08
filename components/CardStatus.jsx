@@ -3,7 +3,7 @@ import classNames from "classnames";
 
 
 
-export default function Status(props) {
+export default function CardStatus(props) {
   return (
     <div className={classNames({
         'card__status-success': props.status == 'Success',

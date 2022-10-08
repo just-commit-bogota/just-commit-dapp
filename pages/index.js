@@ -17,11 +17,11 @@ import dayjs from "dayjs";
 import CommitCard from '../components/CommitCard'
 
 const mockCommit = {
-commitTo: "0x44B274C577e217409e6814C2667e78Ba987FBEEF",
-commitFrom: "0x44B274C577e217409e6814C2667e78Ba987F30AD",
-stakeAmount: "0.02",
-createdTimestamp: "3 hrs ago (Sep-30-2022 04:31:45 AM +UTC)",
-validPeriod: "24 hrs",
+  commitTo: "0x44B274C577e217409e6814C2667e78Ba987FBEEF",
+  commitFrom: "0x44B274C577e217409e6814C2667e78Ba987F30AD",
+  stakeAmount: "0.02",
+  createdTimestamp: "3 hrs ago (Sep-30-2022 04:31:45 AM +UTC)",
+  validPeriod: "24 hrs",
 }
 
 export default function Home() {
