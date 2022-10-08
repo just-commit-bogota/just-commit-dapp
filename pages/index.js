@@ -67,16 +67,17 @@ export default function Home() {
               }}
             />
           </div>
-        </form>
-        <Button style ={{
-            width: '20%',
+          <Button style ={{
+            width: '18%',
             margin: '1rem',
-            backgroundColor : "#1DD297"
+            backgroundColor: "#1DD297",
+            borderRadius: 8,
           }}
           variant="contained"
-        >
+          >
           Commit
         </Button>
+        </form>
       </div>
     </>
   )
