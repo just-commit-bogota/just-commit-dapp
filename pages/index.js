@@ -24,7 +24,11 @@ export default function Home() {
           <ConnectButton className="mr-2 md:inline-flex hover:shadow-lg flex" />
         </div>
       </div>
-      <div className="bg-gradient-to-b from-GREEN-100 to-white-500 min-h-screen">
+      
+      <div className="container container--flex bg-gradient-to-b from-green-100 to-white-500">
+        <div className="heading text-3xl text-left">
+          Make a commitment
+        </div>
       </div>
     </>
   )
@@ -37,20 +41,6 @@ export default function Home() {
 
 
 // contains the h1 text, the form and the commits array render
-.container {
-  max-width: 80rem;
-  margin: 0 auto;
-}
-.container--flex {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  margin-top: 10 rem;
-}
 
-.heading {
-  margin-bottom:2rem;
-  line-height:1;
-}
+
 */}

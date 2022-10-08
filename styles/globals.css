@@ -26,10 +26,34 @@ a {
   justify-content: space-between;
   align-items: center;
 }
-
 .header--absolute {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
+}
+
+.container {
+  max-width: 80rem;
+  margin: 0 auto;
+}
+.container--flex {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  align-items: center;
+  min-height: 100vh;
+  margin-top: 10rem;
+}
+
+.heading {
+  margin-bottom: 2rem;
+  lineHeight: 1;
+  width: 90%;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
