@@ -16,15 +16,15 @@ export default function Home() {
         <meta property="og:description" content="Just Commit" />
       </Head>
 
-      <div className="bg-gradient-to-b from-emerald-100 to-white-500 min-h-screen">
-        <div className="header header--absolute">
-          <div className="text-4xl cursor-default text-black font-semibold ml-6">
-            Just Commit
-          </div>
-          <div>
-            <ConnectButton className="mr-2 md:inline-flex hover:shadow-lg flex " />
-          </div>
+      <div className="header header--absolute bg-white">
+        <div className="text-4xl cursor-default text-black font-semibold ml-6">
+          Just Commit
         </div>
+        <div>
+          <ConnectButton className="mr-2 md:inline-flex hover:shadow-lg flex" />
+        </div>
+      </div>
+      <div className="bg-gradient-to-b from-GREEN-100 to-white-500 min-h-screen">
       </div>
     </>
   )
