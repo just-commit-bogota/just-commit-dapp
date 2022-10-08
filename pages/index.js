@@ -80,13 +80,14 @@ export default function Home() {
         </Button>
         </form>
       </div>
-      
-      <div className="container container--flex container--two">
+
+      {/*
+      <div className="container container--flex">
         <div className="heading heading--two">
           My Commitments     
         </div>
       </div>
-        
+      */}
     </>
   )
 }
