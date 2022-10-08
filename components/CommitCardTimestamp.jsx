@@ -12,7 +12,7 @@ const CommitCardTimestamp = (props) => {
     console.log(props.timeStamp*1000)
     console.log(Date.now())
     return <>
-        {props.timestamp*1000 > Date.now() ? props.timeStamp : <Countdown date={props.timeStamp*1000}></Countdown> }
+        {props.timeStamp*1000 > Date.now() ? <Countdown date={props.timeStamp*1000}></Countdown> : props.timeStamp   }
     </>
 
 

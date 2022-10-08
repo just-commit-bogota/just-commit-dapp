@@ -256,6 +256,26 @@ a {
 
 }
 
+.styledBorder {
+  border-radius: 16px;
+  width: 400px;
+  height: 300px;
+  margin: 0 auto;
+  margin-bottom: 30px;
+
+  box-sizing: border-box;
+
+  /* Auto layout */
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: start;
+  padding: 48px;
+
+  width: 70%;
+  height: 341px;
+}
+
 .styledBorder--waiting {
   background: linear-gradient(93.2deg, rgba(243, 238, 221, 0.02) 0%, rgba(243, 238, 221, 0.27) 100%), #FFFFFF;
   border: 2px solid #F3EEDD;
@@ -268,11 +288,57 @@ a {
 }
 
 .styledBorder--failure {
-  background: linear-gradient(93.2deg, rgba(221, 243, 221, 0.03) 0%, rgba(221, 243, 221, 0.27) 100%), #FFFFFF;
-  border: 2px solid #DDF3DD;
+  background: linear-gradient(93.2deg, rgba(243, 221, 233, 0.02) 0%, rgba(243, 221, 233, 0.27) 100%), #FFFFFF;
+  border: 2px solid #F3DDE9;
 }
 
 .styledBorder--pending {
   background: linear-gradient(93.2deg, rgba(221, 239, 243, 0.02) 0%, rgba(221, 239, 243, 0.27) 100%), #FFFFFF;
   border: 2px solid #DDEFF3;
+}
+
+.card__status{
+    display: flex;
+    width: 7.5rem;
+    height: 33px;
+    border-radius: 28px;
+    align-items: center;
+    justify-content: center;
+}
+
+.card__status__text{
+    font-weight: 7vj00;
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+}
+
+
+.card__status-waiting{
+  background: #F3EEDD;
+}
+
+.card__status-waiting__text{
+  color: #C1AF6E;
+}
+
+.card__status-success{
+  background:#DDF3DD;
+}
+.card__status-success__text{
+  color:#749774
+}
+
+.card__status-failure{
+  background: #F3DDE9;
+}
+.card__status-failure__text{
+  color: #937C88;
+}
+
+.card__status-pending{
+  background: #DDEFF3;
+}
+.card__status-pending__text{
+  color: #4CBCD4;
 }
