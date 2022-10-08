@@ -10,16 +10,16 @@ export default function Home() {
       <Head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width" />
-        <title>Productivity dApp</title>
-        <meta property="og:title" content="Productivity dApp" />
-        <meta name="description" content="Productivity dApp" />
-        <meta property="og:description" content="Productivity dApp" />
+        <title>Just Commit</title>
+        <meta property="og:title" content="Just Commit" />
+        <meta name="description" content="Just Commit" />
+        <meta property="og:description" content="Just Commit" />
       </Head>
 
       <div className="bg-gradient-to-b from-emerald-100 to-white-500 min-h-screen">
         <div className="header header--absolute">
           <div className="text-4xl cursor-default text-black font-semibold ml-6">
-            Productivity dApp
+            Just Commit
           </div>
           <div>
             <ConnectButton className="mr-2 md:inline-flex hover:shadow-lg flex " />
