@@ -17,6 +17,7 @@ export default function Home() {
         <meta property="og:title" content="Just Commit" />
         <meta name="description" content="Just Commit" />
         <meta property="og:description" content="Just Commit" />
+        <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
       </Head>
 
       <div className="header header--absolute bg-white">
