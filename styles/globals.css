@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -169,4 +170,109 @@ a {
   .a {
     display: none;
   }
+.card__logo {
+  height: 32px;
+
+  background: #F3F3F3;
+  border-radius: 200px;
+}
+
+.card__heading {
+  font-family: 'Poppins',apple-system, BlinkMacSystemFont, Segoe UI ;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 32px;
+  
+  /* identical to box height, or 133% */
+  
+  color: #000000;
+}
+
+.infoLeft {
+    /* background-color: orangered; */
+    display: flex;
+    flex-direction: column;
+}
+
+.infoLeft__heading {
+  font-family: 'Poppins', apple-system, BlinkMacSystemFont, Segoe UI ;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: baseline;
+
+}
+
+.infoLeft__description {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: baseline;
+
+
+}
+
+
+.infoLeft__description--line {
+  font-family: 'Poppins', apple-system, BlinkMacSystemFont, Segoe UI;
+  margin-top: 0.6rem;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+
+  /* identical to box height */
+
+  color: rgba(0, 0, 0, 0.4);
+
+
+}
+
+.infoRight{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  text-align: right;
+  align-items: stretch;
+  height: 100%;
+}
+
+.infoRight__spacer {
+  flex: 1;
+
+}
+
+.infoRight__timestamp {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 32px;
+
+  /* identical to box height, or 133% */
+
+  color: rgba(0, 0, 0, 0.4);
+
+}
+
+.styledBorder--waiting {
+  background: linear-gradient(93.2deg, rgba(243, 238, 221, 0.02) 0%, rgba(243, 238, 221, 0.27) 100%), #FFFFFF;
+  border: 2px solid #F3EEDD;
+}
+
+.styledBorder--success {
+  background: linear-gradient(93.2deg, rgba(221, 243, 221, 0.03) 0%, rgba(221, 243, 221, 0.27) 100%), #FFFFFF;
+  border: 2px solid #DDF3DD;
+
+}
+
+.styledBorder--failure {
+  background: linear-gradient(93.2deg, rgba(221, 243, 221, 0.03) 0%, rgba(221, 243, 221, 0.27) 100%), #FFFFFF;
+  border: 2px solid #DDF3DD;
+}
+
+.styledBorder--pending {
+  background: linear-gradient(93.2deg, rgba(221, 239, 243, 0.02) 0%, rgba(221, 239, 243, 0.27) 100%), #FFFFFF;
+  border: 2px solid #DDEFF3;
 }
