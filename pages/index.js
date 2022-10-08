@@ -2,6 +2,8 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import Button from '@mui/material/Button';
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import toast, { Toaster } from 'react-hot-toast'
 
@@ -30,9 +32,6 @@ export default function Home() {
         <div className="heading text-3xl text-left">
           Make a Commitment
         </div>
-        <div className="description">
-          Commit Description
-        </div>
         <form
           className="form"
           onSubmit={async (e) => {
@@ -40,7 +39,44 @@ export default function Home() {
           }
         }
         >
+          <div className="col">
+            <TextField
+              id="outlined-helperText"
+              placeholder="focused building"
+              helperText="Description"
+            />
+            <TextField
+              id="outlined-helperText"
+              placeholder="0xb44...aad"
+              helperText="Commit To"
+            />
+            <TextField
+              id="outlined-helperText"
+              placeholder="0.001"
+              helperText="Deposit Amount"
+              InputProps={{
+                endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
+              }}
+            />
+            <TextField
+              id="outlined-helperText"
+              placeholder="4"
+              helperText="Valid Through"
+              InputProps={{
+                endAdornment: <InputAdornment position="end">Hour(s)</InputAdornment>,
+              }}
+            />
+          </div>
         </form>
+        <Button style ={{
+            width: '20%',
+            margin: '1rem',
+            backgroundColor : "#1DD297"
+          }}
+          variant="contained"
+        >
+          Commit
+        </Button>
       </div>
     </>
   )
