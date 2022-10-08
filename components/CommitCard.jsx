@@ -7,7 +7,7 @@ import CardButton from './CardButton'
 
 const CommitCard = (props) => {
     let buttonType = 'none';
-    if (props.status == "Pending" && props.userIsCreator){
+    if (props.status == "Pending"){
         buttonType = "Upload"
     } else if (props.status == "Waiting" && !props.userIsCreator) {
         buttonType = "Verify"
