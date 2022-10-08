@@ -20,9 +20,7 @@ export default function Home() {
       </Head>
 
       <div className="header header--absolute bg-white">
-        <div className="header__name text-3xl">
-          Just Commit
-        </div>
+        <img src="./logo.png" />
         <div>
           <ConnectButton className="mr-2 md:inline-flex hover:shadow-lg flex" />
         </div>

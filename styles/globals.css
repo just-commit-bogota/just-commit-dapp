@@ -32,18 +32,6 @@ a {
   left: 0;
   right: 0;
 }
-.header__name {
-  background-image: linear-gradient(
-    330.4deg,
-    rgb(27, 228, 124) 4.54%,
-    rgb(31, 234, 221) 59.2%,
-    rgb(31, 170, 239) 148.85%
-  );
-  background-size: 110%;
-  background-clip: text;
-  color: transparent;
-  background-repeat: no-repeat;
-}
 
 .container {
   max-width: 80rem;
@@ -79,7 +67,6 @@ a {
   font-weight: 550;
   font-family: 'Satoshi';
 }
-
 
 .description {
   margin-bottom: 1rem;
@@ -123,9 +110,5 @@ a {
 
   .container {
     min-height: unset;
-  }
-
-  .header__name {
-    display: none;
   }
 }
