@@ -174,7 +174,7 @@ export default function Home() {
           {/* the Commit button */}
           {!isLoading && (
             <Button style ={{
-              width: '18%',
+              width: '32%',
               margin: '1rem',
               backgroundColor: "#1DD297",
               borderRadius: 8,
