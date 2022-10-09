@@ -9,8 +9,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Button from '@mui/material/Button';
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import toast, { Toaster } from 'react-hot-toast'
+import Spinner from "../components/Spinner";
 import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
+import { useWaitForTransaction } from 'wagmi'
 
 export default function Home() {
 
@@ -35,7 +37,6 @@ export default function Home() {
 
   })
   const { data, isLoading, isSuccess, write } = useContractWrite(config)
-
 
   return (
     <>
@@ -102,17 +103,30 @@ export default function Home() {
               }}
             />
           </div>
-          <Button style ={{
-            width: '18%',
-            margin: '1rem',
-            backgroundColor: "#1DD297",
-            borderRadius: 8,
-          }}
-          variant="contained"
-          onClick={write}
-          >
-          Commit
-        </Button>
+
+          
+          {/* the Commit button */}
+          {!isLoading && (
+            <Button style ={{
+              width: '18%',
+              margin: '1rem',
+              backgroundColor: "#1DD297",
+              borderRadius: 8,
+            }}
+            variant="contained"
+            onClick={write}
+            >
+            Commit
+          </Button>
+          )}
+
+          {/*|| (transactionStatus == "loading")*/}
+          {isLoading && (
+            <div className="justifyCenter">
+              <Spinner />
+            </div>
+          )}
+          
         </form>
       </div>
 
