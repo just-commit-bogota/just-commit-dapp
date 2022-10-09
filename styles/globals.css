@@ -25,6 +25,7 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 101;
 }
 .header--absolute {
   position: absolute;
@@ -40,7 +41,7 @@ a {
 .container--flex {
   display: flex;
   flex-direction: column;
-  padding: 2rem 2rem 0rem 2rem;
+  padding: 6rem 2rem 0rem 2rem;
   align-items: center;
   min-height: 40vh;
   background: white;
@@ -48,7 +49,6 @@ a {
 .container--one {
   background: linear-gradient(180deg, #F1F7F5 0%, rgba(241, 247, 245, 0) 100%);
   border-radius: 0px 0px 300px 300px;
-  margin-top: 6rem;
   max-width: 100rem;
 }
 
@@ -153,20 +153,8 @@ a {
   .col {
     flex-direction: column;
   }
-}
-
-@media screen and (max-width: 34em) {
-  .header {
-    position: static;
+  .heading {
     justify-content: center;
-    padding: 2rem;
-  }
-
-  .container {
-    min-height: unset;
-  }
-
-  .a {
-    display: none;
+    text-align: center;
   }
 }
