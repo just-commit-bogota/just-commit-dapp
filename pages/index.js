@@ -72,6 +72,10 @@ export default function Home() {
       return
     }
     // TODO: sort by expiry timestamp
+    if (!commitData) {
+      return;
+
+    }
     let newArray = [];
     for ( let commit of commitData) {
       let newCommitStruct = {}
@@ -97,6 +101,7 @@ export default function Home() {
       newCommitStruct.createdTimestamp = "TODO";
       newCommitStruct.validPeriod = "TODO";
       newCommitStruct.message =commit.message;
+      newCommitStruct.ipfsHash = commit.proofIpfsHash;
 
       newArray.push(newCommitStruct);
     }
@@ -168,7 +173,7 @@ export default function Home() {
               id="outlined-helperText"
               placeholder="4"
               helperText="Valid Through"
-              onChange={(e) => setValidThrough(e.target.value * 3600 + dayjs())}
+              onChange={(e) => setValidThrough(Math.round(e.target.value*3600 + Date.now()/1000))}
               InputProps={{
                 endAdornment: <InputAdornment position="end">Hour(s)</InputAdornment>,
               }}
@@ -185,7 +190,9 @@ export default function Home() {
             }}
             variant="contained"
             onClick={()=> {
-              console.log(validThrough)}}
+              console.log(validThrough)
+              write();
+            }}
             >
             Commit
           </Button>

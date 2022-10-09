@@ -6,6 +6,6 @@ export default function VerifyButton(props) {
     }
 
     return (
-        <button className="card__button" onClick={todo}>Verify</button>
+        <button className="card__button" onClick={props.onClick}>Verify</button>
     )
 }
