@@ -9,12 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/material": "^5.10.8",
     "@rainbow-me/rainbowkit": "^0.7.1",
     "next": "12.2.0",
     "next-plausible": "^3.6.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.0",
+    "styled-components": "^5.3.6",
     "wagmi": "^0.6.8"
   },
   "devDependencies": {
