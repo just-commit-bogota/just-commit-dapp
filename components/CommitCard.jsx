@@ -57,6 +57,15 @@ const CommitCard = (props) => {
     })
     const { data, isLoading, isSuccess, write } = useContractWrite(config)
 
+    const { config: verifyConfig } = usePrepareContractWrite({
+        addressOrName: contractAddress,
+        contractInterface: abi.abi,
+        functionName: "judgeCommit",
+        args: [props.id, true]
+
+    })
+    const { write: verifyWrite } = useContractWrite(verifyConfig)
+
     const uploadFile = () => { 
       const fileInput = document.querySelector('input[type=file]');
       if (fileInput.files.length > 0) {
@@ -68,19 +77,32 @@ const CommitCard = (props) => {
         }).then(cid => {
           setProofIpfsHash(cid);
           // write to updateCommit here
-          console.log("proveCommit")
-          write();
+          if (write) {
+            write();
+          }
         });
       }
    
     }
 
+    const verifyProof = () => { 
+        verifyWrite();
+    }
+
+
+
     let subtitle;
     const [modalIsOpen, setIsOpen] = React.useState(false);
+    const [verifyModalIsOpen, setVerifyIsOpen] = React.useState(false);
 
     function openModal() {
-        console.log('openmodal')
+        console.log('openuploadmodal')
         setIsOpen(true);
+    }
+
+    function openVerifyModal() {
+        console.log('openverifymodal')
+        setVerifyIsOpen(true);
     }
 
     function afterOpenModal() {
@@ -89,8 +111,13 @@ const CommitCard = (props) => {
     }
 
     function closeModal() {
-    setIsOpen(false);
+        setIsOpen(false);
     }
+
+    function closeVerifyModal() {
+        setVerifyIsOpen(false);
+    }
+
     let buttonType = 'none';
     if (props.status == "Pending"){
         buttonType = "Upload"
@@ -129,7 +156,7 @@ const CommitCard = (props) => {
                 <div className='infoRight__timestamp'><CommitCardTimestamp timeStamp={props.timeStamp}></CommitCardTimestamp></div>
                 <div className='infoRight__spacer'></div>
                 <div className='infoRight__button'>
-                    <CardButton onClick={openModal} type={buttonType}></CardButton>
+                    <CardButton onClick={buttonType =='Upload' ? openModal : openVerifyModal} type={buttonType}></CardButton>
                     <Modal
                         isOpen={modalIsOpen}
                         onAfterOpen={afterOpenModal}
@@ -149,6 +176,26 @@ const CommitCard = (props) => {
                                 <input type="file" id="proof" name="proof" />
                                 {proofIpfsHash}
                                 <button onClick={uploadFile}>upload</button>
+                            </div>
+                        </div>
+                    </Modal>
+
+                    <Modal
+                        isOpen={verifyModalIsOpen}
+                        onAfterOpen={afterOpenModal}
+                        onRequestClose={closeVerifyModal}
+                        style={customStyles}
+                        contentLabel="Verify Modal"
+                    >
+                        <div className='flex flex-row'>
+                            <h2 className='upload__modal__heading' ref={(_subtitle) => (subtitle = _subtitle)}>Verify Proof</h2>
+                            <div className='spacer'></div>
+                            <button onClick={closeVerifyModal}>X</button>
+                        </div>
+                        <div className='upload__modal__box'>
+                            <div className="upload__modal__desc">
+                                <a href={"https://ipfs.io/ipfs/"+ proofIpfsHash}>{"https://ipfs.io/ipfs/"+ proofIpfsHash}</a>
+                                <button onClick={verifyProof}>verify</button>
                             </div>
                         </div>
                     </Modal>
