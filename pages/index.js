@@ -50,7 +50,7 @@ export default function Home() {
   const provider = useProvider()
   const { chain, chains } = useNetwork()
   const { address: isConnected } = useAccount()
-  const contractAddress = "0x28D691d5eDFf71b72B8CA60EDcB164308945707F"
+  const contractAddress = "0x4CF68f0D411f5Ab44F05567A7082b09Ae5853511"
 
   const { config } = usePrepareContractWrite({
     addressOrName: contractAddress,
