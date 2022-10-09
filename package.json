@@ -13,6 +13,8 @@
     "@emotion/styled": "^11.10.4",
     "@mui/material": "^5.10.8",
     "@rainbow-me/rainbowkit": "^0.7.1",
+    "dayjs": "^1.11.5",
+    "ethers": "^5.7.1",
     "next": "12.2.0",
     "next-plausible": "^3.6.3",
     "react": "18.2.0",
