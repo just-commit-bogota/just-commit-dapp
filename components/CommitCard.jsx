@@ -3,9 +3,48 @@ import classNames from 'classnames'
 import CommitCardTimestamp from './CommitCardTimestamp'
 import CardStatus from './CardStatus'
 import CardButton from './CardButton'
+import Modal from 'react-modal'
+import { Box } from '@mui/material'
 
+const customStyles = {
+    content: {
+      flexDirection: 'column',
+      alignItems: 'center',
+      padding: "21px 40px",
+
+      width: "598px",
+      height: "248px",
+
+      background: "#FFFFFF",
+      borderRadius: "16px",
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
+
+Modal.setAppElement('#__next');
 
 const CommitCard = (props) => {
+    let subtitle;
+    const [modalIsOpen, setIsOpen] = React.useState(false);
+
+    function openModal() {
+        console.log('openmodal')
+        setIsOpen(true);
+    }
+
+    function afterOpenModal() {
+        // references are now sync'd and can be accessed.
+        subtitle.style.color = '#f00';
+    }
+
+    function closeModal() {
+    setIsOpen(false);
+    }
     let buttonType = 'none';
     if (props.status == "Pending"){
         buttonType = "Upload"
@@ -43,7 +82,33 @@ const CommitCard = (props) => {
             <div className='infoRight'>
                 <div className='infoRight__timestamp'><CommitCardTimestamp timeStamp={props.timeStamp}></CommitCardTimestamp></div>
                 <div className='infoRight__spacer'></div>
-                <div className='infoRight__button'><CardButton type={buttonType}></CardButton></div>
+                <div className='infoRight__button'>
+                    <CardButton onClick={openModal} type={buttonType}></CardButton>
+                    <Modal
+                        isOpen={modalIsOpen}
+                        onAfterOpen={afterOpenModal}
+                        onRequestClose={closeModal}
+                        style={customStyles}
+                        contentLabel="Upload Modal"
+                    >
+                        <div className='flex flex-row'>
+                            <h2 className='upload__modal__heading' ref={(_subtitle) => (subtitle = _subtitle)}>Upload Image</h2>
+                            <div className='spacer'></div>
+                            <button onClick={closeModal}>X</button>
+                        </div>
+                        <form>
+                        <input />
+                        <Box className='upload__modal__box'>
+                            <div className="">
+                                <span className='upload__modal__box-text'>Select an image file to upload</span>
+                            </div>
+
+                        </Box>
+
+                        </form>
+                    </Modal>
+                </div>
+                
 
             </div>
     </div>

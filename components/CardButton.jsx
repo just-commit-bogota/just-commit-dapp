@@ -1,9 +1,15 @@
 import React from "react";
+import UploadButton from "./UploadButton";
 import classNames from "classnames";
 
 
 export default function CardButton(props) {
-    const button = <button hidden={props.type == 'none'} className="card__button">{props.type}</button>;
+  let button;
+  if (props.type == 'Upload'){
+    button = <UploadButton onClick={props.onClick}></UploadButton>
+  } else if (props.type =='Verify') {
+    button = <VerifyButton onClick={props.onClick}></VerifyButton>
+  }
   return (
     button
   );

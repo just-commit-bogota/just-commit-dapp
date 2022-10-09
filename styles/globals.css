@@ -361,3 +361,45 @@ a {
     border-radius: 8px;
     color: white;
 }
+
+.upload__modal__box {
+  border: 1px dashed rgba(0, 0, 0, 0.4);
+  border-radius: 16px;
+  width: 518px;
+  height: 148px;
+  text-align: center;
+  position: relative;
+}
+
+.upload__modal__heading {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  
+  /* identical to box height, or 120% */
+  
+  color: #000000 !important;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.upload__modal__box-text {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  bottom: 50%;
+
+  /* identical to box height, or 143% */
+
+  /* text/text_10 */
+  color: rgba(0, 0, 0, 0.4);
+
+
+}
