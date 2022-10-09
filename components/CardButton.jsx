@@ -1,6 +1,6 @@
 import React from "react";
 import UploadButton from "./UploadButton";
-import classNames from "classnames";
+import VerifyButton from "./VerifyButton";
 
 
 export default function CardButton(props) {
