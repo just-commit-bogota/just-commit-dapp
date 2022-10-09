@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import abi from "../contracts/CommitManager.json";
 import { ethers } from 'ethers'
 import TextField from '@mui/material/TextField';
@@ -13,6 +13,7 @@ import Spinner from "../components/Spinner";
 import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import { useWaitForTransaction } from 'wagmi'
+import dayjs from "dayjs";
 
 export default function Home() {
 
@@ -29,6 +30,8 @@ export default function Home() {
   const { address: isConnected } = useAccount()
   const contractAddress = "0x28D691d5eDFf71b72B8CA60EDcB164308945707F"
 
+  const unix_now = (Math.floor(new Date(dayjs()).getTime() / 1000));
+
   const { config } = usePrepareContractWrite({
     addressOrName: contractAddress,
     contractInterface: abi.abi,
@@ -37,7 +40,7 @@ export default function Home() {
 
   })
   const { data, isLoading, isSuccess, write } = useContractWrite(config)
-
+  
   return (
     <>
       <Head>
@@ -97,13 +100,12 @@ export default function Home() {
               id="outlined-helperText"
               placeholder="4"
               helperText="Valid Through"
-              onChange={(e) => setValidThrough(e.target.value)}
+              onChange={(e) => setValidThrough(e.target.value * 3600 + dayjs())}
               InputProps={{
                 endAdornment: <InputAdornment position="end">Hour(s)</InputAdornment>,
               }}
             />
           </div>
-
           
           {/* the Commit button */}
           {!isLoading && (
@@ -114,7 +116,8 @@ export default function Home() {
               borderRadius: 8,
             }}
             variant="contained"
-            onClick={write}
+            onClick={()=> {
+              console.log(validThrough)}}
             >
             Commit
           </Button>
