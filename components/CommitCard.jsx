@@ -12,7 +12,7 @@ import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite } from 'wagmi'
 
 
-const contractAddress = "0x28D691d5eDFf71b72B8CA60EDcB164308945707F"
+const contractAddress = "0x4CF68f0D411f5Ab44F05567A7082b09Ae5853511"
 const web3StorageToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGRjZUFhYmMxRjk0NTk2QjUzOEYyYTI2ZWY2NzE4NjBkNjJiOTU5OWIiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NjUxOTY1NDM3NjgsIm5hbWUiOiJqdXN0Y29tbWl0LWJvZ290YS10ZXN0In0.VBR4b-l96dOX0clFkvgx_FT40Jtoa2CFeq6cHUMM4uI";
 // Construct with token and endpoint
 const client = new Web3Storage({ token: web3StorageToken})    
