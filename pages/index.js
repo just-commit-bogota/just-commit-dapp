@@ -68,6 +68,9 @@ export default function Home() {
   })
 
   function buildCommitArray() {
+    if (!commitData){
+      return
+    }
     // TODO: sort by expiry timestamp
     let newArray = [];
     for ( let commit of commitData) {
