@@ -37,6 +37,10 @@ const CommitCard = (props) => {
         setIsOpen(true);
     }
 
+    function uploadFile(){
+
+    }
+
     function afterOpenModal() {
         // references are now sync'd and can be accessed.
         subtitle.style.color = '#f00';
@@ -98,11 +102,11 @@ const CommitCard = (props) => {
                         </div>
                         <form>
                         <input />
-                        <Box className='upload__modal__box'>
-                            <div className="">
+                        <Box onClick={uploadFile} className='upload__modal__box'>
+                            <div className="upload__modal__desc">
+                                <img className="upload__modal__icon" src='../static/icons/picture.svg'></img>
                                 <span className='upload__modal__box-text'>Select an image file to upload</span>
                             </div>
-
                         </Box>
 
                         </form>
