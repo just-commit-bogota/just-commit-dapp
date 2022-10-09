@@ -14,6 +14,7 @@ export default function CardList({ cardList }) {
     <div>
 			{cardList.map((card) => (
 				<CommitCard 
+					key={card.id}
                     status={card.status}
                     timeStamp={card.expiryTimestamp}
                     commitFrom={card.commitFrom}

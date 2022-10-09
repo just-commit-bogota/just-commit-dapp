@@ -84,6 +84,7 @@ export default function Home() {
       } else if ( eTimestamp > Date.now()/1000 && commit.proofIpfsHash !== "" ) {
         status = "Waiting";
       } 
+      newCommitStruct.id = commit.id.toNumber();
       newCommitStruct.status = status;
       newCommitStruct.userIsCreator = commit.commitFrom == isConnected;
       newCommitStruct.userIsCommitee = commit.commitTo == isConnected;
