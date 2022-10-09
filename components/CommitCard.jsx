@@ -11,7 +11,7 @@ const CommitCard = (props) => {
         buttonType = "Upload"
     } else if (props.status == "Waiting" && !props.userIsCreator) {
         buttonType = "Verify"
-    } else if (props.status == "Failure" && !props.userIsCreator) {
+    } else if (props.status == "Failure" && props.userIsCommitee) {
         buttonType = "Claim"
     }
 
@@ -27,7 +27,7 @@ const CommitCard = (props) => {
             <div className='infoLeft'>
                 <div className='infoLeft__heading'>
                     <img className='card__logo mr-2' src="../static/icons/workout.svg"></img>
-                    <h2 className='card__heading m-4'>Reading</h2>
+                    <h2 className='card__heading m-4'>{props.message}</h2>
                     <CardStatus status={props.status}></CardStatus>
                 </div> 
                 <div className='infoLeft_description'>
