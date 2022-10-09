@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
+import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
 export default function Home() {
 
@@ -17,19 +18,24 @@ export default function Home() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [commitDescription, setCommitDescription] = useState('');
   const [commitTo, setCommitTo] = useState('');
-  const [commitAmount, setCommitAmount] = useState(0)
-  const [validThrough, setValidThrough] = useState(0)
+  const [commitAmount, setCommitAmount] = useState('0')
+  const [validThrough, setValidThrough] = useState('0')
 
   // smart contract data
   const provider = useProvider()
   const { chain, chains } = useNetwork()
   const { address: isConnected } = useAccount()
   const contractAddress = "0x28D691d5eDFf71b72B8CA60EDcB164308945707F"
-  const commitManagerContract = new ethers.Contract(
-    contractAddress,
-    abi.abi,
-    provider
-  )
+
+  const { config } = usePrepareContractWrite({
+    addressOrName: contractAddress,
+    contractInterface: abi.abi,
+    functionName: "createCommit",
+    args: [commitDescription,commitTo, validThrough, { value: ethers.utils.parseEther(commitAmount)}]
+
+  })
+  const { data, isLoading, isSuccess, write } = useContractWrite(config)
+
 
   return (
     <>
@@ -103,7 +109,7 @@ export default function Home() {
             borderRadius: 8,
           }}
           variant="contained"
-          //onClick=await ethRegistrar.createCommit({commitDescription, commitTo, commitAmount, validThrough})
+          onClick={write}
           >
           Commit
         </Button>
