@@ -66,8 +66,6 @@ export default function Home() {
           </div>
           <div>
             <ConnectButton className="mr-2 md:inline-flex hover:shadow-lg flex " />
-          </div>
-
         </div>
       
 
@@ -148,6 +146,7 @@ export default function Home() {
         <CommitCard status="Success" timeStamp={1665267459} commitFrom={mockCommit.commitFrom} commitTo={mockCommit.commitTo} stakeAmount={mockCommit.stakeAmount} createdTimestamp={mockCommit.createdTimestamp} validPeriod={mockCommit.validPeriod}/>
         <CommitCard status="Failure" timeStamp={1665267459} commitFrom={mockCommit.commitFrom} commitTo={mockCommit.commitTo} stakeAmount={mockCommit.stakeAmount} createdTimestamp={mockCommit.createdTimestamp} validPeriod={mockCommit.validPeriod}/>
         <CommitCard status="Pending" timeStamp={1665267459} commitFrom={mockCommit.commitFrom} commitTo={mockCommit.commitTo} stakeAmount={mockCommit.stakeAmount} createdTimestamp={mockCommit.createdTimestamp} validPeriod={mockCommit.validPeriod}/>
+      </div>
       </div>
 
       {/*
