@@ -30,8 +30,6 @@ export default function Home() {
   const { address: isConnected } = useAccount()
   const contractAddress = "0x28D691d5eDFf71b72B8CA60EDcB164308945707F"
 
-  const unix_now = (Math.floor(new Date(dayjs()).getTime() / 1000));
-
   const { config } = usePrepareContractWrite({
     addressOrName: contractAddress,
     contractInterface: abi.abi,
