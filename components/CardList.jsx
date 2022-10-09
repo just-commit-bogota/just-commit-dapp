@@ -25,6 +25,8 @@ export default function CardList({ cardList }) {
 					message={card.message}
 					userIsCreator={card.userIsCreator}
 					userIsCommitee={card.userIsCommitee}
+					ipfsHash={card.ipfsHash}
+					id={card.id}
 				/>
 			)).reverse()}
 		</div>

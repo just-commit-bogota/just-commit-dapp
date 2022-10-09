@@ -72,6 +72,10 @@ export default function Home() {
       return
     }
     // TODO: sort by expiry timestamp
+    if (!commitData) {
+      return;
+
+    }
     let newArray = [];
     for ( let commit of commitData) {
       let newCommitStruct = {}
@@ -97,6 +101,7 @@ export default function Home() {
       newCommitStruct.createdTimestamp = "TODO";
       newCommitStruct.validPeriod = "TODO";
       newCommitStruct.message =commit.message;
+      newCommitStruct.ipfsHash = commit.proofIpfsHash;
 
       newArray.push(newCommitStruct);
     }
