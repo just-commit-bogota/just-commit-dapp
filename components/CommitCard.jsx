@@ -169,7 +169,7 @@ const CommitCard = (props) => {
                             <div className='spacer'></div>
                             <button onClick={closeModal}>X</button>
                         </div>
-                        <div onClick={uploadFile} className='upload__modal__box'>
+                        <div className='upload__modal__box'>
                             <div className="upload__modal__desc">
                                 <img className="upload__modal__icon" src='../static/icons/picture.svg'></img>
                                 <span className='upload__modal__box-text'>Select an image file to upload</span>
