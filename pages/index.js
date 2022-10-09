@@ -54,19 +54,20 @@ export default function Home() {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width" />
         <title>JustCommit</title>
-        <meta property="og:title" content="Productivity dApp" />
-        <meta name="description" content="Productivity dApp" />
-        <meta property="og:description" content="Productivity dApp" />
+
+        <meta property="og:title" content="Just Commit" />
+        <meta name="description" content="Just Commit" />
+        <meta property="og:description" content="Just Commit" />
+        <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
       </Head>
 
-      <div className="bg-gradient-to-b from-emerald-100 to-white-500 min-h-screen">
-        <div className="flex mb-4 header ">
-          <div className="text-4xl cursor-default text-black font-semibold ml-6">
-            JustCommit
-          </div>
-          <div>
-            <ConnectButton className="mr-2 md:inline-flex hover:shadow-lg flex " />
-        </div>
+      <div className="header header--absolute bg-white">
+       <a href="./">
+         <img src="./logo.png"/>
+       </a>
+       <div>
+         <ConnectButton className="mr-2 md:inline-flex hover:shadow-lg flex" />
+       </div>
       
 
       </div>
@@ -146,7 +147,6 @@ export default function Home() {
         <CommitCard status="Success" timeStamp={1665267459} commitFrom={mockCommit.commitFrom} commitTo={mockCommit.commitTo} stakeAmount={mockCommit.stakeAmount} createdTimestamp={mockCommit.createdTimestamp} validPeriod={mockCommit.validPeriod}/>
         <CommitCard status="Failure" timeStamp={1665267459} commitFrom={mockCommit.commitFrom} commitTo={mockCommit.commitTo} stakeAmount={mockCommit.stakeAmount} createdTimestamp={mockCommit.createdTimestamp} validPeriod={mockCommit.validPeriod}/>
         <CommitCard status="Pending" timeStamp={1665267459} commitFrom={mockCommit.commitFrom} commitTo={mockCommit.commitTo} stakeAmount={mockCommit.stakeAmount} createdTimestamp={mockCommit.createdTimestamp} validPeriod={mockCommit.validPeriod}/>
-      </div>
       </div>
 
       {/*
