@@ -45,12 +45,8 @@ a {
   padding: 6rem 2rem 0rem 2rem;
   align-items: center;
   min-height: 40vh;
-  background: white;
-}
-.container--one {
   background: linear-gradient(180deg, #F1F7F5 0%, rgba(241, 247, 245, 0) 100%);
   border-radius: 0px 0px 300px 300px;
-  max-width: 100rem;
 }
 
 .heading {
@@ -75,9 +71,8 @@ a {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  width: 90%;
+  padding: 2rem;
   background: white;
-  padding: 2rem 1rem 0rem 1rem;
   box-shadow: 0px 8px 24px rgba(26, 170, 160, 0.08), 0px 0px 24px rgba(0, 0, 0, 0.04);
   border-radius: 20px;
   align-items: center;
@@ -86,7 +81,7 @@ a {
 .col {
   display: flex;
   flex-direction: row;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 /*
@@ -150,12 +145,31 @@ a {
   }
 }
 
-@media screen and (max-width: 44em) {
+@media screen and (max-width: 850px) {
   .col {
     flex-direction: column;
+  }
+  .header {
+    text-align: center;
   }
   .heading {
     justify-content: center;
     text-align: center;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  img {
+    display: none;
+  }
+  .header {
+    justify-content: center;
+  }
+  .form {
+    width: 90vw;
+  }
+  .col {
+    inline-size: -webkit-fill-available;
+    overflow: auto; {/*a better param for "Commitment" field?*/}
   }
 }

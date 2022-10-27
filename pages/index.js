@@ -58,8 +58,8 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="container container--flex container--one">
-        <div className="heading text-3xl text-left">
+      <div className="container container--flex">
+        <div className="heading text-3xl">
           Make a Commitment
         </div>
         <form
@@ -75,15 +75,17 @@ export default function Home() {
               label="Commitment"
               maxLength={140}
               placeholder="phone awareness"
-              parentStyles = {{ backgroundColor: '#fff' }}
+              parentStyles = {{
+                width: '25rem' }}
+                //backgroundColor: '#f1fcf8' }}
               onChange={(e) => setCommitDescription(e.target.value)}
               required
             />
             <Input
-              label="Commit To"
+              label="To"
               maxLength={42}
               placeholder="0xb443...9aad"
-              parentStyles = {{ backgroundColor: '#fff' }}
+              //parentStyles = {{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setCommitTo(e.target.value)}
               required
             />
@@ -94,7 +96,7 @@ export default function Home() {
               min = {0}
               type="number"
               units="ETH"
-              parentStyles = {{ backgroundColor: '#fff' }}
+              //parentStyles = {{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setCommitAmount(e.target.value)}
               required
             />
@@ -105,7 +107,7 @@ export default function Home() {
               units="hours"
               min={1}
               max={10}
-              parentStyles={{ backgroundColor: '#fff' }}
+              //parentStyles={{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setValidThrough(e.target.value * 3600 + dayjs())}
               required
             />
