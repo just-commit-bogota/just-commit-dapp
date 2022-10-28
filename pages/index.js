@@ -4,7 +4,7 @@ import styles from '../styles/Home.module.css'
 import { useState, useEffect } from 'react'
 import abi from "../contracts/CommitManager.json"
 import { ethers } from 'ethers'
-import { Input } from '@ensdomains/thorin'
+import { Input, Modal } from '@ensdomains/thorin'
 import Button from '@mui/material/Button'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import toast, { Toaster } from 'react-hot-toast'
@@ -66,7 +66,8 @@ export default function Home() {
           className="form"
           onSubmit={async (e) => {
             e.preventDefault()
-            // do Toast checks
+            // Toast checks
+            
             setDialogOpen(true)
           }}      
         >
@@ -122,12 +123,13 @@ export default function Home() {
               borderRadius: 8,
             }}
             variant="contained"
-            onClick={()=> {
-              console.log(validThrough)}}
+            onClick={()=> { toast.error('Coming soon! Working on it... ') } }// write();
             >
             Commit
           </Button>
           )}
+
+          <Toaster position="bottom-center" />
 
           {/*
           {isLoading && (
@@ -139,14 +141,6 @@ export default function Home() {
           
         </form>
       </div>
-
-      {/*
-      <div className="container container--flex">
-        <div className="heading heading--two">
-          My Commitments     
-        </div>
-      </div>
-      */}
     </>
   )
 }
