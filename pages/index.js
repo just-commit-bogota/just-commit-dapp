@@ -2,35 +2,18 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import { useState, useEffect } from 'react'
-import abi from "../contracts/CommitManager.json";
+import abi from "../contracts/CommitManager.json"
 import { ethers } from 'ethers'
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import Button from '@mui/material/Button';
+import { Input, Modal } from '@ensdomains/thorin'
+import Button from '@mui/material/Button'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import toast, { Toaster } from 'react-hot-toast'
-import Spinner from "../components/Spinner";
 import { useAccount, useNetwork, useProvider } from 'wagmi'
-import { useContractRead, useContractWrite, usePrepareContractWrite } from 'wagmi'
+import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import { useWaitForTransaction } from 'wagmi'
 import dayjs from "dayjs";
-import CommitCard from '../components/CommitCard'
-import CardList from '../components/CardList'
-
-const mockCommit = {
-  commitTo: "0x44B274C577e217409e6814C2667e78Ba987FBEEF",
-  commitFrom: "0x44B274C577e217409e6814C2667e78Ba987F30AD",
-  stakeAmount: "0.02",
-  createdTimestamp: "3 hrs ago (Sep-30-2022 04:31:45 AM +UTC)",
-  validPeriod: "24 hrs",
-}
 
 export default function Home() {
-
-  useEffect(() => {
-    // 👇️ only runs once
-    buildCommitArray();
-  }, []); // 👈️ empty dependencies array
 
   // state variables
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -39,18 +22,11 @@ export default function Home() {
   const [commitAmount, setCommitAmount] = useState('0')
   const [validThrough, setValidThrough] = useState('0')
 
-  // commit structure:
-  // id
-  // commitFrom
-  // commitTo
-
-  const [commitArray, setCommitArray] = useState([])
-
   // smart contract data
   const provider = useProvider()
   const { chain, chains } = useNetwork()
   const { address: isConnected } = useAccount()
-  const contractAddress = "0x4CF68f0D411f5Ab44F05567A7082b09Ae5853511"
+  const contractAddress = "0x28D691d5eDFf71b72B8CA60EDcB164308945707F"
 
   const { config } = usePrepareContractWrite({
     addressOrName: contractAddress,
@@ -60,64 +36,13 @@ export default function Home() {
 
   })
   const { data, isLoading, isSuccess, write } = useContractWrite(config)
-
-  const { data: commitData, isError, isLoading: commitIsLoading } = useContractRead({
-    addressOrName: contractAddress,
-    contractInterface: abi.abi,
-    functionName: "getAllCommits",
-  })
-
-  function buildCommitArray() {
-    if (!commitData){
-      return
-    }
-    // TODO: sort by expiry timestamp
-    if (!commitData) {
-      return;
-
-    }
-    let newArray = [];
-    for ( let commit of commitData) {
-      let newCommitStruct = {}
-      let eTimestamp = commit.expiryTimestamp.toNumber();
-      let status = "Failure";
-      if (commit.commitApproved) {
-        status = "Success";
-      } else if ( eTimestamp > Date.now()/1000 && commit.proofIpfsHash == "" ) {
-        status = "Pending";
-      } else if ( eTimestamp > Date.now()/1000 && commit.proofIpfsHash !== "" ) {
-        status = "Waiting";
-      } 
-      newCommitStruct.id = commit.id.toNumber();
-      newCommitStruct.status = status;
-      newCommitStruct.userIsCreator = commit.commitFrom == isConnected;
-      newCommitStruct.userIsCommitee = commit.commitTo == isConnected;
-      console.log(isConnected)
-      console.log(newCommitStruct.userIsCreator)
-      newCommitStruct.expiryTimestamp = eTimestamp;
-      newCommitStruct.commitFrom = commit.commitFrom;
-      newCommitStruct.commitTo = commit.commitTo;
-      newCommitStruct.stakeAmount = commit.stakeAmount;
-      newCommitStruct.createdTimestamp = "TODO";
-      newCommitStruct.validPeriod = "TODO";
-      newCommitStruct.message =commit.message;
-      newCommitStruct.ipfsHash = commit.proofIpfsHash;
-
-      newArray.push(newCommitStruct);
-    }
-
-    newArray.sort((a, b) => (a.expiryTimestamp > b.expiryTimestamp) ? 1 : -1)
-    setCommitArray(newArray);
-  }
-
-
+  
   return (
     <>
       <Head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width" />
-        <title>JustCommit</title>
-
+        <title>Just Commit</title>
         <meta property="og:title" content="Just Commit" />
         <meta name="description" content="Just Commit" />
         <meta property="og:description" content="Just Commit" />
@@ -125,58 +50,67 @@ export default function Home() {
       </Head>
 
       <div className="header header--absolute bg-white">
-       <a href="./">
-         <img src="./logo.png"/>
-       </a>
-       <div>
-         <ConnectButton className="mr-2 md:inline-flex hover:shadow-lg flex" />
-       </div>
-      
-
+        <a href="./">
+          <img src="./logo.png"/>
+        </a>
+        <div>
+          <ConnectButton className="mr-2 md:inline-flex hover:shadow-lg flex" />
+        </div>
       </div>
 
-      <div className="container container--flex container--one">
-        <div className="heading text-3xl text-left">
+      <div className="container container--flex">
+        <div className="heading text-3xl">
           Make a Commitment
         </div>
         <form
           className="form"
           onSubmit={async (e) => {
             e.preventDefault()
-            // do Toast checks 
+            // Toast checks
+            
             setDialogOpen(true)
           }}      
         >
           <div className="col">
-            <TextField
-              id="outlined-helperText"
-              placeholder="focused building"
-              helperText="Description"
+            <Input
+              label="Commitment"
+              maxLength={140}
+              placeholder="strength workout"
+              //parentStyles = {{
+              //  width: '25rem' }}
+                //backgroundColor: '#f1fcf8' }}
               onChange={(e) => setCommitDescription(e.target.value)}
+              required
             />
-            <TextField
-              id="outlined-helperText"
-              placeholder="0xb44...aad"
-              helperText="Commit To"
+            <Input
+              label="To"
+              maxLength={42}
+              placeholder="0xb443...9aad"
+              //parentStyles = {{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setCommitTo(e.target.value)}
+              required
             />
-            <TextField
-              id="outlined-helperText"
+            <Input
+              label="Amount"
               placeholder="0.001"
-              helperText="Commit Amount"
+              step = "0.001"
+              min = {0}
+              type="number"
+              units="ETH"
+              //parentStyles = {{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setCommitAmount(e.target.value)}
-              InputProps={{
-                endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
-              }}
+              required
             />
-            <TextField
-              id="outlined-helperText"
-              placeholder="4"
-              helperText="Valid Through"
-              onChange={(e) => setValidThrough(Math.round(e.target.value*3600 + Date.now()/1000))}
-              InputProps={{
-                endAdornment: <InputAdornment position="end">Hour(s)</InputAdornment>,
-              }}
+            <Input
+              label="Duration"
+              placeholder="2"
+              type="number"
+              units="hours"
+              min={1}
+              max={10}
+              //parentStyles={{ backgroundColor: '#f1fcf8' }}
+              onChange={(e) => setValidThrough(e.target.value * 3600 + dayjs())}
+              required
             />
           </div>
           
@@ -189,57 +123,24 @@ export default function Home() {
               borderRadius: 8,
             }}
             variant="contained"
-            onClick={()=> {
-              console.log(validThrough)
-              write();
-            }}
+            onClick={()=> { toast.error('Coming soon! Working on it... ') } }// write();
             >
             Commit
           </Button>
           )}
 
-          {/*|| (transactionStatus == "loading")*/}
+          <Toaster position="bottom-center" />
+
+          {/*
           {isLoading && (
             <div className="justifyCenter">
               <Spinner />
             </div>
           )}
+          */}
           
         </form>
       </div>
-      <div className='flex-col mr-4 ml-4 fd-col'>
-        {/* /* debug button */}
-        {/* <Button style ={{
-            width: '18%',
-            margin: '1rem',
-            backgroundColor: "#1DD297",
-            borderRadius: 8,
-          }}
-          variant="contained"
-          onClick={buildCommitArray}
-          >
-          fetch commit data
-        </Button> */}
-        <CardList cardList={commitArray}></CardList>
-        {/* <CommitCard status="Waiting" timeStamp={1665267459} commitFrom={mockCommit.commitFrom} commitTo={mockCommit.commitTo} stakeAmount={mockCommit.stakeAmount} createdTimestamp={mockCommit.createdTimestamp} validPeriod={mockCommit.validPeriod}/>
-        <CommitCard status="Success" timeStamp={1665267459} commitFrom={mockCommit.commitFrom} commitTo={mockCommit.commitTo} stakeAmount={mockCommit.stakeAmount} createdTimestamp={mockCommit.createdTimestamp} validPeriod={mockCommit.validPeriod}/>
-        <CommitCard status="Failure" timeStamp={1665267459} commitFrom={mockCommit.commitFrom} commitTo={mockCommit.commitTo} stakeAmount={mockCommit.stakeAmount} createdTimestamp={mockCommit.createdTimestamp} validPeriod={mockCommit.validPeriod}/>
-        <CommitCard status="Pending" timeStamp={1665267459} commitFrom={mockCommit.commitFrom} commitTo={mockCommit.commitTo} stakeAmount={mockCommit.stakeAmount} createdTimestamp={mockCommit.createdTimestamp} validPeriod={mockCommit.validPeriod}/> */}
-      </div>
-
-      {/*
-      <div className="container container--flex">
-        <div className="heading heading--two">
-          My Commitments     
-        </div>
-      </div>
-      */}
     </>
   )
 }
-
-{/*
-(TODO: update to include the @media overrides)
-(TODO: figure out how to do tailwindCSS for below header CSS code)
-(TODO: add "Home" and "Feed" tabs)
-*/}
