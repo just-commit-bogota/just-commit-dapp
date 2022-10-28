@@ -74,9 +74,9 @@ export default function Home() {
             <Input
               label="Commitment"
               maxLength={140}
-              placeholder="phone awareness"
-              parentStyles = {{
-                width: '25rem' }}
+              placeholder="strength workout"
+              //parentStyles = {{
+              //  width: '25rem' }}
                 //backgroundColor: '#f1fcf8' }}
               onChange={(e) => setCommitDescription(e.target.value)}
               required
