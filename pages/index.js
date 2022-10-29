@@ -101,11 +101,12 @@ export default function Home() {
               onChange={(e) => setCommitAmount(e.target.value)}
               required
             />
+            {/* TODO: abstract away the UNIX conversion*/}
             <Input
               label="Duration"
-              placeholder="2"
+              placeholder="1"
               type="number"
-              units="hours"
+              units={((validThrough - dayjs()) / 3600) > 1 ? 'hours' : 'hour'}
               min={1}
               max={10}
               //parentStyles={{ backgroundColor: '#f1fcf8' }}
