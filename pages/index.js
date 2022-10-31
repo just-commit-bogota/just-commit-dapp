@@ -114,11 +114,10 @@ export default function Home() {
               required
             />
           </div>
-
+          
           {/* the Commit button */}
           {!isLoading && (
-            <Button className=""
-              style = {{
+            <Button style ={{
               width: '32%',
               margin: '1rem',
               backgroundColor: "#1DD297",
