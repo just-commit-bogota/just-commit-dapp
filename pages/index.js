@@ -114,10 +114,11 @@ export default function Home() {
               required
             />
           </div>
-          
+
           {/* the Commit button */}
           {!isLoading && (
-            <Button style ={{
+            <Button className=""
+              style = {{
               width: '32%',
               margin: '1rem',
               backgroundColor: "#1DD297",
@@ -129,6 +130,16 @@ export default function Home() {
             Commit
           </Button>
           )}
+
+          {/* What is this? button */}
+          <button className="">
+            <u className= "text-sm text-sky-600 font-medium"
+              href= "https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
+              target="_blank">
+              
+              What is this?
+            </u>
+          </button>
 
           <Toaster position="bottom-center" />
 
