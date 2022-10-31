@@ -133,7 +133,8 @@ export default function Home() {
           {/*What is this? button*/}
           <a
             href = "https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
-            target="_blank">
+            target="_blank"
+            class="button">
             <u className= "text-sm text-sky-600 font-medium">         
               What is this?
             </u>
