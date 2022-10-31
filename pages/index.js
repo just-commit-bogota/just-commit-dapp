@@ -132,14 +132,13 @@ export default function Home() {
           )}
 
           {/* What is this? button */}
-          <button className="">
-            <u className= "text-sm text-sky-600 font-medium"
-              href= "https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
-              target="_blank">
-              
+          <a
+            href = "https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
+            target="_blank">
+            <u className= "text-sm text-sky-600 font-medium">         
               What is this?
             </u>
-          </button>
+          </a>
 
           <Toaster position="bottom-center" />
 
