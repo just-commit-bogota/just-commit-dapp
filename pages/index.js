@@ -49,12 +49,22 @@ export default function Home() {
         <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
       </Head>
 
-      <div className="header header--absolute bg-white">
-        <a href="./">
-          <img src="./logo.png"/>
-        </a>
+      <div className="header w-full inline-grid justify-between header--absolute bg-white">
+        <div className="flex space-x-0 sm:space-x-10 items-center">
+          <a className="collapse sm:visible"
+            href="./">
+            <img src="./logo.png"/>
+          </a>
+          <a
+            className="font-medium p-1 truncate underline underline-offset-4 decoration-[#1DD297] decoration-1
+                       hover:decoration-8"
+            href="https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
+            target="_blank">
+            About
+          </a>
+        </div>
         <div>
-          <ConnectButton className="mr-2 md:inline-flex hover:shadow-lg flex" />
+          <ConnectButton className="mr-10 hover:shadow-lg" />
         </div>
       </div>
 
@@ -129,15 +139,6 @@ export default function Home() {
             Commit
           </Button>
           )}
-
-          {/*Adding the  What is this? button*/}
-          <a
-            href = "https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
-            target="_blank">
-            <u className= "text-sm text-sky-600 font-medium">         
-              What is this?
-            </u>
-          </a>
 
           <Toaster position="bottom-center" />
 

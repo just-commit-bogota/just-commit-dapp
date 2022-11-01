@@ -160,12 +160,12 @@ a {
   }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 640px) {
   img {
     display: none;
   }
   .header {
-    justify-content: center;
+    justify-content: space-evenly;
   }
   .form {
     width: 90vw;
