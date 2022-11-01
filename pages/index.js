@@ -85,7 +85,7 @@ export default function Home() {
             <Input
               label="Commitment"
               maxLength={140}
-              placeholder="strength workout"
+              placeholder="Strength workout"
               //parentStyles = {{
               //  width: '25rem' }}
                 //backgroundColor: '#f1fcf8' }}
@@ -130,8 +130,8 @@ export default function Home() {
             <Button style ={{
               width: '32%',
               margin: '1rem',
-              backgroundColor: "#1DD297",
-              borderRadius: 8,
+              backgroundColor: "#40b08b",
+              borderRadius: 12,
             }}
             variant="contained"
             onClick={()=> { toast.error('Coming soon! Working on it... ') } }// write();
