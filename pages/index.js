@@ -57,7 +57,7 @@ export default function Home() {
           </a>
           <a
             className="font-medium p-1 truncate underline underline-offset-4 decoration-[#1DD297] decoration-1
-                       hover:decoration-8"
+                       hover:decoration-8 hover:scale-105"
             href="https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
             target="_blank">
             About
