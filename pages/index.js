@@ -114,11 +114,11 @@ export default function Home() {
             />
             <Input
               label="Amount"
-              placeholder="0.001"
-              step = "0.001"
+              placeholder="10"
+              step = "10"
               min = {0}
               type="number"
-              units="ETH"
+              units="USDC"
               //parentStyles = {{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setCommitAmount(e.target.value)}
               required
