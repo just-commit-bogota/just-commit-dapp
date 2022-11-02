@@ -4,7 +4,7 @@ import styles from '../styles/Home.module.css'
 import { useState, useEffect } from 'react'
 import abi from "../contracts/CommitManager.json"
 import { ethers } from 'ethers'
-import { Input, Modal } from '@ensdomains/thorin'
+import { Input, Dropdown } from '@ensdomains/thorin'
 import Button from '@mui/material/Button'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import toast, { Toaster } from 'react-hot-toast'
@@ -55,6 +55,19 @@ export default function Home() {
             href="./">
             <img src="./logo.png"/>
           </a>
+          {/*
+          <Dropdown
+            className="hidden sm:inline"
+            inner
+            items={[
+              { label: 'Active', onClick: () => null, color: 'text' },
+              { label: 'Past', onClick: () => null, color: 'text' },
+            ]}
+            label="Commitments"
+          />
+          */}
+        </div>
+        <div className="flex space-x-0 sm:space-x-10 items-center gap-10 sm:gap-0">
           <a
             className="font-medium p-1 truncate underline underline-offset-4 decoration-[#1DD297] decoration-1
                        hover:decoration-8 hover:scale-105"
@@ -62,14 +75,12 @@ export default function Home() {
             target="_blank">
             About
           </a>
-        </div>
-        <div>
           <ConnectButton className="mr-10 hover:shadow-lg" />
         </div>
       </div>
 
       <div className="container container--flex">
-        <div className="heading text-3xl">
+        <div className="heading text-3xl font-bold">
           Make a Commitment
         </div>
         <form
