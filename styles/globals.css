@@ -160,12 +160,13 @@ a {
   }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 640px) {
   img {
     display: none;
   }
   .header {
     justify-content: center;
+    padding: 1rem 3rem;
   }
   .form {
     width: 90vw;
@@ -182,5 +183,7 @@ a {
     in-inline-size: max-content;
     font-size: 25px;
     wrap: nowrap;
+    margin-top: 0rem;
+    margin-bottom: 1rem;
   }
 }

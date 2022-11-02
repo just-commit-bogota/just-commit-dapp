@@ -4,7 +4,7 @@ import styles from '../styles/Home.module.css'
 import { useState, useEffect } from 'react'
 import abi from "../contracts/CommitManager.json"
 import { ethers } from 'ethers'
-import { Input, Modal } from '@ensdomains/thorin'
+import { Input, Dropdown } from '@ensdomains/thorin'
 import Button from '@mui/material/Button'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import toast, { Toaster } from 'react-hot-toast'
@@ -49,17 +49,39 @@ export default function Home() {
         <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
       </Head>
 
-      <div className="header header--absolute bg-white">
-        <a href="./">
-          <img src="./logo.png"/>
-        </a>
-        <div>
-          <ConnectButton className="mr-2 md:inline-flex hover:shadow-lg flex" />
+      <div className="header w-full inline-grid justify-between header--absolute bg-white">
+        <div className="flex space-x-0 sm:space-x-10 items-center">
+          <a className="collapse sm:visible"
+            href="./">
+            <img src="./logo.png"/>
+          </a>
+          {/*
+          <Dropdown
+            className="hidden sm:inline"
+            inner
+            items={[
+              { label: 'Active', onClick: () => null, color: 'text' },
+              { label: 'Past', onClick: () => null, color: 'text' },
+            ]}
+            label="Commitments"
+          />
+          */}
+        </div>
+        <div className="flex space-x-0 sm:space-x-10 items-center gap-10 sm:gap-0">
+          <a
+            className="font-medium p-1 truncate underline underline-offset-4 decoration-[#1DD297] decoration-1
+                       hover:decoration-8 hover:scale-105"
+            href="https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
+            target="_blank"
+            rel="noopener noreferrer">
+            About
+          </a>
+          <ConnectButton className="mr-10 hover:shadow-lg" />
         </div>
       </div>
 
       <div className="container container--flex">
-        <div className="heading text-3xl">
+        <div className="heading text-3xl font-bold">
           Make a Commitment
         </div>
         <form
@@ -75,7 +97,7 @@ export default function Home() {
             <Input
               label="Commitment"
               maxLength={140}
-              placeholder="strength workout"
+              placeholder="Strength workout"
               //parentStyles = {{
               //  width: '25rem' }}
                 //backgroundColor: '#f1fcf8' }}
@@ -114,15 +136,14 @@ export default function Home() {
               required
             />
           </div>
-
+          
           {/* the Commit button */}
           {!isLoading && (
-            <Button className=""
-              style = {{
+            <Button style ={{
               width: '32%',
               margin: '1rem',
-              backgroundColor: "#1DD297",
-              borderRadius: 8,
+              backgroundColor: "#40b08b",
+              borderRadius: 12,
             }}
             variant="contained"
             onClick={()=> { toast.error('Coming soon! Working on it... ') } }// write();
@@ -130,17 +151,7 @@ export default function Home() {
             Commit
           </Button>
           )}
-
-          {/*What is this? button*/}
-          <a
-            href = "https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
-            target="_blank"
-            rel="noopener noreferrer">
-            <u className= "text-sm text-sky-600 font-medium">         
-              What is this?
-            </u>
-          </a>
-
+          
           <Toaster position="bottom-center" />
 
           {/*
