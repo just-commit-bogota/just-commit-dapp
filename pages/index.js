@@ -55,7 +55,6 @@ export default function Home() {
             href="./">
             <img src="./logo.png"/>
           </a>
-          {/*
           <Dropdown
             className="hidden sm:inline"
             inner
@@ -65,7 +64,6 @@ export default function Home() {
             ]}
             label="Commitments"
           />
-          */}
         </div>
         <div className="flex space-x-0 sm:space-x-10 items-center gap-10 sm:gap-0">
           <a
