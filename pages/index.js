@@ -4,7 +4,7 @@ import styles from '../styles/Home.module.css'
 import { useState, useEffect } from 'react'
 import abi from "../contracts/CommitManager.json"
 import { ethers } from 'ethers'
-import { Input, Dropdown } from '@ensdomains/thorin'
+import { Tag, Typography, Input, Dialog} from '@ensdomains/thorin'
 import Button from '@mui/material/Button'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import toast, { Toaster } from 'react-hot-toast'
@@ -16,9 +16,9 @@ import dayjs from "dayjs";
 export default function Home() {
 
   // state variables
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [commitDescription, setCommitDescription] = useState('');
-  const [commitTo, setCommitTo] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [commitDescription, setCommitDescription] = useState('')
+  const [commitTo, setCommitTo] = useState('')
   const [commitAmount, setCommitAmount] = useState('0')
   const [validThrough, setValidThrough] = useState('0')
 
@@ -27,15 +27,17 @@ export default function Home() {
   const { chain, chains } = useNetwork()
   const { address: isConnected } = useAccount()
   const contractAddress = "0x28D691d5eDFf71b72B8CA60EDcB164308945707F"
-
   const { config } = usePrepareContractWrite({
     addressOrName: contractAddress,
     contractInterface: abi.abi,
     functionName: "createCommit",
     args: [commitDescription,commitTo, validThrough, { value: ethers.utils.parseEther(commitAmount)}]
-
   })
   const { data, isLoading, isSuccess, write } = useContractWrite(config)
+  
+  useEffect(() => {
+    console.log({dialogOpen})
+  }, [dialogOpen])
   
   return (
     <>
@@ -55,6 +57,7 @@ export default function Home() {
             href="./">
             <img src="./logo.png"/>
           </a>
+          {/*
           <Dropdown
             className="hidden sm:inline"
             inner
@@ -64,6 +67,7 @@ export default function Home() {
             ]}
             label="Commitments"
           />
+          */}
         </div>
         <div className="flex space-x-0 sm:space-x-10 items-center gap-10 sm:gap-0">
           <a
@@ -81,41 +85,58 @@ export default function Home() {
         <div className="heading text-3xl font-bold">
           Make a Commitment
         </div>
+        
         <form
           className="form"
           onSubmit={async (e) => {
             e.preventDefault()
             // Toast checks
             
-            setDialogOpen(true)
-          }}      
-        >
+          }}>
+          
           <div className="col">
             <Input
               label="Commitment"
               maxLength={140}
               placeholder="Strength workout"
-              //parentStyles = {{
-              //  width: '25rem' }}
-                //backgroundColor: '#f1fcf8' }}
+              labelSecondary = {
+                <Tag
+                  className="hover:cursor-pointer"
+                  tone="green"
+                  size="small"
+                  onClick={() => setDialogOpen(true)}>
+                  i
+                </Tag>
+              }
               onChange={(e) => setCommitDescription(e.target.value)}
               required
-            />
+            />    
             <Input
               label="To"
               maxLength={42}
-              placeholder="0xb443...9aad"
+              value="justcommit.eth"
+              // labelSecondary = {
+              //   <Tag
+              //     className="hover:cursor-pointer"
+              //     tone="green"
+              //     size="small"
+              //     onClick={() => setInfoModalOpen(true)}>
+              //     i
+              //   </Tag>
+              
               //parentStyles = {{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setCommitTo(e.target.value)}
               required
+              disabled
             />
             <Input
               label="Amount"
-              placeholder="0.001"
-              step = "0.001"
+              placeholder="10"
+              step = "10"
               min = {0}
+              max={100}
               type="number"
-              units="ETH"
+              units="USDC"
               //parentStyles = {{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setCommitAmount(e.target.value)}
               required
@@ -127,7 +148,7 @@ export default function Home() {
               type="number"
               units={((validThrough - dayjs()) / 3600) > 1 ? 'hours' : 'hour'}
               min={1}
-              max={10}
+              max={12}
               //parentStyles={{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setValidThrough(e.target.value * 3600 + dayjs())}
               required
@@ -150,6 +171,16 @@ export default function Home() {
           )}
 
           <Toaster position="bottom-center" />
+
+          {dialogOpen && (
+            <Dialog
+              open={dialogOpen}
+              variant="closable"
+              onDismiss={() => setDialogOpen(false)}
+            >
+              Hi
+            </Dialog>
+          )}
 
           {/*
           {isLoading && (
