@@ -115,15 +115,15 @@ export default function Home() {
               label="To"
               maxLength={42}
               value="justcommit.eth"
-              // labelSecondary = {
-              //   <Tag
-              //     className="hover:cursor-pointer"
-              //     tone="green"
-              //     size="small"
-              //     onClick={() => setInfoModalOpen(true)}>
-              //     i
-              //   </Tag>
-              
+              labelSecondary = {
+                <Tag
+                  className="hover:cursor-pointer"
+                  tone="green"
+                  size="small"
+                  onClick={() => setInfoModalOpen(true)}>
+                  i
+                </Tag>
+              }
               //parentStyles = {{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setCommitTo(e.target.value)}
               required
