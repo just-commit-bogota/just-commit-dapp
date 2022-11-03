@@ -120,7 +120,7 @@ export default function Home() {
                   className="hover:cursor-pointer"
                   tone="green"
                   size="small"
-                  onClick={() => setInfoModalOpen(true)}>
+                  onClick={() => setDialogOpen(true)}>
                   i
                 </Tag>
               }
