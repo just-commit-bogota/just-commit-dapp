@@ -162,8 +162,12 @@ export default function Home() {
               margin: '1rem',
               backgroundColor: "#40b08b",
               borderRadius: 12,
+              color: "white",
+              boxShadow: "0rem 0.4rem 0.4rem 0rem lightGrey",
             }}
-            variant="contained"
+            tone="green"
+            variant="primary"
+            //variant="contained"
             onClick={()=> { toast.error('Coming soon! Working on it... ') } }// write();
             >
             Commit
