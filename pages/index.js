@@ -4,7 +4,7 @@ import styles from '../styles/Home.module.css'
 import { useState, useEffect } from 'react'
 import abi from "../contracts/CommitManager.json"
 import { ethers } from 'ethers'
-import { Tag, Typography, Input, Dialog} from '@ensdomains/thorin'
+import { Tag, Typography, Input, Dialog } from '@ensdomains/thorin'
 import Button from '@mui/material/Button'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import toast, { Toaster } from 'react-hot-toast'
@@ -31,14 +31,10 @@ export default function Home() {
     addressOrName: contractAddress,
     contractInterface: abi.abi,
     functionName: "createCommit",
-    args: [commitDescription,commitTo, validThrough, { value: ethers.utils.parseEther(commitAmount)}]
+    args: [commitDescription, commitTo, validThrough, { value: ethers.utils.parseEther(commitAmount) }]
   })
   const { data, isLoading, isSuccess, write } = useContractWrite(config)
-  
-  useEffect(() => {
-    console.log({dialogOpen})
-  }, [dialogOpen])
-  
+
   return (
     <>
       <Head>
@@ -55,7 +51,7 @@ export default function Home() {
         <div className="flex space-x-0 sm:space-x-10 items-center">
           <a className="collapse sm:visible"
             href="./">
-            <img src="./logo.png"/>
+            <img src="./logo.png" />
           </a>
           {/*
           <Dropdown
@@ -81,25 +77,26 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="container container--flex">
+      <div id="notHeader" className="container container--flex">
         <div className="heading text-3xl font-bold">
           Make a Commitment
         </div>
-        
+
         <form
+          id="form"
           className="form"
           onSubmit={async (e) => {
             e.preventDefault()
             // Toast checks
-            
+
           }}>
-          
+
           <div className="col">
             <Input
               label="Commitment"
               maxLength={140}
               placeholder="Strength workout"
-              labelSecondary = {
+              labelSecondary={
                 <Tag
                   className="hover:cursor-pointer"
                   tone="green"
@@ -110,12 +107,12 @@ export default function Home() {
               }
               onChange={(e) => setCommitDescription(e.target.value)}
               required
-            />    
+            />
             <Input
               label="To"
               maxLength={42}
               value="justcommit.eth"
-              labelSecondary = {
+              labelSecondary={
                 <Tag
                   className="hover:cursor-pointer"
                   tone="green"
@@ -132,8 +129,8 @@ export default function Home() {
             <Input
               label="Amount"
               placeholder="10"
-              step = "10"
-              min = {0}
+              step="10"
+              min={0}
               max={100}
               type="number"
               units="USDC"
@@ -154,10 +151,10 @@ export default function Home() {
               required
             />
           </div>
-          
+
           {/* the Commit button */}
           {!isLoading && (
-            <Button style ={{
+            <Button style={{
               width: '32%',
               margin: '1rem',
               backgroundColor: "#40b08b",
@@ -165,25 +162,31 @@ export default function Home() {
               color: "white",
               boxShadow: "0rem 0.4rem 0.4rem 0rem lightGrey",
             }}
-            tone="green"
-            variant="primary"
-            //variant="contained"
-            onClick={()=> { toast.error('Coming soon! Working on it... ') } }// write();
+              tone="green"
+              variant="primary"
+              onClick={() => { toast.error('Coming soon! Working on it... ') }}// write();
             >
-            Commit
-          </Button>
+              Commit
+            </Button>
           )}
 
           <Toaster position="bottom-center" />
-
-          {dialogOpen && (
-            <Dialog
-              open={dialogOpen}
-              variant="closable"
-              onDismiss={() => setDialogOpen(false)}
-            >
-              Hi
-            </Dialog>
+          
+          {dialogOpen && ( 
+            <div>
+              <Dialog
+                style={{
+                  "opacity": "100%",
+                  "display": "block",
+                  "height": "70%",
+                }}
+                open={dialogOpen}
+                variant="closable"
+                onDismiss={() => setDialogOpen(false)}
+              >
+                Hi
+              </Dialog>
+            </div>
           )}
 
           {/*
@@ -193,7 +196,7 @@ export default function Home() {
             </div>
           )}
           */}
-          
+
         </form>
       </div>
     </>

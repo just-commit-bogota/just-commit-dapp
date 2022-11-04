@@ -85,6 +85,12 @@ a {
 }
 
 /*
+:not(modal) {
+  filter: blur(8px);
+}
+*/
+
+/*
  * source: https://loading.io/css/
  * license: CC0 (Creative Commons)
  */
