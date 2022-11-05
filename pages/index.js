@@ -106,7 +106,7 @@ export default function Home() {
                 </Tag>
               }
               error={(commitDescription.match(/^[a-z0-9]+$/i) ||
-                      commitDescription.length == 0) ? null : "alphanumeric only"}
+                      commitDescription.length == 0) ? null : "Make it alphanumeric"}
               onChange={(e) => setCommitDescription(e.target.value)}
               required
             />
@@ -149,7 +149,7 @@ export default function Home() {
               step={1}
               type="number"
               units={((validThrough - dayjs()) / 3600) > 1 ? 'hours' : 'hour'}
-              error={((validThrough - dayjs()) / 3600) > 12 ? "12 hours max" : null}
+              error={((validThrough - dayjs()) / 3600) > 12 ? "Make it less than 13 hours" : null}
               //parentStyles={{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setValidThrough(e.target.value * 3600 + dayjs())}
               required
