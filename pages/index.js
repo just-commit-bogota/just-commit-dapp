@@ -18,9 +18,9 @@ export default function Home() {
   // state variables
   const [dialogOpen, setDialogOpen] = useState(false);
   const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState('')
-  const [commitAmount, setCommitAmount] = useState('0')
-  const [validThrough, setValidThrough] = useState('0')
+  const [commitTo, setCommitTo] = useState('') // set to justcommit.eth for now
+  const [commitAmount, setCommitAmount] = useState(20)
+  const [validThrough, setValidThrough] = useState(1)
 
   // smart contract data
   const provider = useProvider()
@@ -31,7 +31,7 @@ export default function Home() {
     addressOrName: contractAddress,
     contractInterface: abi.abi,
     functionName: "createCommit",
-    args: [commitDescription, commitTo, validThrough, { value: ethers.utils.parseEther(commitAmount) }]
+    args: [commitDescription, commitTo, validThrough, { value: ethers.utils.parseEther(String(commitAmount)) }]
   })
   const { data, isLoading, isSuccess, write } = useContractWrite(config)
 
@@ -89,13 +89,19 @@ export default function Home() {
             e.preventDefault()
             // Toast checks
 
+            {/*
+            if (commitDescription.match(/^[a-z0-9]+$/i) == false) {
+              toast.error('Commitment text must be alphanumeric')
+              return
+            }
+            */}
           }}>
 
           <div className="col">
             <Input
               label="Commitment"
               maxLength={140}
-              placeholder="Strength workout"
+              placeholder=""
               labelSecondary={
                 <Tag
                   className="hover:cursor-pointer"
@@ -128,9 +134,9 @@ export default function Home() {
             />
             <Input
               label="Amount"
-              placeholder="10"
-              step="10"
-              min={0}
+              placeholder="20"
+              min={1}
+              step={1}
               max={100}
               type="number"
               units="USDC"
@@ -142,10 +148,11 @@ export default function Home() {
             <Input
               label="Duration"
               placeholder="1"
-              type="number"
-              units={((validThrough - dayjs()) / 3600) > 1 ? 'hours' : 'hour'}
               min={1}
               max={12}
+              step={1}
+              type="number"
+              units={((validThrough - dayjs()) / 3600) > 1 ? 'hours' : 'hour'}
               //parentStyles={{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setValidThrough(e.target.value * 3600 + dayjs())}
               required
@@ -157,14 +164,15 @@ export default function Home() {
             <Button style={{
               width: '32%',
               margin: '1rem',
-              backgroundColor: "#40b08b",
+              backgroundColor: commitDescription.length < 6 ? "rgb(73 179 147 / 35%)": "rgb(73,179,147)",
               borderRadius: 12,
               color: "white",
               boxShadow: "0rem 0.4rem 0.4rem 0rem lightGrey",
             }}
               tone="green"
               variant="primary"
-              onClick={() => { toast.error('Coming soon! Working on it... ') }}// write();
+              disabled = {commitDescription == ''}
+              onClick={() => { toast.error('Coming soon! Working on it... ') }} // write();
             >
               Commit
             </Button>
@@ -184,7 +192,7 @@ export default function Home() {
                 variant="closable"
                 onDismiss={() => setDialogOpen(false)}
               >
-                Hi
+                Lorem Ipsum
               </Dialog>
             </div>
           )}
