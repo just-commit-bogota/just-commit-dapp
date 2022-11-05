@@ -77,7 +77,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div id="notHeader" className="container container--flex">
+      <div className="container container--flex">
         <div className="heading text-3xl font-bold">
           Make a Commitment
         </div>
@@ -114,15 +114,6 @@ export default function Home() {
               label="To"
               maxLength={42}
               value="justcommit.eth"
-              labelSecondary={
-                <Tag
-                  className="hover:cursor-pointer"
-                  tone="green"
-                  size="small"
-                  onClick={() => setDialogOpen(true)}>
-                  i
-                </Tag>
-              }
               //parentStyles = {{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setCommitTo(e.target.value)}
               required
@@ -188,11 +179,13 @@ export default function Home() {
                   "display": "block",
                   "height": "70%",
                 }}
+                //title="Closable Dialog"
+                subtitle="Ask Yourself"
                 open={dialogOpen}
                 variant="closable"
                 onDismiss={() => setDialogOpen(false)}
               >
-                Lorem Ipsum
+                Can you submit a picture that proves this?
               </Dialog>
             </div>
           )}
