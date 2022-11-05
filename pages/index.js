@@ -89,12 +89,6 @@ export default function Home() {
             e.preventDefault()
             // Toast checks
 
-            {/*
-            if (commitDescription.match(/^[a-z0-9]+$/i) == false) {
-              toast.error('Commitment text must be alphanumeric')
-              return
-            }
-            */}
           }}>
 
           <div className="col">
@@ -111,6 +105,8 @@ export default function Home() {
                   i
                 </Tag>
               }
+              error={(commitDescription.match(/^[a-z0-9]+$/i) ||
+                      commitDescription.length == 0) ? null : "alphanumeric only"}
               onChange={(e) => setCommitDescription(e.target.value)}
               required
             />
@@ -165,7 +161,9 @@ export default function Home() {
             <Button style={{
               width: '32%',
               margin: '1rem',
-              backgroundColor: (commitDescription.length < 6 || ((validThrough - dayjs()) / 3600) > 12) ?
+              backgroundColor: (commitDescription.length < 6 ||
+                               !commitDescription.match(/^[a-z0-9]+$/i)) ||
+                               ((validThrough - dayjs()) / 3600) > 12 ?
                                 "rgb(73 179 147 / 35%)": "rgb(73 179 147)",
               borderRadius: 12,
               color: "white",
@@ -173,7 +171,7 @@ export default function Home() {
             }}
               tone="green"
               variant="primary"
-              disabled = {commitDescription == '' || validThrough > 12}
+              disabled = {commitDescription.length < 6 || ((validThrough - dayjs()) / 3600) > 12}
               onClick={() => { toast.error('Coming soon! Working on it... ') }} // write();
             >
               Commit
