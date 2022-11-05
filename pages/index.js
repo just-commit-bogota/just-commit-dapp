@@ -137,7 +137,7 @@ export default function Home() {
               placeholder="20"
               min={1}
               step={1}
-              max={100}
+              max={100} // should this be capped?
               type="number"
               units="USDC"
               //parentStyles = {{ backgroundColor: '#f1fcf8' }}
@@ -153,6 +153,7 @@ export default function Home() {
               step={1}
               type="number"
               units={((validThrough - dayjs()) / 3600) > 1 ? 'hours' : 'hour'}
+              error={((validThrough - dayjs()) / 3600) > 12 ? "12 hours max" : null}
               //parentStyles={{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setValidThrough(e.target.value * 3600 + dayjs())}
               required
@@ -164,14 +165,15 @@ export default function Home() {
             <Button style={{
               width: '32%',
               margin: '1rem',
-              backgroundColor: commitDescription.length < 6 ? "rgb(73 179 147 / 35%)": "rgb(73,179,147)",
+              backgroundColor: (commitDescription.length < 6 || ((validThrough - dayjs()) / 3600) > 12) ?
+                                "rgb(73 179 147 / 35%)": "rgb(73 179 147)",
               borderRadius: 12,
               color: "white",
               boxShadow: "0rem 0.4rem 0.4rem 0rem lightGrey",
             }}
               tone="green"
               variant="primary"
-              disabled = {commitDescription == ''}
+              disabled = {commitDescription == '' || validThrough > 12}
               onClick={() => { toast.error('Coming soon! Working on it... ') }} // write();
             >
               Commit
