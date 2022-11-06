@@ -16,7 +16,7 @@ import dayjs from "dayjs";
 export default function Home() {
 
   // state variables
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [modalOpen, setmodalOpen] = useState(false);
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState('') // hard-coded to "justcommit.eth" for now
   const [commitAmount, setCommitAmount] = useState(20)
@@ -102,12 +102,12 @@ export default function Home() {
                   className="hover:cursor-pointer"
                   tone="green"
                   size="small"
-                  onClick={() => setDialogOpen(true)}>
+                  onClick={() => setmodalOpen(true)}>
                   i
                 </Tag>
               }
               error={(commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                      commitDescription.length == 0) ? null : "Alpha-numeric only."}
+                      commitDescription.length == 0) ? null : "Alphanumeric only."}
               onChange={(e) => setCommitDescription(e.target.value)}
               required
             />
@@ -172,8 +172,9 @@ export default function Home() {
 
           <Toaster position="bottom-center" />
           
-          {dialogOpen && ( 
+          {modalOpen && ( 
             <div>
+              {/*
               <Dialog
                 style={{
                   "opacity": "100%",
@@ -181,14 +182,15 @@ export default function Home() {
                   "height": "70%",
                   "on:hover": "disabled"
                 }}
-                //title="Closable Dialog"
+                //title="Closable modal"
                 subtitle="Ask Yourself"
-                open={dialogOpen}
+                open={modalOpen}
                 variant="closable"
-                onDismiss={() => setDialogOpen(false)}
+                onDismiss={() => setmodalOpen(false)}
               >
                 Can a picture prove this?
               </Dialog>
+              */}
             </div>
           )}
 
