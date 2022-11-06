@@ -16,7 +16,6 @@ import dayjs from "dayjs";
 export default function Home() {
 
   // state variables
-  const [modalOpen, setmodalOpen] = useState(false);
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState('') // hard-coded to "justcommit.eth" for now
   const [commitAmount, setCommitAmount] = useState(20)
