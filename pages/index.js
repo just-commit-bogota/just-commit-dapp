@@ -110,7 +110,7 @@ export default function Home() {
                 </Tag>
               }
               error={(commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                      commitDescription.length == 0) ? null : "Alphanumeric only."}
+                      commitDescription.length == 0) ? null : "Alphanumeric only"}
               onChange={(e) => setCommitDescription(e.target.value)}
               required
             />
