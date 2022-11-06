@@ -106,7 +106,7 @@ export default function Home() {
                   i
                 </Tag>
               }
-              error={(commitDescription.match(/^[-_ a-zA-Z0-9]+$/) ||
+              error={(commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
                       commitDescription.length == 0) ? null : "Alpha-numeric only."}
               onChange={(e) => setCommitDescription(e.target.value)}
               required
@@ -154,7 +154,7 @@ export default function Home() {
               width: '32%',
               margin: '1rem',
               backgroundColor: (commitDescription.length < 6 ||
-                               !commitDescription.match(/^[-_ a-zA-Z0-9]+$/)) ||
+                               !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/)) ||
                                ((validThrough - dayjs()) / 3600) > 12 ?
                                 "rgb(73 179 147 / 35%)": "rgb(73 179 147)",
               borderRadius: 12,
