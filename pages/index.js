@@ -4,7 +4,7 @@ import styles from '../styles/Home.module.css'
 import { useState, useEffect } from 'react'
 import abi from "../contracts/CommitManager.json"
 import { ethers } from 'ethers'
-import { Tag, Typography, Input, Dialog } from '@ensdomains/thorin'
+import { Tag, Typography, Input } from '@ensdomains/thorin'
 import Button from '@mui/material/Button'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import toast, { Toaster } from 'react-hot-toast'
@@ -102,7 +102,10 @@ export default function Home() {
                   className="hover:cursor-pointer"
                   tone="green"
                   size="small"
-                  onClick={() => setmodalOpen(true)}>
+                  onClick={() =>
+                    {toast('📸 Will your photo confidently prove this?'),
+                    { position: 'top-center' }}}
+                >
                   i
                 </Tag>
               }
@@ -163,36 +166,16 @@ export default function Home() {
             }}
               tone="green"
               variant="primary"
-              disabled = {commitDescription.length < 6 || ((validThrough - dayjs()) / 3600) > 12}
-              onClick={() => { toast.error('Coming soon! Working on it... ') }} // write();
+              disabled = {commitDescription.length < 6 ||
+                         ((validThrough - dayjs()) / 3600) > 12 ||
+                         !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/)}
+              onClick={() => { toast.error('Coming soon! Working on it... ', { position: 'bottom-center' })}} // write();
             >
               Commit
             </Button>
           )}
 
-          <Toaster position="bottom-center" />
-          
-          {modalOpen && ( 
-            <div>
-              {/*
-              <Dialog
-                style={{
-                  "opacity": "100%",
-                  "display": "block",
-                  "height": "70%",
-                  "on:hover": "disabled"
-                }}
-                //title="Closable modal"
-                subtitle="Ask Yourself"
-                open={modalOpen}
-                variant="closable"
-                onDismiss={() => setmodalOpen(false)}
-              >
-                Can a picture prove this?
-              </Dialog>
-              */}
-            </div>
-          )}
+          <Toaster/>
 
           {/*
           {isLoading && (
