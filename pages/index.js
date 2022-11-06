@@ -106,8 +106,8 @@ export default function Home() {
                   i
                 </Tag>
               }
-              error={(commitDescription.match(/^[a-z0-9]+$/i) ||
-                      commitDescription.length == 0) ? null : "Make it alphanumeric"}
+              error={(commitDescription.match(/^[-_ a-zA-Z0-9]+$/) ||
+                      commitDescription.length == 0) ? null : "Alpha-numeric only."}
               onChange={(e) => setCommitDescription(e.target.value)}
               required
             />
@@ -141,7 +141,7 @@ export default function Home() {
               step={1}
               type="number"
               units={((validThrough - dayjs()) / 3600) > 1 ? 'hours' : 'hour'}
-              error={((validThrough - dayjs()) / 3600) > 12 ? "Make it less than 13 hours" : null}
+              error={((validThrough - dayjs()) / 3600) > 12 ? "Up to 12 hours" : null}
               //parentStyles={{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setValidThrough(e.target.value * 3600 + dayjs())}
               required
@@ -154,7 +154,7 @@ export default function Home() {
               width: '32%',
               margin: '1rem',
               backgroundColor: (commitDescription.length < 6 ||
-                               !commitDescription.match(/^[a-z0-9]+$/i)) ||
+                               !commitDescription.match(/^[-_ a-zA-Z0-9]+$/)) ||
                                ((validThrough - dayjs()) / 3600) > 12 ?
                                 "rgb(73 179 147 / 35%)": "rgb(73 179 147)",
               borderRadius: 12,
@@ -179,6 +179,7 @@ export default function Home() {
                   "opacity": "100%",
                   "display": "block",
                   "height": "70%",
+                  "on:hover": "disabled"
                 }}
                 //title="Closable Dialog"
                 subtitle="Ask Yourself"
@@ -186,7 +187,7 @@ export default function Home() {
                 variant="closable"
                 onDismiss={() => setDialogOpen(false)}
               >
-                Can you submit a picture that proves this?
+                Can a picture prove this?
               </Dialog>
             </div>
           )}
