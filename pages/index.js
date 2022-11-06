@@ -18,7 +18,7 @@ export default function Home() {
   // state variables
   const [dialogOpen, setDialogOpen] = useState(false);
   const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState('') // set to justcommit.eth for now
+  const [commitTo, setCommitTo] = useState('') // hard-coded to "justcommit.eth" for now
   const [commitAmount, setCommitAmount] = useState(20)
   const [validThrough, setValidThrough] = useState(1)
 
