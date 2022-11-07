@@ -110,7 +110,7 @@ export default function Home() {
                   tone="green"
                   size="small"
                   onClick={() =>
-                    {toast('📸 Will your photo confidently prove this?'),
+                    {toast('📸 Can a pic or screenshot prove this?'),
                     { position: 'top-center' }}}
                 >
                   i
