@@ -1,10 +1,12 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
 import styles from '../styles/Home.module.css'
 import { useState, useEffect } from 'react'
+import { Route, Routes } from 'react-router-dom';
 import abi from "../contracts/CommitManager.json"
 import { ethers } from 'ethers'
-import { Tag, Typography, Input } from '@ensdomains/thorin'
+import { Tag, Typography, Input, Dropdown } from '@ensdomains/thorin'
 import Button from '@mui/material/Button'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import toast, { Toaster } from 'react-hot-toast'
@@ -12,6 +14,9 @@ import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import { useWaitForTransaction } from 'wagmi'
 import dayjs from "dayjs";
+import Feed from './feed';
+import Active from './active';
+import MyHistory from './my-history';
 
 export default function Home() {
 
@@ -47,24 +52,26 @@ export default function Home() {
       </Head>
 
       <div className="header w-full inline-grid justify-between header--absolute bg-white">
-        <div className="flex space-x-0 sm:space-x-10 items-center">
-          <a className="collapse sm:visible"
-            href="./">
-            <img src="./logo.png" />
-          </a>
-          {/*
-          <Dropdown
-            className="hidden sm:inline"
+        <div className="flex space-x-0 items-center">
+          <Dropdown className=""
             inner
+            chevron = {false}
             items={[
-              { label: 'Active', onClick: () => null, color: 'text' },
-              { label: 'Past', onClick: () => null, color: 'text' },
+              { label: 'Active', color: 'text', onClick: () => {toast("⏳ Coming soon!")} },
+              { label: 'My History', color: 'text', onClick: () => {toast("⏳ Coming soon!")} },
+              { label: 'Feed', color: 'green', onClick: () => {toast("⏳ Coming soon!")} },
+              /*{ label: <Link href="/active">Active</Link>, color: 'text' },*/
+              /*{ label: <Link href="/my-history">My History</Link>, color: 'text' },*/
+              /*{ label: <Link href="/feed">Feed</Link>, color: 'green' },*/
+              { label: <Link href="https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
+                             target="_blank" rel="noopener noreferrer">
+                             About</Link>, color: 'textSecondary' },
             ]}
-            label="Commitments"
+            label= <img src="./logo.png" />
           />
-          */}
         </div>
-        <div className="flex space-x-0 sm:space-x-10 items-center gap-10 sm:gap-0">
+        <div className="flex space-x-0 sm:space-x-10 text-sm sm:text-base items-center gap-10 sm:gap-0">
+          {/*
           <a
             className="font-medium p-1 truncate underline underline-offset-4 decoration-[#1DD297] decoration-1
                        hover:decoration-8 hover:scale-105"
@@ -73,7 +80,8 @@ export default function Home() {
             rel="noopener noreferrer">
             About
           </a>
-          <ConnectButton className="mr-10 hover:shadow-lg" />
+          */}
+          <ConnectButton className="hover:shadow-lg" />
         </div>
       </div>
 
@@ -102,7 +110,7 @@ export default function Home() {
                   tone="green"
                   size="small"
                   onClick={() =>
-                    {toast('📸 Will your photo confidently prove this?'),
+                    {toast('📸 Can a pic or screenshot prove this?'),
                     { position: 'top-center' }}}
                 >
                   i

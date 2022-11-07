@@ -168,12 +168,9 @@ a {
 }
 
 @media screen and (max-width: 640px) {
-  img {
-    display: none;
-  }
   .header {
-    justify-content: center;
-    padding: 1rem 3rem;
+    justify-content: space-between;
+    padding: 1rem 1rem;
   }
   .form {
     width: 90vw;
