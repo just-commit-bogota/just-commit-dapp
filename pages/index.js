@@ -1,10 +1,12 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
 import styles from '../styles/Home.module.css'
 import { useState, useEffect } from 'react'
+import { Route, Routes } from 'react-router-dom';
 import abi from "../contracts/CommitManager.json"
 import { ethers } from 'ethers'
-import { Tag, Typography, Input } from '@ensdomains/thorin'
+import { Tag, Typography, Input, Dropdown } from '@ensdomains/thorin'
 import Button from '@mui/material/Button'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import toast, { Toaster } from 'react-hot-toast'
@@ -12,6 +14,9 @@ import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import { useWaitForTransaction } from 'wagmi'
 import dayjs from "dayjs";
+import Feed from './feed';
+import Active from './active';
+import MyHistory from './my-history';
 
 export default function Home() {
 
@@ -52,17 +57,16 @@ export default function Home() {
             href="./">
             <img src="./logo.png" />
           </a>
-          {/*
           <Dropdown
             className="hidden sm:inline"
             inner
             items={[
-              { label: 'Active', onClick: () => null, color: 'text' },
-              { label: 'Past', onClick: () => null, color: 'text' },
+              { label: <Link href="/active">Active</Link>, color: 'text' },
+              { label: <Link href="/my-history">My History</Link>, color: 'text' },
+              { label: <Link href="/feed">Feed</Link>, color: 'green' },
             ]}
             label="Commitments"
           />
-          */}
         </div>
         <div className="flex space-x-0 sm:space-x-10 items-center gap-10 sm:gap-0">
           <a
