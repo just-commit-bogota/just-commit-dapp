@@ -35,7 +35,7 @@ export default function Home() {
     addressOrName: contractAddress,
     contractInterface: abi.abi,
     functionName: "createCommit",
-    args: [commitDescription, commitTo, validThrough, { value: ethers.utils.parseEther(String(commitAmount)) }]
+    args: [commitDescription, commitTo, validThrough, { value: ((commitAmount == "") ? null : ethers.utils.parseEther(String(commitAmount))) }]
   })
   const { data, isLoading, isSuccess, write } = useContractWrite(config)
 
@@ -135,7 +135,7 @@ export default function Home() {
               step={1}
               max={100} // should this be capped?
               type="number"
-              units="USDC"
+              units="USDC" // change "Goerli ETH" when live + add 
               //parentStyles = {{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setCommitAmount(e.target.value)}
               required
