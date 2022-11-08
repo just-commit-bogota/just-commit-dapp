@@ -12,7 +12,7 @@ export default function Header() {
             inner
             chevron = {false}
             items= {[   
-              { label: <Link href="./">Home</Link>, color: 'text' },
+              { label: <Link href="./">⚡</Link>, color: 'text' },
               { label: <Link href="./active">Active</Link>, color: 'text' },
               { label: <Link href="./my-history">My History</Link>, color: 'text' },
               { label: <Link href="./feed">Feed</Link>, color: 'green' },
