@@ -182,7 +182,7 @@ export default function Home() {
             </Button>
           )}
 
-          <Toaster toastOptions={{duration: '2000'}}/>
+          <Toaster toastOptions={{duration: '100'}}/>
 
           {/*
           {isLoading && (
