@@ -58,12 +58,21 @@ export default function Home() {
             inner
             chevron = {false}
             items= {[
-              { label: <Link href="/active">Active</Link>, color: 'text' },
-              { label: <Link href="/my-history">My History</Link>, color: 'text' },
-              { label: <Link href="/feed">Feed</Link>, color: 'green' },
+              
+              // { label: <Link href="/active">Active</Link>, color: 'text' },
+              // { label: <Link href="/my-history">My History</Link>, color: 'text' },
+              // { label: <Link href="/feed">Feed</Link>, color: 'green' },
+              // { label: <Link href="https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
+              //                target="_blank" rel="noopener noreferrer">
+              //                About</Link>, color: 'textSecondary' },
+              
+              { label: 'Active', color: 'text', onClick: () => {toast("⏳ Coming soon!")} },
+              { label: 'My History', color: 'text', onClick: () => {toast("⏳ Coming soon!")} },
+              { label: 'Feed', color: 'green', onClick: () => {toast("⏳ Coming soon!")} },
               { label: <Link href="https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
                              target="_blank" rel="noopener noreferrer">
                              About</Link>, color: 'textSecondary' },
+              
             ]}
             label= <img src="./logo.png" />
           />
