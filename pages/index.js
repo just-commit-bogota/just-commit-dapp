@@ -6,9 +6,8 @@ import { useState, useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom';
 import abi from "../contracts/CommitManager.json"
 import { ethers } from 'ethers'
-import { Tag, Typography, Input, Dropdown } from '@ensdomains/thorin'
+import { Tag, Input, Dropdown } from '@ensdomains/thorin'
 import Button from '@mui/material/Button'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
@@ -17,6 +16,7 @@ import dayjs from "dayjs";
 import Feed from './feed';
 import Active from './active';
 import MyHistory from './my-history';
+import Header from '../components/Header.js'
 
 export default function Home() {
 
@@ -35,7 +35,7 @@ export default function Home() {
     addressOrName: contractAddress,
     contractInterface: abi.abi,
     functionName: "createCommit",
-    args: [commitDescription, commitTo, validThrough, { value: ethers.utils.parseEther(String(commitAmount)) }]
+    args: [commitDescription, commitTo, validThrough, { value: ((commitAmount == "") ? null : ethers.utils.parseEther(String(commitAmount))) }]
   })
   const { data, isLoading, isSuccess, write } = useContractWrite(config)
 
@@ -51,46 +51,7 @@ export default function Home() {
         <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
       </Head>
 
-      <div className="header w-full inline-grid justify-between header--absolute bg-white">
-        <div className="flex items-center">
-          <Dropdown
-            style = {{ boxShadow: "0 2px 8px rgb(0 0 0 / 30%)", borderRadius: "10px" }}
-            inner
-            chevron = {false}
-            items= {[
-              
-              // { label: <Link href="/active">Active</Link>, color: 'text' },
-              // { label: <Link href="/my-history">My History</Link>, color: 'text' },
-              // { label: <Link href="/feed">Feed</Link>, color: 'green' },
-              // { label: <Link href="https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
-              //                target="_blank" rel="noopener noreferrer">
-              //                About</Link>, color: 'textSecondary' },
-              
-              { label: 'Active', color: 'text', onClick: () => {toast("⏳ Coming soon!")} },
-              { label: 'My History', color: 'text', onClick: () => {toast("⏳ Coming soon!")} },
-              { label: 'Feed', color: 'green', onClick: () => {toast("⏳ Coming soon!")} },
-              { label: <Link href="https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
-                             target="_blank" rel="noopener noreferrer">
-                             About</Link>, color: 'textSecondary' },
-              
-            ]}
-            label= <img src="./logo.png" />
-          />
-        </div>
-        <div className="flex space-x-0 sm:space-x-10 text-sm sm:text-base items-center gap-10 sm:gap-0">
-          {/*
-          <a
-            className="font-medium p-1 truncate underline underline-offset-4 decoration-[#1DD297] decoration-1
-                       hover:decoration-8 hover:scale-105"
-            href="https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
-            target="_blank"
-            rel="noopener noreferrer">
-            About
-          </a>
-          */}
-          <ConnectButton className="hover:shadow-lg" />
-        </div>
-      </div>
+      <Header />
 
       <div className="container container--flex">
         <div className="heading text-3xl font-bold">
@@ -106,7 +67,7 @@ export default function Home() {
 
           }}>
 
-          <div className="col">
+          <div className="col flex flex-col">
             <Input
               label="Commitment"
               maxLength={140}
@@ -144,7 +105,7 @@ export default function Home() {
               step={1}
               max={100} // should this be capped?
               type="number"
-              units="USDC"
+              units="USDC" // change "Goerli ETH" when live + add 
               //parentStyles = {{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setCommitAmount(e.target.value)}
               required
