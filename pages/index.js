@@ -52,17 +52,15 @@ export default function Home() {
       </Head>
 
       <div className="header w-full inline-grid justify-between header--absolute bg-white">
-        <div className="flex space-x-0 items-center">
-          <Dropdown className=""
+        <div className="flex items-center">
+          <Dropdown
+            style = {{ boxShadow: "0 2px 8px rgb(0 0 0 / 30%)", borderRadius: "10px" }}
             inner
             chevron = {false}
-            items={[
-              { label: 'Active', color: 'text', onClick: () => {toast("⏳ Coming soon!")} },
-              { label: 'My History', color: 'text', onClick: () => {toast("⏳ Coming soon!")} },
-              { label: 'Feed', color: 'green', onClick: () => {toast("⏳ Coming soon!")} },
-              /*{ label: <Link href="/active">Active</Link>, color: 'text' },*/
-              /*{ label: <Link href="/my-history">My History</Link>, color: 'text' },*/
-              /*{ label: <Link href="/feed">Feed</Link>, color: 'green' },*/
+            items= {[
+              { label: <Link href="/active">Active</Link>, color: 'text' },
+              { label: <Link href="/my-history">My History</Link>, color: 'text' },
+              { label: <Link href="/feed">Feed</Link>, color: 'green' },
               { label: <Link href="https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
                              target="_blank" rel="noopener noreferrer">
                              About</Link>, color: 'textSecondary' },
@@ -147,11 +145,11 @@ export default function Home() {
               label="Duration"
               placeholder="1"
               min={1}
-              max={12}
+              max={24}
               step={1}
               type="number"
               units={((validThrough - dayjs()) / 3600) > 1 ? 'hours' : 'hour'}
-              error={((validThrough - dayjs()) / 3600) > 12 ? "Up to 12 hours" : null}
+              error={((validThrough - dayjs()) / 3600) > 24 ? "24 hour maximum" : null}
               //parentStyles={{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setValidThrough(e.target.value * 3600 + dayjs())}
               required
@@ -165,7 +163,7 @@ export default function Home() {
               margin: '1rem',
               backgroundColor: (commitDescription.length < 6 ||
                                !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/)) ||
-                               ((validThrough - dayjs()) / 3600) > 12 ?
+                               ((validThrough - dayjs()) / 3600) > 24 ?
                                 "rgb(73 179 147 / 35%)": "rgb(73 179 147)",
               borderRadius: 12,
               color: "white",
@@ -174,7 +172,7 @@ export default function Home() {
               tone="green"
               variant="primary"
               disabled = {commitDescription.length < 6 ||
-                         ((validThrough - dayjs()) / 3600) > 12 ||
+                         ((validThrough - dayjs()) / 3600) > 24 ||
                          !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/)}
               onClick={() => { toast.error('Coming soon! Working on it... ', { position: 'bottom-center' })}} // write();
             >
@@ -182,7 +180,7 @@ export default function Home() {
             </Button>
           )}
 
-          <Toaster toastOptions={{duration: '2000'}}/>
+          <Toaster toastOptions={{duration: '200'}}/>
 
           {/*
           {isLoading && (
