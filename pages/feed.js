@@ -5,7 +5,7 @@ export default function Feed() {
   return (
     <>
       <Header />
-      <div className= "w-1/2 h-full mx-auto mt-24 p-8">
+      <div className= "w-9/10 sm:w-1/2 mx-auto mt-20 p-8">
         <div className= "flex-col justify-center">
           <Commit />
           <Commit />
