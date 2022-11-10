@@ -1,16 +1,25 @@
+import Head from 'next/head'
 import Header from "../components/Header.js"
 import Commit from "../components/Commit.js"
 
 export default function Feed() {
   return (
     <>
+      <Head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Just Commit</title>
+        <meta property="og:title" content="Just Commit" />
+        <meta name="description" content="Just Commit" />
+        <meta property="og:description" content="Just Commit" />
+        <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
+      </Head>
+      
       <Header />
-      <div className= "w-9/10 sm:w-1/2 mx-auto mt-20 p-8">
-        <div className= "flex-col justify-center">
-          <Commit />
-          <Commit />
-          <Commit />
-        </div>
+        <div className= "w-8/10 sm:w-1/2 mx-auto p-10 mt-20">
+          <div className= "flex flex-col justify-center">
+            <Commit />
+          </div>
       </div>
     </>
   )

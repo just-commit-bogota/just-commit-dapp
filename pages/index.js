@@ -67,7 +67,7 @@ export default function Home() {
 
           }}>
 
-          <div className="col flex flex-col">
+          <div className="col flex flex-col gap-3">
             <Input
               label="Commitment"
               maxLength={140}
