@@ -25,9 +25,8 @@ export default function Commit() {
             <div className="flex flex-col font-semibold align-center justify-center text-xs">&nbsp;20</div>
           </div>
           <div className="flex flex-col align-center justify-center text-lg">✅</div>
-          <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600 text-xs underline-offset-4 hover:scale-105"
-            style={{textDecoration: "underline"}}>
-            Txn
+          <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600 text-xs rounded-lg bg-sky-200 hover:bg-sky-400">
+            <a href="./">&nbsp;&nbsp;Txn&nbsp;&nbsp;</a>
           </div>
         </div>
       </div>
