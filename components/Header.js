@@ -10,7 +10,9 @@ export default function Header() {
           <Dropdown
             style = {{ boxShadow: "0 2px 8px rgb(0 0 0 / 30%)", borderRadius: "10px" }}
             inner
-            chevron =  {false}
+            shortThrow
+            chevron = {false}
+            label= <img src="./logo.png" />
             items= {[   
               { label: <Link href="./">⚡</Link>, color: 'text' },
               { label: <Link href="./active">Active</Link>, color: 'text' },
@@ -20,7 +22,6 @@ export default function Header() {
                              target="_blank" rel="noopener noreferrer">
                              About</Link>, color: 'textSecondary' },        
             ]}
-            label= <img src="./logo.png" />
           />
         </div>
         <div className="flex space-x-0 sm:space-x-10 text-sm sm:text-base items-center gap-10 sm:gap-0">

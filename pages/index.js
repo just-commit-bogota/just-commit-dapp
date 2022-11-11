@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom';
 import abi from "../contracts/CommitManager.json"
 import { ethers } from 'ethers'
-import { Tag, Input, Dropdown } from '@ensdomains/thorin'
+import { Tag, Input } from '@ensdomains/thorin'
 import Button from '@mui/material/Button'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
@@ -67,7 +67,7 @@ export default function Home() {
 
           }}>
 
-          <div className="col flex flex-col gap-3">
+          <div className="flex flex-col gap-3 w-full">
             <Input
               label="Commitment"
               maxLength={140}

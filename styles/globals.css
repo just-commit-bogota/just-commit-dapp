@@ -41,7 +41,7 @@ a {
 .container--flex {
   display: flex;
   flex-direction: column;
-  padding: 6rem 2rem 0rem 2rem;
+  padding: 8rem 2rem 0rem 2rem;
   align-items: center;
   min-height: 40vh;
   background: linear-gradient(180deg, #F1F7F5 0%, rgba(241, 247, 245, 0) 100%);
@@ -50,7 +50,7 @@ a {
 
 .heading {
   margin-top: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 550;
@@ -64,7 +64,6 @@ a {
   font-family: 'Satoshi';
   width: 100%;
 }
-
 .form {
   display: flex;
   flex-direction: column;
@@ -144,9 +143,6 @@ a {
 }
 
 @media screen and (max-width: 1200px) {
-  .col {
-    flex-direction: column;
-  }
   .header {
     text-align: center;
     padding: 1rem 3rem;
@@ -155,11 +151,11 @@ a {
     justify-content: center;
     text-align: center;
   }
-  .container--flex {
-    padding: 4rem 2rem 0rem 2rem;
-  }
   .form {
     width: 50%;
+  }
+  .container--flex {
+    padding: 4rem 2rem 0rem 2rem;
   }
 }
 
@@ -175,10 +171,6 @@ a {
     flex-direction: column;
     gap: 1rem;
     line-height: initial;
-  }
-  .col {
-    inline-size: -webkit-fill-available;
-    overflow: auto; {/*a better param for "Commitment" field?*/}
   }
   .heading {
     in-inline-size: max-content;
