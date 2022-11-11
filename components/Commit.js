@@ -13,12 +13,16 @@ export default function Commit() {
         <br></br>
         <img style={{margin:"0 -8px", maxWidth:"105%", borderRadius:"6px"}} src="./dummy-pic-1.png" />
         <div className="flex flex-row text-xs pt-2" style={{justifyContent: "space-between"}}>
-          <div className="flex flex-col w-2/5" style={{justifyContent: "space-between"}}>
-            <div className="flex flex-row" style={{justifyContent: "space-between"}}><b>From </b>belf.eth</div>
-            <div className="flex flex-row" style={{justifyContent: "space-between"}}><b>To </b>justcommit.eth</div>
+          <div className="flex flex-col w-2/5" style={{
+            justifyContent: "space-between",
+            borderRight:"2px solid rgba(0, 0, 0, 0.18)",
+            borderRadius: "6px",
+          }}>
+            <div className="flex flex-row" style={{justifyContent: "space-between"}}><b>From </b>belf.eth&nbsp;</div>
+            <div className="flex flex-row" style={{justifyContent: "space-between"}}><b>To </b>justcommit.eth&nbsp;</div>
           </div>
           <div className="flex flex-row w-1/5 align-center justify-center"
-               style={{border:"1px solid rgba(50, 50, 50, .5)", borderRadius: "6px"}}>
+               style={{border:"2px solid rgba(50, 50, 50, .5)", borderRadius: "10px"}}>
             <div className="flex flex-col align-center justify-center">
               <img className="h-5" src="./usdc-logo.png" />
             </div>
