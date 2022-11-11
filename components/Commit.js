@@ -15,11 +15,12 @@ export default function Commit() {
         <div className="flex flex-row text-xs pt-2" style={{justifyContent: "space-between"}}>
           <div className="flex flex-col w-2/5" style={{
             justifyContent: "space-between",
+            borderLeft:"2px solid rgba(0, 0, 0, 0.18)",
             borderRight:"2px solid rgba(0, 0, 0, 0.18)",
             borderRadius: "6px",
           }}>
-            <div className="flex flex-row" style={{justifyContent: "space-between"}}><b>From </b>belf.eth&nbsp;</div>
-            <div className="flex flex-row" style={{justifyContent: "space-between"}}><b>To </b>justcommit.eth&nbsp;</div>
+            <div className="flex flex-row" style={{justifyContent: "space-between"}}><b>&nbsp;From </b>belf.eth&nbsp;</div>
+            <div className="flex flex-row" style={{justifyContent: "space-between"}}><b>&nbsp;To </b>justcommit.eth&nbsp;</div>
           </div>
           <div className="flex flex-row w-1/5 align-center justify-center"
                style={{border:"2px solid rgba(50, 50, 50, .5)", borderRadius: "10px"}}>
