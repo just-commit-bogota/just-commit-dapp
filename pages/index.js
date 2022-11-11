@@ -106,6 +106,7 @@ export default function Home() {
               max={100} // should this be capped?
               type="number"
               units="USDC" // change "Goerli ETH" when live + add 
+              error={(commitAmount) > 9999 ? "Maximum of $9999" : null}
               //parentStyles = {{ backgroundColor: '#f1fcf8' }}
               onChange={(e) => setCommitAmount(e.target.value)}
               required
@@ -133,7 +134,8 @@ export default function Home() {
               margin: '1rem',
               backgroundColor: (commitDescription.length < 6 ||
                                !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/)) ||
-                               ((validThrough - dayjs()) / 3600) > 24 ?
+                               ((validThrough - dayjs()) / 3600 > 24) ||
+                               (commitAmount > 9999) ?
                                 "rgb(73 179 147 / 35%)": "rgb(73 179 147)",
               borderRadius: 12,
               color: "white",
