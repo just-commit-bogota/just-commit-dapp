@@ -150,6 +150,7 @@ a {
   .heading {
     justify-content: center;
     text-align: center;
+    margin-top: 3rem;
   }
   .form {
     width: 50%;
