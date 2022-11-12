@@ -5,9 +5,9 @@ export default function Commit() {
     <>
       <div className="border-solid border-2 border-neutral-600/20 bg-white p-4 rounded-md mb-10 shadow-md">
         <div className="flex flex-row" style = {{justifyContent: "space-between"}}>
-          <div className="w-1/2 text-sm block">Stretching exercises</div>
+          <div className="w-4/5 text-sm block">Stretching exercises hello this ish</div>
           <div className="flex align-left space-x-2">
-            <div className="text-slate-400 opacity-80">5h ago</div>
+            <div className="text-sm text-slate-400 opacity-80">5h ago</div>
           </div>
         </div>
         <br></br>
@@ -40,9 +40,9 @@ export default function Commit() {
 
       <div className="border-solid border-2 border-neutral-600/20 bg-white p-4 rounded-md mb-10 shadow-md">
         <div className="flex flex-row" style = {{justifyContent: "space-between"}}>
-          <div className="w-1/2 text-sm block">100 push-ups</div>
+          <div className="w-4/5 text-sm block">100 push-ups</div>
           <div className="flex align-left space-x-2">
-            <div className="text-slate-400 opacity-80">7h ago</div>
+            <div className="text-sm text-slate-400 opacity-80">7h ago</div>
           </div>
         </div>
         <br></br>

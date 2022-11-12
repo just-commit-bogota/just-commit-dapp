@@ -144,20 +144,26 @@ export default function Home() {
             <Button style={{
               width: '32%',
               margin: '1rem',
-              backgroundColor: (commitDescription.length < 6 ||
-                               !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/)) ||
-                               ((validThrough - dayjs()) / 3600 > 24) ||
-                               (commitAmount > 9999) ?
-                                "rgb(73 179 147 / 35%)": "rgb(73 179 147)",
+              backgroundColor:
+                commitDescription.length < 6 ||
+                commitDescription.length > 35 ||
+                !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
+                ((validThrough - dayjs()) / 3600 > 24) ||
+                (commitAmount > 9999) ?
+                "rgb(73 179 147 / 35%)": "rgb(73 179 147)",
               borderRadius: 12,
               color: "white",
               boxShadow: "0rem 0.4rem 0.4rem 0rem lightGrey",
             }}
               tone="green"
               variant="primary"
-              disabled = {commitDescription.length < 6 ||
-                         ((validThrough - dayjs()) / 3600) > 24 ||
-                         !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/)}
+              disabled = {
+                commitDescription.length < 6 ||
+                commitDescription.length > 35 ||
+                !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
+                ((validThrough - dayjs()) / 3600 > 24) ||
+                (commitAmount > 9999)
+              }
               onClick={() => { toast.error('Coming soon! Working on it... ', { position: 'bottom-center' })}} // write();
             >
               Commit
