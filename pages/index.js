@@ -17,14 +17,22 @@ import Feed from './feed';
 import Active from './active';
 import MyHistory from './my-history';
 import Header from '../components/Header.js'
+import { Placeholders } from "../components/Placeholders.js"
 
 export default function Home() {
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoadingState('loaded')
+    }, 3000);
+  }, []);
 
   // state variables
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState('') // hard-coded to "justcommit.eth" for now
   const [commitAmount, setCommitAmount] = useState(20)
   const [validThrough, setValidThrough] = useState(1)
+  const [loadingState, setLoadingState] = useState('loading')
 
   // smart contract data
   const provider = useProvider()
@@ -57,6 +65,10 @@ export default function Home() {
         <div className="heading text-3xl font-bold">
           Make a Commitment
         </div>
+
+        {
+          loadingState === 'loading' && <Placeholders loadingStyle = "indexLoadingStyle" number = {1} />
+        }
 
         <form
           id="form"

@@ -49,7 +49,7 @@ a {
 }
 
 .heading {
-  margin-top: 2rem;
+  margin-top: 1rem;
   margin-bottom: 2rem;
   font-family: 'Poppins';
   font-style: normal;
@@ -79,6 +79,26 @@ a {
 .col {
   display: flex;
   flex-direction: col;
+}
+
+.feedLoadingStyle {
+  background-color: rgba(0, 0, 0, .1);
+  height: 380px;
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 40px;
+  border-radius: 7px;
+  animation: shimmer 2s infinite linear;
+}
+
+.indexLoadingStyle {
+  background-color: rgba(0, 0, 0, .1);
+  height: 480px;
+  width: 50%;
+  margin-top: 10px;
+  margin-bottom: 40px;
+  border-radius: 20px;
+  animation: shimmer 2s infinite linear;
 }
 
 /*
@@ -141,6 +161,17 @@ a {
     transform: translate(24px, 0);
   }
 }
+@keyframes shimmer {
+  from {
+    opacity: .2;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: .2;
+  }
+}
 
 @media screen and (max-width: 1200px) {
   .header {
@@ -179,5 +210,14 @@ a {
     wrap: nowrap;
     margin-top: 2rem;
     margin-bottom: 1rem;
+  }
+  .indexLoadingStyle {
+    background-color: rgba(0, 0, 0, .1);
+    height: 480px;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    border-radius: 20px;
+    animation: shimmer 2s infinite linear;
   }
 }

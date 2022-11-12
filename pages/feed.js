@@ -1,8 +1,19 @@
 import Head from 'next/head'
 import Header from "../components/Header.js"
 import Commit from "../components/Commit.js"
+import { Placeholders } from "../components/Placeholders.js"
+import { useState, useEffect } from 'react'
 
 export default function Feed() {
+
+  const [loadingState, setLoadingState] = useState('loading')
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoadingState('loaded')
+    }, 3000);
+  }, []);
+  
   return (
     <>
       <Head>
@@ -18,6 +29,9 @@ export default function Feed() {
       <Header />
         <div className= "w-8/10 sm:w-1/2 mx-auto p-10 mt-20">
           <div className= "flex flex-col justify-center">
+            {
+              loadingState === 'loading' && <Placeholders loadingStyle = "feedLoadingStyle" number = {6} />
+            }
             <Commit />
           </div>
       </div>
