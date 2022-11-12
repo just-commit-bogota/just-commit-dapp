@@ -32,7 +32,10 @@ export default function Feed() {
             {
               loadingState === 'loading' && <Placeholders loadingStyle = "feedLoadingStyle" number = {6} />
             }
-            <Commit />
+            {
+              loadingState === 'loaded' &&
+              <Commit />
+            }
           </div>
       </div>
     </>
