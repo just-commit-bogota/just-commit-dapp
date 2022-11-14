@@ -1,6 +1,7 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import Header from "../components/Header.js"
-import Commit from "../components/Commit.js"
+import CommitCard from "../components/CommitCard.js"
 import { Placeholders } from "../components/Placeholders.js"
 import { useState, useEffect } from 'react'
 
@@ -11,7 +12,7 @@ export default function Feed() {
   useEffect(() => {
     setTimeout(() => {
       setLoadingState('loaded')
-    }, 3000);
+    }, 1000);
   }, []);
   
   return (
@@ -26,17 +27,18 @@ export default function Feed() {
         <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
       </Head>
       
-      <Header />
-        <div className= "w-8/10 sm:w-1/2 mx-auto p-10 mt-20">
-          <div className= "flex flex-col justify-center">
-            {
-              loadingState === 'loading' && <Placeholders loadingStyle = "feedLoadingStyle" number = {6} />
-            }
-            {
-              loadingState === 'loaded' &&
-              <Commit />
-            }
-          </div>
+      <Header dropdownLabel = <Link href="./feed">&emsp;&emsp;&emsp;Feed&emsp;&emsp;&emsp;</Link> />
+      
+      <div className= "w-8/10 sm:w-1/2 mx-auto p-10 mt-20">
+        <div className= "flex flex-col justify-center">
+          {
+            loadingState === 'loading' && <Placeholders loadingStyle = "feedLoadingStyle" number = {6} />
+          }
+          {
+            loadingState === 'loaded' &&
+            <CommitCard />
+          }
+        </div>
       </div>
     </>
   )

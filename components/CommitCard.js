@@ -1,11 +1,11 @@
 import Button from '@mui/material/Button'
 
-export default function Commit() {
+export default function CommitCard() {
   return (
     <>
       <div className="border-solid border-2 border-neutral-600/20 bg-white p-4 rounded-md mb-10 shadow-md">
         <div className="flex flex-row" style = {{justifyContent: "space-between"}}>
-          <div className="w-4/5 text-sm block">Stretching exercises hello this ish</div>
+          <div className="w-4/5 text-sm block">Stretching exercises</div>
           <div className="flex align-left space-x-2">
             <div className="text-sm text-slate-400 opacity-80">5h ago</div>
           </div>

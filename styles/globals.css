@@ -101,6 +101,12 @@ a {
   animation: shimmer 2s infinite linear;
 }
 
+.modal {
+  width: 35rem;
+  max-width: 100%;
+  justify-content: center;
+}
+
 /*
  * source: https://loading.io/css/
  * license: CC0 (Creative Commons)

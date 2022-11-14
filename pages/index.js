@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
-import styles from '../styles/Home.module.css'
 import { useState, useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom';
 import abi from "../contracts/CommitManager.json"
@@ -13,18 +12,16 @@ import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import { useWaitForTransaction } from 'wagmi'
 import dayjs from "dayjs";
-import Feed from './feed';
-import Active from './active';
-import MyHistory from './my-history';
-import Header from '../components/Header.js'
-import { Placeholders } from "../components/Placeholders.js"
+import Header from '../components/Header.js';
+import { Placeholders } from "../components/Placeholders.js";
+import { CommitModal } from "../components/CommitModal.js";
 
 export default function Home() {
 
   useEffect(() => {
     setTimeout(() => {
       setLoadingState('loaded')
-    }, 3000);
+    }, 1000);
   }, []);
 
   // state variables
@@ -118,7 +115,7 @@ export default function Home() {
                 placeholder="20"
                 min={1}
                 step={1}
-                max={100} // should this be capped?
+                max={9999}
                 type="number"
                 units="USDC" // change "Goerli ETH" when live + add 
                 error={(commitAmount) > 9999 ? "Maximum of $9999" : null}
@@ -167,7 +164,15 @@ export default function Home() {
                   ((validThrough - dayjs()) / 3600 > 24) ||
                   (commitAmount > 9999)
                 }
-                onClick={() => { toast.error('Coming soon! Working on it... ', { position: 'bottom-center' })}} // write();
+                onClick={() => { 
+                  <CommitModal
+                    commitDescription = {commitDescription}
+                    commitTo = {commitTo}
+                    amount = {commitAmount}
+                    duration = {validThrough}
+                  />
+                }}
+                  // toast.error('Coming soon! Working on it... ', { position: 'bottom-center' })}} // write();
               >
                 Commit
               </Button>
