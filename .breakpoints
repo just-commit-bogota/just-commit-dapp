@@ -1,12 +1,3 @@
 {
-  "files": {
-    "package.json": [
-      {
-        "id": "961eccb1-456e-4604-bc8b-a70757ee005c",
-        "line": 1,
-        "version": 1,
-        "index": 0
-      }
-    ]
-  }
+  "files": {}
 }

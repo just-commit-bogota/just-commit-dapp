@@ -15,6 +15,7 @@ import dayjs from "dayjs";
 import Header from '../components/Header.js';
 import { Placeholders } from "../components/Placeholders.js";
 import CommitModal from "../components/CommitModal.js";
+import Spinner from "../components/Spinner.js";
 
 export default function Home() {
 
@@ -24,27 +25,29 @@ export default function Home() {
     }, 1000);
   }, []);
 
-  // state variables
+  // state
+  const [dialogOpen, setDialogOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState('') // hard-coded to "justcommit.eth" for now
-  const [commitAmount, setCommitAmount] = useState(20)
+  const [commitTo, setCommitTo] = useState('0xB44691c50339de6D882E1D6DB4EbE5E3d670BAAd') // hard-coded for now (belf.eth)
+  const [commitAmount, setCommitAmount] = useState('0.05')
   const [validThrough, setValidThrough] = useState(1)
   const [loadingState, setLoadingState] = useState('loading')
 
-  // smart contract data
+  // smart contract
   const provider = useProvider()
   const { chain, chains } = useNetwork()
   const { address: isConnected } = useAccount()
-  const contractAddress = "0x28D691d5eDFf71b72B8CA60EDcB164308945707F"
+  const contractAddress = "0x013e7A0632389b825Ce45581566EeE5108eB8e5a"
   const { config } = usePrepareContractWrite({
     addressOrName: contractAddress,
     contractInterface: abi.abi,
     functionName: "createCommit",
-    args: [commitDescription, commitTo, validThrough, { value: ((commitAmount == "") ? null : ethers.utils.parseEther(String(commitAmount))) }]
+    args: [commitDescription, commitTo, validThrough,
+          { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }]
   })
   const { data, isLoading, isSuccess, write } = useContractWrite(config)
-
+  
   return (
     <>
       <Head>
@@ -56,7 +59,7 @@ export default function Home() {
         <meta property="og:description" content="Just Commit" />
         <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
       </Head>
-
+      
       <Header />
 
       <div className="container container--flex">
@@ -74,10 +77,23 @@ export default function Home() {
           <form
             id="form"
             className="form"
+            
+            // write();
+            // toast.error('Coming soon! Working on it... ', { position: 'bottom-center' })}} 
+            // setModalOpen(true)
+
+            // this takes priority over Commit <Button> onClick
             onSubmit={async (e) => {
               e.preventDefault()
-              // Toast checks
-  
+
+              // Toast Checks
+              
+              // 1. On right network
+              if (!chains.some((c) => c.id === chain.id)) {
+                return toast.error('Switch to a supported network')
+              }
+
+              // 2. blah
             }}>
   
             <div className="flex flex-col gap-3 w-full">
@@ -113,12 +129,12 @@ export default function Home() {
               />
               <Input
                 label="Amount"
-                placeholder="20"
-                min={1}
+                placeholder="0.05"
+                // min={1}
                 step={1}
                 max={9999}
                 type="number"
-                units="USDC" // change "Goerli ETH" when live + add 
+                units="Goerli ETH"
                 error={(commitAmount) > 9999 ? "Maximum of $9999" : null}
                 //parentStyles = {{ backgroundColor: '#f1fcf8' }}
                 onChange={(e) => setCommitAmount(e.target.value)}
@@ -157,7 +173,8 @@ export default function Home() {
                 boxShadow: "0rem 0.4rem 0.4rem 0rem lightGrey",
               }}
                 tone="green"
-                variant="primary"
+                type="submit"
+                variant="action"
                 disabled = {
                   commitDescription.length < 6 ||
                   commitDescription.length > 35 ||
@@ -165,10 +182,7 @@ export default function Home() {
                   ((validThrough - dayjs()) / 3600 > 24) ||
                   (commitAmount > 9999)
                 }
-                onClick={() => { }}
-                  // write();
-                  // toast.error('Coming soon! Working on it... ', { position: 'bottom-center' })}} 
-                  // setModalOpen(true)
+                onClick= {write}
               >
                 Commit
               </Button>
@@ -189,13 +203,11 @@ export default function Home() {
             
             <Toaster toastOptions={{duration: '200'}}/>
   
-            {/*
             {isLoading && (
               <div className="justifyCenter">
                 <Spinner />
               </div>
             )}
-            */}
   
           </form>
         }
