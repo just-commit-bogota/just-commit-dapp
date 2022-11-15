@@ -14,7 +14,7 @@ import { useWaitForTransaction } from 'wagmi'
 import dayjs from "dayjs";
 import Header from '../components/Header.js';
 import { Placeholders } from "../components/Placeholders.js";
-import { CommitModal } from "../components/CommitModal.js";
+import CommitModal from "../components/CommitModal.js";
 
 export default function Home() {
 
@@ -25,6 +25,7 @@ export default function Home() {
   }, []);
 
   // state variables
+  const [modalOpen, setModalOpen] = useState(false)
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState('') // hard-coded to "justcommit.eth" for now
   const [commitAmount, setCommitAmount] = useState(20)
@@ -164,20 +165,24 @@ export default function Home() {
                   ((validThrough - dayjs()) / 3600 > 24) ||
                   (commitAmount > 9999)
                 }
-                onClick={() => { 
-                  <CommitModal
-                    commitDescription = {commitDescription}
-                    commitTo = {commitTo}
-                    amount = {commitAmount}
-                    duration = {validThrough}
-                  />
-                }}
+                onClick={() => { setModalOpen(true) }}
                   // toast.error('Coming soon! Working on it... ', { position: 'bottom-center' })}} // write();
               >
                 Commit
               </Button>
             )}
-  
+
+            {(modalOpen && 
+            <CommitModal
+              commitDescription = {commitDescription}
+              commitTo = "justcommit.eth" // {commitTo}
+              amount = {commitAmount}
+              duration = {validThrough}
+              modalOpen = {modalOpen}
+              setModalOpen = {setModalOpen}
+            />
+            )}
+            
             <Toaster toastOptions={{duration: '200'}}/>
   
             {/*

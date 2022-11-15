@@ -1,29 +1,32 @@
 import { lightTheme as theme } from '@ensdomains/thorin'
 
-export default function CommitDetails({ commitDescription, commitTo, amount, duration }) {
+export default function CommitDetails({ commitDescription, commitTo, amount, duration, ...props }) {
   return (
     <>
-      <div className="detail">
-        <span className="key">Description</span>
-        <span className="value">{commitDescription}</span>
-      </div>
-      <div className="detail">
-        <span className="key">To</span>
-        <span className="value">{commitTo}</span>
-      </div>
-      <div className="detail">
-        <span className="key">Amount</span>
-        <span className="value">{amount}</span>
-      </div>
-      <div className="detail">
-        <span className="key">Duration</span>
-        <span className="value">{duration}</span>
+      <div className="details" {...props}>
+        <div className="detail">
+          <span className="key">Description</span>
+          <span className="value">{commitDescription}</span>
+        </div>
+        <div className="detail">
+          <span className="key">To</span>
+          <span className="value">{commitTo}</span>
+        </div>
+        <div className="detail">
+          <span className="key">Amount</span>
+          <span className="value">{amount}</span>
+        </div>
+        <div className="detail">
+          <span className="key">Duration</span>
+          <span className="value">{duration}</span>
+        </div>
       </div>
 
       <style jsx>{`
         .details {
           display: flex;
           flex-direction: column;
+          width: 80%;
           gap: ${theme.space[3]};
           padding-bottom: ${theme.space[6]};
         }
@@ -54,7 +57,7 @@ export default function CommitDetails({ commitDescription, commitTo, amount, dur
         .image-wrapper {
           line-height: 1;
           height: 36px;
-          background-image: ${theme.colors.gradients.blue};
+          background-image: ${theme.colors.gradients.green};
           box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
           border-radius: 18px;
           overflow: hidden;
