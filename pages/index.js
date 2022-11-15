@@ -165,13 +165,16 @@ export default function Home() {
                   ((validThrough - dayjs()) / 3600 > 24) ||
                   (commitAmount > 9999)
                 }
-                onClick={() => { setModalOpen(true) }}
-                  // toast.error('Coming soon! Working on it... ', { position: 'bottom-center' })}} // write();
+                onClick={() => { }}
+                  // write();
+                  // toast.error('Coming soon! Working on it... ', { position: 'bottom-center' })}} 
+                  // setModalOpen(true)
               >
                 Commit
               </Button>
             )}
 
+            {/*
             {(modalOpen && 
             <CommitModal
               commitDescription = {commitDescription}
@@ -182,6 +185,7 @@ export default function Home() {
               setModalOpen = {setModalOpen}
             />
             )}
+            */}
             
             <Toaster toastOptions={{duration: '200'}}/>
   
