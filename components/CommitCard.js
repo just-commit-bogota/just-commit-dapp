@@ -117,7 +117,7 @@ export default function CommitCard ({...props}) {
             <div className="w-4/5 text-sm block">{props.message}</div>
             <div className="flex align-left space-x-2">
               <div className="text-sm text-slate-400 opacity-80" style= {{whiteSpace: "nowrap"}}>
-                { (props.expiryTimestamp) > Date.now()/1000 ? <Countdown date={props.expiryTimestamp*1000} daysInHours></Countdown> : moment(Date.now() + props.createdTimestamp).fromNow()}
+                { (props.expiryTimestamp) > Date.now()/1000 ? <Countdown date={props.expiryTimestamp*1000} daysInHours></Countdown> : moment(props.createdTimestamp*1000).fromNow()}
               </div>
             </div>
           </div>
