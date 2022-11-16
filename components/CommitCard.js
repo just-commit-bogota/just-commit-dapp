@@ -21,8 +21,8 @@ export default function CommitCard ({...props}) {
   const [verifyModalIsOpen, setVerifyIsOpen] = React.useState(false);
   let subtitle;
   const CommitStatusEmoji = {
-	  "Pending": "❓",
-  	"Waiting": "❓",
+	  "Pending": "❓", // picture not yet submitted
+  	"Waiting": "⏳", // picture submitted
   	"Failure": "❌",
     "Success": "✅",
   }
@@ -125,7 +125,7 @@ export default function CommitCard ({...props}) {
           <br></br>
           {/* <img style={{margin:"0 -8px", maxWidth:"105%", borderRadius:"6px"}} src="./dummy-pic-1.png" /> */}
           <div className="flex flex-row text-xs pt-4" style={{justifyContent: "space-between"}}>
-            <div className="flex flex-col w-1/2" style={{
+            <div className="flex flex-col w-1/2 lg:w-1/3" style={{
               justifyContent: "space-between",
               borderLeft:"2px solid rgba(0, 0, 0, 0.18)",
               borderRight:"2px solid rgba(0, 0, 0, 0.18)",
