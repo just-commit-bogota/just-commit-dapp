@@ -22,7 +22,7 @@ export default function CommitCard ({...props}) {
   let subtitle;
   const CommitStatusEmoji = {
 	  "Pending": "❓", // picture not yet submitted
-  	"Waiting": "⏳", // picture submitted
+  	"Waiting": "⏳", // picture submitted waiting for commitTo judging
   	"Failure": "❌",
     "Success": "✅",
   }
@@ -36,9 +36,9 @@ export default function CommitCard ({...props}) {
       contractInterface: abi.abi,
       functionName: "proveCommit",
       args: [props.id, proofIpfsHash ]
-
   })
   const { data, isLoading, isSuccess, write } = useContractWrite(config)
+  
   const { config: verifyConfig } = usePrepareContractWrite({
       addressOrName: contractAddress,
       contractInterface: abi.abi,
@@ -55,7 +55,7 @@ export default function CommitCard ({...props}) {
       console.log(client)
       console.log(fileInput)
       client.put(fileInput.files, {
-          name: 'fileInput',
+          name: 'file',
           maxRetries: 3,
       }).then(cid => {
         setProofIpfsHash(cid);
@@ -117,7 +117,7 @@ export default function CommitCard ({...props}) {
             <div className="w-4/5 text-sm block">{props.message}</div>
             <div className="flex align-left space-x-2">
               <div className="text-sm text-slate-400 opacity-80" style= {{whiteSpace: "nowrap"}}>
-                {props.timeStamp*1000 > Date.now() ? <Countdown date={props.timeStamp*1000}></Countdown> : moment(Date.now() + props.timeStamp).fromNow()}
+                { (props.expiryTimestamp) > Date.now()/1000 ? <Countdown date={props.expiryTimestamp*1000} daysInHours></Countdown> : moment(Date.now() + props.createdTimestamp).fromNow()}
               </div>
             </div>
           </div>

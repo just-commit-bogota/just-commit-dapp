@@ -13,12 +13,11 @@ export default function CommitCardList({ cardList }) {
 				<CommitCard
 					key={card.id}
           status={card.status}
-          timeStamp={card.expiryTimestamp}
+          expiryTimestamp={card.expiryTimestamp}
           commitFrom={card.commitFrom}
           commitTo={card.commitTo}
           stakeAmount={ethers.utils.formatEther(card.stakeAmount)}
-          createdTimestamp="TODO"
-          validPeriod="TODO"
+          createdTimestamp={card.createdTimestamp}
 					message={card.message}
 					userIsCreator={card.userIsCreator}
 					userIsCommitee={card.userIsCommitee}

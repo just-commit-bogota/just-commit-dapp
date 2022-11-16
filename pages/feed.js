@@ -21,7 +21,7 @@ export default function Feed() {
   const { address: isConnected } = useAccount()
 
   // smart contract
-  const contractAddress = "0x013e7A0632389b825Ce45581566EeE5108eB8e5a"
+  const contractAddress = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
   const { data: commitData, isError, isLoading: commitIsLoading } = useContractRead({
     addressOrName: contractAddress,
     contractInterface: abi.abi,
@@ -33,35 +33,34 @@ export default function Feed() {
     if (!commitData) {
       return
     }
-    console.log(commitData)
+
     let newArray = [];
     for (let commit of commitData) {
       let newCommitStruct = {}
-      let eTimestamp = commit.expiryTimestamp.toNumber();
       
       let status = "Failure";
-      if (commit.commitApproved) {
+      if (commit.commitJudged) {
         status = "Success";
-      } else if ( eTimestamp > Date.now()/1000 && commit.proofIpfsHash == "" ) {
+      } else if ( commit.expiryTimestamp > Date.now()/1000 && commit.proofIpfsHash == "" ) {
         status = "Pending";
-      } else if ( eTimestamp > Date.now()/1000 && commit.proofIpfsHash !== "" ) {
+      } else if ( commit.expiryTimestamp > Date.now()/1000 && commit.proofIpfsHash !== "" ) {
         status = "Waiting";
-      } 
+      }
       
       newCommitStruct.id = commit.id.toNumber();
       newCommitStruct.status = status;
       newCommitStruct.userIsCreator = commit.commitFrom == isConnected;
       newCommitStruct.userIsCommitee = commit.commitTo == isConnected;
-      newCommitStruct.expiryTimestamp = eTimestamp;
+      newCommitStruct.expiryTimestamp = commit.expiryTimestamp.toNumber();
       newCommitStruct.commitFrom = commit.commitFrom;
       newCommitStruct.commitTo = commit.commitTo;
       newCommitStruct.stakeAmount = commit.stakeAmount;
-      newCommitStruct.createdTimestamp = "TODO";
-      newCommitStruct.validPeriod = "TODO";
+      newCommitStruct.createdTimestamp = commit.createdTimestamp.toNumber();
       newCommitStruct.message = commit.message;
       newCommitStruct.ipfsHash = commit.proofIpfsHash;
 
       newArray.push(newCommitStruct);
+      console.log(newCommitStruct)
     }
 
     newArray.sort((a, b) => (a.expiryTimestamp > b.expiryTimestamp) ? 1 : -1)

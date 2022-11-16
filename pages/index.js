@@ -33,12 +33,14 @@ export default function Home() {
   const [commitAmount, setCommitAmount] = useState('0.05')
   const [validThrough, setValidThrough] = useState(1)
   const [loadingState, setLoadingState] = useState('loading')
-
+  const [transactionLoading, setTransactionLoading] = useState(false)
+  
   // smart contract
   const provider = useProvider()
   const { chain, chains } = useNetwork()
   const { address: isConnected } = useAccount()
-  const contractAddress = "0x013e7A0632389b825Ce45581566EeE5108eB8e5a"
+  const contractAddress = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
+  
   const { config } = usePrepareContractWrite({
     addressOrName: contractAddress,
     contractInterface: abi.abi,
@@ -46,7 +48,19 @@ export default function Home() {
     args: [commitDescription, commitTo, validThrough,
           { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }]
   })
-  const { data, isLoading, isSuccess, write } = useContractWrite(config)
+  const { data, write, isLoading } = useContractWrite({
+    ...config,
+    onSettled(data, error) {
+      setTransactionLoading(true)
+      waitForTransaction()
+    },
+  })
+  const waitForTransaction = useWaitForTransaction({
+    hash: data?.hash,
+    onSettled(data, error) {
+      setTransactionLoading(false)
+    },
+  })
   
   return (
     <>
@@ -151,13 +165,13 @@ export default function Home() {
                 units={((validThrough - dayjs()) / 3600) > 1 ? 'hours' : 'hour'}
                 error={((validThrough - dayjs()) / 3600) > 24 ? "24 hour maximum" : null}
                 //parentStyles={{ backgroundColor: '#f1fcf8' }}
-                onChange={(e) => setValidThrough(e.target.value * 3600 + dayjs())}
+                onChange={(e) => setValidThrough(Math.round(e.target.value * 3600 + Date.now()/1000))}
                 required
               />
             </div>
   
             {/* the Commit button */}
-            {!isLoading && (
+            {(!isLoading && !transactionLoading) && (
               <Button style={{
                 width: '32%',
                 margin: '1rem',
@@ -203,7 +217,7 @@ export default function Home() {
             
             <Toaster toastOptions={{duration: '200'}}/>
   
-            {isLoading && (
+            {(isLoading || transactionLoading) && (
               <div className="justifyCenter">
                 <Spinner />
               </div>
