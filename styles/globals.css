@@ -106,6 +106,7 @@ a {
   flex-direction: row;
   justify-content: start;
   align-items: start;
+  margin-bottom: 30px;
 }
 
 .styledBorder--waiting {
