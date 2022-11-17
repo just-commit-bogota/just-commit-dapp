@@ -102,13 +102,16 @@ export default function Home() {
               e.preventDefault()
 
               // Toast Checks
+
+              // Wallet connection
+              if (!isConnected) {
+                return toast.error('Connect your wallet')
+              }
               
-              // 1. On right network
+              // On right network
               if (!chains.some((c) => c.id === chain.id)) {
                 return toast.error('Switch to a supported network')
               }
-
-              // 2. blah
             }}>
   
             <div className="flex flex-col gap-3 w-full">
