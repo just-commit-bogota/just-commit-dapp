@@ -41,9 +41,9 @@ export default function Feed() {
       let status = "Failure";
       if (commit.commitJudged) {
         status = "Success";
-      } else if ( commit.expiryTimestamp > Date.now()/1000 && commit.proofIpfsHash == "" ) {
+      } else if ( commit.expiryTimestamp*1000 > Date.now() && commit.proofIpfsHash == "" ) {
         status = "Pending";
-      } else if ( commit.expiryTimestamp > Date.now()/1000 && commit.proofIpfsHash !== "" ) {
+      } else if ( commit.expiryTimestamp*1000 > Date.now() && commit.proofIpfsHash !== "" ) {
         status = "Waiting";
       }
       
@@ -60,7 +60,6 @@ export default function Feed() {
       newCommitStruct.ipfsHash = commit.proofIpfsHash;
 
       newArray.push(newCommitStruct);
-      console.log(newCommitStruct)
     }
 
     newArray.sort((a, b) => (a.expiryTimestamp > b.expiryTimestamp) ? 1 : -1)

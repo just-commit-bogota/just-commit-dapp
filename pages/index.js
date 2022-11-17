@@ -31,7 +31,7 @@ export default function Home() {
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState('0xB44691c50339de6D882E1D6DB4EbE5E3d670BAAd') // hard-coded for now (belf.eth)
   const [commitAmount, setCommitAmount] = useState('0.05')
-  const [validThrough, setValidThrough] = useState(1)
+  const [validThrough, setValidThrough] = useState(1) // this has issues if I don't touch the field at all
   const [loadingState, setLoadingState] = useState('loading')
   const [transactionLoading, setTransactionLoading] = useState(false)
   
@@ -48,18 +48,14 @@ export default function Home() {
     args: [commitDescription, commitTo, validThrough,
           { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }]
   })
-  const { data, write, isLoading } = useContractWrite({
+  const { data, write, isLoading: isWriteLoading } = useContractWrite({
     ...config,
     onSettled(data, error) {
-      setTransactionLoading(true)
-      waitForTransaction()
+      {wait}
     },
   })
-  const waitForTransaction = useWaitForTransaction({
+  const {wait, isLoading: isWaitLoading } = useWaitForTransaction({                                
     hash: data?.hash,
-    onSettled(data, error) {
-      setTransactionLoading(false)
-    },
   })
   
   return (
@@ -162,16 +158,16 @@ export default function Home() {
                 max={24}
                 step={1}
                 type="number"
-                units={((validThrough - dayjs()) / 3600) > 1 ? 'hours' : 'hour'}
-                error={((validThrough - dayjs()) / 3600) > 24 ? "24 hour maximum" : null}
+                units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
+                error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null }
                 //parentStyles={{ backgroundColor: '#f1fcf8' }}
-                onChange={(e) => setValidThrough(Math.round(e.target.value * 3600 + Date.now()/1000))}
+                onChange={(e) => setValidThrough(Math.round((e.target.value * 3600 * 1000) + Date.now()))}
                 required
               />
             </div>
   
             {/* the Commit button */}
-            {(!isLoading && !transactionLoading) && (
+            {(!isWriteLoading && !isWaitLoading) && (
               <Button style={{
                 width: '32%',
                 margin: '1rem',
@@ -179,7 +175,7 @@ export default function Home() {
                   commitDescription.length < 6 ||
                   commitDescription.length > 35 ||
                   !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                  ((validThrough - dayjs()) / 3600 > 24) ||
+                  ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
                   (commitAmount > 9999) ?
                   "rgb(73 179 147 / 35%)": "rgb(73 179 147)",
                 borderRadius: 12,
@@ -193,7 +189,7 @@ export default function Home() {
                   commitDescription.length < 6 ||
                   commitDescription.length > 35 ||
                   !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                  ((validThrough - dayjs()) / 3600 > 24) ||
+                  ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
                   (commitAmount > 9999)
                 }
                 onClick= {write}
@@ -217,11 +213,19 @@ export default function Home() {
             
             <Toaster toastOptions={{duration: '200'}}/>
   
-            {(isLoading || transactionLoading) && (
+            {(isWriteLoading || isWaitLoading) && (
               <div className="justifyCenter">
                 <Spinner />
               </div>
             )}
+
+            isWriteLoading: {String(isWriteLoading)}
+            <br></br>
+            <br></br>
+            isWaitLoading: {String(isWaitLoading)}
+            <br></br>
+            <br></br>
+            {data?.hash}
   
           </form>
         }

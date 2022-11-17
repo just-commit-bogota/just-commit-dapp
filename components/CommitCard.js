@@ -9,7 +9,7 @@ import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite } from 'wagmi'
 import moment from 'moment/moment';
 
-const contractAddress = "0x013e7A0632389b825Ce45581566EeE5108eB8e5a"
+const contractAddress = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
 const web3StorageToken = process.env['WEB3_STORAGE_TOKEN']
 const client = new Web3Storage({ token: web3StorageToken})   
 
@@ -117,7 +117,7 @@ export default function CommitCard ({...props}) {
             <div className="w-4/5 text-sm block">{props.message}</div>
             <div className="flex align-left space-x-2">
               <div className="text-sm text-slate-400 opacity-80" style= {{whiteSpace: "nowrap"}}>
-                { (props.expiryTimestamp) > Date.now()/1000 ? <Countdown date={props.expiryTimestamp*1000} daysInHours></Countdown> : moment(props.createdTimestamp*1000).fromNow()}
+                { (props.expiryTimestamp*1000) > Date.now() ? <Countdown date={props.expiryTimestamp*1000} daysInHours></Countdown> : moment(props.createdTimestamp*1000).fromNow()}
               </div>
             </div>
           </div>
@@ -151,6 +151,7 @@ export default function CommitCard ({...props}) {
             <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600 text-xs rounded-lg bg-sky-200 hover:bg-sky-400">
               <a href="./">&nbsp;&nbsp;Txn&nbsp;&nbsp;</a>
             </div>
+            ({props.expiryTimestamp*1000}) <br></br> {Date.now()}
           </div>
         </div>
       </div>
