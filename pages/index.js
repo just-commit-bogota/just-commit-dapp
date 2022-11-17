@@ -30,11 +30,11 @@ export default function Home() {
   const [modalOpen, setModalOpen] = useState(false)
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState('0xB44691c50339de6D882E1D6DB4EbE5E3d670BAAd') // hard-coded for now (belf.eth)
-  const [commitAmount, setCommitAmount] = useState('0.05')
+  const [commitAmount, setCommitAmount] = useState('0.01')
   const [validThrough, setValidThrough] = useState((1 * 3600 * 1000) + Date.now()) // = 1 hour
   const [loadingState, setLoadingState] = useState('loading')
   const [transactionLoading, setTransactionLoading] = useState(false)
-  let hasCommited = false
+  const [hasCommited, setHasCommited] = useState(false)
   
   // smart contract
   const provider = useProvider()
@@ -53,12 +53,13 @@ export default function Home() {
     ...config,
     onSettled(data, error) {
       {wait}
-      // for some strange reason, the line below DOES NOT work
-      hasCommited = true;
     },
   })
   const {wait, isLoading: isWaitLoading } = useWaitForTransaction({                                
     hash: data?.hash,
+    onSettled(data, error) {
+      setHasCommited(true)
+    },
   })
   
   // rendering
@@ -143,7 +144,7 @@ export default function Home() {
               />
               <Input
                 label="Amount"
-                placeholder="0.05"
+                placeholder="0.01"
                 // min={1}
                 step={1}
                 max={9999}
@@ -171,7 +172,8 @@ export default function Home() {
             </div>
   
             {/* the Commit button */}
-            {(!isWriteLoading && !isWaitLoading) && (
+            {/* show it when there hasn't been a commit and the write is not loading */}
+            {(!((isWriteLoading || isWaitLoading)) && !hasCommited) && (
               <Button style={{
                 width: '32%',
                 margin: '1rem',
@@ -217,18 +219,15 @@ export default function Home() {
             
             <Toaster toastOptions={{duration: '200'}}/>
   
-            {((isWriteLoading || isWaitLoading) && !hasCommited) && (
-                <div className="justifyCenter">
-                  <Spinner />
-                </div>
-              
+            {(((isWriteLoading || isWaitLoading)) && !hasCommited) && (
+              <div className="justifyCenter">
+                <Spinner />
+              </div> 
             )}
 
-            {hasCommited == 1 && 
+            {hasCommited && 
               <div>HELLO!</div>
             }
-
-            {String(hasCommited)}
 
             {/*
             isWriteLoading: {String(isWriteLoading)}
@@ -237,9 +236,9 @@ export default function Home() {
             isWaitLoading: {String(isWaitLoading)}
             <br></br>
             <br></br>
-            {data?.hash}
+            hasCommited: {String(hasCommited)}
             */}
-  
+            
           </form>
         }
       </div>
