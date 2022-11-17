@@ -107,11 +107,11 @@ export default function Home() {
               if (!isConnected) {
                 return toast.error('Connect your wallet')
               }
-              
               // On right network
               if (!chains.some((c) => c.id === chain.id)) {
                 return toast.error('Switch to a supported network')
               }
+              //
             }}>
   
             <div className="flex flex-col gap-3 w-full">
@@ -229,27 +229,30 @@ export default function Home() {
             )}
 
             {hasCommited && 
-              <div className="flex flex-row mt-5 w-full gap-6">
+              <div className="flex flex-row mt-5 mb-2 gap-4">
                 <ButtonThorin
                   outlined
-                  as = "a"
-                  shadowless
-                  tone="green"
+                  shape="circle"
+                  tone="grey"
                   size="small"
-                  variant="secondary"
-                  // onClick={() => }
+                  variant="transparent"
+                  href={`https://${
+                    chain?.id === 5 ? 'goerli.' : ''
+                  }etherscan.io/tx/${data.hash}`}
+                  target="_blank"
+                  rel="noreferrer"
                 >
-                  Go to commit
+                  Transaction
                 </ButtonThorin>
                 <div className="text-2xl font-bold">⚡</div>
                 <ButtonThorin
-                  shadowless
-                  tone="grey"
+                  outlined
+                  shape="circle"
+                  tone="green"
                   size="small"
                   variant="secondary"
-                  // onClick={() => }
                 >
-                  Transaction
+                  Commitment
                 </ButtonThorin>
               </div>
             }
