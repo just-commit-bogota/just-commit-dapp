@@ -24,16 +24,17 @@ export default function Home() {
       setLoadingState('loaded')
     }, 1000);
   }, []);
-
+  
   // state
   const [dialogOpen, setDialogOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState('0xB44691c50339de6D882E1D6DB4EbE5E3d670BAAd') // hard-coded for now (belf.eth)
   const [commitAmount, setCommitAmount] = useState('0.05')
-  const [validThrough, setValidThrough] = useState(1) // this has issues if I don't touch the field at all
+  const [validThrough, setValidThrough] = useState((1 * 3600 * 1000) + Date.now()) // = 1 hour
   const [loadingState, setLoadingState] = useState('loading')
   const [transactionLoading, setTransactionLoading] = useState(false)
+  let hasCommited = false
   
   // smart contract
   const provider = useProvider()
@@ -52,12 +53,15 @@ export default function Home() {
     ...config,
     onSettled(data, error) {
       {wait}
+      // for some strange reason, the line below DOES NOT work
+      hasCommited = true;
     },
   })
   const {wait, isLoading: isWaitLoading } = useWaitForTransaction({                                
     hash: data?.hash,
   })
   
+  // rendering
   return (
     <>
       <Head>
@@ -161,7 +165,7 @@ export default function Home() {
                 units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
                 error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null }
                 //parentStyles={{ backgroundColor: '#f1fcf8' }}
-                onChange={(e) => setValidThrough(Math.round((e.target.value * 3600 * 1000) + Date.now()))}
+                onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
                 required
               />
             </div>
@@ -213,12 +217,20 @@ export default function Home() {
             
             <Toaster toastOptions={{duration: '200'}}/>
   
-            {(isWriteLoading || isWaitLoading) && (
-              <div className="justifyCenter">
-                <Spinner />
-              </div>
+            {((isWriteLoading || isWaitLoading) && !hasCommited) && (
+                <div className="justifyCenter">
+                  <Spinner />
+                </div>
+              
             )}
 
+            {hasCommited == 1 && 
+              <div>HELLO!</div>
+            }
+
+            {String(hasCommited)}
+
+            {/*
             isWriteLoading: {String(isWriteLoading)}
             <br></br>
             <br></br>
@@ -226,6 +238,7 @@ export default function Home() {
             <br></br>
             <br></br>
             {data?.hash}
+            */}
   
           </form>
         }
