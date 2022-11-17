@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom';
 import abi from "../contracts/CommitManager.json"
 import { ethers } from 'ethers'
-import { Tag, Input } from '@ensdomains/thorin'
+import { Tag, Input, Button as ButtonThorin } from '@ensdomains/thorin'
 import Button from '@mui/material/Button'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
@@ -226,7 +226,29 @@ export default function Home() {
             )}
 
             {hasCommited && 
-              <div>HELLO!</div>
+              <div className="flex flex-row mt-5 w-full gap-6">
+                <ButtonThorin
+                  outlined
+                  as = "a"
+                  shadowless
+                  tone="green"
+                  size="small"
+                  variant="secondary"
+                  // onClick={() => }
+                >
+                  Go to commit
+                </ButtonThorin>
+                <div className="text-2xl font-bold">⚡</div>
+                <ButtonThorin
+                  shadowless
+                  tone="grey"
+                  size="small"
+                  variant="secondary"
+                  // onClick={() => }
+                >
+                  Transaction
+                </ButtonThorin>
+              </div>
             }
 
             {/*
