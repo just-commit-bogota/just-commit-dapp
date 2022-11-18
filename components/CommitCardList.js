@@ -2,7 +2,7 @@ import React  from 'react'
 import CommitCard from "./CommitCard.js"
 import { ethers } from 'ethers'
 
-export default function CommitCardList({ cardList }) {
+export default function CommitCardList({cardList}) {
 	if (!cardList) {
 		return null;
 	}

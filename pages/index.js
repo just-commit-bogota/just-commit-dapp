@@ -10,7 +10,7 @@ import Button from '@mui/material/Button'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
-import { useWaitForTransaction } from 'wagmi'
+import { useWaitForTransaction, useContractRead } from 'wagmi'
 import dayjs from "dayjs";
 import Header from '../components/Header.js';
 import { Placeholders } from "../components/Placeholders.js";
@@ -19,10 +19,8 @@ import Spinner from "../components/Spinner.js";
 
 export default function Home() {
 
-  useEffect(() => {
-    setTimeout(() => {
-      setLoadingState('loaded')
-    }, 1000);
+  useEffect(() => {  
+    setLoadingState('loaded')
   }, []);
   
   // state
@@ -31,10 +29,11 @@ export default function Home() {
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState('0xB44691c50339de6D882E1D6DB4EbE5E3d670BAAd') // hard-coded for now (belf.eth)
   const [commitAmount, setCommitAmount] = useState('0.01')
-  const [validThrough, setValidThrough] = useState((1 * 3600 * 1000) + Date.now()) // = 1 hour
+  const [validThrough, setValidThrough] = useState((1 * 3600 * 1000) + Date.now()) // == 1 hour
   const [loadingState, setLoadingState] = useState('loading')
   const [transactionLoading, setTransactionLoading] = useState(false)
   const [hasCommited, setHasCommited] = useState(false)
+  const [commitArray, setCommitArray] = useState([])
   
   // smart contract
   const provider = useProvider()
@@ -53,14 +52,19 @@ export default function Home() {
     ...config,
     onSettled(data, error) {
       {wait}
+      isWriteLoading = false // why do I have to do this? is the function running forever?
     },
   })
   const {wait, isLoading: isWaitLoading } = useWaitForTransaction({                                
     hash: data?.hash,
     onSettled(data, error) {
       setHasCommited(true)
+      isWaitLoading = false // same questions as above.
     },
   })
+
+  // functions
+ 
   
   // rendering
   return (
@@ -119,6 +123,7 @@ export default function Home() {
                 label="Commitment"
                 maxLength={140}
                 placeholder=""
+                disabled = {!isWriteLoading && !isWaitLoading && hasCommited}
                 labelSecondary={
                   <Tag
                     className="hover:cursor-pointer"
@@ -148,8 +153,9 @@ export default function Home() {
               <Input
                 label="Amount"
                 placeholder="0.01"
+                disabled = {!isWriteLoading && !isWaitLoading && hasCommited}
                 // min={1}
-                step={1}
+                step="any"
                 max={9999}
                 type="number"
                 units="Goerli ETH"
@@ -162,6 +168,7 @@ export default function Home() {
               <Input
                 label="Duration"
                 placeholder="1"
+                disabled = {!isWriteLoading && !isWaitLoading && hasCommited}
                 min={1}
                 max={24}
                 step={1}
@@ -232,11 +239,12 @@ export default function Home() {
               <div className="flex flex-row mt-5 mb-2 gap-4">
                 <ButtonThorin
                   outlined
-                  shape="circle"
+                  shape="rounded"
                   tone="grey"
                   size="small"
                   variant="transparent"
-                  href={`https://${
+                  as = "a"
+                  href = {`https://${
                     chain?.id === 5 ? 'goerli.' : ''
                   }etherscan.io/tx/${data.hash}`}
                   target="_blank"
@@ -247,10 +255,12 @@ export default function Home() {
                 <div className="text-2xl font-bold">⚡</div>
                 <ButtonThorin
                   outlined
-                  shape="circle"
+                  shape="rounded"
                   tone="green"
                   size="small"
                   variant="secondary"
+                  as = "a"
+                  href = "./feed"
                 >
                   Commitment
                 </ButtonThorin>
@@ -265,6 +275,11 @@ export default function Home() {
             <br></br>
             <br></br>
             hasCommited: {String(hasCommited)}
+            */}
+            
+            {/*
+            {validThrough}
+            {Date.now()}
             */}
             
           </form>

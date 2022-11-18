@@ -11,8 +11,10 @@ import abi from "../contracts/CommitManager.json"
 export default function Feed() {
 
   useEffect(() => {
-    buildCommitArray()
-    setLoadingState('loaded')
+    setTimeout(() => {
+      buildCommitArray()
+      setLoadingState('loaded')
+    }, 1000);
   }, []);
 
   // state
@@ -87,7 +89,7 @@ export default function Feed() {
           }
           {
             loadingState === 'loaded' && 
-              // <CommitCardListDummy /> // &&
+              // <CommitCardListDummy /> 
               <CommitCardList cardList = {commitArray} />
           }
         </div>
