@@ -18,13 +18,11 @@ export default function Header({dropdownLabel}) {
             chevron = {false}
             label= {dropdownLabel}
             items= {[   
-              { label: <Link href="./">⚡</Link>, color: 'textSecondary' },
-              { label: <Link href="./active">Active</Link>, color: 'textSecondary' },
-              { label: <Link href="./my-history">My History</Link>, color: 'textSecondary' },
-              { label: <Link href="./feed">Feed</Link>, color: 'textSecondary' },
+              { label: <Link href="./">✍🏼</Link>, color: 'text' },
+              { label: <Link href="./commitments">Commitments</Link>, color: 'green' },
               { label: <Link href="https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
                              target="_blank" rel="noopener noreferrer">
-                             About</Link>, color: 'text' },        
+                             About</Link>, color: 'textSecondary' },        
             ]}
           />
         </div>

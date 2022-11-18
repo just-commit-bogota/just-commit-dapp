@@ -260,7 +260,7 @@ export default function Home() {
                   size="small"
                   variant="secondary"
                   as = "a"
-                  href = "./feed"
+                  href = "./commitments"
                 >
                   Commitment
                 </ButtonThorin>

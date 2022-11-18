@@ -81,7 +81,7 @@ a {
   flex-direction: col;
 }
 
-.feedLoadingStyle {
+.commitmentsLoadingStyle {
   background-color: rgba(0, 0, 0, .1);
   height: 380px;
   width: 100%;
