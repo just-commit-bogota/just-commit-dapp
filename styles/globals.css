@@ -115,7 +115,6 @@ a {
 
 .styledBorder--success {
   border: 4px solid #DDF3DD;
-
 }
 
 .styledBorder--failure {
@@ -124,6 +123,31 @@ a {
 
 .styledBorder--pending {
   border: 4px solid #DDEFF3;
+}
+
+.pictureArea {
+  margin: 0 auto;
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+  height: 25rem;
+  justify-content: center;
+}
+
+.pictureArea--waiting {
+  
+}
+
+.pictureArea--success {
+
+}
+
+.pictureArea--failure {
+  height: 3rem;
+}
+
+.pictureArea--pending {
+
 }
 
 .card__status{

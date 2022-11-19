@@ -23,8 +23,8 @@ export default function CommitCard ({...props}) {
   const CommitStatusEmoji = {
 	  "Pending": "❓", // picture not yet submitted
   	"Waiting": "⏳", // picture submitted waiting for commitTo judging
-  	"Failure": "❌",
-    "Success": "✅",
+  	"Failure": "❌", // time expired or picture denied
+    "Success": "✅", // picture accepted :) 
   }
 
   // smart contract data 
@@ -112,7 +112,7 @@ export default function CommitCard ({...props}) {
         'styledBorder--pending': props.status == "Pending",
 
       })}>
-        <div className="bg-white p-3" style={{ borderRadius: "12px"}}>
+        <div className="flex flex-col bg-white p-3" style={{ borderRadius: "12px"}}>
           <div className="flex flex-row" style = {{justifyContent: "space-between"}}>
             <div className="w-4/5 text-sm block">{props.message}</div>
             <div className="flex align-left space-x-2">
@@ -121,8 +121,17 @@ export default function CommitCard ({...props}) {
               </div>
             </div>
           </div>
-          <br></br>
-          <br></br>
+          <div className = {classNames({
+            'pictureArea': true,
+            'pictureArea--waiting': props.status == "Waiting",
+            'pictureArea--success': props.status == "Success",
+            'pictureArea--failure': props.status == "Failure",
+            'pictureArea--pending': props.status == "Pending",
+          })}>
+            {props.status == "Pending" &&
+              <div><img className="h-6" src="./upload-image.png" /></div>
+            }
+          </div>
           {/* <img style={{margin:"0 -8px", maxWidth:"105%", borderRadius:"6px"}} src="./dummy-pic-1.png" /> */}
           <div className="flex flex-row text-xs pt-4" style={{justifyContent: "space-between"}}>
             <div className="flex flex-col w-1/2 lg:w-1/3" style={{
