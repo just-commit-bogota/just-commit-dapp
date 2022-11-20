@@ -80,7 +80,7 @@ export default function Commitments() {
         <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
       </Head>
       
-      <Header dropdownLabel = <Link href="./commitments">&emsp;&emsp;Commitments&emsp;&emsp;</Link> />
+      <Header dropdownLabel = <Link href="commitments" color="green">&emsp;&emsp;Commitments&emsp;&emsp;</Link> color="green"/>
       
       <div className= "w-8/10 sm:w-1/2 mx-auto p-10 mt-20">
         <div className= "flex flex-col justify-center">

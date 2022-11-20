@@ -1,4 +1,6 @@
+
 import Button from '@mui/material/Button'
+import { FileInput } from '@ensdomains/thorin'
 import React, {useState}  from 'react'
 import classNames from 'classnames'
 import abi from "../contracts/CommitManager.json";
@@ -129,7 +131,9 @@ export default function CommitCard ({...props}) {
             'pictureArea--pending': props.status == "Pending",
           })}>
             {props.status == "Pending" &&
-              <div><img className="h-6" src="./upload-image.png" /></div>
+              <div className="text-3xl hover:scale-150">
+                📷
+              </div>
             }
           </div>
           {/* <img style={{margin:"0 -8px", maxWidth:"105%", borderRadius:"6px"}} src="./dummy-pic-1.png" /> */}

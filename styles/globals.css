@@ -126,12 +126,11 @@ a {
 }
 
 .pictureArea {
-  margin: 0 auto;
-  flex-direction: row;
-  display: flex;
-  align-items: center;
-  height: 25rem;
-  justify-content: center;
+  margin: 50px auto 100px auto
+}
+
+.pictureArea:hover {
+    cursor: pointer;
 }
 
 .pictureArea--waiting {
@@ -143,7 +142,7 @@ a {
 }
 
 .pictureArea--failure {
-  height: 3rem;
+  height: 2rem;
 }
 
 .pictureArea--pending {
@@ -165,7 +164,6 @@ a {
     line-height: 19px;
     text-align: center;
 }
-
 
 .card__status-waiting{
   background: #F3EEDD;
