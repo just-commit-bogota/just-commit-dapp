@@ -130,7 +130,6 @@ a {
 }
 
 .pictureArea:hover {
-    cursor: pointer;
 }
 
 .pictureArea--waiting {
@@ -142,7 +141,7 @@ a {
 }
 
 .pictureArea--failure {
-  height: 2rem;
+  height: 0rem;
 }
 
 .pictureArea--pending {

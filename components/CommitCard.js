@@ -119,12 +119,8 @@ export default function CommitCard ({...props}) {
             {props.status == "Pending" &&
               <>
                 <div className="flex flex-col" style={{alignItems:"center"}}>
-                  {fileUploaded && (
-                    <div className="text-3xl">📸</div>
-                  )}
-                  {!fileUploaded && (
-                    <div className="text-3xl">📷</div>
-                  )}
+                  {/* make the below line conditional on props.status */}
+                  <div className="text-3xl">📷</div>
                   <br />
                   <br />
                   <div className="flex">
