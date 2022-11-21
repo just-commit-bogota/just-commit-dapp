@@ -1,6 +1,6 @@
 
 import Button from '@mui/material/Button'
-import { FileInput } from '@ensdomains/thorin'
+import { FileInput, Tag, CloseSVG} from '@ensdomains/thorin'
 import React, {useState}  from 'react'
 import classNames from 'classnames'
 import abi from "../contracts/CommitManager.json";
@@ -12,16 +12,14 @@ import { usePrepareContractWrite, useContractWrite } from 'wagmi'
 import moment from 'moment/moment';
 
 const contractAddress = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
-const web3StorageToken = process.env['WEB3_STORAGE_TOKEN']
-const client = new Web3Storage({ token: web3StorageToken})   
+const web3StorageToken = ""
+const client = new Web3Storage({ token: web3StorageToken })
 
 export default function CommitCard ({...props}) {
 
   // state
   const [proofIpfsHash, setProofIpfsHash] = useState(props.ipfsHash);
-  const [modalIsOpen, setIsOpen] = React.useState(false);
-  const [verifyModalIsOpen, setVerifyIsOpen] = React.useState(false);
-  let subtitle;
+  const [fileUploaded, setFileUploaded] = React.useState(false);
   const CommitStatusEmoji = {
 	  "Pending": "❓", // picture not yet submitted
   	"Waiting": "⏳", // picture submitted waiting for commitTo judging
@@ -50,21 +48,22 @@ export default function CommitCard ({...props}) {
   })
   const { write: verifyWrite } = useContractWrite(verifyConfig)
 
-  // modal functions
-  const uploadFile = () => { 
-    const fileInput = document.querySelector('input[type=file]');
-    if (fileInput.files.length > 0) {
-      console.log(client)
-      console.log(fileInput)
+  // functions
+  const uploadFile = () => {
+    const fileInput = document.querySelector('input[type="file"]')
+    if (fileInput.size > 0) {
+      console.log({client})
+      // getting here for sure
       client.put(fileInput.files, {
-          name: 'file',
-          maxRetries: 3,
+        name: 'fileInput',
+        maxRetries: 3,
       }).then(cid => {
-        setProofIpfsHash(cid);
+        setProofIpfsHash(cid)
         if (write) {
-          write();
+          write()
         }
-      });
+      })
+      console.log({proofIpfsHash}) // cid
     }
   }
 
@@ -72,22 +71,9 @@ export default function CommitCard ({...props}) {
     verifyWrite();
   }
 
-  function openModal() {
-      console.log('openUploadModal')
-      setIsOpen(true);
-  }
-
   function openVerifyModal() {
       console.log('openVerifyModal')
       setVerifyIsOpen(true);
-  }
-
-  function afterOpenModal() {
-      subtitle.style.color = '#f00';
-  }
-
-  function closeModal() {
-      setIsOpen(false);
   }
 
   function closeVerifyModal() {
@@ -131,9 +117,48 @@ export default function CommitCard ({...props}) {
             'pictureArea--pending': props.status == "Pending",
           })}>
             {props.status == "Pending" &&
-              <div className="text-3xl hover:scale-150">
-                📷
-              </div>
+              <>
+                <div className="flex flex-col" style={{alignItems:"center"}}>
+                  {fileUploaded && (
+                    <div className="text-3xl">📸</div>
+                  )}
+                  {!fileUploaded && (
+                    <div className="text-3xl">📷</div>
+                  )}
+                  <br />
+                  <br />
+                  <div className="flex">
+                    <FileInput maxSize={1} onChange={(file) => uploadFile()}>
+                      {(context) =>
+                        context.name ? (
+                          <div className="flex flex-col" style={{alignItems:"center"}}>
+                            <Tag
+                              shape="circle"
+                              size="extraSmall"
+                              variant="secondary"
+                              tone="green"
+                              onClick={context.reset}
+                            >
+                              <div className="text-xl">X</div>
+                            </Tag>
+                          </div>
+                        ) : (
+                          <div>{context.droppable ? 'Upload' : 
+                            <Tag
+                              className="hover:cursor-pointer"
+                              tone="green"
+                              variation="secondary"
+                              size="medium"
+                             >
+                              &nbsp;Upload&nbsp;
+                            </Tag>}
+                          </div>
+                        )
+                      }
+                    </FileInput>
+                  </div>
+                </div>
+              </>
             }
           </div>
           {/* <img style={{margin:"0 -8px", maxWidth:"105%", borderRadius:"6px"}} src="./dummy-pic-1.png" /> */}
