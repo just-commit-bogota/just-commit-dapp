@@ -20,6 +20,7 @@ export default function CommitCard ({...props}) {
   // state
   const [proofIpfsHash, setProofIpfsHash] = useState(props.ipfsHash);
   const [fileUploaded, setFileUploaded] = React.useState(false);
+  
   const CommitStatusEmoji = {
 	  "Pending": "❓", // picture not yet submitted
   	"Waiting": "⏳", // picture submitted waiting for commitTo judging
@@ -31,13 +32,15 @@ export default function CommitCard ({...props}) {
   const provider = useProvider()
   const { chain, chains } = useNetwork()
   const { address: isConnected } = useAccount()
-  const { config } = usePrepareContractWrite({
+
+  // smart contract write functions
+  const { config: proveConfig } = usePrepareContractWrite({
       addressOrName: contractAddress,
       contractInterface: abi.abi,
       functionName: "proveCommit",
-      args: [props.id, proofIpfsHash ]
+      args: [props.id, proofIpfsHash]
   })
-  const { data, isLoading, isSuccess, write } = useContractWrite(config)
+  const { data, isLoading, isSuccess, write: proveWrite } = useContractWrite(proveConfig)
   
   const { config: verifyConfig } = usePrepareContractWrite({
       addressOrName: contractAddress,
@@ -59,8 +62,8 @@ export default function CommitCard ({...props}) {
         maxRetries: 3,
       }).then(cid => {
         setProofIpfsHash(cid)
-        if (write) {
-          write()
+        if (proveWrite) {
+          proveWrite()
         }
       })
       console.log({proofIpfsHash}) // cid
@@ -105,7 +108,11 @@ export default function CommitCard ({...props}) {
             <div className="w-4/5 text-sm block">{props.message}</div>
             <div className="flex align-left space-x-2">
               <div className="text-sm text-slate-400 opacity-80" style= {{whiteSpace: "nowrap"}}>
-                { (props.expiryTimestamp*1000) > Date.now() ? <Countdown date={props.expiryTimestamp} daysInHours></Countdown> : moment(props.createdTimestamp*1000).fromNow()}
+                {
+                  (props.expiryTimestamp*1000) > Date.now() ?
+                    <Countdown date={props.expiryTimestamp} daysInHours></Countdown> :
+                    moment(props.createdTimestamp*1000).fromNow()
+                }
               </div>
             </div>
           </div>
@@ -119,8 +126,6 @@ export default function CommitCard ({...props}) {
             {props.status == "Pending" &&
               <>
                 <div className="flex flex-col" style={{alignItems:"center"}}>
-                  {/* make the below line conditional on props.status */}
-                  <div className="text-3xl">📷</div>
                   <br />
                   <br />
                   <div className="flex">
@@ -141,17 +146,39 @@ export default function CommitCard ({...props}) {
                         ) : (
                           <div>{context.droppable ? 'Upload' : 
                             <Tag
-                              className="hover:cursor-pointer"
+                              className="text-2xl hover:cursor-pointer"
                               tone="green"
-                              variation="secondary"
-                              size="medium"
+                              variation="primary"
+                              size="large"
                              >
-                              &nbsp;Upload&nbsp;
+                              &nbsp;📷&nbsp;
                             </Tag>}
                           </div>
                         )
                       }
                     </FileInput>
+                  </div>
+                </div>
+              </>
+            }
+            {props.status == "Waiting" &&
+              <>
+                <div className="flex flex-col" style={{alignItems:"center"}}>
+                  <br />
+                  <br />
+                  <div className="flex">
+                    <a href = {`https://${proofIpfsHash}.ipfs.w3s.link/`}
+                        target="_blank"
+                        rel="noreferrer">
+                      <Tag
+                        className="text-2xl hover:cursor-pointer"
+                        tone="green"
+                        variation="primary"
+                        size="large"
+                       >
+                      &nbsp;📸&nbsp;
+                      </Tag>
+                    </a>
                   </div>
                 </div>
               </>

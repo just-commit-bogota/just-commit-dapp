@@ -247,6 +247,27 @@ a {
   color: rgba(0, 0, 0, 0.4);
 }
 
+.active {
+  font-weight: bold;
+}
+
+.continent_nav {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  padding-inline-start: 0px;
+}
+
+.continent_nav > li {
+  border: none;
+  border-radius: 16px;
+  padding: 4px 4px;
+}
+
+.filterOption {
+  cursor: pointer;
+}
+
 /*
  * source: https://loading.io/css/
  * license: CC0 (Creative Commons)
