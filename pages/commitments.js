@@ -60,6 +60,7 @@ export default function Commitments() {
       newCommitStruct.createdTimestamp = commit.createdTimestamp.toNumber();
       newCommitStruct.message = commit.message;
       newCommitStruct.ipfsHash = commit.proofIpfsHash;
+      newCommitStruct.txnHash = commitData.hash;
 
       newArray.push(newCommitStruct);
     }
