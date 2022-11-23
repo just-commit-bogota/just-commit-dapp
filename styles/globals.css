@@ -257,6 +257,7 @@ a {
   justify-content: space-between;
   list-style: none;
   padding-inline-start: 0px;
+  gap: 6px;
 }
 
 .continent_nav > li {
