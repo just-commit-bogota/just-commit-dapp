@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import CommitCard from "./CommitCard.js"
 import { ethers } from 'ethers'
 import { useAccount } from 'wagmi'

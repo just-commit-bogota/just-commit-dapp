@@ -27,7 +27,7 @@ export default function Home() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState('0xB44691c50339de6D882E1D6DB4EbE5E3d670BAAd') // hard-coded for now (belf.eth)
+  const [commitTo, setCommitTo] = useState('0xB44691c50339de6D882E1D6DB4EbE5E3d670BAAd') // hard-coded for now (belf.eth) - does this work with justcommit.eth full address
   const [commitAmount, setCommitAmount] = useState('0.01')
   const [validThrough, setValidThrough] = useState((1 * 3600 * 1000) + Date.now()) // == 1 hour
   const [loadingState, setLoadingState] = useState('loading')
