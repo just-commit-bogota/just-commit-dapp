@@ -4,10 +4,6 @@ import { ethers } from 'ethers'
 import { useAccount } from 'wagmi'
 
 export default function CommitCardList({cardList}) {
-	if (!cardList) {
-		return null;
-	}
-
   // state
   const [selectedFilter, setSelectedFilter] = useState("Feed")
   const { address: connectedAddress } = useAccount()
