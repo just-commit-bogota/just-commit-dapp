@@ -50,11 +50,10 @@ export default function CommitCardList({cardList}) {
 
 	return (
     <>
-      <div className="flex flex-col"
-      style={{alignItems: "center", display:"block"}}>
-
+      <div className="flex flex-col lg:block"
+           style={{alignItems: "center"}}>
         {/*lg:justify-center lg:space-x-10 */}
-        <ul className="continent_nav place-content-evenly mt-4 mb-10">
+        <ul className="continent_nav text-small mt-4 mb-10">
           {filters.map(f => 
           <li key={f} id={f} className="filterOption" >
             <a onClick={() => onCategoryClick(f)}>{f}</a>

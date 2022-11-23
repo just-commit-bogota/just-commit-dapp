@@ -249,6 +249,7 @@ a {
 
 .active {
   font-weight: bold;
+  background-color: rgba(211, 211, 211, .4);
 }
 
 .continent_nav {
@@ -259,9 +260,11 @@ a {
 }
 
 .continent_nav > li {
-  border: none;
+  border: solid;
+  border-color: rgba(211, 211, 211, .8);
   border-radius: 16px;
-  padding: 4px 4px;
+  padding: 8px 8px;
+  font-size: smaller;
 }
 
 .filterOption {
@@ -340,7 +343,7 @@ a {
   }
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1000px) {
   .header {
     text-align: center;
     padding: 1rem 3rem;
@@ -355,6 +358,13 @@ a {
   }
   .container--flex {
     padding: 4rem 2rem 0rem 2rem;
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  .continent_nav {
+    justify-content: left;
+    gap: 1rem;
   }
 }
 
@@ -394,5 +404,10 @@ a {
     width: 35rem;
     max-width: 100%;
     justify-content: center;
+  }
+  .continent_nav {
+    display: inline-flex;
+    gap: 1rem;
+    width: max-content;
   }
 }
