@@ -59,6 +59,7 @@ export default function Home() {
     hash: data?.hash,
     onSettled(data, error) {
       setHasCommited(true)
+      localStorage.setItem('txnHash', data?.hash);
       isWaitLoading = false // same questions as above.
     },
   })

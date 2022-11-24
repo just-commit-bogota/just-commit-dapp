@@ -12,10 +12,11 @@ import { usePrepareContractWrite, useContractWrite } from 'wagmi'
 import moment from 'moment/moment';
 
 const contractAddress = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
+const txnHash = typeof window !== 'undefined' ? localStorage.getItem('txnHash') : null
 
 // dummy token
 const client = new Web3Storage({ token:
-"dummy_token"
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E"
 })
 
 export default function CommitCard ({...props}) {
@@ -226,7 +227,7 @@ export default function CommitCard ({...props}) {
             <div className="flex flex-col align-center justify-center text-lg">{CommitStatusEmoji[props.status]}</div>
             <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600 text-xs rounded-lg bg-sky-200 hover:bg-sky-400">
               <a href = {`https://${chain?.id === 5 ? 'goerli.' : ''
-                  }etherscan.io/tx/`} // TODO
+                  }etherscan.io/tx/${{txnHash}}`} // FIX
                   target="_blank"
                   rel="noreferrer"
               >

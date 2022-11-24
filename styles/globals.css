@@ -129,9 +129,6 @@ a {
   margin: 40px auto 40px auto
 }
 
-.pictureArea:hover {
-}
-
 .pictureArea--waiting {
   margin: 15px auto 0px auto
 }
@@ -146,6 +143,9 @@ a {
 }
 
 .pictureArea--pending {
+}
+
+.pictureArea:hover {
 }
 
 .card__status{
