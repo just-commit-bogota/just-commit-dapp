@@ -60,7 +60,7 @@ export default function CommitCardList({cardList}) {
           </li>)}
         </ul>
     
-        <div>
+        <div style = {{width: "90%"}}>
     			{cardListToDisplay.map((card, index) => (
     				<CommitCard
     					key={card.id}

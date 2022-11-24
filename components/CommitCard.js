@@ -1,6 +1,6 @@
 
 import Button from '@mui/material/Button'
-import { FileInput, Tag, CloseSVG} from '@ensdomains/thorin'
+import { FileInput, Tag, CloseSVG, Button as ButtonThorin } from '@ensdomains/thorin'
 import React, {useState}  from 'react'
 import classNames from 'classnames'
 import abi from "../contracts/CommitManager.json";
@@ -12,8 +12,11 @@ import { usePrepareContractWrite, useContractWrite } from 'wagmi'
 import moment from 'moment/moment';
 
 const contractAddress = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
-const web3StorageToken = ""
-const client = new Web3Storage({ token: web3StorageToken })
+
+// dummy token
+const client = new Web3Storage({ token:
+"dummy_token"
+})
 
 export default function CommitCard ({...props}) {
 
@@ -47,7 +50,6 @@ export default function CommitCard ({...props}) {
       contractInterface: abi.abi,
       functionName: "judgeCommit",
       args: [props.id, true]
-
   })
   const { write: verifyWrite } = useContractWrite(verifyConfig)
 
@@ -103,7 +105,7 @@ export default function CommitCard ({...props}) {
         'styledBorder--pending': props.status == "Pending",
 
       })}>
-        <div className="flex flex-col bg-white p-3" style={{ borderRadius: "12px"}}>
+        <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px"}}>
           <div className="flex flex-row" style = {{justifyContent: "space-between"}}>
             <div className="w-4/5 text-sm block">{props.message}</div>
             <div className="flex align-left space-x-2">
@@ -123,16 +125,18 @@ export default function CommitCard ({...props}) {
             'pictureArea--failure': props.status == "Failure",
             'pictureArea--pending': props.status == "Pending",
           })}>
+            {/* CARD BODY */}
+
+            {/* PENDING OR HISTORY CARD */}
             {props.status == "Pending" &&
               <>
                 <div className="flex flex-col" style={{alignItems:"center"}}>
-                  <br />
-                  <br />
                   <div className="flex">
                     <FileInput maxSize={1} onChange={(file) => uploadFile()}>
                       {(context) =>
                         context.name ? (
-                          <div className="flex flex-col" style={{alignItems:"center"}}>
+                          <div className="flex flex-col"
+                               style={{alignItems:"center", justifyContent:"center"}}>
                             <Tag
                               shape="circle"
                               size="extraSmall"
@@ -140,7 +144,7 @@ export default function CommitCard ({...props}) {
                               tone="green"
                               onClick={context.reset}
                             >
-                              <div className="text-xl">X</div>
+                              <div className="text-2xl">&nbsp;📸&nbsp;</div>
                             </Tag>
                           </div>
                         ) : (
@@ -161,30 +165,41 @@ export default function CommitCard ({...props}) {
                 </div>
               </>
             }
+            {/* ALL OTHER CARDS */}
             {props.status == "Waiting" &&
               <>
                 <div className="flex flex-col" style={{alignItems:"center"}}>
-                  <br />
-                  <br />
-                  <div className="flex">
-                    <a href = {`https://${proofIpfsHash}.ipfs.w3s.link/`}
-                        target="_blank"
-                        rel="noreferrer">
-                      <Tag
-                        className="text-2xl hover:cursor-pointer"
+                
+                <img className="w-full h-full" style={{borderRadius:"4px"}} src="./dummy-pic-5.png" />
+                {/* THE VERIFY VARIANT */}
+                {props.status == "Verify" && (
+                    <div>
+                    <br></br>
+                    <div className="flex flex-row gap-5" style={{justifyContent:"space-between"}}>
+                      <ButtonThorin
+                        shape="rounded"
+                        tone="red"
+                        size="small"
+                      >
+                        Reject
+                      </ButtonThorin>
+                      <ButtonThorin
+                        shape="rounded"
                         tone="green"
-                        variation="primary"
-                        size="large"
-                       >
-                      &nbsp;📸&nbsp;
-                      </Tag>
-                    </a>
+                        size="small"
+                      >
+                        Approve
+                      </ButtonThorin>
+                    </div>
+                    <br></br>
                   </div>
+                )}
                 </div>
               </>
             }
           </div>
-          {/* <img style={{margin:"0 -8px", maxWidth:"105%", borderRadius:"6px"}} src="./dummy-pic-1.png" /> */}
+
+          {/* FOOTER */}
           <div className="flex flex-row text-xs pt-4" style={{justifyContent: "space-between"}}>
             <div className="flex flex-col w-1/2 lg:w-1/3" style={{
               justifyContent: "space-between",
