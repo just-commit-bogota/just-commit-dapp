@@ -55,7 +55,12 @@ export default function CommitCardList({cardList}) {
         {/*lg:justify-center lg:space-x-10 */}
         <ul className="continent_nav text-small mt-4 mb-10">
           {filters.map(f => 
-          <li key={f} id={f} className="filterOption" >
+          <li key={f} id={f} className="filterOption"
+              style=
+              {{
+                 borderColor: (f == "Feed" || f == "My History") ?
+                              "rgba(29, 210, 151, .6)" : "",
+              }}>
             <a onClick={() => onCategoryClick(f)}>{f}</a>
           </li>)}
         </ul>
