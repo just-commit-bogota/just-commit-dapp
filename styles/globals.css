@@ -253,12 +253,9 @@ a {
 }
 
 .continent_nav {
-  display: flex;
-  justify-content: center;
   list-style: none;
   padding-inline-start: 0px;
   gap: 6px;
-  align-items: center;
 }
 
 .continent_nav > li {

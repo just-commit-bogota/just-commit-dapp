@@ -9,7 +9,8 @@ export default function CommitCardList({cardList}) {
   const { address: connectedAddress } = useAccount()
 
   // variables
-  const filters = ["Active", "Waiting", "Verify", "My History", "Feed"]
+  const filters_left = ["Active", "Waiting", "Verify"]
+  const filters_right = ["My History", "Feed"]
   const cardListToDisplay =
     // Feed: Failure or Success
     selectedFilter == "Feed" ?
@@ -50,39 +51,39 @@ export default function CommitCardList({cardList}) {
 
 	return (
     <>
-      <div className="flex flex-col lg:block"
-           style={{alignItems: "center"}}>
-        {/*lg:justify-center lg:space-x-10 */}
-        <ul className="continent_nav text-small mt-4 mb-10">
-          {filters.map(f => 
-          <li key={f} id={f} className="filterOption"
-              style=
-              {{
-                 borderColor: (f == "Feed" || f == "My History") ?
-                              "rgba(29, 210, 151, .6)" : "",
-              }}>
+      <div className = "flex w-11/12 justify-center gap-2 lg:gap-16 text-small mt-4 mb-10">
+        <ul className="flex flex-row continent_nav">
+          {filters_left.map(f => 
+          <li key={f} id={f} className="filterOption">
             <a onClick={() => onCategoryClick(f)}>{f}</a>
           </li>)}
         </ul>
-    
-        <div style = {{width: "90%"}}>
-    			{cardListToDisplay.map((card, index) => (
-    				<CommitCard
-    					key={card.id}
-              status={card.status}
-              expiryTimestamp={card.expiryTimestamp}
-              commitFrom={card.commitFrom}
-              commitTo={card.commitTo}
-              stakeAmount={ethers.utils.formatEther(card.stakeAmount)}
-              createdTimestamp={card.createdTimestamp}
-    					message={card.message}
-    					userIsCreator={card.userIsCreator}
-    					userIsCommitee={card.userIsCommitee}
-    					ipfsHash={card.ipfsHash}
-    					id={card.id}
-    				/>
-    			)).reverse()}
-    		</div>
+        <ul className="flex flex-row continent_nav">
+          {filters_right.map(f => 
+          <li key={f} id={f} className="filterOption"
+            style = {{borderColor: "rgba(29, 180, 151, .8)"}}>
+            <a onClick={() => onCategoryClick(f)}>{f}</a>
+          </li>)}
+        </ul>
+      </div>
+  
+      <div className = "w-11/12">
+        {cardListToDisplay.map((card, index) => (
+          <CommitCard
+            key={card.id}
+            status={card.status}
+            expiryTimestamp={card.expiryTimestamp}
+            commitFrom={card.commitFrom}
+            commitTo={card.commitTo}
+            stakeAmount={ethers.utils.formatEther(card.stakeAmount)}
+            createdTimestamp={card.createdTimestamp}
+            message={card.message}
+            userIsCreator={card.userIsCreator}
+            userIsCommitee={card.userIsCommitee}
+            ipfsHash={card.ipfsHash}
+            id={card.id}
+          />
+        )).reverse()}
       </div>
     </>
   )
