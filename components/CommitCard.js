@@ -16,9 +16,7 @@ const contractAddress = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
 const txnHash = typeof window !== 'undefined' ? localStorage.getItem('txnHash') : null
 
 // dummy token
-const client = new Web3Storage({ token:
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E"
-})
+const client = new Web3Storage({ token: "" })
 
 export default function CommitCard ({...props}) {
 
@@ -29,6 +27,7 @@ export default function CommitCard ({...props}) {
   const CommitStatusEmoji = {
 	  "Pending": "❓", // picture not yet submitted
   	"Waiting": "⏳", // picture submitted waiting for commitTo judging
+    "Verify": "⏳", // commitTo view of a Waiting card
   	"Failure": "❌", // time expired or picture denied
     "Success": "✅", // picture accepted :) 
   }
@@ -115,11 +114,11 @@ export default function CommitCard ({...props}) {
       
       <div style={{ borderRadius: "12px"}} className = {classNames({
         'styledBorder': true,
+        'styledBorder--pending': props.status == "Pending",
         'styledBorder--waiting': props.status == "Waiting",
+        'styledBorder--verify': props.status == "Verify",
         'styledBorder--success': props.status == "Success",
         'styledBorder--failure': props.status == "Failure",
-        'styledBorder--pending': props.status == "Pending",
-
       })}>
         <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px"}}>
           <div className="flex flex-row" style = {{justifyContent: "space-between"}}>
@@ -136,14 +135,15 @@ export default function CommitCard ({...props}) {
           </div>
           <div className = {classNames({
             'pictureArea': true,
+            'pictureArea--pending': props.status == "Pending",
             'pictureArea--waiting': props.status == "Waiting",
+            'pictureArea--verify': props.status == "Verify",
             'pictureArea--success': props.status == "Success",
             'pictureArea--failure': props.status == "Failure",
-            'pictureArea--pending': props.status == "Pending",
           })}>
             {/* CARD BODY */}
 
-            {/* PENDING OR HISTORY CARD */}
+            {/* PENDING CARD */}
             {props.status == "Pending" &&
               <>
                 <div className="flex flex-col" style={{alignItems:"center"}}>
@@ -165,20 +165,26 @@ export default function CommitCard ({...props}) {
               </>
             }
             {/* ALL OTHER CARDS */}
-            {props.status == "Waiting" &&
+            {props.status == "Waiting" && (
               <>
                 <div className="flex flex-col" style={{alignItems:"center"}}>
-                
-                <img className="w-full h-full" style={{borderRadius:"4px"}} src="./dummy-pic-5.png" />
-                {/* THE VERIFY VARIANT */}
-                {props.status == "Verify" && (
-                    <div>
+                  <img className="w-full h-full" style={{borderRadius:"4px"}} src="./dummy-pic-3.png" />
+                </div>
+              </>
+            )}
+                  
+            {props.status == "Verify" && (
+              <>
+                <div className="flex flex-col" style={{alignItems:"center"}}>
+                  <div>
                     <br></br>
+                    <img className="w-full h-full" style={{borderRadius:"4px"}} src="./dummy-pic-8.png" />
                     <div className="flex flex-row gap-5" style={{justifyContent:"space-between"}}>
                       <ButtonThorin
                         shape="rounded"
                         tone="red"
                         size="small"
+                        onClick={returnError}
                       >
                         Reject
                       </ButtonThorin>
@@ -186,16 +192,16 @@ export default function CommitCard ({...props}) {
                         shape="rounded"
                         tone="green"
                         size="small"
+                        onClick={returnError}
                       >
                         Approve
                       </ButtonThorin>
                     </div>
                     <br></br>
                   </div>
-                )}
                 </div>
               </>
-            }
+            )}
           </div>
 
           {/* FOOTER */}

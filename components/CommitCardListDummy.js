@@ -48,6 +48,34 @@ export default function CommitCardListDummy() {
       message: 'go to the gym today',
       ipfsHash: '',
       txnHash: '',
+    },
+    {
+      id: '1',
+      status: "Waiting",
+      userIsCreator: false,
+      userIsCommitee: false,
+      expiryTimestamp: 44444444,
+      commitFrom: 'belf.eth',
+      commitTo: 'best-friend.eth',
+      stakeAmount: 100,
+      createdTimestamp: 77774444,
+      message: 'ice bath session 🧊',
+      ipfsHash: '',
+      txnHash: '',
+    },
+    {
+      id: '2',
+      status: "Verify",
+      userIsCreator: false,
+      userIsCommitee: false,
+      expiryTimestamp: 1669650839,
+      commitFrom: 'greg.eth',
+      commitTo: 'belf.eth',
+      stakeAmount: 50,
+      createdTimestamp: 1669650839,
+      message: 'go for a run 🏃🏼‍♂️',
+      ipfsHash: '',
+      txnHash: '',
     }
   ]
   
@@ -66,9 +94,9 @@ export default function CommitCardListDummy() {
     selectedFilter == "My History" ?
       commitArray.filter(c => (
                            (c.status == "Failure" || c.status == "Success"))) :
-    // Verify: connectedAddress is commitTo and Waiting
+    // Verify: connectedAddress is commitTo and Verify
     selectedFilter == "Verify" ?
-      commitArray.filter(c => (c.status == "Waiting")) :
+      commitArray.filter(c => (c.status == "Verify")) :
     // Waiting: connectedAddress is commitFrom and Waiting
     selectedFilter == "Waiting" ? 
       commitArray.filter(c => (c.status == "Waiting")) :
@@ -94,8 +122,6 @@ export default function CommitCardListDummy() {
       const newSelected = document.getElementById(filter);
       newSelected.classList.toggle("active");
     }
-    console.log(commitArray)
-    console.log(cardListToDisplay)
   }
 
 	return (
@@ -118,7 +144,7 @@ export default function CommitCardListDummy() {
   
       <div className = "w-11/12">
         {/* if I change this to  commitArray, it renders */}
-        {commitArray.map((card, index) => (
+        {cardListToDisplay.map((card, index) => (
           <CommitCard
             key={card.id}
             status={card.status}
