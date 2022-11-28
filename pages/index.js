@@ -65,7 +65,10 @@ export default function Home() {
   })
 
   // functions
- 
+
+  function returnError() {
+    return toast.error('dApp is not live yet')
+  }
   
   // rendering
   return (
@@ -145,21 +148,21 @@ export default function Home() {
               <Input
                 label="To"
                 maxLength={42}
-                value="justcommit.eth"
+                placeholder="your-best-friend.eth"
                 //parentStyles = {{ backgroundColor: '#f1fcf8' }}
                 onChange={(e) => setCommitTo(e.target.value)}
                 required
-                disabled
+                // disabled
               />
               <Input
                 label="Amount"
-                placeholder="0.01"
+                placeholder="20"
                 disabled = {!isWriteLoading && !isWaitLoading && hasCommited}
                 // min={1}
                 step="any"
                 max={9999}
                 type="number"
-                units="Goerli ETH"
+                units="USDC"
                 error={(commitAmount) > 9999 ? "Maximum of $9999" : null}
                 //parentStyles = {{ backgroundColor: '#f1fcf8' }}
                 onChange={(e) => setCommitAmount(e.target.value)}
@@ -209,7 +212,7 @@ export default function Home() {
                   ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
                   (commitAmount > 9999)
                 }
-                onClick= {write}
+                onClick= {returnError} // {write}
               >
                 Commit
               </Button>
