@@ -46,14 +46,13 @@ export default function CommitCardListDummy() {
       stakeAmount: 20,
       createdTimestamp: 1669650839,
       message: 'go to the gym today',
-      ipfsHash: 'hi',
-      txnHash: 'hi',
+      ipfsHash: '',
+      txnHash: '',
     }
   ]
   
   // state
   const [selectedFilter, setSelectedFilter] = useState("Feed")
-  const connectedAddress = true // { address: connectedAddress } = useAccount()
   const [commitArray, setCommitArray] = useState([])
 
   // variables
@@ -65,16 +64,16 @@ export default function CommitCardListDummy() {
       commitArray.filter(c => (c.status == "Failure" || c.status == "Success")) :
     // My History: connectedAddress is commitFrom and Failure or Success
     selectedFilter == "My History" ?
-      commitArray.filter(c => (c.commitFrom == connectedAddress &&
+      commitArray.filter(c => (
                            (c.status == "Failure" || c.status == "Success"))) :
     // Verify: connectedAddress is commitTo and Waiting
     selectedFilter == "Verify" ?
-      commitArray.filter(c => (c.commitTo == connectedAddress && c.status == "Waiting")) :
+      commitArray.filter(c => (c.status == "Waiting")) :
     // Waiting: connectedAddress is commitFrom and Waiting
     selectedFilter == "Waiting" ? 
-      commitArray.filter(c => (c.commitFrom == connectedAddress && c.status == "Waiting")) :
+      commitArray.filter(c => (c.status == "Waiting")) :
     // Active: connectedAddress is commitFrom and Pending
-    commitArray.filter(c => (c.commitFrom == connectedAddress && c.status == "Pending"))
+    commitArray.filter(c => (c.status == "Pending"))
 
   // useEffect()
   // set Active filter to active
@@ -119,7 +118,7 @@ export default function CommitCardListDummy() {
   
       <div className = "w-11/12">
         {/* if I change this to  commitArray, it renders */}
-        {cardListToDisplay.map((card, index) => (
+        {commitArray.map((card, index) => (
           <CommitCard
             key={card.id}
             status={card.status}

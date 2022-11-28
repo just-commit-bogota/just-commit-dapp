@@ -10,6 +10,7 @@ import { Web3Storage } from 'web3.storage'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite } from 'wagmi'
 import moment from 'moment/moment';
+import toast, { Toaster } from 'react-hot-toast'
 
 const contractAddress = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
 const txnHash = typeof window !== 'undefined' ? localStorage.getItem('txnHash') : null
@@ -86,6 +87,18 @@ export default function CommitCard ({...props}) {
       setVerifyIsOpen(false);
   }
 
+  function returnError() {
+    // Wallet connection
+    if (!isConnected) {
+      return toast.error('Connect your wallet')
+    }
+    // On right network
+    if (!chains.some((c) => c.id === chain.id)) {
+      return toast.error('Switch to a supported network')
+    }
+    return toast.error('dApp is not live yet')
+  }
+
   // buttonType state
   let buttonType = 'none';
   if (props.status == "Pending") {
@@ -98,6 +111,8 @@ export default function CommitCard ({...props}) {
 
   return (
     <>
+      <Toaster toastOptions={{duration: '200'}}/>
+      
       <div style={{ borderRadius: "12px"}} className = {classNames({
         'styledBorder': true,
         'styledBorder--waiting': props.status == "Waiting",
@@ -133,35 +148,18 @@ export default function CommitCard ({...props}) {
               <>
                 <div className="flex flex-col" style={{alignItems:"center"}}>
                   <div className="flex">
-                    <FileInput maxSize={1} onChange={(file) => uploadFile()}>
-                      {(context) =>
-                        context.name ? (
-                          <div className="flex flex-col"
-                               style={{alignItems:"center", justifyContent:"center"}}>
-                            <Tag
-                              shape="circle"
-                              size="extraSmall"
-                              variant="secondary"
-                              tone="green"
-                              onClick={context.reset}
-                            >
-                              <div className="text-2xl">&nbsp;📸&nbsp;</div>
-                            </Tag>
-                          </div>
-                        ) : (
-                          <div>{context.droppable ? 'Upload' : 
-                            <Tag
-                              className="text-2xl hover:cursor-pointer"
-                              tone="green"
-                              variation="primary"
-                              size="large"
-                             >
-                              &nbsp;📷&nbsp;
-                            </Tag>}
-                          </div>
-                        )
-                      }
-                    </FileInput>
+                    <Button onClick={returnError}>
+                      <div>
+                        <Tag
+                          className="text-2xl hover:cursor-pointer"
+                          tone="green"
+                          variation="primary"
+                          size="large"
+                         >
+                          &nbsp;📷&nbsp;
+                        </Tag>
+                      </div>
+                    </Button>
                   </div>
                 </div>
               </>
@@ -209,28 +207,24 @@ export default function CommitCard ({...props}) {
               borderRadius: "6px",
             }}>
               <div className="flex flex-row" style={{justifyContent: "space-between"}}>
-                <b>&nbsp;From </b>{props.commitFrom.slice(0, 5)}...{props.commitFrom.slice(-4)}&nbsp;
+                <b>&nbsp;From </b>{props.commitFrom}&nbsp;
               </div>
               <div className="flex flex-row" style={{justifyContent: "space-between"}}>
-                <b>&nbsp;To </b>{props.commitTo.slice(0, 5)}...{props.commitTo.slice(-4)}&nbsp;
+                <b>&nbsp;To </b>{props.commitTo}&nbsp;
               </div>
             </div>
             <div className="flex flex-row w-1/5 align-center justify-center"
                  style={{border:"2px solid rgba(50, 50, 50, .5)", borderRadius: "10px"}}>
               <div className="flex flex-row p-1">
                 <div className="flex flex-col align-center justify-center">
-                  <img className="h-4" src="./ethereum-logo.png" />
+                  <img className="h-4" src="./usdc-logo.png" />
                 </div>
-                <div className="flex flex-col font-semibold align-center justify-center text-xs">&nbsp;{props.stakeAmount}</div>
+                <div className="flex flex-col font-semibold align-center justify-center text-xs">&nbsp;{props.stakeAmount*1e18}</div>
               </div>
             </div>
             <div className="flex flex-col align-center justify-center text-lg">{CommitStatusEmoji[props.status]}</div>
             <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600 text-xs rounded-lg bg-sky-200 hover:bg-sky-400">
-              <a href = {`https://${chain?.id === 5 ? 'goerli.' : ''
-                  }etherscan.io/tx/${{txnHash}}`} // FIX
-                  target="_blank"
-                  rel="noreferrer"
-              >
+              <a onClick={returnError}>
                 &nbsp;&nbsp;Txn&nbsp;&nbsp;
               </a>
             </div>
