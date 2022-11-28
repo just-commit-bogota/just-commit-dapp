@@ -6,19 +6,45 @@ import { useAccount } from 'wagmi'
 
 export default function CommitCardListDummy() {
 
+  useEffect(() => {
+    buildCommitArray()
+  }, []);
+
+  function buildCommitArray() {
+    let newArrayDummy = [];
+    for (let card of cardList) {
+      let newCommitStructDummy = {}
+      newCommitStructDummy.id = card.id;
+      newCommitStructDummy.status = card.status;
+      newCommitStructDummy.userIsCreator = card.userIsCreator;
+      newCommitStructDummy.userIsCommitee = card.userIsCommitee;
+      newCommitStructDummy.expiryTimestamp = card.expiryTimestamp;
+      newCommitStructDummy.commitFrom = card.commitFrom;
+      newCommitStructDummy.commitTo = card.commitTo;
+      newCommitStructDummy.stakeAmount = card.stakeAmount;
+      newCommitStructDummy.createdTimestamp = card.createdTimestamp;
+      newCommitStructDummy.message = card.message;
+      newCommitStructDummy.ipfsHash = card.ipfsHash;
+      newCommitStructDummy.txnHash = card.txnHash;
+
+      newArrayDummy.push(newCommitStructDummy);
+    }
+    newArrayDummy.sort((a, b) => (a.expiryTimestamp > b.expiryTimestamp) ? 1 : -1)
+    setCommitArray(newArrayDummy)
+  }
+
   // a dummy card list
-  
   const cardList = [
     {
       id: '0',
-      status: 'Active',
+      status: "Pending",
       userIsCreator: false,
       userIsCommitee: false,
-      expiryTimestamp: '0000',
+      expiryTimestamp: 1669650839,
       commitFrom: 'belf.eth',
       commitTo: 'vitalik.eth',
-      stakeAmount: '20 USDC',
-      createdTimestamp: '1111',
+      stakeAmount: 20,
+      createdTimestamp: 1669650839,
       message: 'go to the gym today',
       ipfsHash: 'hi',
       txnHash: 'hi',
@@ -28,6 +54,7 @@ export default function CommitCardListDummy() {
   // state
   const [selectedFilter, setSelectedFilter] = useState("Feed")
   const connectedAddress = true // { address: connectedAddress } = useAccount()
+  const [commitArray, setCommitArray] = useState([])
 
   // variables
   const filters_left = ["Active", "Waiting", "Verify"]
@@ -35,19 +62,19 @@ export default function CommitCardListDummy() {
   const cardListToDisplay =
     // Feed: Failure or Success
     selectedFilter == "Feed" ?
-      cardList.filter(c => (c.status == "Failure" || c.status == "Success")) :
+      commitArray.filter(c => (c.status == "Failure" || c.status == "Success")) :
     // My History: connectedAddress is commitFrom and Failure or Success
     selectedFilter == "My History" ?
-      cardList.filter(c => (c.commitFrom == connectedAddress &&
+      commitArray.filter(c => (c.commitFrom == connectedAddress &&
                            (c.status == "Failure" || c.status == "Success"))) :
     // Verify: connectedAddress is commitTo and Waiting
     selectedFilter == "Verify" ?
-      cardList.filter(c => (c.commitTo == connectedAddress && c.status == "Waiting")) :
+      commitArray.filter(c => (c.commitTo == connectedAddress && c.status == "Waiting")) :
     // Waiting: connectedAddress is commitFrom and Waiting
     selectedFilter == "Waiting" ? 
-      cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Waiting")) :
+      commitArray.filter(c => (c.commitFrom == connectedAddress && c.status == "Waiting")) :
     // Active: connectedAddress is commitFrom and Pending
-    cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Pending"))
+    commitArray.filter(c => (c.commitFrom == connectedAddress && c.status == "Pending"))
 
   // useEffect()
   // set Active filter to active
@@ -67,7 +94,9 @@ export default function CommitCardListDummy() {
       setSelectedFilter(filter);
       const newSelected = document.getElementById(filter);
       newSelected.classList.toggle("active");
-    }   
+    }
+    console.log(commitArray)
+    console.log(cardListToDisplay)
   }
 
 	return (
@@ -89,6 +118,7 @@ export default function CommitCardListDummy() {
       </div>
   
       <div className = "w-11/12">
+        {/* if I change this to  commitArray, it renders */}
         {cardListToDisplay.map((card, index) => (
           <CommitCard
             key={card.id}
