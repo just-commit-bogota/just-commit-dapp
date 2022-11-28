@@ -67,7 +67,9 @@ export default function Home() {
   // functions
 
   function returnError() {
-    return toast.error('dApp is not live yet')
+    if (isConnected && chains.some((c) => c.id === chain.id)) {
+      return toast.error('dApp is not live yet')
+    }
   }
   
   // rendering

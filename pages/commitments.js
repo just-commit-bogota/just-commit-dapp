@@ -67,6 +67,7 @@ export default function Commitments() {
 
     newArray.sort((a, b) => (a.expiryTimestamp > b.expiryTimestamp) ? 1 : -1)
     setCommitArray(newArray);
+    console.log(commitArray)
   }
   
   return (
@@ -91,8 +92,8 @@ export default function Commitments() {
             }
             {
               loadingState === 'loaded' && 
-                // <CommitCardListDummy /> 
-                <CommitCardList cardList = {commitArray} />
+                <CommitCardListDummy />
+                // <CommitCardList cardList = {commitArray} />
             }
           </div>
         </div>
