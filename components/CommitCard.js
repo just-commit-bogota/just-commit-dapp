@@ -127,12 +127,23 @@ export default function CommitCard ({...props}) {
           <div className="flex flex-row" style = {{justifyContent: "space-between"}}>
             <div className="w-4/5 text-sm block">{props.message}</div>
             <div className="flex align-left space-x-2">
+              {/* TIMESTAMP */}
               <div className="text-sm text-slate-400 opacity-80" style= {{whiteSpace: "nowrap"}}>
-                {
+                {props.status == "Pending" || props.status == "Waiting" || props.status == "Verify" &&
                   (props.expiryTimestamp*1000) > Date.now() ?
-                    <Countdown date={props.expiryTimestamp} daysInHours></Countdown> :
-                    moment(props.createdTimestamp*1000).fromNow()
+                  <Countdown date={props.expiryTimestamp*1000} daysInHours></Countdown> : null
                 }
+                {(props.status == "Success" || props.status == "Failure") && (
+                  props.id == "3" ? ("1 day ago") :
+                  props.id == "4" ? ("2 days ago") :
+                  props.id == "5" ? ("3 days ago") :
+                  props.id == "6" ? ("6 days ago") :
+                  props.id == "7" ? ("11 days ago") :
+                  props.id == "8" ? ("12 days ago") :
+                  props.id == "9" ? ("12 days ago") :
+                  props.id == "10" ? ("15 days ago") :
+                  props.id == "11" ? ("21 days ago") : null
+                )}
               </div>
             </div>
           </div>
