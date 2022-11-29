@@ -36,6 +36,7 @@ export default function CommitCard ({...props}) {
   const provider = useProvider()
   const { chain, chains } = useNetwork()
   const { address: isConnected } = useAccount()
+  const imgSrc = props.imgSrc
 
   // smart contract write functions
   const { config: proveConfig } = usePrepareContractWrite({
@@ -120,6 +121,8 @@ export default function CommitCard ({...props}) {
         'styledBorder--success': props.status == "Success",
         'styledBorder--failure': props.status == "Failure",
       })}>
+
+      {/* HEADER */}
         <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px"}}>
           <div className="flex flex-row" style = {{justifyContent: "space-between"}}>
             <div className="w-4/5 text-sm block">{props.message}</div>
@@ -141,7 +144,9 @@ export default function CommitCard ({...props}) {
             'pictureArea--success': props.status == "Success",
             'pictureArea--failure': props.status == "Failure",
           })}>
-            {/* CARD BODY */}
+
+            
+      {/* BODY */}
 
             {/* PENDING CARD */}
             {props.status == "Pending" &&
@@ -164,38 +169,47 @@ export default function CommitCard ({...props}) {
                 </div>
               </>
             }
-            {/* ALL OTHER CARDS */}
-            {props.status == "Waiting" && (
+            {/* WAITING || SUCESS || FAILURE */}
+            {((props.status == "Waiting" || props.status == "Success") || props.status == "Failure") && (
               <>
                 <div className="flex flex-col" style={{alignItems:"center"}}>
-                  <img className="w-full h-full" style={{borderRadius:"4px"}} src="./dummy-pic-3.png" />
+                  <div>
+                    <br></br>
+                    {props.status != "Failure" && (
+                      <img className="w-full h-full" style={{ height: "400px", width: "400px", borderRadius:"4px"}} src= {imgSrc} />
+                    )}
+                    <br></br>
+                  </div>
                 </div>
               </>
             )}
-                  
+            {/* VERIFY */}
             {props.status == "Verify" && (
               <>
                 <div className="flex flex-col" style={{alignItems:"center"}}>
                   <div>
                     <br></br>
-                    <img className="w-full h-full" style={{borderRadius:"4px"}} src="./dummy-pic-8.png" />
-                    <div className="flex flex-row gap-5" style={{justifyContent:"space-between"}}>
-                      <ButtonThorin
-                        shape="rounded"
-                        tone="red"
-                        size="small"
-                        onClick={returnError}
-                      >
-                        Reject
-                      </ButtonThorin>
-                      <ButtonThorin
-                        shape="rounded"
-                        tone="green"
-                        size="small"
-                        onClick={returnError}
-                      >
-                        Approve
-                      </ButtonThorin>
+                    <img className="w-full h-full" style={{borderRadius:"4px"}} src="./dummy-pic-9.png" />
+                    <br></br>
+                    <div className="flex justify-center align-center">
+                    <div className="flex flex-row w-1/2 gap-5" style={{justifyContent:"space-between"}}>
+                        <ButtonThorin
+                          shape="rounded"
+                          tone="red"
+                          size="small"
+                          onClick={returnError}
+                        >
+                          Reject
+                        </ButtonThorin>
+                        <ButtonThorin
+                          shape="rounded"
+                          tone="green"
+                          size="small"
+                          onClick={returnError}
+                        >
+                          Approve
+                        </ButtonThorin>
+                      </div>
                     </div>
                     <br></br>
                   </div>

@@ -26,6 +26,7 @@ export default function CommitCardListDummy() {
       newCommitStructDummy.message = card.message;
       newCommitStructDummy.ipfsHash = card.ipfsHash;
       newCommitStructDummy.txnHash = card.txnHash;
+      newCommitStructDummy.imgSrc = card.imgSrc;
 
       newArrayDummy.push(newCommitStructDummy);
     }
@@ -40,14 +41,15 @@ export default function CommitCardListDummy() {
       status: "Pending",
       userIsCreator: false,
       userIsCommitee: false,
-      expiryTimestamp: 1669650839,
+      expiryTimestamp: 1669687136,
       commitFrom: 'belf.eth',
       commitTo: 'vitalik.eth',
       stakeAmount: 20,
-      createdTimestamp: 1669650839,
-      message: 'go to the gym today',
+      createdTimestamp: 1669788136,
+      message: 'Go to the gym today',
       ipfsHash: '',
       txnHash: '',
+      imgSrc: "",
     },
     {
       id: '1',
@@ -59,9 +61,10 @@ export default function CommitCardListDummy() {
       commitTo: 'best-friend.eth',
       stakeAmount: 100,
       createdTimestamp: 77774444,
-      message: 'ice bath session 🧊',
+      message: 'Ice bath session 🧊',
       ipfsHash: '',
       txnHash: '',
+      imgSrc: "./dummy-pic-3.png",
     },
     {
       id: '2',
@@ -73,10 +76,116 @@ export default function CommitCardListDummy() {
       commitTo: 'belf.eth',
       stakeAmount: 50,
       createdTimestamp: 1669650839,
-      message: 'go for a run 🏃🏼‍♂️',
+      message: 'a coding session 🖥️',
       ipfsHash: '',
       txnHash: '',
-    }
+      imgSrc: "./dummy-pic-9.png",
+    },
+    {
+      id: '3',
+      status: "Success",
+      userIsCreator: false,
+      userIsCommitee: false,
+      expiryTimestamp: 1669650839,
+      commitFrom: 'belf.eth',
+      commitTo: 'sofia.eth',
+      stakeAmount: 10,
+      createdTimestamp: 1669650839,
+      message: 'Stretching exercises',
+      ipfsHash: '',
+      txnHash: '',
+      imgSrc: "./dummy-pic-1.png",
+    },
+    {
+      id: '4',
+      status: "Success",
+      userIsCreator: false,
+      userIsCommitee: false,
+      expiryTimestamp: 1669650839,
+      commitFrom: 'belf.eth',
+      commitTo: 'gym-buddy.eth',
+      stakeAmount: 50,
+      createdTimestamp: 1669650839,
+      message: 'go for a hike ⛰️',
+      ipfsHash: '',
+      txnHash: '',
+      imgSrc: "./dummy-pic-2.png",
+    },
+    {
+      id: '5',
+      status: "Failure",
+      userIsCreator: false,
+      userIsCommitee: false,
+      expiryTimestamp: 1669650839,
+      commitFrom: 'belf.eth',
+      commitTo: 'miguel.eth',
+      stakeAmount: 10,
+      createdTimestamp: 1669650839,
+      message: 'buy Coldplay tickets',
+      ipfsHash: '',
+      txnHash: '',
+      imgSrc: "",
+    },
+    {
+      id: '6',
+      status: "Success",
+      userIsCreator: false,
+      userIsCommitee: false,
+      expiryTimestamp: 1669650839,
+      commitFrom: 'belf.eth',
+      commitTo: 'sam.eth',
+      stakeAmount: 15,
+      createdTimestamp: 1669650839,
+      message: 'a meditation session',
+      ipfsHash: '',
+      txnHash: '',
+      imgSrc: "./dummy-pic-7.png",
+    },
+    {
+      id: '7',
+      status: "Success",
+      userIsCreator: false,
+      userIsCommitee: false,
+      expiryTimestamp: 1669650839,
+      commitFrom: 'belf.eth',
+      commitTo: 'andruch.eth',
+      stakeAmount: 200,
+      createdTimestamp: 1669650839,
+      message: 'driving range ⛳',
+      ipfsHash: '',
+      txnHash: '',
+      imgSrc: "./dummy-pic-6.png",
+    },
+    {
+      id: '8',
+      status: "Failure",
+      userIsCreator: false,
+      userIsCommitee: false,
+      expiryTimestamp: 1669650839,
+      commitFrom: 'belf.eth',
+      commitTo: 'dad.eth',
+      stakeAmount: 50,
+      createdTimestamp: 1669650839,
+      message: 'prepare the Thursday presentation',
+      ipfsHash: '',
+      txnHash: '',
+      imgSrc: "",
+    },
+    { 
+      id: '9',
+      status: "Success",
+      userIsCreator: false,
+      userIsCommitee: false,
+      expiryTimestamp: 1669650839,
+      commitFrom: 'belf.eth',
+      commitTo: 'karen.eth',
+      stakeAmount: 20,
+      createdTimestamp: 1669650839,
+      message: 'add a dropdown menu to the dApp 🖥️',
+      ipfsHash: '',
+      txnHash: '',
+      imgSrc: "./dummy-pic-4.png",
+    },
   ]
   
   // state
@@ -84,7 +193,7 @@ export default function CommitCardListDummy() {
   const [commitArray, setCommitArray] = useState([])
 
   // variables
-  const filters_left = ["Active", "Waiting", "Verify"]
+  const filters_left = ["Active", "Waiting", "To Verify"]
   const filters_right = ["My History", "Feed"]
   const cardListToDisplay =
     // Feed: Failure or Success
@@ -95,7 +204,7 @@ export default function CommitCardListDummy() {
       commitArray.filter(c => (
                            (c.status == "Failure" || c.status == "Success"))) :
     // Verify: connectedAddress is commitTo and Verify
-    selectedFilter == "Verify" ?
+    selectedFilter == "To Verify" ?
       commitArray.filter(c => (c.status == "Verify")) :
     // Waiting: connectedAddress is commitFrom and Waiting
     selectedFilter == "Waiting" ? 
@@ -158,6 +267,7 @@ export default function CommitCardListDummy() {
             userIsCommitee={card.userIsCommitee}
             ipfsHash={card.ipfsHash}
             id={card.id}
+            imgSrc={card.imgSrc}
           />
         )).reverse()}
       </div>
