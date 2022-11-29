@@ -18,11 +18,11 @@ export default function Header({dropdownLabel}) {
             chevron = {false}
             label= {dropdownLabel}
             items= {[   
-              { label: <Link href="./">✍🏼</Link>, color: 'text', size: "extraSsmall" },
+              { label: <Link href="./">Home</Link>, color: 'text'},
               { label: <Link href="./commitments">Commitments</Link>, color: 'text' },
               { label: <Link href="http://turf.dev/plots/301"
                              target="_blank" rel="noopener noreferrer">
-                             Headquarters</Link>, color: 'green' },
+                             Headquarters</Link>, color: 'text' },
               { label: <Link href="https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
                              target="_blank" rel="noopener noreferrer">
                              About</Link>, color: 'textTertiary' }, 

@@ -235,7 +235,7 @@ export default function CommitCardListDummy() {
 
 	return (
     <>
-      <div className = "flex w-11/12 justify-center gap-2 lg:gap-16 text-small mt-4 mb-10">
+      <div className = "flex w-full lg:w-11/12 justify-center sm:flex-nowrap gap-2 lg:gap-16 text-small mt-4 mb-10">
         <ul className="flex flex-row continent_nav">
           {filters_left.map(f => 
           <li key={f} id={f} className="filterOption">

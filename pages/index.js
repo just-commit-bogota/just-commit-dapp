@@ -158,11 +158,11 @@ export default function Home() {
               />
               <Input
                 label="Amount"
-                placeholder="20"
+                placeholder="5"
                 disabled = {!isWriteLoading && !isWaitLoading && hasCommited}
-                // min={1}
-                step="any"
+                min={5}
                 max={9999}
+                step= {5} // "any"
                 type="number"
                 units="USDC"
                 error={(commitAmount) > 9999 ? "Maximum of $9999" : null}
@@ -194,7 +194,7 @@ export default function Home() {
                 width: '32%',
                 margin: '1rem',
                 backgroundColor:
-                  commitDescription.length < 6 ||
+                  commitDescription.length < 3 ||
                   commitDescription.length > 35 ||
                   !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
                   ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
@@ -208,7 +208,7 @@ export default function Home() {
                 type="submit"
                 variant="action"
                 disabled = {
-                  commitDescription.length < 6 ||
+                  commitDescription.length < 3 ||
                   commitDescription.length > 35 ||
                   !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
                   ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
