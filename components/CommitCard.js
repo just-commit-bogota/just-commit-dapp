@@ -161,7 +161,7 @@ export default function CommitCard ({...props}) {
                           variation="primary"
                           size="large"
                          >
-                          &nbsp;+ 📷&nbsp;
+                          &nbsp;+ 📸&nbsp;
                         </Tag>
                       </div>
                     </Button>
