@@ -129,7 +129,10 @@ export default function CommitCard ({...props}) {
             <div className="flex align-left space-x-2">
               {/* TIMESTAMP */}
               <div className="text-sm text-slate-400 opacity-80" style= {{whiteSpace: "nowrap"}}>
-                {props.status == "Pending" || props.status == "Waiting" || props.status == "Verify" &&
+                {props.status == "Pending" && (
+                <div>Expires in <b>6 hours</b></div>
+                )}
+                {props.status == "Waiting" || props.status == "Verify" &&
                   (props.expiryTimestamp*1000) > Date.now() ?
                   <Countdown date={props.expiryTimestamp*1000} daysInHours></Countdown> : null
                 }
@@ -187,7 +190,7 @@ export default function CommitCard ({...props}) {
                   <div>
                     <br></br>
                     {props.status != "Failure" && (
-                      <img className="w-full h-full" style={{ height: "400px", width: "400px", borderRadius:"4px"}} src= {imgSrc} />
+                      <img className="w-full h-full" style={{ height: "350px", width: "400px", borderRadius:"4px"}} src= {imgSrc} />
                     )}
                     <br></br>
                   </div>

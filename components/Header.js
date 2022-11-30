@@ -18,7 +18,7 @@ export default function Header({dropdownLabel}) {
             chevron = {false}
             label= {dropdownLabel}
             items= {[   
-              { label: <Link href="./">Home</Link>, color: 'text'},
+              { label: <Link href="./">Home</Link>, color: 'green'},
               { label: <Link href="./commitments">Commitments</Link>, color: 'text' },
               { label: <Link href="http://turf.dev/plots/301"
                              target="_blank" rel="noopener noreferrer">

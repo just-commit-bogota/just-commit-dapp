@@ -141,19 +141,19 @@ a:hover {
 }
 
 .pictureArea--waiting {
-  margin: 15px auto 0px auto
+  margin: 0px auto 0px auto
 }
 
 .pictureArea--verify {
-  margin: 15px auto 0px auto
+  margin: 0px auto 0px auto
 }
 
 .pictureArea--success {
-  margin: 15px auto 0px auto
+  margin: 0px auto 0px auto
 }
 
 .pictureArea--failure {
-  margin: 0px auto 10px auto;
+  margin: 0px auto 0px auto;
   height: 2rem;
 }
 
