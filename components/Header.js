@@ -1,8 +1,12 @@
 import { Dropdown } from '@ensdomains/thorin'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
-export default function Header() {
+export default function Header({dropdownLabel}) {
+
+  var dropdownLabel = dropdownLabel == null ? <img src="./logo.png" /> : dropdownLabel
+  
   return (
     <>
       <div className="header w-full inline-grid justify-between header--absolute bg-white">
@@ -10,17 +14,19 @@ export default function Header() {
           <Dropdown
             style = {{ boxShadow: "0 2px 8px rgb(0 0 0 / 30%)", borderRadius: "10px" }}
             inner
-            chevron = {false}
+            shortThrow
+            chevron = {false}
+            label= {dropdownLabel}
             items= {[   
-              { label: <Link href="./">⚡</Link>, color: 'text' },
-              { label: <Link href="./active">Active</Link>, color: 'text' },
-              { label: <Link href="./my-history">My History</Link>, color: 'text' },
-              { label: <Link href="./feed">Feed</Link>, color: 'green' },
+              { label: <Link href="./">Home</Link>, color: 'green'},
+              { label: <Link href="./commitments">Commitments</Link>, color: 'text' },
+              { label: <Link href="http://turf.dev/plots/301"
+                             target="_blank" rel="noopener noreferrer">
+                             Headquarters</Link>, color: 'text' },
               { label: <Link href="https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
                              target="_blank" rel="noopener noreferrer">
-                             About</Link>, color: 'textSecondary' },        
+                             About</Link>, color: 'textTertiary' }, 
             ]}
-            label= <img src="./logo.png" />
           />
         </div>
         <div className="flex space-x-0 sm:space-x-10 text-sm sm:text-base items-center gap-10 sm:gap-0">
