@@ -1,44 +1,78 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
-import styles from '../styles/Home.module.css'
 import { useState, useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom';
 import abi from "../contracts/CommitManager.json"
 import { ethers } from 'ethers'
-import { Tag, Input, Dropdown } from '@ensdomains/thorin'
+import { Tag, Input, Button as ButtonThorin } from '@ensdomains/thorin'
 import Button from '@mui/material/Button'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
-import { useWaitForTransaction } from 'wagmi'
+import { useWaitForTransaction, useContractRead } from 'wagmi'
 import dayjs from "dayjs";
-import Feed from './feed';
-import Active from './active';
-import MyHistory from './my-history';
-import Header from '../components/Header.js'
+import Header from '../components/Header.js';
+import { Placeholders } from "../components/Placeholders.js";
+import CommitModal from "../components/CommitModal.js";
+import Spinner from "../components/Spinner.js";
 
 export default function Home() {
 
-  // state variables
+  useEffect(() => {  
+    setLoadingState('loaded')
+  }, []);
+  
+  // state
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
   const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState('') // hard-coded to "justcommit.eth" for now
-  const [commitAmount, setCommitAmount] = useState(20)
-  const [validThrough, setValidThrough] = useState(1)
-
-  // smart contract data
+  const [commitTo, setCommitTo] = useState('0xB44691c50339de6D882E1D6DB4EbE5E3d670BAAd') // hard-coded for now (belf.eth) - does this work with justcommit.eth full address
+  const [commitAmount, setCommitAmount] = useState('0.01')
+  const [validThrough, setValidThrough] = useState((1 * 3600 * 1000) + Date.now()) // == 1 hour
+  const [loadingState, setLoadingState] = useState('loading')
+  const [transactionLoading, setTransactionLoading] = useState(false)
+  const [hasCommited, setHasCommited] = useState(false)
+  const [commitArray, setCommitArray] = useState([])
+  
+  // smart contract
   const provider = useProvider()
   const { chain, chains } = useNetwork()
   const { address: isConnected } = useAccount()
-  const contractAddress = "0x28D691d5eDFf71b72B8CA60EDcB164308945707F"
+  const contractAddress = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
+  
   const { config } = usePrepareContractWrite({
     addressOrName: contractAddress,
     contractInterface: abi.abi,
     functionName: "createCommit",
-    args: [commitDescription, commitTo, validThrough, { value: ((commitAmount == "") ? null : ethers.utils.parseEther(String(commitAmount))) }]
+    args: [commitDescription, commitTo, validThrough,
+          { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }]
   })
-  const { data, isLoading, isSuccess, write } = useContractWrite(config)
+  const { data, write, isLoading: isWriteLoading } = useContractWrite({
+    ...config,
+    onSettled(data, error) {
+      {wait}
+      isWriteLoading = false // why do I have to do this? is the function running forever?
+    },
+  })
+  const {wait, isLoading: isWaitLoading } = useWaitForTransaction({                                
+    hash: data?.hash,
+    onSettled(data, error) {
+      setHasCommited(true)
+      localStorage.setItem('txnHash', data?.hash);
+      isWaitLoading = false // same questions as above.
+    },
+  })
 
+  // functions
+
+  function returnError() {
+    if (isConnected && chains.some((c) => c.id === chain.id)) {
+      return toast.error('dApp is not live yet')
+    }
+  }
+  
+  // rendering
   return (
     <>
       <Head>
@@ -58,109 +92,204 @@ export default function Home() {
           Make a Commitment
         </div>
 
-        <form
-          id="form"
-          className="form"
-          onSubmit={async (e) => {
-            e.preventDefault()
-            // Toast checks
+        {
+          loadingState === 'loading' && <Placeholders loadingStyle = "indexLoadingStyle" number = {1} />
+        }
 
-          }}>
+        {
+          loadingState === 'loaded' &&
+        
+          <form
+            id="form"
+            className="form"
+            
+            // write();
+            // toast.error('Coming soon! Working on it... ', { position: 'bottom-center' })}} 
+            // setModalOpen(true)
 
-          <div className="col flex flex-col">
-            <Input
-              label="Commitment"
-              maxLength={140}
-              placeholder=""
-              labelSecondary={
-                <Tag
-                  className="hover:cursor-pointer"
+            // this takes priority over Commit <Button> onClick
+            onSubmit={async (e) => {
+              e.preventDefault()
+
+              // Toast Checks
+
+              // Wallet connection
+              if (!isConnected) {
+                return toast.error('Connect your wallet')
+              }
+              // On right network
+              if (!chains.some((c) => c.id === chain.id)) {
+                return toast.error('Switch to a supported network')
+              }
+              //
+            }}>
+  
+            <div className="flex flex-col gap-3 w-full">
+              <Input
+                label="Commitment"
+                maxLength={140}
+                placeholder=""
+                disabled = {!isWriteLoading && !isWaitLoading && hasCommited}
+                labelSecondary={
+                  <Tag
+                    className="hover:cursor-pointer"
+                    tone="green"
+                    size="small"
+                    onClick={() =>
+                      {toast('📸 Can a pic or screenshot prove this?'),
+                      { position: 'top-center' }}}
+                  >
+                    i
+                  </Tag>
+                }
+                error={(commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
+                        commitDescription.length == 0) ? null : "Alphanumeric only"}
+                onChange={(e) => setCommitDescription(e.target.value)}
+                required
+              />
+              <Input
+                label="To"
+                maxLength={42}
+                placeholder="your-best-friend.eth"
+                //parentStyles = {{ backgroundColor: '#f1fcf8' }}
+                onChange={(e) => setCommitTo(e.target.value)}
+                required
+                // disabled
+              />
+              <Input
+                label="Amount"
+                placeholder="5"
+                disabled = {!isWriteLoading && !isWaitLoading && hasCommited}
+                min={5}
+                max={9999}
+                step= {5} // "any"
+                type="number"
+                units="USDC"
+                error={(commitAmount) > 9999 ? "Maximum of $9999" : null}
+                //parentStyles = {{ backgroundColor: '#f1fcf8' }}
+                onChange={(e) => setCommitAmount(e.target.value)}
+                required
+              />
+              {/* TODO: abstract away the UNIX conversion*/}
+              <Input
+                label="Duration"
+                placeholder="1"
+                disabled = {!isWriteLoading && !isWaitLoading && hasCommited}
+                min={1}
+                max={24}
+                step={1}
+                type="number"
+                units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
+                error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null }
+                //parentStyles={{ backgroundColor: '#f1fcf8' }}
+                onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
+                required
+              />
+            </div>
+  
+            {/* the Commit button */}
+            {/* show it when there hasn't been a commit and the write is not loading */}
+            {(!((isWriteLoading || isWaitLoading)) && !hasCommited) && (
+              <Button style={{
+                width: '32%',
+                margin: '1rem',
+                backgroundColor:
+                  commitDescription.length < 3 ||
+                  commitDescription.length > 35 ||
+                  !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
+                  ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
+                  (commitAmount > 9999) ?
+                  "rgb(73 179 147 / 35%)": "rgb(73 179 147)",
+                borderRadius: 12,
+                color: "white",
+                boxShadow: "0rem 0.4rem 0.4rem 0rem lightGrey",
+              }}
+                tone="green"
+                type="submit"
+                variant="action"
+                disabled = {
+                  commitDescription.length < 3 ||
+                  commitDescription.length > 35 ||
+                  !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
+                  ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
+                  (commitAmount > 9999)
+                }
+                onClick= {returnError} // {write}
+              >
+                Commit
+              </Button>
+            )}
+
+            {/*
+            {(modalOpen && 
+            <CommitModal
+              commitDescription = {commitDescription}
+              commitTo = "justcommit.eth" // {commitTo}
+              amount = {commitAmount}
+              duration = {validThrough}
+              modalOpen = {modalOpen}
+              setModalOpen = {setModalOpen}
+            />
+            )}
+            */}
+            
+            <Toaster toastOptions={{duration: '200'}}/>
+  
+            {(((isWriteLoading || isWaitLoading)) && !hasCommited) && (
+              <div className="justifyCenter">
+                <Spinner />
+              </div> 
+            )}
+
+            {hasCommited && 
+              <div className="flex flex-row mt-5 mb-2 gap-4">
+                <ButtonThorin
+                  outlined
+                  shape="rounded"
+                  tone="grey"
+                  size="small"
+                  variant="transparent"
+                  as = "a"
+                  href = {`https://${
+                    chain?.id === 5 ? 'goerli.' : ''
+                  }etherscan.io/tx/${data.hash}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Transaction
+                </ButtonThorin>
+                <div className="text-2xl font-bold">⚡</div>
+                <ButtonThorin
+                  outlined
+                  shape="rounded"
                   tone="green"
                   size="small"
-                  onClick={() =>
-                    {toast('📸 Can a pic or screenshot prove this?'),
-                    { position: 'top-center' }}}
+                  variant="secondary"
+                  as = "a"
+                  href = "./commitments"
                 >
-                  i
-                </Tag>
-              }
-              error={(commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                      commitDescription.length == 0) ? null : "Alphanumeric only"}
-              onChange={(e) => setCommitDescription(e.target.value)}
-              required
-            />
-            <Input
-              label="To"
-              maxLength={42}
-              value="justcommit.eth"
-              //parentStyles = {{ backgroundColor: '#f1fcf8' }}
-              onChange={(e) => setCommitTo(e.target.value)}
-              required
-              disabled
-            />
-            <Input
-              label="Amount"
-              placeholder="20"
-              min={1}
-              step={1}
-              max={100} // should this be capped?
-              type="number"
-              units="USDC" // change "Goerli ETH" when live + add 
-              //parentStyles = {{ backgroundColor: '#f1fcf8' }}
-              onChange={(e) => setCommitAmount(e.target.value)}
-              required
-            />
-            {/* TODO: abstract away the UNIX conversion*/}
-            <Input
-              label="Duration"
-              placeholder="1"
-              min={1}
-              max={24}
-              step={1}
-              type="number"
-              units={((validThrough - dayjs()) / 3600) > 1 ? 'hours' : 'hour'}
-              error={((validThrough - dayjs()) / 3600) > 24 ? "24 hour maximum" : null}
-              //parentStyles={{ backgroundColor: '#f1fcf8' }}
-              onChange={(e) => setValidThrough(e.target.value * 3600 + dayjs())}
-              required
-            />
-          </div>
+                  Commitment
+                </ButtonThorin>
+              </div>
+            }
 
-          {/* the Commit button */}
-          {!isLoading && (
-            <Button style={{
-              width: '32%',
-              margin: '1rem',
-              backgroundColor: (commitDescription.length < 6 ||
-                               !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/)) ||
-                               ((validThrough - dayjs()) / 3600) > 24 ?
-                                "rgb(73 179 147 / 35%)": "rgb(73 179 147)",
-              borderRadius: 12,
-              color: "white",
-              boxShadow: "0rem 0.4rem 0.4rem 0rem lightGrey",
-            }}
-              tone="green"
-              variant="primary"
-              disabled = {commitDescription.length < 6 ||
-                         ((validThrough - dayjs()) / 3600) > 24 ||
-                         !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/)}
-              onClick={() => { toast.error('Coming soon! Working on it... ', { position: 'bottom-center' })}} // write();
-            >
-              Commit
-            </Button>
-          )}
-
-          <Toaster toastOptions={{duration: '200'}}/>
-
-          {/*
-          {isLoading && (
-            <div className="justifyCenter">
-              <Spinner />
-            </div>
-          )}
-          */}
-
-        </form>
+            {/*
+            isWriteLoading: {String(isWriteLoading)}
+            <br></br>
+            <br></br>
+            isWaitLoading: {String(isWaitLoading)}
+            <br></br>
+            <br></br>
+            hasCommited: {String(hasCommited)}
+            */}
+            
+            {/*
+            {validThrough}
+            {Date.now()}
+            */}
+            
+          </form>
+        }
       </div>
     </>
   )

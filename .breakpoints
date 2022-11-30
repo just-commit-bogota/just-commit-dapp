@@ -1,10 +1,10 @@
 {
   "files": {
-    "package.json": [
+    "pages/index.js": [
       {
-        "id": "961eccb1-456e-4604-bc8b-a70757ee005c",
+        "id": "5c71efac-0fde-4c14-9db0-5c52978b7377",
         "line": 1,
-        "version": 13,
+        "version": 9760,
         "index": 0
       }
     ]
