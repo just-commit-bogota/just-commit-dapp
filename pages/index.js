@@ -146,17 +146,17 @@ export default function Home() {
               <Input
                 label="To"
                 maxLength={42}
-                value="justcommit.eth"
+                //value="justcommit.eth"
                 //parentStyles = {{ backgroundColor: '#f1fcf8' }}
                 onChange={(e) => setCommitTo(e.target.value)}
                 required
-                disabled
+                //disabled
               />
               <Input
                 label="Amount"
-                placeholder="0.01"
+                placeholder="1"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommited}
-                // min={1}
+                min={0}
                 step="any"
                 max={9999}
                 type="number"
