@@ -1,4 +1,3 @@
-
 import Button from '@mui/material/Button'
 import { FileInput, Tag, CloseSVG, Button as ButtonThorin } from '@ensdomains/thorin'
 import React, {useState}  from 'react'
@@ -10,13 +9,14 @@ import { Web3Storage } from 'web3.storage'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite } from 'wagmi'
 import moment from 'moment/moment';
-import toast, { Toaster } from 'react-hot-toast'
 
 const contractAddress = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
 const txnHash = typeof window !== 'undefined' ? localStorage.getItem('txnHash') : null
 
 // dummy token
-const client = new Web3Storage({ token: "" })
+const client = new Web3Storage({ token:
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E"
+})
 
 export default function CommitCard ({...props}) {
 
@@ -27,7 +27,6 @@ export default function CommitCard ({...props}) {
   const CommitStatusEmoji = {
 	  "Pending": "❓", // picture not yet submitted
   	"Waiting": "⏳", // picture submitted waiting for commitTo judging
-    "Verify": "⏳", // commitTo view of a Waiting card
   	"Failure": "❌", // time expired or picture denied
     "Success": "✅", // picture accepted :) 
   }
@@ -36,7 +35,6 @@ export default function CommitCard ({...props}) {
   const provider = useProvider()
   const { chain, chains } = useNetwork()
   const { address: isConnected } = useAccount()
-  const imgSrc = props.imgSrc
 
   // smart contract write functions
   const { config: proveConfig } = usePrepareContractWrite({
@@ -87,18 +85,6 @@ export default function CommitCard ({...props}) {
       setVerifyIsOpen(false);
   }
 
-  function returnError() {
-    // Wallet connection
-    if (!isConnected) {
-      return toast.error('Connect your wallet')
-    }
-    // On right network
-    if (!chains.some((c) => c.id === chain.id)) {
-      return toast.error('Switch to a supported network')
-    }
-    return toast.error('dApp is not live yet')
-  }
-
   // buttonType state
   let buttonType = 'none';
   if (props.status == "Pending") {
@@ -111,125 +97,106 @@ export default function CommitCard ({...props}) {
 
   return (
     <>
-      <Toaster toastOptions={{duration: '200'}}/>
-      
       <div style={{ borderRadius: "12px"}} className = {classNames({
         'styledBorder': true,
-        'styledBorder--pending': props.status == "Pending",
         'styledBorder--waiting': props.status == "Waiting",
-        'styledBorder--verify': props.status == "Verify",
         'styledBorder--success': props.status == "Success",
         'styledBorder--failure': props.status == "Failure",
-      })}>
+        'styledBorder--pending': props.status == "Pending",
 
-      {/* HEADER */}
+      })}>
         <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px"}}>
           <div className="flex flex-row" style = {{justifyContent: "space-between"}}>
             <div className="w-4/5 text-sm block">{props.message}</div>
             <div className="flex align-left space-x-2">
-              {/* TIMESTAMP */}
               <div className="text-sm text-slate-400 opacity-80" style= {{whiteSpace: "nowrap"}}>
-                {props.status == "Pending" && (
-                <div>Expires in <b>6 hours</b></div>
-                )}
-                {props.status == "Waiting" || props.status == "Verify" &&
+                {
                   (props.expiryTimestamp*1000) > Date.now() ?
-                  <Countdown date={props.expiryTimestamp*1000} daysInHours></Countdown> : null
+                    <Countdown date={props.expiryTimestamp} daysInHours></Countdown> :
+                    moment(props.createdTimestamp*1000).fromNow()
                 }
-                {(props.status == "Success" || props.status == "Failure") && (
-                  props.id == "3" ? ("1 day ago") :
-                  props.id == "4" ? ("2 days ago") :
-                  props.id == "5" ? ("3 days ago") :
-                  props.id == "6" ? ("6 days ago") :
-                  props.id == "7" ? ("11 days ago") :
-                  props.id == "8" ? ("12 days ago") :
-                  props.id == "9" ? ("12 days ago") :
-                  props.id == "10" ? ("15 days ago") :
-                  props.id == "11" ? ("21 days ago") : null
-                )}
               </div>
             </div>
           </div>
           <div className = {classNames({
             'pictureArea': true,
-            'pictureArea--pending': props.status == "Pending",
             'pictureArea--waiting': props.status == "Waiting",
-            'pictureArea--verify': props.status == "Verify",
             'pictureArea--success': props.status == "Success",
             'pictureArea--failure': props.status == "Failure",
+            'pictureArea--pending': props.status == "Pending",
           })}>
+            {/* CARD BODY */}
 
-            
-      {/* BODY */}
-
-            {/* PENDING CARD */}
+            {/* PENDING OR HISTORY CARD */}
             {props.status == "Pending" &&
               <>
                 <div className="flex flex-col" style={{alignItems:"center"}}>
                   <div className="flex">
-                    <Button onClick={returnError}>
-                      <div>
-                        <Tag
-                          className="text-2xl hover:cursor-pointer"
-                          tone="green"
-                          variation="primary"
-                          size="large"
-                         >
-                          &nbsp;+ 📸&nbsp;
-                        </Tag>
-                      </div>
-                    </Button>
+                    <FileInput maxSize={1} onChange={(file) => uploadFile()}>
+                      {(context) =>
+                        context.name ? (
+                          <div className="flex flex-col"
+                               style={{alignItems:"center", justifyContent:"center"}}>
+                            <Tag
+                              shape="circle"
+                              size="extraSmall"
+                              variant="secondary"
+                              tone="green"
+                              onClick={context.reset}
+                            >
+                              <div className="text-2xl">&nbsp;📸&nbsp;</div>
+                            </Tag>
+                          </div>
+                        ) : (
+                          <div>{context.droppable ? 'Upload' : 
+                            <Tag
+                              className="text-2xl hover:cursor-pointer"
+                              tone="green"
+                              variation="primary"
+                              size="large"
+                             >
+                              &nbsp;📷&nbsp;
+                            </Tag>}
+                          </div>
+                        )
+                      }
+                    </FileInput>
                   </div>
                 </div>
               </>
             }
-            {/* WAITING || SUCESS || FAILURE */}
-            {((props.status == "Waiting" || props.status == "Success") || props.status == "Failure") && (
+            {/* ALL OTHER CARDS */}
+            {props.status == "Waiting" &&
               <>
                 <div className="flex flex-col" style={{alignItems:"center"}}>
-                  <div>
+                
+                <img className="w-full h-full" style={{borderRadius:"4px"}} src="./dummy-pic-5.png" />
+                {/* THE VERIFY VARIANT */}
+                {props.status == "Verify" && (
+                    <div>
                     <br></br>
-                    {props.status != "Failure" && (
-                      <img className="w-full h-full" style={{ height: "350px", width: "400px", borderRadius:"4px"}} src= {imgSrc} />
-                    )}
-                    <br></br>
-                  </div>
-                </div>
-              </>
-            )}
-            {/* VERIFY */}
-            {props.status == "Verify" && (
-              <>
-                <div className="flex flex-col" style={{alignItems:"center"}}>
-                  <div>
-                    <br></br>
-                    <img className="w-full h-full" style={{borderRadius:"4px"}} src="./dummy-pic-9.png" />
-                    <br></br>
-                    <div className="flex justify-center align-center">
-                    <div className="flex flex-row w-1/2 gap-5" style={{justifyContent:"space-between"}}>
-                        <ButtonThorin
-                          shape="rounded"
-                          tone="red"
-                          size="small"
-                          onClick={returnError}
-                        >
-                          Reject
-                        </ButtonThorin>
-                        <ButtonThorin
-                          shape="rounded"
-                          tone="green"
-                          size="small"
-                          onClick={returnError}
-                        >
-                          Approve
-                        </ButtonThorin>
-                      </div>
+                    <div className="flex flex-row gap-5" style={{justifyContent:"space-between"}}>
+                      <ButtonThorin
+                        shape="rounded"
+                        tone="red"
+                        size="small"
+                      >
+                        Reject
+                      </ButtonThorin>
+                      <ButtonThorin
+                        shape="rounded"
+                        tone="green"
+                        size="small"
+                      >
+                        Approve
+                      </ButtonThorin>
                     </div>
                     <br></br>
                   </div>
+                )}
                 </div>
               </>
-            )}
+            }
           </div>
 
           {/* FOOTER */}
@@ -241,24 +208,28 @@ export default function CommitCard ({...props}) {
               borderRadius: "6px",
             }}>
               <div className="flex flex-row" style={{justifyContent: "space-between"}}>
-                <b>&nbsp;From </b>{props.commitFrom}&nbsp;
+                <b>&nbsp;From </b>{props.commitFrom.slice(0, 5)}...{props.commitFrom.slice(-4)}&nbsp;
               </div>
               <div className="flex flex-row" style={{justifyContent: "space-between"}}>
-                <b>&nbsp;To </b>{props.commitTo}&nbsp;
+                <b>&nbsp;To </b>{props.commitTo.slice(0, 5)}...{props.commitTo.slice(-4)}&nbsp;
               </div>
             </div>
             <div className="flex flex-row w-1/5 align-center justify-center"
                  style={{border:"2px solid rgba(50, 50, 50, .5)", borderRadius: "10px"}}>
               <div className="flex flex-row p-1">
                 <div className="flex flex-col align-center justify-center">
-                  <img className="h-4" src="./usdc-logo.png" />
+                  <img className="h-4" src="./ethereum-logo.png" />
                 </div>
-                <div className="flex flex-col font-semibold align-center justify-center text-xs">&nbsp;{props.stakeAmount*1e18}</div>
+                <div className="flex flex-col font-semibold align-center justify-center text-xs">&nbsp;{props.stakeAmount}</div>
               </div>
             </div>
             <div className="flex flex-col align-center justify-center text-lg">{CommitStatusEmoji[props.status]}</div>
             <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600 text-xs rounded-lg bg-sky-200 hover:bg-sky-400">
-              <a onClick={returnError}>
+              <a href = {`https://${chain?.id === 5 ? 'goerli.' : ''
+                  }etherscan.io/tx/${{txnHash}}`} // FIX
+                  target="_blank"
+                  rel="noreferrer"
+              >
                 &nbsp;&nbsp;Txn&nbsp;&nbsp;
               </a>
             </div>

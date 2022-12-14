@@ -91,8 +91,8 @@ export default function Commitments() {
             }
             {
               loadingState === 'loaded' && 
-                <CommitCardListDummy />
-                // <CommitCardList cardList = {commitArray} />
+                // <CommitCardListDummy /> 
+                <CommitCardList cardList = {commitArray} />
             }
           </div>
         </div>
@@ -100,4 +100,3 @@ export default function Commitments() {
     </>
   )
 }
-
