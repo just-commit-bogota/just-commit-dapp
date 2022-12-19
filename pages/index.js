@@ -150,7 +150,7 @@ export default function Home() {
               <Input
                 label="To"
                 maxLength={42}
-                placeholder="your-best-friend.eth"
+                // placeholder="your-best-friend.eth"
                 //parentStyles = {{ backgroundColor: '#f1fcf8' }}
                 onChange={(e) => setCommitTo(e.target.value)}
                 required
