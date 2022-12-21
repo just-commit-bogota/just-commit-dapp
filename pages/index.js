@@ -16,6 +16,7 @@ import Header from '../components/Header.js';
 import { Placeholders } from "../components/Placeholders.js";
 import CommitModal from "../components/CommitModal.js";
 import Spinner from "../components/Spinner.js";
+import useFetch from '../hooks/fetch'
 
 export default function Home() {
 
@@ -65,7 +66,11 @@ export default function Home() {
   })
 
   // functions
-
+  
+  // live Ethereum stats
+  const gasApi = useFetch('https://gas.best/stats')
+  const gasPrice = gasApi.data?.pending?.fee
+  const ethPrice = gasApi.data?.ethPrice
 
   // rendering
   return (
