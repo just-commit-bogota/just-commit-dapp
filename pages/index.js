@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useFetch } from 'react'
 import { Route, Routes } from 'react-router-dom';
 import abi from "../contracts/CommitManager.json"
 import { ethers } from 'ethers'
@@ -16,7 +16,6 @@ import Header from '../components/Header.js';
 import { Placeholders } from "../components/Placeholders.js";
 import CommitModal from "../components/CommitModal.js";
 import Spinner from "../components/Spinner.js";
-import useFetch from '../hooks/fetch'
 
 export default function Home() {
 
