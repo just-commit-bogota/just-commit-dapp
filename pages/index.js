@@ -17,9 +17,12 @@ export default function Home() {
     setLoadingState('loaded')
   }, []);
 
+  // hard-coded variables
+  const CONTRACT_ADDRESS = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
+
   // state
   const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState('0xB44691c50339de6D882E1D6DB4EbE5E3d670BAAd') // hard-coded for now (belf.eth) - does this work with justcommit.eth full address
+  const [commitTo, setCommitTo] = useState('')
   const [commitAmount, setCommitAmount] = useState('0.01')
   const [validThrough, setValidThrough] = useState((1 * 3600 * 1000) + Date.now()) // == 1 hour
   const [loadingState, setLoadingState] = useState('loading')
@@ -28,11 +31,10 @@ export default function Home() {
   // smart contract data
   const { chain, chains } = useNetwork()
   const { address } = useAccount()
-  const contractAddress = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
   
-  // functions
+  // contract functions
   const { config } = usePrepareContractWrite({
-    addressOrName: contractAddress,
+    addressOrName: CONTRACT_ADDRESS,
     contractInterface: abi.abi,
     functionName: "createCommit",
     args: [commitDescription, commitTo, validThrough,
@@ -51,7 +53,9 @@ export default function Home() {
       isWaitLoading = false // same questions as above.
     },
   })
-  
+
+  // helper functions
+
   // extra (live ETH stats)
   const gasApi = useFetch('https://gas.best/stats')
   const gasPrice = gasApi.data?.pending?.fee
