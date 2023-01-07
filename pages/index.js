@@ -6,9 +6,7 @@ import { ethers } from 'ethers'
 import { Tag, Input, Button as ButtonThorin } from '@ensdomains/thorin'
 import Button from '@mui/material/Button'
 import toast, { Toaster } from 'react-hot-toast'
-import { useAccount, useNetwork, useProvider } from 'wagmi'
-import { useContractWrite, usePrepareContractWrite } from 'wagmi'
-import { useWaitForTransaction, useContractRead } from 'wagmi'
+import { useAccount, useNetwork, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
 import { Placeholders } from "../components/Placeholders.js";
 import Spinner from "../components/Spinner.js";
@@ -25,16 +23,14 @@ export default function Home() {
   const [commitAmount, setCommitAmount] = useState('0.01')
   const [validThrough, setValidThrough] = useState((1 * 3600 * 1000) + Date.now()) // == 1 hour
   const [loadingState, setLoadingState] = useState('loading')
-  const [transactionLoading, setTransactionLoading] = useState(false)
   const [hasCommited, setHasCommited] = useState(false)
-  const [commitArray, setCommitArray] = useState([])
 
-  // smart contract
-  const provider = useProvider()
+  // smart contract data
   const { chain, chains } = useNetwork()
-  const { address: isConnected } = useAccount()
+  const { address } = useAccount()
   const contractAddress = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
-
+  
+  // functions
   const { config } = usePrepareContractWrite({
     addressOrName: contractAddress,
     contractInterface: abi.abi,
@@ -42,25 +38,21 @@ export default function Home() {
     args: [commitDescription, commitTo, validThrough,
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }]
   })
-  const { data, write, isLoading: isWriteLoading } = useContractWrite({
-    ...config,
+  const { data, write, isLoading: isWriteLoading } = useContractWrite({...config,
     onSettled(data, error) {
       { wait }
       isWriteLoading = false // why do I have to do this? is the function running forever?
     },
   })
-  const { wait, isLoading: isWaitLoading } = useWaitForTransaction({
-    hash: data?.hash,
+  const { wait, isLoading: isWaitLoading } = useWaitForTransaction({ hash: data?.hash,
     onSettled(data, error) {
       setHasCommited(true)
       localStorage.setItem('txnHash', data?.hash);
       isWaitLoading = false // same questions as above.
     },
   })
-
-  // functions
   
-  // live Ethereum stats
+  // extra (live ETH stats)
   const gasApi = useFetch('https://gas.best/stats')
   const gasPrice = gasApi.data?.pending?.fee
   const ethPrice = gasApi.data?.ethPrice
@@ -96,25 +88,21 @@ export default function Home() {
             id="form"
             className="form"
 
-            // write();
-            // toast.error('Coming soon! Working on it... ', { position: 'bottom-center' })}} 
-            // setModalOpen(true)
-
-            // this takes priority over Commit <Button> onClick
+            // Toast Checks (which have priority over the Commit Button onClick)
             onSubmit={async (e) => {
               e.preventDefault()
-
-              // Toast Checks
-
-              // Wallet connection
-              if (!isConnected) {
+              // is wallet connected?
+              if (!address) {
                 return toast.error('Connect your wallet')
               }
-              // On right network
+              // are you on the right network?
               if (!chains.some((c) => c.id === chain.id)) {
                 return toast.error('Switch to a supported network')
               }
-              //
+              // commiting to self?
+              if (commitTo == address) {
+                return toast.error('Cannot commit to self')
+              }
             }}>
 
             <div className="flex flex-col gap-3 w-full">
@@ -252,6 +240,13 @@ export default function Home() {
                 </ButtonThorin>
               </div>
             }
+
+            {/*
+            ---------
+            DEBUGGING
+            ---------
+            */}
+              
 
             {/*
             isWriteLoading: {String(isWriteLoading)}
