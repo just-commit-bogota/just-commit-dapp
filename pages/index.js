@@ -43,14 +43,12 @@ export default function Home() {
   const { data, write, isLoading: isWriteLoading } = useContractWrite({...config,
     onSettled(data, error) {
       { wait }
-      isWriteLoading = false // why do I have to do this? is the function running forever?
     },
   })
   const { wait, isLoading: isWaitLoading } = useWaitForTransaction({ hash: data?.hash,
     onSettled(data, error) {
       setHasCommited(true)
       localStorage.setItem('txnHash', data?.hash);
-      isWaitLoading = false // same questions as above.
     },
   })
 
@@ -252,7 +250,6 @@ export default function Home() {
             */}
               
 
-            {/*
             isWriteLoading: {String(isWriteLoading)}
             <br></br>
             <br></br>
@@ -260,7 +257,6 @@ export default function Home() {
             <br></br>
             <br></br>
             hasCommited: {String(hasCommited)}
-            */}
 
             {/*
             {validThrough}
