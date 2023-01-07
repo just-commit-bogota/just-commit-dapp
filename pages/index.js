@@ -40,7 +40,7 @@ export default function Home() {
     args: [commitDescription, commitTo, validThrough,
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }]
   })
-  const { data, write, isLoading: isWriteLoading } = useContractWrite({...config,
+  const { write, data, isLoading: isWriteLoading } = useContractWrite({...config,
     onSettled(data, error) {
       { wait }
     },
@@ -51,9 +51,7 @@ export default function Home() {
       localStorage.setItem('txnHash', data?.hash);
     },
   })
-
-  // helper functions
-
+  
   // extra (live ETH stats)
   const gasApi = useFetch('https://gas.best/stats')
   const gasPrice = gasApi.data?.pending?.fee
@@ -134,11 +132,8 @@ export default function Home() {
               <Input
                 label="To"
                 maxLength={42}
-                //value="justcommit.eth"
-                //parentStyles = {{ backgroundColor: '#f1fcf8' }}
                 onChange={(e) => setCommitTo(e.target.value)}
                 required
-                //disabled
               />
               <Input
                 label="Amount"
@@ -150,11 +145,9 @@ export default function Home() {
                 type="number"
                 units="Goerli ETH"
                 error={(commitAmount) > 9999 ? "Maximum of $9999" : null}
-                //parentStyles = {{ backgroundColor: '#f1fcf8' }}
                 onChange={(e) => setCommitAmount(e.target.value)}
                 required
               />
-              {/* TODO: abstract away the UNIX conversion*/}
               <Input
                 label="Duration"
                 placeholder="1"
@@ -165,20 +158,18 @@ export default function Home() {
                 type="number"
                 units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
                 error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
-                //parentStyles={{ backgroundColor: '#f1fcf8' }}
                 onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
                 required
               />
             </div>
 
-            {/* the Commit button */}
-            {/* show it when there hasn't been a commit and the write is not loading */}
+            {/* Commit Button */}
             {(!((isWriteLoading || isWaitLoading)) && !hasCommited) && (
               <Button style={{
                 width: '32%',
                 margin: '1rem',
                 backgroundColor:
-                  commitDescription.length < 6 ||
+                    commitDescription.length < 6 ||
                     commitDescription.length > 35 ||
                     !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
                     ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
@@ -204,7 +195,7 @@ export default function Home() {
               </Button>
             )}
 
-            <Toaster toastOptions={{ duration: '200' }} />
+            <Toaster toastOptions={{ duration: 2000 }} />
 
             {(((isWriteLoading || isWaitLoading)) && !hasCommited) && (
               <div className="justifyCenter">
@@ -249,7 +240,7 @@ export default function Home() {
             ---------
             */}
               
-
+            {/*
             isWriteLoading: {String(isWriteLoading)}
             <br></br>
             <br></br>
@@ -257,10 +248,13 @@ export default function Home() {
             <br></br>
             <br></br>
             hasCommited: {String(hasCommited)}
+            */}
 
             {/*
-            {validThrough}
-            {Date.now()}
+            validThrou.: {validThrough}
+            <br></br>
+            <br></br>
+            Date.now(): {Date.now()}
             */}
 
           </form>
