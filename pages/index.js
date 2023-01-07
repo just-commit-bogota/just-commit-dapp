@@ -15,7 +15,6 @@ import { useWaitForTransaction, useContractRead } from 'wagmi'
 import dayjs from "dayjs";
 import Header from '../components/Header.js';
 import { Placeholders } from "../components/Placeholders.js";
-import CommitModal from "../components/CommitModal.js";
 import Spinner from "../components/Spinner.js";
 
 export default function Home() {
@@ -26,7 +25,6 @@ export default function Home() {
 
   // state
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [modalOpen, setModalOpen] = useState(false)
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState('0xB44691c50339de6D882E1D6DB4EbE5E3d670BAAd') // hard-coded for now (belf.eth) - does this work with justcommit.eth full address
   const [commitAmount, setCommitAmount] = useState('0.01')
@@ -220,19 +218,6 @@ export default function Home() {
                 Commit
               </Button>
             )}
-
-            {/*
-            {(modalOpen && 
-            <CommitModal
-              commitDescription = {commitDescription}
-              commitTo = "justcommit.eth" // {commitTo}
-              amount = {commitAmount}
-              duration = {validThrough}
-              modalOpen = {modalOpen}
-              setModalOpen = {setModalOpen}
-            />
-            )}
-            */}
 
             <Toaster toastOptions={{ duration: '200' }} />
 
