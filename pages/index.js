@@ -1,9 +1,6 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import useFetch from '../hooks/fetch'
-import { Route, Routes } from 'react-router-dom';
 import abi from "../contracts/CommitManager.json"
 import { ethers } from 'ethers'
 import { Tag, Input, Button as ButtonThorin } from '@ensdomains/thorin'
@@ -12,7 +9,6 @@ import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import { useWaitForTransaction, useContractRead } from 'wagmi'
-import dayjs from "dayjs";
 import Header from '../components/Header.js';
 import { Placeholders } from "../components/Placeholders.js";
 import Spinner from "../components/Spinner.js";
@@ -24,7 +20,6 @@ export default function Home() {
   }, []);
 
   // state
-  const [dialogOpen, setDialogOpen] = useState(false)
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState('0xB44691c50339de6D882E1D6DB4EbE5E3d670BAAd') // hard-coded for now (belf.eth) - does this work with justcommit.eth full address
   const [commitAmount, setCommitAmount] = useState('0.01')
