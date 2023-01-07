@@ -233,7 +233,7 @@ export default function Home() {
             )}
             */}
             
-            <Toaster toastOptions={{duration: '200'}}/>
+            <Toaster toastOptions={{duration: 2000 }}/>
   
             {(((isWriteLoading || isWaitLoading)) && !hasCommited) && (
               <div className="justifyCenter">
