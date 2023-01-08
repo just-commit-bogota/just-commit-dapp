@@ -14,7 +14,7 @@ const contractAddress = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
 const txnHash = typeof window !== 'undefined' ? localStorage.getItem('txnHash') : null
 
 // dummy token
-const client = new Web3Storage({ token: process.env['Web3StorageToken'] })
+const client = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
 
 export default function CommitCard({ ...props }) {
 
@@ -55,8 +55,6 @@ export default function CommitCard({ ...props }) {
   const uploadFile = () => {
     const fileInput = document.querySelector('input[type="file"]')
     if (fileInput.size > 0) {
-      console.log({ client })
-      // getting here for sure
       client.put(fileInput.files, {
         name: 'fileInput',
         maxRetries: 3,
