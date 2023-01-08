@@ -17,7 +17,7 @@ export default function Home() {
     setLoadingState('loaded')
   }, []);
 
-  // hard-coded variables
+  // hard-coded
   const CONTRACT_ADDRESS = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
 
   // state

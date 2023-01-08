@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Header from "../components/Header.js"
-import CommitCardListDummy from "../components/CommitCardListDummy.js"
 import CommitCardList from "../components/CommitCardList.js"
 import { Placeholders } from "../components/Placeholders.js"
 import { useState, useEffect } from 'react'
@@ -14,18 +13,20 @@ export default function Commitments() {
     setTimeout(() => {
       buildCommitArray()
       setLoadingState('loaded')
-    }, 1000);
+    });
   }, []);
+
+  // hard-coded
+  const CONTRACT_ADDRESS = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
 
   // state
   const [loadingState, setLoadingState] = useState('loading')
   const [commitArray, setCommitArray] = useState([])
-  const { address: isConnected } = useAccount()
+  const { address } = useAccount()
 
   // smart contract
-  const contractAddress = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
-  const { data: commitData, isError, isLoading: commitIsLoading } = useContractRead({
-    addressOrName: contractAddress,
+  const { data: commitData, isError } = useContractRead({
+    addressOrName: CONTRACT_ADDRESS,
     contractInterface: abi.abi,
     functionName: "getAllCommits",
   })
@@ -43,16 +44,25 @@ export default function Commitments() {
       let status = "Failure";
       if (commit.commitJudged) {
         status = "Success";
-      } else if ( commit.expiryTimestamp*1000 > Date.now() && commit.proofIpfsHash == "" ) {
+      } else if (commit.expiryTimestamp > Date.now() && commit.proofIpfsHash == "") {
         status = "Pending";
-      } else if ( commit.expiryTimestamp*1000 > Date.now() && commit.proofIpfsHash !== "" ) {
+      } else if (commit.expiryTimestamp > Date.now() && commit.proofIpfsHash !== "") {
         status = "Waiting";
       }
+
+      // DEBUGGING
+
+      // console.log("expiryTimestamp: " + commit.expiryTimestamp)
+      // console.log("proofIpfsHash: " + commit.proofIpfsHash)
+      // console.log("Date.now(): " + Date.now())
+      
+
+      // END OF DEBUGGING
       
       newCommitStruct.id = commit.id.toNumber();
       newCommitStruct.status = status;
-      newCommitStruct.userIsCreator = commit.commitFrom == isConnected;
-      newCommitStruct.userIsCommitee = commit.commitTo == isConnected;
+      newCommitStruct.userIsCreator = commit.commitFrom == address;
+      newCommitStruct.userIsCommitee = commit.commitTo == address;
       newCommitStruct.expiryTimestamp = commit.expiryTimestamp.toNumber();
       newCommitStruct.commitFrom = commit.commitFrom;
       newCommitStruct.commitTo = commit.commitTo;
@@ -81,7 +91,7 @@ export default function Commitments() {
         <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
       </Head>
       
-      <Header dropdownLabel = <Link href="commitments" color="green">&emsp;Commitments&emsp;</Link> color="green"/>
+      <Header dropdownLabel = "&emsp;Commitments&emsp;" />
 
       <div className="flex">
         <div className= "w-8/10 sm:w-1/2 mx-auto p-0 lg:p-10 mt-20">
@@ -90,11 +100,10 @@ export default function Commitments() {
               loadingState === 'loading' && <Placeholders loadingStyle = "commitmentsLoadingStyle" number = {6} />
             }
             {
-              loadingState === 'loaded' && 
-                // <CommitCardListDummy /> 
-                <CommitCardList cardList = {commitArray} />
+              loadingState === 'loaded' && <CommitCardList cardList = {commitArray} />
             }
           </div>
+          
         </div>
       </div>
     </>

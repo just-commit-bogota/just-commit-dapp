@@ -74,15 +74,6 @@ export default function CommitCard({ ...props }) {
     verifyWrite();
   }
 
-  function openVerifyModal() {
-    console.log('openVerifyModal')
-    setVerifyIsOpen(true);
-  }
-
-  function closeVerifyModal() {
-    setVerifyIsOpen(false);
-  }
-
   // buttonType state
   let buttonType = 'none';
   if (props.status == "Pending") {
@@ -109,7 +100,7 @@ export default function CommitCard({ ...props }) {
             <div className="flex align-left space-x-2">
               <div className="text-sm text-slate-400 opacity-80" style={{ whiteSpace: "nowrap" }}>
                 {
-                  (props.expiryTimestamp * 1000) > Date.now() ?
+                    (props.expiryTimestamp) > Date.now() ?
                     <Countdown date={props.expiryTimestamp} daysInHours></Countdown> :
                     moment(props.createdTimestamp * 1000).fromNow()
                 }
@@ -231,17 +222,20 @@ export default function CommitCard({ ...props }) {
                 &nbsp;&nbsp;Txn&nbsp;&nbsp;
               </a>
             </div>
-
-            {/*
-            DEBUGGING
-            
-            ({props.expiryTimestamp*1000})
-            <br></br>
-            {Date.now()}
-            */}
-
           </div>
         </div>
+        {/*
+          DEBUGGING
+          <br></br>
+          <br></br>
+          {props.expiryTimestamp}
+          <br></br>
+          <br></br>
+          {props.createdTimestamp*1000}
+          <br></br>
+          <br></br>
+          {Date.now()}
+        */}
       </div>
     </>
   )
