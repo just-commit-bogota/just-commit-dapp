@@ -111,7 +111,7 @@ export default function CommitCard ({...props}) {
 
   return (
     <>
-      <Toaster toastOptions={{duration: '200'}}/>
+       <Toaster toastOptions={{duration: 2000 }}/>
       
       <div style={{ borderRadius: "12px"}} className = {classNames({
         'styledBorder': true,
