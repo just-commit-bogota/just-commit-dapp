@@ -10,6 +10,7 @@ import { useAccount, useNetwork, useContractWrite, usePrepareContractWrite, useW
 import Header from '../components/Header.js';
 import { Placeholders } from "../components/Placeholders.js";
 import Spinner from "../components/Spinner.js";
+import { useStorage } from '../hooks/useLocalStorage.ts';
 
 export default function Home() {
 
@@ -20,6 +21,9 @@ export default function Home() {
   // hard-coded
   const CONTRACT_ADDRESS = "0xa8db83b92e56bac174e71283104176d4368092d9"
   const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
+
+  // variables
+  const { setItem } = useStorage()
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
@@ -45,13 +49,13 @@ export default function Home() {
     ...config,
     onSettled(data, error) {
       { wait }
+      setItem('txnHash', data?.hash)
     },
   })
   const { wait, isLoading: isWaitLoading } = useWaitForTransaction({
     hash: data?.hash,
     onSettled(data, error) {
       setHasCommited(true)
-      localStorage.setItem('txnHash', data?.hash);
     },
   })
 

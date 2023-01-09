@@ -8,14 +8,18 @@ import { Web3Storage } from 'web3.storage'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite } from 'wagmi'
 import moment from 'moment/moment';
+import { useStorage } from '../hooks/useLocalStorage.ts';
 
 const CONTRACT_ADDRESS = "0xa8db83b92e56bac174e71283104176d4368092d9"
-const txnHash = typeof window !== 'undefined' ? localStorage.getItem('txnHash') : null
 
 // dummy token
 const client = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
 
 export default function CommitCard({ ...props }) {
+
+  // variables
+  const { getItem } = useStorage();
+  const txnHash = getItem('txnHash');
 
   // state
   const [proofIpfsHash, setProofIpfsHash] = useState(props.ipfsHash);
@@ -177,7 +181,7 @@ export default function CommitCard({ ...props }) {
             <div className="flex flex-col align-center justify-center text-lg">{CommitStatusEmoji[props.status]}</div>
             <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600 text-xs rounded-lg bg-sky-200 hover:bg-sky-400">
               <a href={`https://${chain?.id === 5 ? 'goerli.' : ''
-                }etherscan.io/tx/${{}}`} // FIX
+                }etherscan.io/tx/${txnHash}`} // FIX
                 target="_blank"
                 rel="noreferrer"
               >
