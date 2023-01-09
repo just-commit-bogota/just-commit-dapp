@@ -9,7 +9,7 @@ import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite } from 'wagmi'
 import moment from 'moment/moment';
 
-const contractAddress = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
+const CONTRACT_ADDRESS = "0xa8db83b92e56bac174e71283104176d4368092d9"
 const txnHash = typeof window !== 'undefined' ? localStorage.getItem('txnHash') : null
 
 // dummy token
@@ -62,9 +62,9 @@ export default function CommitCard({ ...props }) {
             <div className="flex align-left space-x-2">
               <div className="text-sm text-slate-400 opacity-80" style={{ whiteSpace: "nowrap" }}>
                 {
-                    (props.expiryTimestamp) > Date.now() ?
-                    <Countdown date={props.expiryTimestamp} daysInHours></Countdown> :
-                    moment(props.createdTimestamp * 1000).fromNow()
+                  (props.validThrough) > Date.now() ?
+                    <Countdown date={props.validThrough} daysInHours></Countdown> :
+                    moment(props.createdAt).fromNow()
                 }
               </div>
             </div>
@@ -189,16 +189,14 @@ export default function CommitCard({ ...props }) {
         {/*
           DEBUGGING
           <br></br>
+          {props.validThrough}
           <br></br>
-          {props.expiryTimestamp}
-          <br></br>
-          <br></br>
-          {props.createdTimestamp*1000}
-          <br></br>
+          {props.createdAt}
           <br></br>
           {Date.now()}
+          <br></br>
+          {txnHash}
         */}
-        console.log({txnHash})
       </div>
     </>
   )

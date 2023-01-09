@@ -17,7 +17,7 @@ export default function Commitments() {
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
+  const CONTRACT_ADDRESS = "0xa8db83b92e56bac174e71283104176d4368092d9"
 
   // state
   const [loadingState, setLoadingState] = useState('loading')
@@ -47,43 +47,54 @@ export default function Commitments() {
       if (commit.commitJudged) { // TODO: does not take into account actual "approve" or "deny" response
         status = "Success";
         console.log("SUCCESS")
-      } else if (commit.expiryTimestamp > Date.now() && commit.proofIpfsHash == "") {
+      } else if (commit.validThrough > Date.now() && commit.ipfsHash == "") {
         status = "Pending";
         console.log("PENDING")
-      } else if (commit.expiryTimestamp > Date.now() && commit.proofIpfsHash != "") {
+      } else if (commit.validThrough > Date.now() && commit.ipfsHash != "") {
         status = "Waiting";
         console.log("WAITING")
       }
 
-      // DEBUGGING
-
-      // console.log("expiryTimestamp: " + commit.expiryTimestamp)
-      // console.log("proofIpfsHash: " + commit.proofIpfsHash)
-      // console.log("Date.now(): " + Date.now())
-      
-
-      // END OF DEBUGGING
-      
+      // from start contract
       newCommitStruct.id = commit.id.toNumber();
-      newCommitStruct.status = status;
-      newCommitStruct.userIsCreator = commit.commitFrom == address;
-      newCommitStruct.userIsCommitee = commit.commitTo == address;
-      newCommitStruct.expiryTimestamp = commit.expiryTimestamp.toNumber();
       newCommitStruct.commitFrom = commit.commitFrom;
       newCommitStruct.commitTo = commit.commitTo;
+      newCommitStruct.createdAt = commit.createdAt.toNumber();
+      newCommitStruct.validThrough = commit.validThrough.toNumber();
+      newCommitStruct.judgeDeadline = commit.judgeDeadline;
       newCommitStruct.stakeAmount = commit.stakeAmount;
-      newCommitStruct.createdTimestamp = commit.createdTimestamp.toNumber();
       newCommitStruct.message = commit.message;
-      newCommitStruct.ipfsHash = commit.proofIpfsHash;
-      newCommitStruct.txnHash = commitData.hash;
+      newCommitStruct.ipfsHash = commit.ipfsHash;
+      newCommitStruct.commitJudged = commit.commitJudged;
+      newCommitStruct.isApproved = commit.isApproved;
+
+      // front-end only
+      newCommitStruct.status = status;
+      newCommitStruct.userIsCreator = commit.commitFrom == address;
+      newCommitStruct.userIsJudge = commit.commitTo == address;
 
       newArray.push(newCommitStruct);
+
+      console.log(newCommitStruct);
+
+      // ----------
+
+      // DEBUGGING
+
+      // console.log("validThrough: " + commit.validThrough)
+      // console.log("ipfsHash: " + commit.ipfsHash)
+      // console.log("Date.now(): " + Date.now())
+
+      // END OF DEBUGGING
+
+      // ----------
+
     }
 
-    newArray.sort((a, b) => (a.expiryTimestamp > b.expiryTimestamp) ? 1 : -1)
+    newArray.sort((a, b) => (a.validThrough > b.validThrough) ? 1 : -1)
     setCommitArray(newArray);
   }
-  
+
   return (
     <>
       <Head>
@@ -95,20 +106,20 @@ export default function Commitments() {
         <meta property="og:description" content="Just Commit" />
         <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
       </Head>
-      
-      <Header dropdownLabel = "&emsp;Commitments&emsp;" />
+
+      <Header dropdownLabel="&emsp;Commitments&emsp;" />
 
       <div className="flex">
-        <div className= "w-8/10 sm:w-1/2 mx-auto p-0 lg:p-10 mt-20">
-          <div className= "flex flex-col justify-center items-center">
+        <div className="w-8/10 sm:w-1/2 mx-auto p-0 lg:p-10 mt-20">
+          <div className="flex flex-col justify-center items-center">
             {
-              loadingState === 'loading' && <Placeholders loadingStyle = "commitmentsLoadingStyle" number = {6} />
+              loadingState === 'loading' && <Placeholders loadingStyle="commitmentsLoadingStyle" number={6} />
             }
             {
-              loadingState === 'loaded' && <CommitCardList cardList = {commitArray} />
+              loadingState === 'loaded' && <CommitCardList cardList={commitArray} />
             }
           </div>
-          
+
         </div>
       </div>
     </>

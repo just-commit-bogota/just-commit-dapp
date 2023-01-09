@@ -18,11 +18,12 @@ export default function Home() {
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
+  const CONTRACT_ADDRESS = "0xa8db83b92e56bac174e71283104176d4368092d9"
+  const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState('')
+  const [commitTo, setCommitTo] = useState(CONTRACT_OWNER)
   const [commitAmount, setCommitAmount] = useState('0.01')
   const [validThrough, setValidThrough] = useState((1 * 3600 * 1000) + Date.now()) // == 1 hour
   const [loadingState, setLoadingState] = useState('loading')
@@ -31,7 +32,7 @@ export default function Home() {
   // smart contract data
   const { chain, chains } = useNetwork()
   const { address } = useAccount()
-  
+
   // contract functions
   const { config } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
@@ -40,18 +41,20 @@ export default function Home() {
     args: [commitDescription, commitTo, validThrough,
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }]
   })
-  const { write, data, isLoading: isWriteLoading } = useContractWrite({...config,
+  const { write, data, isLoading: isWriteLoading } = useContractWrite({
+    ...config,
     onSettled(data, error) {
       { wait }
     },
   })
-  const { wait, isLoading: isWaitLoading } = useWaitForTransaction({ hash: data?.hash,
+  const { wait, isLoading: isWaitLoading } = useWaitForTransaction({
+    hash: data?.hash,
     onSettled(data, error) {
       setHasCommited(true)
       localStorage.setItem('txnHash', data?.hash);
     },
   })
-  
+
   // extra (live ETH stats)
   const gasApi = useFetch('https://gas.best/stats')
   const gasPrice = gasApi.data?.pending?.fee
@@ -118,7 +121,7 @@ export default function Home() {
                     size="small"
                     onClick={() => {
                       toast('📸 Can a pic or screenshot prove this?'),
-                      { position: 'top-center' }
+                        { position: 'top-center' }
                     }}
                   >
                     i
@@ -131,9 +134,24 @@ export default function Home() {
               />
               <Input
                 label="To"
+                placeholder="justcommit.eth"
                 maxLength={42}
                 onChange={(e) => setCommitTo(e.target.value)}
+                labelSecondary={
+                  <Tag
+                    className="hover:cursor-pointer"
+                    tone="green"
+                    size="small"
+                    onClick={() => {
+                      toast('⚠️ Only address allowed in Beta'),
+                        { position: 'top-center' }
+                    }}
+                  >
+                    i
+                  </Tag>
+                }
                 required
+                disabled
               />
               <Input
                 label="Amount"
@@ -169,7 +187,7 @@ export default function Home() {
                 width: '32%',
                 margin: '1rem',
                 backgroundColor:
-                    commitDescription.length < 6 ||
+                  commitDescription.length < 6 ||
                     commitDescription.length > 35 ||
                     !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
                     ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
@@ -239,7 +257,7 @@ export default function Home() {
             DEBUGGING
             ---------
             */}
-              
+
             {/*
             isWriteLoading: {String(isWriteLoading)}
             <br></br>

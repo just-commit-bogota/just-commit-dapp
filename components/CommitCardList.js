@@ -53,13 +53,13 @@ export default function CommitCardList({cardList}) {
     <>
       <div className = "flex w-11/12 justify-center gap-2 lg:gap-16 text-small mt-4 mb-10">
         <ul className="flex flex-row continent_nav">
-          {filters_left.map((f) => 
+          {filters_left.map(f => 
           <li key={f} id={f} className="filterOption">
             <a onClick={() => onCategoryClick(f)}>{f}</a>
           </li>)}
         </ul>
         <ul className="flex flex-row continent_nav">
-          {filters_right.map((f) => 
+          {filters_right.map(f => 
           <li key={f} id={f} className="filterOption"
             style = {{borderColor: "rgba(29, 180, 151, .5)"}}>
             <a onClick={() => onCategoryClick(f)}>{f}</a>
@@ -70,18 +70,23 @@ export default function CommitCardList({cardList}) {
       <div className = "w-11/12">
         {cardListToDisplay.map((card, index) => (
           <CommitCard
-            key={card.id}
-            status={card.status}
-            expiryTimestamp={card.expiryTimestamp}
+            key={index}
+            
+            id={card.id}
             commitFrom={card.commitFrom}
             commitTo={card.commitTo}
+            createdAt={card.createdAt}
+            validThrough={card.validThrough}
+            judgeDeadline = {card.judgeDeadline}
             stakeAmount={ethers.utils.formatEther(card.stakeAmount)}
-            createdTimestamp={card.createdTimestamp}
             message={card.message}
+            ipfsHash={card.ipfsHash}
+            commitJudged = {card.commitJudged}
+            isApproved = {card.isApproved}
+
+            status={card.status}
             userIsCreator={card.userIsCreator}
             userIsCommitee={card.userIsCommitee}
-            ipfsHash={card.ipfsHash}
-            id={card.id}
           />
         )).reverse()}
       </div>
