@@ -41,17 +41,18 @@ export default function Commitments() {
     for (let commit of commitData) {
       let newCommitStruct = {}
 
-      // classify into one of the four statuses
-      // TODO: does not take into account actual "approve" or "deny" response
+      // classify into one of four statuses
       let status = "Failure";
-      console.log("Hello")
-      if (commit.commitJudged) { // never gets here
-        console.log("Hi")
+      console.log("FAILURE")
+      if (commit.commitJudged) { // TODO: does not take into account actual "approve" or "deny" response
         status = "Success";
+        console.log("SUCCESS")
       } else if (commit.expiryTimestamp > Date.now() && commit.proofIpfsHash == "") {
         status = "Pending";
+        console.log("PENDING")
       } else if (commit.expiryTimestamp > Date.now() && commit.proofIpfsHash != "") {
         status = "Waiting";
+        console.log("WAITING")
       }
 
       // DEBUGGING
