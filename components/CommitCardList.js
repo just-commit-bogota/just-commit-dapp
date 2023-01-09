@@ -53,13 +53,13 @@ export default function CommitCardList({cardList}) {
     <>
       <div className = "flex w-11/12 justify-center gap-2 lg:gap-16 text-small mt-4 mb-10">
         <ul className="flex flex-row continent_nav">
-          {filters_left.map(f => 
+          {filters_left.map((f) => 
           <li key={f} id={f} className="filterOption">
             <a onClick={() => onCategoryClick(f)}>{f}</a>
           </li>)}
         </ul>
         <ul className="flex flex-row continent_nav">
-          {filters_right.map(f => 
+          {filters_right.map((f) => 
           <li key={f} id={f} className="filterOption"
             style = {{borderColor: "rgba(29, 180, 151, .5)"}}>
             <a onClick={() => onCategoryClick(f)}>{f}</a>

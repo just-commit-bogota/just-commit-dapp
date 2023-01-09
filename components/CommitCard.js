@@ -3,7 +3,6 @@ import { FileInput, Tag, CloseSVG, Button as ButtonThorin } from '@ensdomains/th
 import React, { useState } from 'react'
 import classNames from 'classnames'
 import abi from "../contracts/CommitManager.json";
-import Modal from 'react-modal'
 import Countdown from 'react-countdown';
 import { Web3Storage } from 'web3.storage'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
@@ -32,24 +31,7 @@ export default function CommitCard({ ...props }) {
   // smart contract data 
   const provider = useProvider()
   const { chain, chains } = useNetwork()
-  const { address: isConnected } = useAccount()
-
-  // smart contract write functions
-  const { config: proveConfig } = usePrepareContractWrite({
-    addressOrName: contractAddress,
-    contractInterface: abi.abi,
-    functionName: "proveCommit",
-    args: [props.id, proofIpfsHash]
-  })
-  const { data, isLoading, isSuccess, write: proveWrite } = useContractWrite(proveConfig)
-
-  const { config: verifyConfig } = usePrepareContractWrite({
-    addressOrName: contractAddress,
-    contractInterface: abi.abi,
-    functionName: "judgeCommit",
-    args: [props.id, true]
-  })
-  const { write: verifyWrite } = useContractWrite(verifyConfig)
+  const { address } = useAccount()
 
   // functions
   const uploadFile = () => {
@@ -60,26 +42,8 @@ export default function CommitCard({ ...props }) {
         maxRetries: 3,
       }).then(cid => {
         setProofIpfsHash(cid)
-        if (proveWrite) {
-          proveWrite()
-        }
       })
-      console.log({ proofIpfsHash }) // cid
     }
-  }
-
-  const verifyProof = () => {
-    verifyWrite();
-  }
-
-  // buttonType state
-  let buttonType = 'none';
-  if (props.status == "Pending") {
-    buttonType = "Upload"
-  } else if (props.status == "Waiting" && !props.userIsCreator) {
-    buttonType = "Verify"
-  } else if (props.status == "Failure" && props.userIsCommitee) {
-    buttonType = "Claim"
   }
 
   return (
@@ -213,7 +177,7 @@ export default function CommitCard({ ...props }) {
             <div className="flex flex-col align-center justify-center text-lg">{CommitStatusEmoji[props.status]}</div>
             <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600 text-xs rounded-lg bg-sky-200 hover:bg-sky-400">
               <a href={`https://${chain?.id === 5 ? 'goerli.' : ''
-                }etherscan.io/tx/${{ txnHash }}`} // FIX
+                }etherscan.io/tx/${{}}`} // FIX
                 target="_blank"
                 rel="noreferrer"
               >
@@ -234,6 +198,7 @@ export default function CommitCard({ ...props }) {
           <br></br>
           {Date.now()}
         */}
+        console.log({txnHash})
       </div>
     </>
   )
