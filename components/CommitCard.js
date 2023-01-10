@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button'
 import { FileInput, Tag, CloseSVG, Button as ButtonThorin } from '@ensdomains/thorin'
 import React, { useState } from 'react'
 import classNames from 'classnames'
@@ -8,7 +7,6 @@ import { Web3Storage } from 'web3.storage'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite } from 'wagmi'
 import moment from 'moment/moment';
-import { useStorage } from '../hooks/useLocalStorage.ts';
 
 const CONTRACT_ADDRESS = "0xa8db83b92e56bac174e71283104176d4368092d9"
 
@@ -16,11 +14,7 @@ const CONTRACT_ADDRESS = "0xa8db83b92e56bac174e71283104176d4368092d9"
 const client = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
 
 export default function CommitCard({ ...props }) {
-
-  // variables
-  const { getItem } = useStorage();
-  const txnHash = getItem('txnHash');
-
+  
   // state
   const [proofIpfsHash, setProofIpfsHash] = useState(props.ipfsHash);
   const [fileUploaded, setFileUploaded] = React.useState(false);
@@ -68,7 +62,7 @@ export default function CommitCard({ ...props }) {
                 {
                   (props.validThrough) > Date.now() ?
                     <Countdown date={props.validThrough} daysInHours></Countdown> :
-                    moment(props.createdAt).fromNow()
+                    moment(props.createdAt * 1000).fromNow()
                 }
               </div>
             </div>
@@ -82,7 +76,7 @@ export default function CommitCard({ ...props }) {
           })}>
             {/* CARD BODY */}
 
-            {/* PENDING OR HISTORY CARD */}
+            {/* ACTIVE BODY */}
             {props.status == "Pending" &&
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
@@ -120,13 +114,13 @@ export default function CommitCard({ ...props }) {
                 </div>
               </>
             }
-            {/* ALL OTHER CARDS */}
+            {/* WAITING BODY */}
             {props.status == "Waiting" &&
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
 
                   <img className="w-full h-full" style={{ borderRadius: "4px" }} src="./dummy-pic-5.png" />
-                  {/* THE VERIFY VARIANT */}
+                  {/* VERIFY BODY */}
                   {props.status == "Verify" && (
                     <div>
                       <br></br>
@@ -181,7 +175,7 @@ export default function CommitCard({ ...props }) {
             <div className="flex flex-col align-center justify-center text-lg">{CommitStatusEmoji[props.status]}</div>
             <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600 text-xs rounded-lg bg-sky-200 hover:bg-sky-400">
               <a href={`https://${chain?.id === 5 ? 'goerli.' : ''
-                }etherscan.io/tx/${txnHash}`} // FIX
+                }etherscan.io/tx/${props.txnHash}`}
                 target="_blank"
                 rel="noreferrer"
               >

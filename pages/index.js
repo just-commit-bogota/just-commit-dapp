@@ -49,7 +49,7 @@ export default function Home() {
     ...config,
     onSettled(data, error) {
       { wait }
-      setItem('txnHash', data?.hash)
+      setItem('txnHash', data?.hash) // FIX (include this var in CommitCard struct)
     },
   })
   const { wait, isLoading: isWaitLoading } = useWaitForTransaction({

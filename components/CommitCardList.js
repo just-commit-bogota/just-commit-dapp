@@ -87,6 +87,7 @@ export default function CommitCardList({cardList}) {
             status={card.status}
             userIsCreator={card.userIsCreator}
             userIsCommitee={card.userIsCommitee}
+            txnHash={card.txnHash}
           />
         )).reverse()}
       </div>
