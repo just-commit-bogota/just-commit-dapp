@@ -31,7 +31,7 @@ export default function Home() {
   const [commitAmount, setCommitAmount] = useState('0.01')
   const [validThrough, setValidThrough] = useState((1 * 3600 * 1000) + Date.now()) // == 1 hour
   const [loadingState, setLoadingState] = useState('loading')
-  const [hasUpdated, setHasUpdated] = useState(false)
+  const [hasCommitted, setHasCommited] = useState(false)
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -53,39 +53,18 @@ export default function Home() {
     args: [commitDescription, commitTo, validThrough,
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }]
   })
-  const { config: updateCommitConfig } = usePrepareContractWrite({
-    addressOrName: CONTRACT_ADDRESS,
-    contractInterface: abi.abi,
-    functionName: "updateCommit",
-    args: [getItem('totalCommits'), getItem('txnHash')]
-  })
-
-  // writes and waits
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
     onSettled(commitWriteData, error) {
-      console.log("settled commitWrite")
-      setItem('txnHash', commitWriteData?.hash)
       { wait }
     },
   })
-  const { wait, data: waitData, isLoading: isWaitLoading } = useWaitForTransaction({
-    hash: commitWriteData?.hash, // is getItem('txnHash') an alternative to this line?
+  const { wait, data: waitData, isLoading: isWaitLoading } = useWaitForTransaction({ hash: commitWriteData?.hash,
     onSettled(waitData, error) {
-      setItem('totalCommits', totalCommits.toNumber())
-      { updateWrite() }
-      console.log("settled wait")
+      setHasCommited(true)
     },
   })
-  const { write: updateWrite, data: updateWriteData, isLoading: isUpdateLoading } = useContractWrite({
-    ...updateCommitConfig,
-    onSettled(updateWriteData, error) {
-      console.log("settled updateWrite")
-      console.log(getItem('totalCommits'))
-      console.log(getItem('txnHash'))
-      setHasUpdated(true)
-    },
-  })
+
 
   // extra (live ETH stats)
   const gasApi = useFetch('https://gas.best/stats')
@@ -145,7 +124,7 @@ export default function Home() {
                 label="Commitment"
                 maxLength={140}
                 placeholder=""
-                disabled={!isWriteLoading && !isWaitLoading && !isUpdateLoading && hasUpdated}
+                disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 labelSecondary={
                   <Tag
                     className="hover:cursor-pointer"
@@ -188,7 +167,7 @@ export default function Home() {
               <Input
                 label="Amount"
                 placeholder="1"
-                disabled={!isWriteLoading && !isWaitLoading && !isUpdateLoading && hasUpdated}
+                disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 min={0}
                 step="any"
                 max={9999}
@@ -201,7 +180,7 @@ export default function Home() {
               <Input
                 label="Duration"
                 placeholder="1"
-                disabled={!isWriteLoading && !isWaitLoading && !isUpdateLoading && hasUpdated}
+                disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 min={1}
                 max={24}
                 step={1}
@@ -214,7 +193,7 @@ export default function Home() {
             </div>
 
             {/* Commit Button */}
-            {(!((isWriteLoading || isWaitLoading || isUpdateLoading)) && !hasUpdated) && (
+            {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
               <Button style={{
                 width: '32%',
                 margin: '1rem',
@@ -247,13 +226,13 @@ export default function Home() {
 
             <Toaster toastOptions={{ duration: 2000 }} />
 
-            {(((isWriteLoading || isWaitLoading || isUpdateLoading)) && !hasUpdated) && (
+            {(((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
               <div className="justifyCenter">
                 <Spinner />
               </div>
             )}
 
-            {hasUpdated &&
+            {hasCommitted &&
               <div className="flex flex-row mt-5 mb-2 gap-4">
                 <ButtonThorin
                   outlined
@@ -295,9 +274,6 @@ export default function Home() {
             <br></br>
             <br></br>
             isWaitLoading: {String(isWaitLoading)}
-            <br></br>
-            <br></br>
-            isUpdateLoading: {String(isUpdateLoading)}
             <br></br>
             <br></br>
             */}
