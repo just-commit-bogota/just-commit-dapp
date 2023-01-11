@@ -10,7 +10,6 @@ import { useAccount, useNetwork, useContractWrite, useContractRead, usePrepareCo
 import Header from '../components/Header.js';
 import { Placeholders } from "../components/Placeholders.js";
 import Spinner from "../components/Spinner.js";
-import { useStorage } from '../hooks/useLocalStorage.ts';
 
 export default function Home() {
 
@@ -21,9 +20,6 @@ export default function Home() {
   // hard-coded
   const CONTRACT_ADDRESS = "0xe69E5b56A7E4307e13eFb2908697D95C9617dC1c"
   const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
-
-  // variables
-  const { setItem, getItem } = useStorage()
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
@@ -38,14 +34,6 @@ export default function Home() {
   const { address } = useAccount()
 
   // smart contract functions
-
-  // reads
-  const { data: totalCommits, isError } = useContractRead({
-    addressOrName: CONTRACT_ADDRESS,
-    contractInterface: abi.abi,
-    functionName: "getTotalCommits",
-  })
-
   const { config: createCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: abi.abi,

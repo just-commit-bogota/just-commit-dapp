@@ -6,7 +6,6 @@ import { Placeholders } from "../components/Placeholders.js"
 import { useState, useEffect } from 'react'
 import { useAccount, useContractRead } from 'wagmi'
 import abi from "../contracts/CommitManager.json"
-import { useStorage } from '../hooks/useLocalStorage.ts';
 
 export default function Commitments() {
 
@@ -19,9 +18,6 @@ export default function Commitments() {
 
   // hard-coded
   const CONTRACT_ADDRESS = "0xe69E5b56A7E4307e13eFb2908697D95C9617dC1c"
-
-  // variables
-  const { getItem } = useStorage();
 
   // state
   const [loadingState, setLoadingState] = useState('loading')
@@ -69,7 +65,6 @@ export default function Commitments() {
       newCommitStruct.judgeDeadline = commit.judgeDeadline;
       newCommitStruct.stakeAmount = commit.stakeAmount;
       newCommitStruct.message = commit.message;
-      newCommitStruct.txnHash = commit.txnHash;
       newCommitStruct.ipfsHash = commit.ipfsHash;
       newCommitStruct.hasBeenUpdated = commit.hasBeenUpdated;
       newCommitStruct.commitJudged = commit.commitJudged;
@@ -83,7 +78,6 @@ export default function Commitments() {
       newArray.push(newCommitStruct);
 
       console.log(newCommitStruct);
-      console.log(localStorage)
 
       // ----------
 

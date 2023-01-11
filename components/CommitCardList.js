@@ -79,7 +79,6 @@ export default function CommitCardList({ cardList }) {
             judgeDeadline={card.judgeDeadline}
             stakeAmount={ethers.utils.formatEther(card.stakeAmount)}
             message={card.message}
-            txnHash={card.txnHash}
             ipfsHash={card.ipfsHash}
             hasBeenUpdated={card.hasBeenUpdated}
             commitJudged={card.commitJudged}
