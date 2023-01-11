@@ -7,17 +7,14 @@ import { Web3Storage } from 'web3.storage'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite } from 'wagmi'
 import moment from 'moment/moment';
+import Spinner from "../components/Spinner.js";
 
-const CONTRACT_ADDRESS = "0xe69E5b56A7E4307e13eFb2908697D95C9617dC1c"
+const CONTRACT_ADDRESS = "0x17C7B7a3DcF9D5c43056787292104F85EAb19d00"
 
 // dummy token
 const client = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
 
 export default function CommitCard({ ...props }) {
-
-  // state
-  const [proofIpfsHash, setProofIpfsHash] = useState(props.ipfsHash);
-  const [fileUploaded, setFileUploaded] = React.useState(false);
 
   const CommitStatusEmoji = {
     "Pending": "❓", // picture not yet submitted
@@ -31,6 +28,20 @@ export default function CommitCard({ ...props }) {
   const { chain, chains } = useNetwork()
   const { address } = useAccount()
 
+  // smart contract functions
+  const { config: proveCommitConfig } = usePrepareContractWrite({
+    addressOrName: CONTRACT_ADDRESS,
+    contractInterface: abi.abi,
+    functionName: "proveCommit",
+    args: [props.id, props.ipfsHash]
+  })
+  const { write: proveWrite, data: proveCommitData, isLoading: isProveLoading } = useContractWrite({
+    ...proveCommitConfig,
+    onSettled(proveCommitConfig, error) {
+      // location.reload()
+    },
+  })
+
   // functions
   const uploadFile = () => {
     const fileInput = document.querySelector('input[type="file"]')
@@ -39,7 +50,8 @@ export default function CommitCard({ ...props }) {
         name: 'fileInput',
         maxRetries: 3,
       }).then(cid => {
-        setProofIpfsHash(cid)
+        props.ipfsHash = cid // not working
+        { proveWrite() }
       })
     }
   }
@@ -83,31 +95,19 @@ export default function CommitCard({ ...props }) {
                   <div className="flex">
                     <FileInput maxSize={1} onChange={(file) => uploadFile()}>
                       {(context) =>
-                        context.name ? (
-                          <div className="flex flex-col"
-                            style={{ alignItems: "center", justifyContent: "center" }}>
-                            <Tag
-                              shape="circle"
-                              size="extraSmall"
-                              variant="secondary"
-                              tone="green"
-                              onClick={context.reset}
-                            >
-                              <div className="text-2xl">&nbsp;📸&nbsp;</div>
-                            </Tag>
-                          </div>
-                        ) : (
+                        context.name ?
+                          <Spinner />
+                          :
                           <div>{context.droppable ? 'Upload' :
                             <Tag
                               className="text-2xl hover:cursor-pointer"
                               tone="green"
                               variation="primary"
-                              size="large"
+                              size="Large"
                             >
                               &nbsp;📷&nbsp;
                             </Tag>}
                           </div>
-                        )
                       }
                     </FileInput>
                   </div>

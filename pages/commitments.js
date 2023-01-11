@@ -17,7 +17,7 @@ export default function Commitments() {
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0xe69E5b56A7E4307e13eFb2908697D95C9617dC1c"
+  const CONTRACT_ADDRESS = "0x17C7B7a3DcF9D5c43056787292104F85EAb19d00"
 
   // state
   const [loadingState, setLoadingState] = useState('loading')
@@ -42,18 +42,28 @@ export default function Commitments() {
     for (let commit of commitData) {
       let newCommitStruct = {}
 
-      // classify into one of four statuses
-      let status = "Failure";
-      console.log("FAILURE")
-      if (commit.commitJudged) { // TODO: does not take into account actual "approve" or "deny" response
+      // classify status
+      let status = "";
+      
+      // has been approved || commit expired but had the proof
+      if (commit.isApproved || (commit.judgeDeadline < Date.now() && commit.ipfsHash != "")) {
         status = "Success";
         console.log("SUCCESS")
-      } else if (commit.validThrough > Date.now() && commit.ipfsHash == "") {
+      }
+      // has not been approved and does not have a proof
+      else if (commit.validThrough > Date.now() && commit.ipfsHash == "") {
         status = "Pending";
         console.log("PENDING")
-      } else if (commit.validThrough > Date.now() && commit.ipfsHash != "") {
+      }
+      // has not been approved and has a proof
+      else if (commit.validThrough > Date.now() && commit.ipfsHash != "") {
         status = "Waiting";
         console.log("WAITING")
+      }
+      // commit has been denied || commit has expired
+      else {
+        status = "Failure";
+        console.log("FAILURE")
       }
 
       // from start contract
@@ -62,11 +72,10 @@ export default function Commitments() {
       newCommitStruct.commitTo = commit.commitTo;
       newCommitStruct.createdAt = commit.createdAt.toNumber();
       newCommitStruct.validThrough = commit.validThrough.toNumber();
-      newCommitStruct.judgeDeadline = commit.judgeDeadline;
+      newCommitStruct.judgeDeadline = commit.judgeDeadline.toNumber();
       newCommitStruct.stakeAmount = commit.stakeAmount;
       newCommitStruct.message = commit.message;
       newCommitStruct.ipfsHash = commit.ipfsHash;
-      newCommitStruct.hasBeenUpdated = commit.hasBeenUpdated;
       newCommitStruct.commitJudged = commit.commitJudged;
       newCommitStruct.isApproved = commit.isApproved;
 
