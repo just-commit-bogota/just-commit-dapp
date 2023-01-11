@@ -6,7 +6,7 @@ import { ethers } from 'ethers'
 import { Tag, Input, Button as ButtonThorin } from '@ensdomains/thorin'
 import Button from '@mui/material/Button'
 import toast, { Toaster } from 'react-hot-toast'
-import { useAccount, useNetwork, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import { useAccount, useNetwork, useContractWrite, useContractRead, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
 import { Placeholders } from "../components/Placeholders.js";
 import Spinner from "../components/Spinner.js";
@@ -19,11 +19,11 @@ export default function Home() {
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0xa8db83b92e56bac174e71283104176d4368092d9"
+  const CONTRACT_ADDRESS = "0xe69E5b56A7E4307e13eFb2908697D95C9617dC1c"
   const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
   // variables
-  const { setItem } = useStorage()
+  const { setItem, getItem } = useStorage()
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
@@ -31,31 +31,59 @@ export default function Home() {
   const [commitAmount, setCommitAmount] = useState('0.01')
   const [validThrough, setValidThrough] = useState((1 * 3600 * 1000) + Date.now()) // == 1 hour
   const [loadingState, setLoadingState] = useState('loading')
-  const [hasCommited, setHasCommited] = useState(false)
+  const [hasUpdated, setHasUpdated] = useState(false)
 
   // smart contract data
   const { chain, chains } = useNetwork()
   const { address } = useAccount()
 
-  // contract functions
-  const { config } = usePrepareContractWrite({
+  // smart contract functions
+
+  // reads
+  const { data: totalCommits, isError } = useContractRead({
+    addressOrName: CONTRACT_ADDRESS,
+    contractInterface: abi.abi,
+    functionName: "getTotalCommits",
+  })
+
+  const { config: createCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: abi.abi,
     functionName: "createCommit",
     args: [commitDescription, commitTo, validThrough,
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }]
   })
-  const { write, data, isLoading: isWriteLoading } = useContractWrite({
-    ...config,
-    onSettled(data, error) {
+  const { config: updateCommitConfig } = usePrepareContractWrite({
+    addressOrName: CONTRACT_ADDRESS,
+    contractInterface: abi.abi,
+    functionName: "updateCommit",
+    args: [getItem('totalCommits'), getItem('txnHash')]
+  })
+
+  // writes and waits
+  const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
+    ...createCommitConfig,
+    onSettled(commitWriteData, error) {
+      console.log("settled commitWrite")
+      setItem('txnHash', commitWriteData?.hash)
       { wait }
-      setItem('txnHash', data?.hash) // FIX (include this var in CommitCard struct)
     },
   })
-  const { wait, isLoading: isWaitLoading } = useWaitForTransaction({
-    hash: data?.hash,
-    onSettled(data, error) {
-      setHasCommited(true)
+  const { wait, data: waitData, isLoading: isWaitLoading } = useWaitForTransaction({
+    hash: commitWriteData?.hash, // is getItem('txnHash') an alternative to this line?
+    onSettled(waitData, error) {
+      setItem('totalCommits', totalCommits.toNumber())
+      { updateWrite() }
+      console.log("settled wait")
+    },
+  })
+  const { write: updateWrite, data: updateWriteData, isLoading: isUpdateLoading } = useContractWrite({
+    ...updateCommitConfig,
+    onSettled(updateWriteData, error) {
+      console.log("settled updateWrite")
+      console.log(getItem('totalCommits'))
+      console.log(getItem('txnHash'))
+      setHasUpdated(true)
     },
   })
 
@@ -117,7 +145,7 @@ export default function Home() {
                 label="Commitment"
                 maxLength={140}
                 placeholder=""
-                disabled={!isWriteLoading && !isWaitLoading && hasCommited}
+                disabled={!isWriteLoading && !isWaitLoading && !isUpdateLoading && hasUpdated}
                 labelSecondary={
                   <Tag
                     className="hover:cursor-pointer"
@@ -160,7 +188,7 @@ export default function Home() {
               <Input
                 label="Amount"
                 placeholder="1"
-                disabled={!isWriteLoading && !isWaitLoading && hasCommited}
+                disabled={!isWriteLoading && !isWaitLoading && !isUpdateLoading && hasUpdated}
                 min={0}
                 step="any"
                 max={9999}
@@ -173,7 +201,7 @@ export default function Home() {
               <Input
                 label="Duration"
                 placeholder="1"
-                disabled={!isWriteLoading && !isWaitLoading && hasCommited}
+                disabled={!isWriteLoading && !isWaitLoading && !isUpdateLoading && hasUpdated}
                 min={1}
                 max={24}
                 step={1}
@@ -186,7 +214,7 @@ export default function Home() {
             </div>
 
             {/* Commit Button */}
-            {(!((isWriteLoading || isWaitLoading)) && !hasCommited) && (
+            {(!((isWriteLoading || isWaitLoading || isUpdateLoading)) && !hasUpdated) && (
               <Button style={{
                 width: '32%',
                 margin: '1rem',
@@ -211,7 +239,7 @@ export default function Home() {
                   ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
                   (commitAmount > 9999)
                 }
-                onClick={write}
+                onClick={commitWrite}
               >
                 Commit
               </Button>
@@ -219,13 +247,13 @@ export default function Home() {
 
             <Toaster toastOptions={{ duration: 2000 }} />
 
-            {(((isWriteLoading || isWaitLoading)) && !hasCommited) && (
+            {(((isWriteLoading || isWaitLoading || isUpdateLoading)) && !hasUpdated) && (
               <div className="justifyCenter">
                 <Spinner />
               </div>
             )}
 
-            {hasCommited &&
+            {hasUpdated &&
               <div className="flex flex-row mt-5 mb-2 gap-4">
                 <ButtonThorin
                   outlined
@@ -235,7 +263,7 @@ export default function Home() {
                   variant="transparent"
                   as="a"
                   href={`https://${chain?.id === 5 ? 'goerli.' : ''
-                    }etherscan.io/tx/${data.hash}`}
+                    }etherscan.io/tx/${commitWriteData.hash}`}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -269,7 +297,9 @@ export default function Home() {
             isWaitLoading: {String(isWaitLoading)}
             <br></br>
             <br></br>
-            hasCommited: {String(hasCommited)}
+            isUpdateLoading: {String(isUpdateLoading)}
+            <br></br>
+            <br></br>
             */}
 
             {/*

@@ -8,13 +8,13 @@ import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite } from 'wagmi'
 import moment from 'moment/moment';
 
-const CONTRACT_ADDRESS = "0xa8db83b92e56bac174e71283104176d4368092d9"
+const CONTRACT_ADDRESS = "0xe69E5b56A7E4307e13eFb2908697D95C9617dC1c"
 
 // dummy token
 const client = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
 
 export default function CommitCard({ ...props }) {
-  
+
   // state
   const [proofIpfsHash, setProofIpfsHash] = useState(props.ipfsHash);
   const [fileUploaded, setFileUploaded] = React.useState(false);

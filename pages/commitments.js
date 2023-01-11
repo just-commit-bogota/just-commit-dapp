@@ -18,11 +18,10 @@ export default function Commitments() {
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0xa8db83b92e56bac174e71283104176d4368092d9"
+  const CONTRACT_ADDRESS = "0xe69E5b56A7E4307e13eFb2908697D95C9617dC1c"
 
   // variables
   const { getItem } = useStorage();
-  const txnHash = getItem('txnHash');
 
   // state
   const [loadingState, setLoadingState] = useState('loading')
@@ -42,6 +41,7 @@ export default function Commitments() {
       return
     }
 
+    // build commit array
     let newArray = [];
     for (let commit of commitData) {
       let newCommitStruct = {}
@@ -69,7 +69,9 @@ export default function Commitments() {
       newCommitStruct.judgeDeadline = commit.judgeDeadline;
       newCommitStruct.stakeAmount = commit.stakeAmount;
       newCommitStruct.message = commit.message;
+      newCommitStruct.txnHash = commit.txnHash;
       newCommitStruct.ipfsHash = commit.ipfsHash;
+      newCommitStruct.hasBeenUpdated = commit.hasBeenUpdated;
       newCommitStruct.commitJudged = commit.commitJudged;
       newCommitStruct.isApproved = commit.isApproved;
 
@@ -77,11 +79,11 @@ export default function Commitments() {
       newCommitStruct.status = status;
       newCommitStruct.userIsCreator = commit.commitFrom == address;
       newCommitStruct.userIsJudge = commit.commitTo == address;
-      newCommitStruct.txnHash = txnHash;
 
       newArray.push(newCommitStruct);
 
       console.log(newCommitStruct);
+      console.log(localStorage)
 
       // ----------
 
