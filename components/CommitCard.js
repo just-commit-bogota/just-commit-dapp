@@ -104,9 +104,9 @@ export default function CommitCard({ ...props }) {
                           <div>{context.droppable ? 'Upload' :
                             <Tag
                               className="text-2xl hover:cursor-pointer"
-                              tone="green"
+                              tone="accent"
                               variation="primary"
-                              size="Large"
+                              size="large"
                             >
                               &nbsp;📷&nbsp;
                             </Tag>}
@@ -120,11 +120,12 @@ export default function CommitCard({ ...props }) {
             {/* WAITING OR VERIFY BODY */}
             {props.status == "Waiting" &&
               <>
-                <div className="flex flex-col" style={{ alignItems: "center" }}>
+                <div className="flex flex-col gap-10" style={{ alignItems: "center" }}>
                 <Tag
                     className="text-2xl hover:cursor-pointer"
-                    tone="green"
-                    size="Large"
+                    tone="accent"
+                    size="large"
+
                     onClick={() => {
                       window.open(
                     	`https://ipfs.io/ipfs/${props.ipfsHash}`,
@@ -137,24 +138,24 @@ export default function CommitCard({ ...props }) {
                   {/* ACCEPT OR REJECT BUTTONS */}
                   {props.commitTo == address && (
                     <div>
-                      <br></br>
-                      <div className="flex flex-row gap-5" style={{ justifyContent: "space-between" }}>
+                      <div className="flex flex-row gap-5" style={{ justifyContent: "space-between", marginBottom: "-30px" }}>
                         <ButtonThorin
-                          shape="rounded"
                           tone="red"
                           size="small"
+                          variant="secondary"
+                          outlined
                         >
                           Reject
                         </ButtonThorin>
                         <ButtonThorin
-                          shape="rounded"
                           tone="green"
                           size="small"
+                          variant="secondary"
+                          outlined
                         >
                           Approve
                         </ButtonThorin>
                       </div>
-                      <br></br>
                     </div>
                   )}
                 </div>
