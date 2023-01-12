@@ -5,7 +5,7 @@ import abi from "../contracts/CommitManager.json";
 import Countdown from 'react-countdown';
 import { Web3Storage } from 'web3.storage'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
-import { usePrepareContractWrite, useContractWrite } from 'wagmi'
+import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
 import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
 import { useStorage } from '../hooks/useLocalStorage.ts'
@@ -26,6 +26,9 @@ export default function CommitCard({ ...props }) {
     "Success": "✅", // picture accepted :) 
   }
 
+  // state
+  const [hasProved, setHasProved] = useState(false)
+
   // smart contract data 
   const provider = useProvider()
   const { chain, chains } = useNetwork()
@@ -41,6 +44,12 @@ export default function CommitCard({ ...props }) {
   const { write: proveWrite, data: proveCommitData, isLoading: isProveLoading } = useContractWrite({
     ...proveCommitConfig,
     onSettled(proveCommitConfig, error) {
+      { proveWait }
+    },
+  })
+  const { wait: proveWait, data: proveWaitData, isLoading: isProveWaitLoading } = useWaitForTransaction({ hash: proveCommitData?.hash,
+    onSettled(proveWaitData, error) {
+      setHasProved(true)
       location.reload()
     },
   })
@@ -99,7 +108,7 @@ export default function CommitCard({ ...props }) {
                     <FileInput maxSize={1} onChange={(file) => uploadFile()}>
                       {(context) =>
                         context.name ?
-                          <Spinner />
+                          (isProveWaitLoading || isProveLoading) && <Spinner />
                           :
                           <div>{context.droppable ? 'Upload' :
                             <Tag
@@ -117,6 +126,29 @@ export default function CommitCard({ ...props }) {
                 </div>
               </>
             }
+
+            {/*
+            ---------
+            DEBUGGING
+            ---------
+            */}
+            
+            {/*
+            isProveWaitLoading: {String(isProveWaitLoading)}
+            <br></br>
+            <br></br>
+            isProveLoading: {String(isProveLoading)}
+            <br></br>
+            <br></br>
+            */}
+
+            {/*
+            validThrou.: {validThrough}
+            <br></br>
+            <br></br>
+            Date.now(): {Date.now()}
+            */}
+
             {/* WAITING OR VERIFY BODY */}
             {props.status == "Waiting" &&
               <>
