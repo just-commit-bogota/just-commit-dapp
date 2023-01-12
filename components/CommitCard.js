@@ -4,6 +4,7 @@ import classNames from 'classnames'
 import abi from "../contracts/CommitManager.json";
 import Countdown from 'react-countdown';
 import { Web3Storage } from 'web3.storage'
+import { MediaRenderer } from "@thirdweb-dev/react";
 import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite } from 'wagmi'
 import moment from 'moment/moment';
@@ -36,7 +37,7 @@ export default function CommitCard({ ...props }) {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: abi.abi,
     functionName: "proveCommit",
-    args: [props.id, getItem('txnHash')]
+    args: [props.id, getItem('ipfsHash')]
   })
   const { write: proveWrite, data: proveCommitData, isLoading: isProveLoading } = useContractWrite({
     ...proveCommitConfig,
@@ -53,8 +54,8 @@ export default function CommitCard({ ...props }) {
         name: 'fileInput',
         maxRetries: 3,
       }).then(cid => {
-        setItem('txnHash', cid) // get this line to work
-        { proveWrite() }
+        setItem('ipfsHash', cid) // get this line to work
+        proveWrite()
       })
     }
   }
@@ -122,7 +123,7 @@ export default function CommitCard({ ...props }) {
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
 
-                  <img className="w-full h-full" style={{ borderRadius: "4px" }} src="./dummy-pic-5.png" />
+                 <img className="w-full h-full" style={{ borderRadius: "4px" }} src={`https://ipfs.io/ipfs/${getItem("ipfsHash")}`} />
                   {/* VERIFY BODY */}
                   {props.status == "Verify" && (
                     <div>
@@ -178,7 +179,7 @@ export default function CommitCard({ ...props }) {
             <div className="flex flex-col align-center justify-center text-lg">{CommitStatusEmoji[props.status]}</div>
             <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600 text-xs rounded-lg bg-sky-200 hover:bg-sky-400">
               <a href={`https://${chain?.id === 5 ? 'goerli.' : ''
-                }etherscan.io/tx/${props.txnHash}`}
+                }etherscan.io/tx/${props.txnHash}`} // FIX
                 target="_blank"
                 rel="noreferrer"
               >

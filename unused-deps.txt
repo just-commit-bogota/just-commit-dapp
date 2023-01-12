@@ -1,5 +1,19 @@
 Need to install the following packages:
   depcheck
 Ok to proceed? (y) Unused dependencies
+* @emotion/css
+* @tanstack/query-core
+* @tanstack/react-query
 * autoprefixer
+* classnames
+* dayjs
+* moment
+* next-plausible
+* react-countdown
+* react-modal
+* react-query
+* react-router-dom
+* react-transition-state
+* react-use
 * tailwindcss
+* web3.storage
