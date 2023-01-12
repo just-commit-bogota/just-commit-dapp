@@ -4,7 +4,6 @@ import classNames from 'classnames'
 import abi from "../contracts/CommitManager.json";
 import Countdown from 'react-countdown';
 import { Web3Storage } from 'web3.storage'
-import { MediaRenderer } from "@thirdweb-dev/react";
 import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite } from 'wagmi'
 import moment from 'moment/moment';
@@ -118,14 +117,25 @@ export default function CommitCard({ ...props }) {
                 </div>
               </>
             }
-            {/* WAITING BODY */}
+            {/* WAITING OR VERIFY BODY */}
             {props.status == "Waiting" &&
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
-
-                 <img className="w-full h-full" style={{ borderRadius: "4px" }} src={`https://ipfs.io/ipfs/${getItem("ipfsHash")}`} />
-                  {/* VERIFY BODY */}
-                  {props.status == "Verify" && (
+                <Tag
+                    className="text-2xl hover:cursor-pointer"
+                    tone="green"
+                    size="Large"
+                    onClick={() => {
+                      window.open(
+                    	`https://ipfs.io/ipfs/${props.ipfsHash}`,
+                    	"_blank",
+                    	"noopener, noreferrer")
+                    }}
+                  >
+                    &nbsp;📸&nbsp;
+                  </Tag>
+                  {/* ACCEPT OR REJECT BUTTONS */}
+                  {props.commitTo == address && (
                     <div>
                       <br></br>
                       <div className="flex flex-row gap-5" style={{ justifyContent: "space-between" }}>
