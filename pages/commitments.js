@@ -17,7 +17,7 @@ export default function Commitments() {
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0x17C7B7a3DcF9D5c43056787292104F85EAb19d00"
+  const CONTRACT_ADDRESS = "0x7497cf83fcb156eb91422073eb46e83bec01df05"
 
   // state
   const [loadingState, setLoadingState] = useState('loading')
@@ -76,13 +76,12 @@ export default function Commitments() {
       newCommitStruct.stakeAmount = commit.stakeAmount;
       newCommitStruct.message = commit.message;
       newCommitStruct.ipfsHash = commit.ipfsHash;
+      newCommitStruct.commitProved = commit.commitProved;
       newCommitStruct.commitJudged = commit.commitJudged;
       newCommitStruct.isApproved = commit.isApproved;
 
       // front-end only
       newCommitStruct.status = status;
-      newCommitStruct.userIsCreator = commit.commitFrom == address;
-      newCommitStruct.userIsJudge = commit.commitTo == address;
 
       newArray.push(newCommitStruct);
 

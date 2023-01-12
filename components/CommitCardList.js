@@ -79,12 +79,11 @@ export default function CommitCardList({ cardList }) {
             stakeAmount={ethers.utils.formatEther(card.stakeAmount)}
             message={card.message}
             ipfsHash={card.ipfsHash}
+            commitProved={card.commitProved}
             commitJudged={card.commitJudged}
             isApproved={card.isApproved}
 
             status={card.status}
-            userIsCreator={card.userIsCreator}
-            userIsCommitee={card.userIsCommitee}
           />
         )).reverse()}
       </div>

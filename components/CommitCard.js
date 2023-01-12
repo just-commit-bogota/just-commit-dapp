@@ -1,5 +1,5 @@
 import { FileInput, Tag, CloseSVG, Button as ButtonThorin } from '@ensdomains/thorin'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import abi from "../contracts/CommitManager.json";
 import Countdown from 'react-countdown';
@@ -10,7 +10,7 @@ import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
 import { useStorage } from '../hooks/useLocalStorage.ts'
 
-const CONTRACT_ADDRESS = "0x17C7B7a3DcF9D5c43056787292104F85EAb19d00"
+const CONTRACT_ADDRESS = "0x7497cf83fcb156eb91422073eb46e83bec01df05"
 
 // dummy token
 const client = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
@@ -28,6 +28,7 @@ export default function CommitCard({ ...props }) {
 
   // state
   const [hasProved, setHasProved] = useState(false)
+  const [hasJudged, setHasJudged] = useState(false)
 
   // smart contract data 
   const provider = useProvider()
@@ -35,23 +36,45 @@ export default function CommitCard({ ...props }) {
   const { address } = useAccount()
 
   // smart contract functions
+
+  // prepare
   const { config: proveCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: abi.abi,
     functionName: "proveCommit",
     args: [props.id, getItem('ipfsHash')]
   })
+  const { config: judgeCommitConfig } = usePrepareContractWrite({
+    addressOrName: CONTRACT_ADDRESS,
+    contractInterface: abi.abi,
+    functionName: "judgeCommit",
+    args: [props.id, getItem("isApproved")] // works with get/set? works with state variables? -- to try both
+  })
+  // write
   const { write: proveWrite, data: proveCommitData, isLoading: isProveLoading } = useContractWrite({
     ...proveCommitConfig,
     onSettled(proveCommitConfig, error) {
       { proveWait }
     },
   })
+  const { write: judgeWrite, data: judgeCommitData, isLoading: isJudgeLoading } = useContractWrite({
+    ...judgeCommitConfig,
+    onSettled(judgeCommitConfig, error) {
+      { judgeWait }
+    },
+  })
+  // wait
   const { wait: proveWait, data: proveWaitData, isLoading: isProveWaitLoading } = useWaitForTransaction({ hash: proveCommitData?.hash,
     onSettled(proveWaitData, error) {
       setHasProved(true)
       location.reload()
-    },
+    }
+  })
+  const { wait: judgeWait, data: judgeWaitData, isLoading: isJudgeWaitLoading } = useWaitForTransaction({ hash: judgeCommitData?.hash,
+    onSettled(judgeWaitData, error) {
+      setHasJudged(true)
+      location.reload()
+    }
   })
 
   // functions
@@ -62,7 +85,7 @@ export default function CommitCard({ ...props }) {
         name: 'fileInput',
         maxRetries: 3,
       }).then(cid => {
-        setItem('ipfsHash', cid) // get this line to work
+        setItem('ipfsHash', cid)
         proveWrite()
       })
     }
@@ -150,7 +173,7 @@ export default function CommitCard({ ...props }) {
             */}
 
             {/* WAITING OR VERIFY BODY */}
-            {props.status == "Waiting" &&
+            {(props.status == "Waiting" || props.status == "Success") &&
               <>
                 <div className="flex flex-col gap-10" style={{ alignItems: "center" }}>
                 <Tag
@@ -176,6 +199,10 @@ export default function CommitCard({ ...props }) {
                           size="small"
                           variant="secondary"
                           outlined
+                          onClick={() => {
+                            setItem("isApproved", false)
+                            judgeWrite()
+                          }}
                         >
                           Reject
                         </ButtonThorin>
@@ -184,6 +211,10 @@ export default function CommitCard({ ...props }) {
                           size="small"
                           variant="secondary"
                           outlined
+                          onClick={() => {
+                            setItem("isApproved", true)
+                            judgeWrite()
+                          }}
                         >
                           Approve
                         </ButtonThorin>
@@ -231,9 +262,10 @@ export default function CommitCard({ ...props }) {
             </div>
           </div>
         </div>
+          
         {/*
-          DEBUGGING
           <br></br>
+          {hasProved}
           {props.validThrough}
           <br></br>
           {props.createdAt}
@@ -242,6 +274,7 @@ export default function CommitCard({ ...props }) {
           <br></br>
           {txnHash}
         */}
+        
       </div>
     </>
   )

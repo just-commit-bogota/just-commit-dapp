@@ -180,6 +180,11 @@
   					},
   					{
   						"internalType": "bool",
+  						"name": "commitProved",
+  						"type": "bool"
+  					},
+  					{
+  						"internalType": "bool",
   						"name": "commitJudged",
   						"type": "bool"
   					},
@@ -210,5 +215,5 @@
   		"stateMutability": "view",
   		"type": "function"
   	}
-  ] 
+  ]
 }

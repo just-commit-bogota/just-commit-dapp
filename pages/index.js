@@ -18,7 +18,7 @@ export default function Home() {
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0x17C7B7a3DcF9D5c43056787292104F85EAb19d00"
+  const CONTRACT_ADDRESS = "0x7497cf83fcb156eb91422073eb46e83bec01df05"
   const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
   // state
@@ -47,7 +47,8 @@ export default function Home() {
       { wait }
     },
   })
-  const { wait, data: waitData, isLoading: isWaitLoading } = useWaitForTransaction({ hash: commitWriteData?.hash,
+  const { wait, data: waitData, isLoading: isWaitLoading } = useWaitForTransaction({
+    hash: commitWriteData?.hash,
     onSettled(waitData, error) {
       setHasCommited(true)
     },
