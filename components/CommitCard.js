@@ -8,6 +8,7 @@ import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite } from 'wagmi'
 import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
+import { useStorage } from '../hooks/useLocalStorage.ts'
 
 const CONTRACT_ADDRESS = "0x17C7B7a3DcF9D5c43056787292104F85EAb19d00"
 
@@ -16,6 +17,8 @@ const client = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ey
 
 export default function CommitCard({ ...props }) {
 
+  // variables
+  const { getItem, setItem } = useStorage()
   const CommitStatusEmoji = {
     "Pending": "❓", // picture not yet submitted
     "Waiting": "⏳", // picture submitted waiting for commitTo judging
@@ -33,12 +36,12 @@ export default function CommitCard({ ...props }) {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: abi.abi,
     functionName: "proveCommit",
-    args: [props.id, props.ipfsHash]
+    args: [props.id, getItem('txnHash')]
   })
   const { write: proveWrite, data: proveCommitData, isLoading: isProveLoading } = useContractWrite({
     ...proveCommitConfig,
     onSettled(proveCommitConfig, error) {
-      // location.reload()
+      location.reload()
     },
   })
 
@@ -50,7 +53,7 @@ export default function CommitCard({ ...props }) {
         name: 'fileInput',
         maxRetries: 3,
       }).then(cid => {
-        props.ipfsHash = cid // not working
+        setItem('txnHash', cid) // get this line to work
         { proveWrite() }
       })
     }

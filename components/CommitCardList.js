@@ -28,7 +28,6 @@ export default function CommitCardList({ cardList }) {
             // Active: connectedAddress is commitFrom and Pending
             cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Pending"))
 
-  // useEffect()
   // set Active filter to active
   useEffect(() => {
     setSelectedFilter("Active")
