@@ -211,7 +211,6 @@ export default function CommitCard ({...props}) {
                           shape="rounded"
                           tone="red"
                           size="small"
-			  variant="secondary"
                           outlined
                           onClick={returnError}
                         >
@@ -221,7 +220,6 @@ export default function CommitCard ({...props}) {
                           shape="rounded"
                           tone="green"
                           size="small"
-			  variant="secondary"
                           outlined
                           onClick={returnError}
                         >
