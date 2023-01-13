@@ -107,7 +107,7 @@ export default function CommitCard({ ...props }) {
             <div className="flex align-left space-x-2">
               <div className="text-sm text-slate-400 opacity-80" style={{ whiteSpace: "nowrap" }}>
                 {
-                  (props.validThrough) > Date.now() ?
+                  (props.validThrough > Date.now() && props.commitProved == false) ?
                     <Countdown date={props.validThrough} daysInHours></Countdown> :
                     moment(props.createdAt * 1000).fromNow()
                 }
@@ -172,7 +172,7 @@ export default function CommitCard({ ...props }) {
             Date.now(): {Date.now()}
             */}
 
-            {/* WAITING OR VERIFY BODY */}
+            {/* WAITING/VERIFY OR SUCCESS BODY */}
             {(props.status == "Waiting" || props.status == "Success") &&
               <>
                 <div className="flex flex-col gap-10" style={{ alignItems: "center" }}>
@@ -190,8 +190,8 @@ export default function CommitCard({ ...props }) {
                   >
                     &nbsp;📸&nbsp;
                   </Tag>
-                  {/* ACCEPT OR REJECT BUTTONS */}
-                  {props.commitTo == address && (
+                  {/* THE VERIFY VARIANT */}
+                  {props.commitTo == address && props.judgeDeadline > Date.now() && !props.commitJudged && (
                     <div>
                       <div className="flex flex-row gap-5" style={{ justifyContent: "space-between", marginBottom: "-30px" }}>
                         <ButtonThorin

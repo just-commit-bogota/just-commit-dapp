@@ -45,20 +45,20 @@ export default function Commitments() {
       // classify status
       let status = "";
       
-      // has been approved || commit expired but had the proof
-      if (commit.isApproved || (commit.judgeDeadline < Date.now() && commit.ipfsHash != "")) {
-        status = "Success";
-        console.log("SUCCESS")
-      }
-      // has not been approved and does not have a proof
-      else if (commit.validThrough > Date.now() && commit.ipfsHash == "") {
+      // is valid and does not have a proof
+      if (commit.validThrough > Date.now() && !commit.commitProved) {
         status = "Pending";
         console.log("PENDING")
       }
-      // has not been approved and has a proof
-      else if (commit.validThrough > Date.now() && commit.ipfsHash != "") {
+      // is valid, has not expired, has a proof but has not been judged
+      else if (commit.validThrough > Date.now() && commit.judgeDeadline > Date.now() && commit.commitProved && !commit.commitJudged) {
         status = "Waiting";
         console.log("WAITING")
+      }
+      // is approved or the commit expired but had a proof
+      else if (commit.isApproved || (commit.judgeDeadline < Date.now() && commit.ipfsHash != "")) {
+        status = "Success";
+        console.log("SUCCESS")
       }
       // commit has been denied || commit has expired
       else {
