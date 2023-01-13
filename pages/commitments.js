@@ -101,7 +101,7 @@ export default function Commitments() {
 
     }
 
-    newArray.sort((a, b) => (a.validThrough > b.validThrough) ? 1 : -1)
+    newArray.sort((a, b) => (a.createdAt > b.createdAt) ? 1 : -1)
     setCommitArray(newArray);
   }
 

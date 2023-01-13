@@ -194,30 +194,36 @@ export default function CommitCard({ ...props }) {
                   {props.commitTo == address && props.judgeDeadline > Date.now() && !props.commitJudged && (
                     <div>
                       <div className="flex flex-row gap-5" style={{ justifyContent: "space-between", marginBottom: "-30px" }}>
-                        <ButtonThorin
-                          tone="red"
-                          size="small"
-                          variant="secondary"
-                          outlined
-                          onClick={() => {
-                            setItem("isApproved", false)
-                            judgeWrite()
-                          }}
-                        >
-                          Reject
-                        </ButtonThorin>
-                        <ButtonThorin
-                          tone="green"
-                          size="small"
-                          variant="secondary"
-                          outlined
-                          onClick={() => {
-                            setItem("isApproved", true)
-                            judgeWrite()
-                          }}
-                        >
-                          Approve
-                        </ButtonThorin>
+                        {
+                        isJudgeWaitLoading ?
+                          <Spinner /> :
+                          <>
+                          <ButtonThorin
+                            tone="red"
+                            size="small"
+                            variant="secondary"
+                            outlined
+                            onClick={() => {
+                              setItem("isApproved", false)
+                              judgeWrite()
+                            }}
+                          >
+                            Reject
+                          </ButtonThorin>
+                          <ButtonThorin
+                            tone="green"
+                            size="small"
+                            variant="secondary"
+                            outlined
+                            onClick={() => {
+                              setItem("isApproved", true)
+                              judgeWrite()
+                            }}
+                          >
+                            Approve
+                          </ButtonThorin>
+                          </>
+                        }
                       </div>
                     </div>
                   )}
@@ -253,7 +259,7 @@ export default function CommitCard({ ...props }) {
             <div className="flex flex-col align-center justify-center text-lg">{CommitStatusEmoji[props.status]}</div>
             <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600 text-xs rounded-lg bg-sky-200 hover:bg-sky-400">
               <a href={`https://${chain?.id === 5 ? 'goerli.' : ''
-                }etherscan.io/tx/${props.txnHash}`} // FIX
+                }etherscan.io/tx/${props.txnHash}`} /// FIX 
                 target="_blank"
                 rel="noreferrer"
               >
@@ -262,7 +268,7 @@ export default function CommitCard({ ...props }) {
             </div>
           </div>
         </div>
-          
+        
         {/*
           <br></br>
           {hasProved}
