@@ -17,7 +17,7 @@ export default function Commitments() {
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0x7497cf83fcb156eb91422073eb46e83bec01df05"
+  const CONTRACT_ADDRESS = "0xdF8f89106a37756B0324Ad981cf19c14914b1709"
 
   // state
   const [loadingState, setLoadingState] = useState('loading')
@@ -44,7 +44,7 @@ export default function Commitments() {
 
       // classify status
       let status = "";
-      
+
       // is valid and does not have a proof
       if (commit.validThrough > Date.now() && !commit.commitProved) {
         status = "Pending";

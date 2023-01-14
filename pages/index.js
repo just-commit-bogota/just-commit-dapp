@@ -18,8 +18,9 @@ export default function Home() {
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0x7497cf83fcb156eb91422073eb46e83bec01df05"
+  const CONTRACT_ADDRESS = "0xdF8f89106a37756B0324Ad981cf19c14914b1709"
   const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
+  const ONLY_VALID_COMMITER = "0x32bD9e1D9D5E44A95D76f4bc9680F47B0b738346"
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
@@ -106,6 +107,10 @@ export default function Home() {
               if (commitTo == address) {
                 return toast.error('Cannot commit to self')
               }
+              // commitTo is other than belf.eth
+              if (address != ONLY_VALID_COMMITER) {
+                return toast.error('⚠️ dApp is not live yet')
+              }
             }}>
 
             <div className="flex flex-col gap-3 w-full">
@@ -132,11 +137,14 @@ export default function Home() {
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
               />
+              {/* TODO some things below commented for demo purposes */}
               <Input
                 label="To"
-                placeholder="justcommit.eth"
+                // placeholder="justcommit.eth"
                 maxLength={42}
-                onChange={(e) => setCommitTo(e.target.value)}
+                //onChange={(e) => setCommitTo(e.target.value)}
+                required
+                // disabled
                 labelSecondary={
                   <Tag
                     className="hover:cursor-pointer"
@@ -150,8 +158,6 @@ export default function Home() {
                     i
                   </Tag>
                 }
-                required
-                disabled
               />
               <Input
                 label="Amount"

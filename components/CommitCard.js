@@ -10,7 +10,7 @@ import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
 import { useStorage } from '../hooks/useLocalStorage.ts'
 
-const CONTRACT_ADDRESS = "0x7497cf83fcb156eb91422073eb46e83bec01df05"
+const CONTRACT_ADDRESS = "0xdF8f89106a37756B0324Ad981cf19c14914b1709"
 
 // dummy token
 const client = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
@@ -64,13 +64,15 @@ export default function CommitCard({ ...props }) {
     },
   })
   // wait
-  const { wait: proveWait, data: proveWaitData, isLoading: isProveWaitLoading } = useWaitForTransaction({ hash: proveCommitData?.hash,
+  const { wait: proveWait, data: proveWaitData, isLoading: isProveWaitLoading } = useWaitForTransaction({
+    hash: proveCommitData?.hash,
     onSettled(proveWaitData, error) {
       setHasProved(true)
       location.reload()
     }
   })
-  const { wait: judgeWait, data: judgeWaitData, isLoading: isJudgeWaitLoading } = useWaitForTransaction({ hash: judgeCommitData?.hash,
+  const { wait: judgeWait, data: judgeWaitData, isLoading: isJudgeWaitLoading } = useWaitForTransaction({
+    hash: judgeCommitData?.hash,
     onSettled(judgeWaitData, error) {
       setHasJudged(true)
       location.reload()
@@ -155,7 +157,7 @@ export default function CommitCard({ ...props }) {
             DEBUGGING
             ---------
             */}
-            
+
             {/*
             isProveWaitLoading: {String(isProveWaitLoading)}
             <br></br>
@@ -176,16 +178,16 @@ export default function CommitCard({ ...props }) {
             {(props.status == "Waiting" || props.status == "Success") &&
               <>
                 <div className="flex flex-col gap-10" style={{ alignItems: "center" }}>
-                <Tag
+                  <Tag
                     className="text-2xl hover:cursor-pointer"
                     tone="accent"
                     size="large"
 
                     onClick={() => {
                       window.open(
-                    	`https://ipfs.io/ipfs/${props.ipfsHash}`,
-                    	"_blank",
-                    	"noopener, noreferrer")
+                        `https://ipfs.io/ipfs/${props.ipfsHash}`,
+                        "_blank",
+                        "noopener, noreferrer")
                     }}
                   >
                     &nbsp;📸&nbsp;
@@ -195,34 +197,34 @@ export default function CommitCard({ ...props }) {
                     <div>
                       <div className="flex flex-row gap-5" style={{ justifyContent: "space-between", marginBottom: "-30px" }}>
                         {
-                        isJudgeWaitLoading ?
-                          <Spinner /> :
-                          <>
-                          <ButtonThorin
-                            tone="red"
-                            size="small"
-                            variant="secondary"
-                            outlined
-                            onClick={() => {
-                              setItem("isApproved", false)
-                              judgeWrite()
-                            }}
-                          >
-                            Reject
-                          </ButtonThorin>
-                          <ButtonThorin
-                            tone="green"
-                            size="small"
-                            variant="secondary"
-                            outlined
-                            onClick={() => {
-                              setItem("isApproved", true)
-                              judgeWrite()
-                            }}
-                          >
-                            Approve
-                          </ButtonThorin>
-                          </>
+                          isJudgeWaitLoading ?
+                            <Spinner /> :
+                            <>
+                              <ButtonThorin
+                                tone="red"
+                                size="small"
+                                variant="secondary"
+                                outlined
+                                onClick={() => {
+                                  setItem("isApproved", false)
+                                  judgeWrite()
+                                }}
+                              >
+                                Reject
+                              </ButtonThorin>
+                              <ButtonThorin
+                                tone="green"
+                                size="small"
+                                variant="secondary"
+                                outlined
+                                onClick={() => {
+                                  setItem("isApproved", true)
+                                  judgeWrite()
+                                }}
+                              >
+                                Approve
+                              </ButtonThorin>
+                            </>
                         }
                       </div>
                     </div>
@@ -268,7 +270,7 @@ export default function CommitCard({ ...props }) {
             </div>
           </div>
         </div>
-        
+
         {/*
           <br></br>
           {hasProved}
@@ -280,7 +282,7 @@ export default function CommitCard({ ...props }) {
           <br></br>
           {txnHash}
         */}
-        
+
       </div>
     </>
   )
