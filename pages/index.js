@@ -14,13 +14,14 @@ import Spinner from "../components/Spinner.js";
 export default function Home() {
 
   useEffect(() => {
+    localStorage.clear()
     setLoadingState('loaded')
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0xdF8f89106a37756B0324Ad981cf19c14914b1709"
+  const CONTRACT_ADDRESS = "0x867cb93e115fe0b0bCc39bEE9Ba8ba985cE52504"
   const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
-  const ONLY_VALID_COMMITER = "0x32bD9e1D9D5E44A95D76f4bc9680F47B0b738346"
+  const ONLY_ADDRESS_ALLOWED = "0x32bD9e1D9D5E44A95D76f4bc9680F47B0b738346"
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
@@ -104,11 +105,11 @@ export default function Home() {
                 return toast.error('Switch to a supported network')
               }
               // commiting to self?
-              if (commitTo == address) {
+              if (address == commitTo) {
                 return toast.error('Cannot commit to self')
               }
-              // commitTo is other than belf.eth
-              if (address != ONLY_VALID_COMMITER) {
+              // for Beta purposes only
+              if (address != ONLY_ADDRESS_ALLOWED) {
                 return toast.error('⚠️ dApp is not live yet')
               }
             }}>
@@ -137,27 +138,26 @@ export default function Home() {
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
               />
-              {/* TODO some things below commented for demo purposes */}
               <Input
                 label="To"
                 // placeholder="justcommit.eth"
                 maxLength={42}
-                //onChange={(e) => setCommitTo(e.target.value)}
-                required
-                // disabled
+                // onChange={(e) => setCommitTo(e.target.value)}
                 labelSecondary={
                   <Tag
                     className="hover:cursor-pointer"
                     tone="green"
                     size="small"
-                    onClick={() => {
-                      toast('⚠️ Only address allowed in Beta'),
-                        { position: 'top-center' }
-                    }}
+                  //onClick={() => {
+                  //  toast('⚠️ Only address allowed in Beta'),
+                  //..    { position: 'top-center' }
+                  //}}
                   >
                     i
                   </Tag>
                 }
+                required
+              // disabled
               />
               <Input
                 label="Amount"

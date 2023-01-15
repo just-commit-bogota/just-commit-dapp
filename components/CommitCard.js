@@ -10,7 +10,7 @@ import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
 import { useStorage } from '../hooks/useLocalStorage.ts'
 
-const CONTRACT_ADDRESS = "0xdF8f89106a37756B0324Ad981cf19c14914b1709"
+const CONTRACT_ADDRESS = "0x867cb93e115fe0b0bCc39bEE9Ba8ba985cE52504"
 
 // dummy token
 const client = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
