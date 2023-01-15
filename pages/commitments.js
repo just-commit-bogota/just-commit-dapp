@@ -17,7 +17,7 @@ export default function Commitments() {
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0x867cb93e115fe0b0bCc39bEE9Ba8ba985cE52504"
+  const CONTRACT_ADDRESS = "0xd9145CCE52D386f254917e481eB44e9943F39138"
 
   // state
   const [loadingState, setLoadingState] = useState('loading')

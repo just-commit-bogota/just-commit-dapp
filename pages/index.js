@@ -19,7 +19,7 @@ export default function Home() {
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0x867cb93e115fe0b0bCc39bEE9Ba8ba985cE52504"
+  const CONTRACT_ADDRESS = "0xd9145CCE52D386f254917e481eB44e9943F39138"
   const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
   const ONLY_ADDRESS_ALLOWED = "0x32bD9e1D9D5E44A95D76f4bc9680F47B0b738346"
 
@@ -140,24 +140,24 @@ export default function Home() {
               />
               <Input
                 label="To"
+                required
+                // disabled
                 // placeholder="justcommit.eth"
                 maxLength={42}
                 // onChange={(e) => setCommitTo(e.target.value)}
-                labelSecondary={
-                  <Tag
-                    className="hover:cursor-pointer"
-                    tone="green"
-                    size="small"
-                  //onClick={() => {
+                // labelSecondary={
+                  // <Tag
+                  //   className="hover:cursor-pointer"
+                  //   tone="green"
+                  //   size="small"
+                  // onClick={() => {
                   //  toast('⚠️ Only address allowed in Beta'),
-                  //..    { position: 'top-center' }
-                  //}}
-                  >
-                    i
-                  </Tag>
-                }
-                required
-              // disabled
+                  // ..    { position: 'top-center' }
+                  // }}
+                  // >
+                  //   i
+                  // </Tag>
+                // }
               />
               <Input
                 label="Amount"
