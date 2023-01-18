@@ -132,10 +132,9 @@ export default function CommitCard ({...props}) {
                 {props.status == "Pending" && (
                 <div>Expires in <b>6 hours</b></div>
                 )}
-                {props.status == "Waiting" || props.status == "Verify" &&
-                  (props.expiryTimestamp*1000) > Date.now() ?
-                  <Countdown date={props.expiryTimestamp*1000} daysInHours></Countdown> : null
-                }
+		{props.status == "Waiting" || props.status == "Verify" && (
+                <div>Due in <b>3 hours</b></div>
+                )}
                 {(props.status == "Success" || props.status == "Failure") && (
                   props.id == "3" ? ("1 day ago") :
                   props.id == "4" ? ("2 days ago") :
