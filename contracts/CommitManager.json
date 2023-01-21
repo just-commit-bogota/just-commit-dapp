@@ -2,47 +2,6 @@
   "abi":
   [
   	{
-  		"inputs": [
-  			{
-  				"internalType": "string",
-  				"name": "_message",
-  				"type": "string"
-  			},
-  			{
-  				"internalType": "address",
-  				"name": "commitTo",
-  				"type": "address"
-  			},
-  			{
-  				"internalType": "uint256",
-  				"name": "validThrough",
-  				"type": "uint256"
-  			}
-  		],
-  		"name": "createCommit",
-  		"outputs": [],
-  		"stateMutability": "payable",
-  		"type": "function"
-  	},
-  	{
-  		"inputs": [
-  			{
-  				"internalType": "uint256",
-  				"name": "commitId",
-  				"type": "uint256"
-  			},
-  			{
-  				"internalType": "bool",
-  				"name": "_isApproved",
-  				"type": "bool"
-  			}
-  		],
-  		"name": "judgeCommit",
-  		"outputs": [],
-  		"stateMutability": "nonpayable",
-  		"type": "function"
-  	},
-  	{
   		"inputs": [],
   		"stateMutability": "nonpayable",
   		"type": "constructor"
@@ -112,19 +71,24 @@
   	{
   		"inputs": [
   			{
-  				"internalType": "uint256",
-  				"name": "commitId",
-  				"type": "uint256"
+  				"internalType": "string",
+  				"name": "_message",
+  				"type": "string"
   			},
   			{
-  				"internalType": "string",
-  				"name": "_ipfsHash",
-  				"type": "string"
+  				"internalType": "address",
+  				"name": "commitTo",
+  				"type": "address"
+  			},
+  			{
+  				"internalType": "uint256",
+  				"name": "validThrough",
+  				"type": "uint256"
   			}
   		],
-  		"name": "proveCommit",
+  		"name": "createCommit",
   		"outputs": [],
-  		"stateMutability": "nonpayable",
+  		"stateMutability": "payable",
   		"type": "function"
   	},
   	{
@@ -213,6 +177,42 @@
   			}
   		],
   		"stateMutability": "view",
+  		"type": "function"
+  	},
+  	{
+  		"inputs": [
+  			{
+  				"internalType": "uint256",
+  				"name": "commitId",
+  				"type": "uint256"
+  			},
+  			{
+  				"internalType": "bool",
+  				"name": "_isApproved",
+  				"type": "bool"
+  			}
+  		],
+  		"name": "judgeCommit",
+  		"outputs": [],
+  		"stateMutability": "nonpayable",
+  		"type": "function"
+  	},
+  	{
+  		"inputs": [
+  			{
+  				"internalType": "uint256",
+  				"name": "commitId",
+  				"type": "uint256"
+  			},
+  			{
+  				"internalType": "string",
+  				"name": "_ipfsHash",
+  				"type": "string"
+  			}
+  		],
+  		"name": "proveCommit",
+  		"outputs": [],
+  		"stateMutability": "nonpayable",
   		"type": "function"
   	}
   ]

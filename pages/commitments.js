@@ -10,14 +10,13 @@ import abi from "../contracts/CommitManager.json"
 export default function Commitments() {
 
   useEffect(() => {
-    setTimeout(() => {
-      buildCommitArray()
-      setLoadingState('loaded')
-    });
+    localStorage.clear()
+    buildCommitArray()
+    setLoadingState('loaded')
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0xB67408231420182Dab995F6d8364e181cE7e1cA5"
+  const CONTRACT_ADDRESS = "0xC7a2b356B01b46BaeB14640C00A3f5DC390BEc8C"
 
   // state
   const [loadingState, setLoadingState] = useState('loading')

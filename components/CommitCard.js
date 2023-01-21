@@ -9,13 +9,18 @@ import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from
 import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
 import { useStorage } from '../hooks/useLocalStorage.ts'
+import toast, { Toaster } from 'react-hot-toast'
 
-const CONTRACT_ADDRESS = "0xB67408231420182Dab995F6d8364e181cE7e1cA5"
+const CONTRACT_ADDRESS = "0xC7a2b356B01b46BaeB14640C00A3f5DC390BEc8C"
 
 // dummy token
 const client = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
 
 export default function CommitCard({ ...props }) {
+
+  useEffect(() => {
+    localStorage.clear()
+  }, []);
 
   // variables
   const { getItem, setItem } = useStorage()
@@ -246,7 +251,8 @@ export default function CommitCard({ ...props }) {
                 <b>&nbsp;From </b>{props.commitFrom.slice(0, 5)}...{props.commitFrom.slice(-4)}&nbsp;
               </div>
               <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
-                <b>&nbsp;To </b>{props.commitTo.slice(0, 5)}...{props.commitTo.slice(-4)}&nbsp;
+                <b>&nbsp;To </b>justcommit.eth&nbsp;
+                {/*<b>&nbsp;To </b>{props.commitTo.slice(0, 5)}...{props.commitTo.slice(-4)}&nbsp;*/}
               </div>
             </div>
             <div className="flex flex-row w-1/5 align-center justify-center"
@@ -260,16 +266,21 @@ export default function CommitCard({ ...props }) {
             </div>
             <div className="flex flex-col align-center justify-center text-lg">{CommitStatusEmoji[props.status]}</div>
             <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600 text-xs rounded-lg bg-sky-200 hover:bg-sky-400">
+              <a onClick={() => { toast("⏳ Working on it...") }}>
+              {/*}
               <a href={`https://${chain?.id === 5 ? 'goerli.' : ''
-                }etherscan.io/tx/${props.txnHash}`} /// FIX 
+                }etherscan.io/tx/${props.txnHash}`} // FIX 
                 target="_blank"
                 rel="noreferrer"
               >
+              */}
                 &nbsp;&nbsp;Txn&nbsp;&nbsp;
               </a>
             </div>
           </div>
         </div>
+
+        <Toaster toastOptions={{ duration: 2000 }} />
 
         {/*
           <br></br>

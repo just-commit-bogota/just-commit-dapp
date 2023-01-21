@@ -49,7 +49,7 @@ export default function CommitCardList({ cardList }) {
 
   return (
     <>
-      <div className="flex w-11/12 justify-center gap-2 lg:gap-16 text-small mt-4 mb-10">
+      <div className="flex justify-center gap-2 lg:gap-16 text-small mt-4 mb-10">
         <ul className="flex flex-row continent_nav">
           {filters_left.map(f =>
             <li key={f} id={f} className="filterOption">
@@ -65,7 +65,7 @@ export default function CommitCardList({ cardList }) {
         </ul>
       </div>
 
-      <div className="w-11/12">
+      <div className="w-full">
         {cardListToDisplay.map((card, index) => (
           <CommitCard
             key={index}

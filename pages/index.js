@@ -19,7 +19,7 @@ export default function Home() {
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0xB67408231420182Dab995F6d8364e181cE7e1cA5"
+  const CONTRACT_ADDRESS = "0xC7a2b356B01b46BaeB14640C00A3f5DC390BEc8C"
   const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
   const ONLY_ADDRESS_ALLOWED = "0x32bD9e1D9D5E44A95D76f4bc9680F47B0b738346"
 
@@ -151,6 +151,19 @@ export default function Home() {
                 required
               />
               <Input
+                label="Duration"
+                placeholder="1"
+                disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
+                min={1}
+                max={24}
+                step={1}
+                type="number"
+                units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
+                error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
+                onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
+                required
+              />
+              <Input
                 label="To"
                 required
                 disabled
@@ -170,19 +183,6 @@ export default function Home() {
                     i
                   </Tag>
                 }
-              />
-              <Input
-                label="Duration"
-                placeholder="1"
-                disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
-                min={1}
-                max={24}
-                step={1}
-                type="number"
-                units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
-                error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
-                onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
-                required
               />
             </div>
 
