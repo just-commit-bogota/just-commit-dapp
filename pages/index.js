@@ -14,14 +14,12 @@ import Spinner from "../components/Spinner.js";
 export default function Home() {
 
   useEffect(() => {
-    localStorage.clear()
     setLoadingState('loaded')
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0xC7a2b356B01b46BaeB14640C00A3f5DC390BEc8C"
+  const CONTRACT_ADDRESS = "0xE69640812Ba25e954978d2341535677442FD7628"
   const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
-  const ONLY_ADDRESS_ALLOWED = "0x32bD9e1D9D5E44A95D76f4bc9680F47B0b738346"
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
@@ -106,10 +104,6 @@ export default function Home() {
               // commiting to self?
               if (address == commitTo) {
                 return toast.error('Cannot commit to self')
-              }
-              // for Beta purposes only
-              if (address != ONLY_ADDRESS_ALLOWED) {
-                return toast.error('⚠️ dApp is not live yet')
               }
             }}>
 

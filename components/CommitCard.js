@@ -8,22 +8,18 @@ import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
 import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
-import { useStorage } from '../hooks/useLocalStorage.ts'
+import { useStorage } from '../hooks/useStorage.ts'
 import toast, { Toaster } from 'react-hot-toast'
 
-const CONTRACT_ADDRESS = "0xC7a2b356B01b46BaeB14640C00A3f5DC390BEc8C"
+const CONTRACT_ADDRESS = "0xE69640812Ba25e954978d2341535677442FD7628"
 
 // dummy token
 const client = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
 
 export default function CommitCard({ ...props }) {
 
-  useEffect(() => {
-    localStorage.clear()
-  }, []);
-
   // variables
-  const { getItem, setItem } = useStorage()
+  const { getItem, setItem, removeItem } = useStorage()
   const CommitStatusEmoji = {
     "Pending": "❓", // picture not yet submitted
     "Waiting": "⏳", // picture submitted waiting for commitTo judging
@@ -34,6 +30,8 @@ export default function CommitCard({ ...props }) {
   // state
   const [hasProved, setHasProved] = useState(false)
   const [hasJudged, setHasJudged] = useState(false)
+  const [isProveCommitCalled, setIsProveCommitCalled] = useState(false);
+  const [isJudgeCommitCalled, setIsJudgeCommitCalled] = useState(false);
 
   // smart contract data 
   const provider = useProvider()
@@ -47,13 +45,13 @@ export default function CommitCard({ ...props }) {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: abi.abi,
     functionName: "proveCommit",
-    args: [props.id, getItem('ipfsHash')]
+    args: [props.id, getItem('ipfsHash', 'session')]
   })
   const { config: judgeCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: abi.abi,
     functionName: "judgeCommit",
-    args: [props.id, getItem("isApproved")] // works with get/set? works with state variables? -- to try both
+    args: [props.id, getItem('isApproved', 'session')]
   })
   // write
   const { write: proveWrite, data: proveCommitData, isLoading: isProveLoading } = useContractWrite({
@@ -92,7 +90,8 @@ export default function CommitCard({ ...props }) {
         name: 'fileInput',
         maxRetries: 3,
       }).then(cid => {
-        setItem('ipfsHash', cid)
+        removeItem('ipfsHash', "session")
+        setItem('ipfsHash', cid, "session")
         proveWrite()
       })
     }
@@ -211,7 +210,8 @@ export default function CommitCard({ ...props }) {
                                 variant="secondary"
                                 outlined
                                 onClick={() => {
-                                  setItem("isApproved", false)
+                                  removeItem('isApproved', "session")
+                                  setItem("isApproved", false, "session")
                                   judgeWrite()
                                 }}
                               >
@@ -223,7 +223,8 @@ export default function CommitCard({ ...props }) {
                                 variant="secondary"
                                 outlined
                                 onClick={() => {
-                                  setItem("isApproved", true)
+                                  removeItem('isApproved', "session")
+                                  setItem("isApproved", true, "session")
                                   judgeWrite()
                                 }}
                               >
@@ -267,7 +268,7 @@ export default function CommitCard({ ...props }) {
             <div className="flex flex-col align-center justify-center text-lg">{CommitStatusEmoji[props.status]}</div>
             <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600 text-xs rounded-lg bg-sky-200 hover:bg-sky-400">
               <a onClick={() => { toast("⏳ Working on it...") }}>
-              {/*}
+                {/*}
               <a href={`https://${chain?.id === 5 ? 'goerli.' : ''
                 }etherscan.io/tx/${props.txnHash}`} // FIX 
                 target="_blank"

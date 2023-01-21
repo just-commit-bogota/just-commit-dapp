@@ -1,3 +1,18 @@
 {
-  "files": {}
+  "files": {
+    "components/CommitCard.js": [
+      {
+        "id": "aba58e36-ce7a-4ed8-9ee4-ca17581f4ac4",
+        "line": 44,
+        "version": 10386,
+        "index": 1858
+      },
+      {
+        "id": "60b73da9-428c-4770-ad37-d942fd80b3ee",
+        "line": 45,
+        "version": 10386,
+        "index": 1894
+      }
+    ]
+  }
 }

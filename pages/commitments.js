@@ -6,22 +6,23 @@ import { Placeholders } from "../components/Placeholders.js"
 import { useState, useEffect } from 'react'
 import { useAccount, useContractRead } from 'wagmi'
 import abi from "../contracts/CommitManager.json"
+import { useStorage } from '../hooks/useStorage.ts'
 
 export default function Commitments() {
 
   useEffect(() => {
-    localStorage.clear()
     buildCommitArray()
     setLoadingState('loaded')
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0xC7a2b356B01b46BaeB14640C00A3f5DC390BEc8C"
+  const CONTRACT_ADDRESS = "0xE69640812Ba25e954978d2341535677442FD7628"
 
   // state
+  const { removeItem } = useStorage()
+  const { address } = useAccount()
   const [loadingState, setLoadingState] = useState('loading')
   const [commitArray, setCommitArray] = useState([])
-  const { address } = useAccount()
 
   // smart contract
   const { data: commitData, isError } = useContractRead({
