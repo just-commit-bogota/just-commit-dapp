@@ -19,7 +19,7 @@ export default function Home() {
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0xd9145CCE52D386f254917e481eB44e9943F39138"
+  const CONTRACT_ADDRESS = "0xB67408231420182Dab995F6d8364e181cE7e1cA5"
   const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
   const ONLY_ADDRESS_ALLOWED = "0x32bD9e1D9D5E44A95D76f4bc9680F47B0b738346"
 
@@ -55,7 +55,6 @@ export default function Home() {
       setHasCommited(true)
     },
   })
-
 
   // extra (live ETH stats)
   const gasApi = useFetch('https://gas.best/stats')
@@ -139,27 +138,6 @@ export default function Home() {
                 required
               />
               <Input
-                label="To"
-                required
-                // disabled
-                // placeholder="justcommit.eth"
-                maxLength={42}
-                // onChange={(e) => setCommitTo(e.target.value)}
-                // labelSecondary={
-                  // <Tag
-                  //   className="hover:cursor-pointer"
-                  //   tone="green"
-                  //   size="small"
-                  // onClick={() => {
-                  //  toast('⚠️ Only address allowed in Beta'),
-                  // ..    { position: 'top-center' }
-                  // }}
-                  // >
-                  //   i
-                  // </Tag>
-                // }
-              />
-              <Input
                 label="Amount"
                 placeholder="1"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
@@ -171,6 +149,27 @@ export default function Home() {
                 error={(commitAmount) > 9999 ? "Maximum of $9999" : null}
                 onChange={(e) => setCommitAmount(e.target.value)}
                 required
+              />
+              <Input
+                label="To"
+                required
+                disabled
+                placeholder="justcommit.eth"
+                maxLength={42}
+                onChange={(e) => setCommitTo(e.target.value)}
+                labelSecondary={
+                  <Tag
+                    className="hover:cursor-pointer"
+                    tone="green"
+                    size="small"
+                    onClick={() => {
+                      toast('⚠️ Only address allowed in Beta'),
+                        { position: 'top-center' }
+                    }}
+                  >
+                    i
+                  </Tag>
+                }
               />
               <Input
                 label="Duration"
