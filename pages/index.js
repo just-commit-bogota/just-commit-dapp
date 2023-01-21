@@ -18,7 +18,7 @@ export default function Home() {
   }, []);
 
   // hard-coded
-  const CONTRACT_ADDRESS = "0xE69640812Ba25e954978d2341535677442FD7628"
+  const CONTRACT_ADDRESS = "0x1874441C819f09384942E4c0EC9348169665ac6B"
   const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
   // state

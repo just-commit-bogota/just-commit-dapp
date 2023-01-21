@@ -11,7 +11,7 @@ import Spinner from "../components/Spinner.js";
 import { useStorage } from '../hooks/useStorage.ts'
 import toast, { Toaster } from 'react-hot-toast'
 
-const CONTRACT_ADDRESS = "0xE69640812Ba25e954978d2341535677442FD7628"
+const CONTRACT_ADDRESS = "0x1874441C819f09384942E4c0EC9348169665ac6B"
 
 // dummy token
 const client = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
@@ -28,11 +28,9 @@ export default function CommitCard({ ...props }) {
   }
 
   // state
-  const [hasProved, setHasProved] = useState(false)
-  const [hasJudged, setHasJudged] = useState(false)
-  const [isProveCommitCalled, setIsProveCommitCalled] = useState(false);
-  const [isJudgeCommitCalled, setIsJudgeCommitCalled] = useState(false);
-
+  const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
+  const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
+  
   // smart contract data 
   const provider = useProvider()
   const { chain, chains } = useNetwork()
@@ -45,13 +43,15 @@ export default function CommitCard({ ...props }) {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: abi.abi,
     functionName: "proveCommit",
-    args: [props.id, getItem('ipfsHash', 'session')]
+    args: [props.id, getItem('ipfsHash', 'session')],
+    enabled: triggerProveContractFunctions,
   })
   const { config: judgeCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: abi.abi,
     functionName: "judgeCommit",
-    args: [props.id, getItem('isApproved', 'session')]
+    args: [props.id, getItem('isApproved', 'session')],
+    enabled: triggerJudgeContractFunctions,
   })
   // write
   const { write: proveWrite, data: proveCommitData, isLoading: isProveLoading } = useContractWrite({
@@ -70,14 +70,12 @@ export default function CommitCard({ ...props }) {
   const { wait: proveWait, data: proveWaitData, isLoading: isProveWaitLoading } = useWaitForTransaction({
     hash: proveCommitData?.hash,
     onSettled(proveWaitData, error) {
-      setHasProved(true)
       location.reload()
     }
   })
   const { wait: judgeWait, data: judgeWaitData, isLoading: isJudgeWaitLoading } = useWaitForTransaction({
     hash: judgeCommitData?.hash,
     onSettled(judgeWaitData, error) {
-      setHasJudged(true)
       location.reload()
     }
   })
@@ -92,6 +90,7 @@ export default function CommitCard({ ...props }) {
       }).then(cid => {
         removeItem('ipfsHash', "session")
         setItem('ipfsHash', cid, "session")
+        setTriggerProveContractFunctions(true)
         proveWrite()
       })
     }
@@ -137,7 +136,7 @@ export default function CommitCard({ ...props }) {
                     <FileInput maxSize={1} onChange={(file) => uploadFile()}>
                       {(context) =>
                         context.name ?
-                          (isProveWaitLoading || isProveLoading) && <Spinner />
+                          (isProveWaitLoading || isProveLoading) && <Spinner /> 
                           :
                           <div>{context.droppable ? 'Upload' :
                             <Tag
@@ -212,6 +211,7 @@ export default function CommitCard({ ...props }) {
                                 onClick={() => {
                                   removeItem('isApproved', "session")
                                   setItem("isApproved", false, "session")
+                                  setTriggerJudgeContractFunctions(true)
                                   judgeWrite()
                                 }}
                               >
@@ -225,6 +225,7 @@ export default function CommitCard({ ...props }) {
                                 onClick={() => {
                                   removeItem('isApproved', "session")
                                   setItem("isApproved", true, "session")
+                                  setTriggerJudgeContractFunctions(true)
                                   judgeWrite()
                                 }}
                               >
