@@ -5,8 +5,8 @@ import CommitCardList from "../components/CommitCardList.js"
 import { Placeholders } from "../components/Placeholders.js"
 import { useState, useEffect } from 'react'
 import { useAccount, useContractRead } from 'wagmi'
-import abi from "../contracts/CommitManager.json"
 import { useStorage } from '../hooks/useStorage.ts'
+import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 
 export default function Commitments() {
 
@@ -14,9 +14,6 @@ export default function Commitments() {
     buildCommitArray()
     setLoadingState('loaded')
   }, []);
-
-  // hard-coded
-  const CONTRACT_ADDRESS = "0x1874441C819f09384942E4c0EC9348169665ac6B"
 
   // state
   const { removeItem } = useStorage()
@@ -27,7 +24,7 @@ export default function Commitments() {
   // smart contract
   const { data: commitData, isError } = useContractRead({
     addressOrName: CONTRACT_ADDRESS,
-    contractInterface: abi.abi,
+    contractInterface: ABI,
     functionName: "getAllCommits",
   })
 

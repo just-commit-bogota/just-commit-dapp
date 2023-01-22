@@ -1,7 +1,6 @@
 import { FileInput, Tag, CloseSVG, Button as ButtonThorin } from '@ensdomains/thorin'
 import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
-import abi from "../contracts/CommitManager.json";
 import Countdown from 'react-countdown';
 import { Web3Storage } from 'web3.storage'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
@@ -10,8 +9,7 @@ import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
 import { useStorage } from '../hooks/useStorage.ts'
 import toast, { Toaster } from 'react-hot-toast'
-
-const CONTRACT_ADDRESS = "0x1874441C819f09384942E4c0EC9348169665ac6B"
+import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 
 // dummy token
 const client = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
@@ -30,7 +28,7 @@ export default function CommitCard({ ...props }) {
   // state
   const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
-  
+
   // smart contract data 
   const provider = useProvider()
   const { chain, chains } = useNetwork()
@@ -41,43 +39,35 @@ export default function CommitCard({ ...props }) {
   // prepare
   const { config: proveCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
-    contractInterface: abi.abi,
+    contractInterface: ABI,
     functionName: "proveCommit",
     args: [props.id, getItem('ipfsHash', 'session')],
     enabled: triggerProveContractFunctions,
   })
   const { config: judgeCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
-    contractInterface: abi.abi,
+    contractInterface: ABI,
     functionName: "judgeCommit",
     args: [props.id, getItem('isApproved', 'session')],
     enabled: triggerJudgeContractFunctions,
   })
+  
   // write
-  const { write: proveWrite, data: proveCommitData, isLoading: isProveLoading } = useContractWrite({
-    ...proveCommitConfig,
-    onSettled(proveCommitConfig, error) {
-      { proveWait }
-    },
+  const proveWrite = useContractWrite({...proveCommitConfig,
+    onSettled() {{ proveWait }},
   })
-  const { write: judgeWrite, data: judgeCommitData, isLoading: isJudgeLoading } = useContractWrite({
-    ...judgeCommitConfig,
-    onSettled(judgeCommitConfig, error) {
-      { judgeWait }
-    },
+  const judgeWrite = useContractWrite({...judgeCommitConfig,
+    onSettled() {{ judgeWait }},
   })
+  
   // wait
   const { wait: proveWait, data: proveWaitData, isLoading: isProveWaitLoading } = useWaitForTransaction({
-    hash: proveCommitData?.hash,
-    onSettled(proveWaitData, error) {
-      location.reload()
-    }
+    hash: proveWrite.data?.hash,
+    onSettled() { location.reload() }
   })
   const { wait: judgeWait, data: judgeWaitData, isLoading: isJudgeWaitLoading } = useWaitForTransaction({
-    hash: judgeCommitData?.hash,
-    onSettled(judgeWaitData, error) {
-      location.reload()
-    }
+    hash: judgeWrite.data?.hash,
+    onSettled() { location.reload() }
   })
 
   // functions
@@ -91,7 +81,7 @@ export default function CommitCard({ ...props }) {
         removeItem('ipfsHash', "session")
         setItem('ipfsHash', cid, "session")
         setTriggerProveContractFunctions(true)
-        proveWrite()
+        proveWrite.write?.()
       })
     }
   }
@@ -136,7 +126,7 @@ export default function CommitCard({ ...props }) {
                     <FileInput maxSize={1} onChange={(file) => uploadFile()}>
                       {(context) =>
                         context.name ?
-                          (isProveWaitLoading || isProveLoading) && <Spinner /> 
+                          (isProveWaitLoading || proveWrite.isLoading) && <Spinner />
                           :
                           <div>{context.droppable ? 'Upload' :
                             <Tag
@@ -210,9 +200,9 @@ export default function CommitCard({ ...props }) {
                                 outlined
                                 onClick={() => {
                                   removeItem('isApproved', "session")
-                                  setItem("isApproved", false, "session")
+                                  setItem('isApproved', false, "session")
                                   setTriggerJudgeContractFunctions(true)
-                                  judgeWrite()
+                                  judgeWrite.write?.()
                                 }}
                               >
                                 Reject
@@ -224,9 +214,9 @@ export default function CommitCard({ ...props }) {
                                 outlined
                                 onClick={() => {
                                   removeItem('isApproved', "session")
-                                  setItem("isApproved", true, "session")
+                                  setItem('isApproved', true, "session")
                                   setTriggerJudgeContractFunctions(true)
-                                  judgeWrite()
+                                  judgeWrite.write?.()
                                 }}
                               >
                                 Approve

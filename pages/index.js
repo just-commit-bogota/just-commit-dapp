@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import useFetch from '../hooks/fetch'
-import abi from "../contracts/CommitManager.json"
 import { ethers } from 'ethers'
 import { Tag, Input, Button as ButtonThorin } from '@ensdomains/thorin'
 import Button from '@mui/material/Button'
@@ -10,16 +9,13 @@ import { useAccount, useNetwork, useContractWrite, useContractRead, usePrepareCo
 import Header from '../components/Header.js';
 import { Placeholders } from "../components/Placeholders.js";
 import Spinner from "../components/Spinner.js";
+import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 
 export default function Home() {
 
   useEffect(() => {
     setLoadingState('loaded')
   }, []);
-
-  // hard-coded
-  const CONTRACT_ADDRESS = "0x1874441C819f09384942E4c0EC9348169665ac6B"
-  const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
@@ -36,7 +32,7 @@ export default function Home() {
   // smart contract functions
   const { config: createCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
-    contractInterface: abi.abi,
+    contractInterface: ABI,
     functionName: "createCommit",
     args: [commitDescription, commitTo, validThrough,
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }]
