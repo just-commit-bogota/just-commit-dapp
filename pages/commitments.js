@@ -29,7 +29,7 @@ export default function Commitments() {
 
   // functions
   function buildCommitArray() {
-    console.log("Hi")
+    console.log("building commit array")
     if (!commitData) {
       return
     }

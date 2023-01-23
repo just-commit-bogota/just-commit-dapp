@@ -81,7 +81,12 @@ export default function CommitCard({ ...props }) {
         removeItem('ipfsHash', "session")
         setItem('ipfsHash', cid, "session")
         setTriggerProveContractFunctions(true)
-        proveWrite.write?.()
+        try {
+          proveWrite.write?.()
+        }
+        catch {
+          toast.error("Click again")
+        }
       })
     }
   }
@@ -128,7 +133,7 @@ export default function CommitCard({ ...props }) {
                         context.name ?
                           (isProveWaitLoading || proveWrite.isLoading) && <Spinner />
                           :
-                          <div>{context.droppable ? 'Upload' :
+                          props.isProved && <div>{context.droppable ? 'Upload' :
                             <Tag
                               className="text-2xl hover:cursor-pointer"
                               tone="accent"

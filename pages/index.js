@@ -20,7 +20,7 @@ export default function Home() {
   // state
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState(CONTRACT_OWNER)
-  const [commitAmount, setCommitAmount] = useState('0.01')
+  const [commitAmount, setCommitAmount] = useState('5')
   const [validThrough, setValidThrough] = useState((1 * 3600 * 1000) + Date.now()) // == 1 hour
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
@@ -49,6 +49,16 @@ export default function Home() {
       setHasCommited(true)
     },
   })
+
+  // functions
+  function formatUsd(number) {
+    return number.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2,
+    })
+  }
 
   // extra (live ETH stats)
   const gasApi = useFetch('https://gas.best/stats')
@@ -129,13 +139,13 @@ export default function Home() {
               />
               <Input
                 label="Amount"
-                placeholder="1"
+                placeholder="5"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 min={0}
                 step="any"
                 max={9999}
                 type="number"
-                units="Goerli ETH"
+                units="MATIC"
                 error={(commitAmount) > 9999 ? "Maximum of $9999" : null}
                 onChange={(e) => setCommitAmount(e.target.value)}
                 required
@@ -178,8 +188,9 @@ export default function Home() {
 
             {/* Commit Button */}
             {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
-              <Button style={{
-                width: '32%',
+              <ButtonThorin style={{
+                width: '50%',
+                height:'2.5rem',
                 margin: '1rem',
                 backgroundColor:
                   commitDescription.length < 6 ||
@@ -187,14 +198,13 @@ export default function Home() {
                     !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
                     ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
                     (commitAmount > 9999) ?
-                    "rgb(73 179 147 / 35%)" : "rgb(73 179 147)",
+                    "rgb(30 174 131 / 36%)" : "rgb(30 174 131)",
                 borderRadius: 12,
                 color: "white",
                 boxShadow: "0rem 0.4rem 0.4rem 0rem lightGrey",
               }}
-                tone="green"
-                type="submit"
-                variant="action"
+                size="small"
+                suffix={"$" + formatUsd(commitAmount)}
                 disabled={
                   commitDescription.length < 6 ||
                   commitDescription.length > 35 ||
@@ -205,7 +215,7 @@ export default function Home() {
                 onClick={commitWrite}
               >
                 Commit
-              </Button>
+              </ButtonThorin>
             )}
 
             <Toaster toastOptions={{ duration: 2000 }} />
