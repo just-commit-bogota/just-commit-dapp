@@ -1,55 +1,9 @@
-export const CONTRACT_ADDRESS = "0xE0b0Af2dCbC7EC403Eb1c06F878CAeF9a84dAdb8"
+export const CONTRACT_ADDRESS = "0x219Ce339BBC34486f2F87FBF710A9CCc59465b31"
 
 export const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
 export const ABI =
 [
-	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_message",
-				"type": "string"
-			},
-			{
-				"internalType": "address",
-				"name": "commitTo",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "validThrough",
-				"type": "uint256"
-			}
-		],
-		"name": "createCommit",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "commitId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bool",
-				"name": "_isApproved",
-				"type": "bool"
-			}
-		],
-		"name": "judgeCommit",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
 	{
 		"anonymous": false,
 		"inputs": [
@@ -115,6 +69,47 @@ export const ABI =
 	{
 		"inputs": [
 			{
+				"internalType": "string",
+				"name": "_message",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "commitTo",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "validThrough",
+				"type": "uint256"
+			}
+		],
+		"name": "createCommit",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "commitId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "_isApproved",
+				"type": "bool"
+			}
+		],
+		"name": "judgeCommit",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "uint256",
 				"name": "commitId",
 				"type": "uint256"
@@ -129,6 +124,11 @@ export const ABI =
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
 	},
 	{
 		"inputs": [],

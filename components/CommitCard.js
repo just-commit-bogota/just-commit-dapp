@@ -175,7 +175,6 @@ export default function CommitCard({ ...props }) {
                     className="text-2xl hover:cursor-pointer"
                     tone="accent"
                     size="large"
-
                     onClick={() => {
                       window.open(
                         `https://ipfs.io/ipfs/${props.ipfsHash}`,
@@ -202,6 +201,7 @@ export default function CommitCard({ ...props }) {
                                   removeItem('isApproved', "session")
                                   setItem('isApproved', false, "session")
                                   setTriggerJudgeContractFunctions(true)
+                                  // console.log(judgeCommitConfig)
                                   judgeWrite.write?.()
                                 }}
                               >

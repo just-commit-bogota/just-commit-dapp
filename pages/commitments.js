@@ -16,7 +16,6 @@ export default function Commitments() {
   }, []);
 
   // state
-  const { removeItem } = useStorage()
   const { address } = useAccount()
   const [loadingState, setLoadingState] = useState('loading')
   const [commitArray, setCommitArray] = useState([])
@@ -30,6 +29,7 @@ export default function Commitments() {
 
   // functions
   function buildCommitArray() {
+    console.log("Hi")
     if (!commitData) {
       return
     }
@@ -57,7 +57,7 @@ export default function Commitments() {
         status = "Success";
         console.log("SUCCESS")
       }
-      // commit has been denied || commit has expired
+      // commit has been denied or commit has expired
       else {
         status = "Failure";
         console.log("FAILURE")
@@ -81,8 +81,7 @@ export default function Commitments() {
       newCommitStruct.status = status;
 
       newArray.push(newCommitStruct);
-
-      console.log(newCommitStruct);
+      console.log(newCommitStruct.isApproved);
 
       // ----------
 
