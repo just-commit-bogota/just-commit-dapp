@@ -146,7 +146,7 @@ export default function Home() {
                     tone="green"
                     size="small"
                     onClick={() => {
-                      toast('💵 1 MATIC = $' + maticPrice + " USD"),
+                      toast('💵 1 MATIC = ' + maticPrice + " USD"),
                         { position: 'top-center' }
                     }}
                   >
