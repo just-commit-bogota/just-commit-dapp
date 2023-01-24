@@ -60,11 +60,9 @@ export default function Home() {
     })
   }
 
-  // eth stats
-  const gasApi = useFetch('https://gas.best/stats')
-  const gasPrice = gasApi.data?.pending?.fee
-  const ethPrice = gasApi.data?.ethPrice
-  const commitCost = parseFloat(ethPrice * gasPrice * 0.000000001)
+  // polygon stats
+  const priceApi = useFetch('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd')
+  const maticPrice = parseFloat(priceApi.data?.["matic-network"].usd)
 
   // rendering
   return (
@@ -205,7 +203,7 @@ export default function Home() {
                 boxShadow: "0rem 0.4rem 0.4rem 0rem lightGrey",
               }}
                 size="small"
-                suffix={"$" + formatUsd(commitAmount)} // + commitCost
+                suffix= {!priceApi.isLoading && formatUsd(maticPrice * commitAmount)}
                 disabled={
                   commitDescription.length < 6 ||
                   commitDescription.length > 35 ||
@@ -272,7 +270,7 @@ export default function Home() {
             <br></br>
             <br></br>
             */}
-
+            
             {/*
             validThrou.: {validThrough}
             <br></br>
