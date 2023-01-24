@@ -60,10 +60,11 @@ export default function Home() {
     })
   }
 
-  // extra (live ETH stats)
+  // eth stats
   const gasApi = useFetch('https://gas.best/stats')
   const gasPrice = gasApi.data?.pending?.fee
   const ethPrice = gasApi.data?.ethPrice
+  const commitCost = parseFloat(ethPrice * gasPrice * 0.000000001)
 
   // rendering
   return (
@@ -204,7 +205,7 @@ export default function Home() {
                 boxShadow: "0rem 0.4rem 0.4rem 0rem lightGrey",
               }}
                 size="small"
-                suffix={"$" + formatUsd(commitAmount)}
+                suffix={"$" + formatUsd(commitAmount)} // + commitCost
                 disabled={
                   commitDescription.length < 6 ||
                   commitDescription.length > 35 ||

@@ -7,6 +7,7 @@ import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
 import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
+import Button from '@mui/material/Button'
 import { useStorage } from '../hooks/useStorage.ts'
 import toast, { Toaster } from 'react-hot-toast'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
@@ -81,12 +82,12 @@ export default function CommitCard({ ...props }) {
         removeItem('ipfsHash', "session")
         setItem('ipfsHash', cid, "session")
         setTriggerProveContractFunctions(true)
-        try {
-          proveWrite.write?.()
+        // hacky workaround to avoid user refresh
+        if (!proveWrite.write) {
+          toast.error("Refresh and upload again")
+          return
         }
-        catch {
-          toast.error("Click again")
-        }
+        proveWrite.write?.()
       })
     }
   }
@@ -130,10 +131,22 @@ export default function CommitCard({ ...props }) {
                   <div className="flex">
                     <FileInput maxSize={1} onChange={(file) => uploadFile()}>
                       {(context) =>
-                        context.name ?
-                          (isProveWaitLoading || proveWrite.isLoading) && <Spinner />
+                        (isProveWaitLoading || proveWrite.isLoading) ?
+                          <Spinner />
                           :
-                          props.isProved && <div>{context.droppable ? 'Upload' :
+                          (context.name && triggerProveContractFunctions) ?
+                          <div>
+                            <Tag
+                              className="text-2xl hover:cursor-pointer"
+                              tone="accent"
+                              size="large"
+                              onClick={() => { location.reload() }}
+                            >
+                              &nbsp;🔁&nbsp;
+                            </Tag>
+                          </div>
+                          :
+                          <div>
                             <Tag
                               className="text-2xl hover:cursor-pointer"
                               tone="accent"
@@ -141,7 +154,8 @@ export default function CommitCard({ ...props }) {
                               size="large"
                             >
                               &nbsp;📷&nbsp;
-                            </Tag>}
+                              {console.log(context)}
+                            </Tag>
                           </div>
                       }
                     </FileInput>

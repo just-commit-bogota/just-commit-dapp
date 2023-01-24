@@ -81,7 +81,7 @@ export default function Commitments() {
       newCommitStruct.status = status;
 
       newArray.push(newCommitStruct);
-      console.log(newCommitStruct.isApproved);
+      console.log("isApproved: " + newCommitStruct.isApproved);
 
       // ----------
 
@@ -99,6 +99,8 @@ export default function Commitments() {
 
     newArray.sort((a, b) => (a.createdAt > b.createdAt) ? 1 : -1)
     setCommitArray(newArray);
+    
+    console.log(newArray);
   }
 
   return (
