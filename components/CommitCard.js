@@ -275,7 +275,21 @@ export default function CommitCard({ ...props }) {
                 <div className="flex flex-col font-semibold align-center justify-center text-xs">&nbsp;{props.stakeAmount}</div>
               </div>
             </div>
-            <div className="flex flex-col align-center justify-center text-lg">{CommitStatusEmoji[props.status]}</div>
+            <div className="flex flex-col align-center justify-center text-lg">
+            {
+              props.status != "Pending" ?
+                CommitStatusEmoji[props.status]
+              :
+                <Tag
+                  className="text-2xl hover:cursor-pointer"
+                  tone="accent"
+                  size="medium"
+                  onClick={() => { toast("ℹ️ Refresh the page if you've uploaded the image yet see the card") }}
+                >
+                  &nbsp;{CommitStatusEmoji[props.status]}&nbsp;
+                </Tag>
+            }
+            </div>
             <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600 text-xs rounded-lg bg-sky-200 hover:bg-sky-400">
               <a onClick={() => { toast("⏳ Working on it...") }}>
                 {/*}
