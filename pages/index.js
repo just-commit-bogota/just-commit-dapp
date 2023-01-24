@@ -140,6 +140,19 @@ export default function Home() {
                 label="Amount"
                 placeholder="5"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
+                labelSecondary={
+                  <Tag
+                    className="hover:cursor-pointer"
+                    tone="green"
+                    size="small"
+                    onClick={() => {
+                      toast('💵 1 MATIC = $' + maticPrice + " USD"),
+                        { position: 'top-center' }
+                    }}
+                  >
+                    i
+                  </Tag>
+                }
                 min={0}
                 step="any"
                 max={9999}
