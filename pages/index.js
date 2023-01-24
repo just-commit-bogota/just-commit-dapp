@@ -158,7 +158,7 @@ export default function Home() {
                 max={9999}
                 type="number"
                 units="MATIC"
-                error={(commitAmount) > 9999 ? "Maximum of $9999" : null}
+                error={(commitAmount) > 9999 ? "Maximum of 9999" : null}
                 onChange={(e) => setCommitAmount(e.target.value)}
                 required
               />
@@ -201,7 +201,7 @@ export default function Home() {
             {/* Commit Button */}
             {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
               <ButtonThorin style={{
-                width: '50%',
+                width: '60%',
                 height:'2.5rem',
                 margin: '1rem',
                 backgroundColor:
