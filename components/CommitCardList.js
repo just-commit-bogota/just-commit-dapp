@@ -47,6 +47,8 @@ export default function CommitCardList({ cardList }) {
     }
   }
 
+  
+
   return (
     <>
       <div className="flex justify-center gap-2 lg:gap-16 text-small mt-4 mb-10">
@@ -69,7 +71,6 @@ export default function CommitCardList({ cardList }) {
         {cardListToDisplay.map((card, index) => (
           <CommitCard
             key={index}
-
             id={card.id}
             commitFrom={card.commitFrom}
             commitTo={card.commitTo}
@@ -82,7 +83,6 @@ export default function CommitCardList({ cardList }) {
             commitProved={card.commitProved}
             commitJudged={card.commitJudged}
             isApproved={card.isApproved}
-
             status={card.status}
           />
         )).reverse()}

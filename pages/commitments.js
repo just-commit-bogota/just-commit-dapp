@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react'
 import { useAccount, useContractRead } from 'wagmi'
 import { useStorage } from '../hooks/useStorage.ts'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
+import PullToRefresh from 'react-simple-pull-to-refresh';
 
 export default function Commitments() {
 
@@ -104,32 +105,36 @@ export default function Commitments() {
   }
 
   return (
-    <>
-      <Head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width" />
-        <title>Just Commit</title>
-        <meta property="og:title" content="Just Commit" />
-        <meta name="description" content="Just Commit" />
-        <meta property="og:description" content="Just Commit" />
-        <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
-      </Head>
-
-      <Header dropdownLabel="&emsp;Commitments&emsp;" />
-
-      <div className="flex">
-        <div className="w-8/10 sm:w-1/2 mx-auto p-0 lg:p-10 mt-20">
-          <div className="flex flex-col justify-center items-center">
-            {
-              loadingState === 'loading' && <Placeholders loadingStyle="commitmentsLoadingStyle" number={6} />
-            }
-            {
-              loadingState === 'loaded' && <CommitCardList cardList={commitArray} />
-            }
+    <PullToRefresh onRefresh={() =>
+      {return location.reload()}}
+    >
+      <>
+        <Head>
+          <meta charSet="utf-8" />
+          <meta name="viewport" content="width=device-width" />
+          <title>Just Commit</title>
+          <meta property="og:title" content="Just Commit" />
+          <meta name="description" content="Just Commit" />
+          <meta property="og:description" content="Just Commit" />
+          <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
+        </Head>
+  
+        <Header dropdownLabel="&emsp;Commitments&emsp;" />
+  
+        <div className="flex">
+          <div className="w-8/10 sm:w-1/2 mx-auto p-0 lg:p-10 mt-20">
+            <div className="flex flex-col justify-center items-center">
+              {
+                loadingState === 'loading' && <Placeholders loadingStyle="commitmentsLoadingStyle" number={6} />
+              }
+              {
+                loadingState === 'loaded' && <CommitCardList cardList={commitArray} />
+              }
+            </div>
+  
           </div>
-
         </div>
-      </div>
-    </>
-  )
+      </>
+    </PullToRefresh>
+  );
 }

@@ -137,7 +137,7 @@ export default function CommitCard({ ...props }) {
                           (context.name && triggerProveContractFunctions) ?
                           <div>
                             <a
-                              className="text-2xl hover:cursor-pointer"
+                              className="text-4xl hover:cursor-pointer"
                               href="#"
                               onClick={(e) => { 
                                 e.preventDefault();
@@ -286,7 +286,7 @@ export default function CommitCard({ ...props }) {
                   className="text-2xl hover:cursor-pointer"
                   tone="accent"
                   size="medium"
-                  onClick={() => { toast("ℹ️ Refresh the page if you've uploaded the image yet see the card as Active") }}
+                  onClick={() => { toast("ℹ️ Refresh the page if you've uploaded the image yet see the card Active") }}
                 >
                   &nbsp;{"ℹ️"}&nbsp;
                 </Tag>
