@@ -105,9 +105,13 @@ export default function Commitments() {
   }
 
   return (
-    <PullToRefresh onRefresh={() =>
-      {return location.reload()}}
-    >
+    <PullToRefresh onRefresh={() => {
+      try {
+        return location.reload()
+      } catch (error) {
+        return
+      }
+    }}>
       <>
         <Head>
           <meta charSet="utf-8" />
@@ -121,7 +125,7 @@ export default function Commitments() {
   
         <Header dropdownLabel="&emsp;Commitments&emsp;" />
   
-        <div className="flex">
+        <div className="flex h-screen">
           <div className="w-8/10 sm:w-1/2 mx-auto p-0 lg:p-10 mt-20">
             <div className="flex flex-col justify-center items-center">
               {
@@ -131,7 +135,6 @@ export default function Commitments() {
                 loadingState === 'loaded' && <CommitCardList cardList={commitArray} />
               }
             </div>
-  
           </div>
         </div>
       </>

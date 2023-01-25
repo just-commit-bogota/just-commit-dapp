@@ -146,7 +146,7 @@ export default function Home() {
                     tone="green"
                     size="small"
                     onClick={() => {
-                      toast('1 MATIC = ' + maticPrice + " USD"),
+                      toast('1 MATIC 🟰 ' + formatUsd(maticPrice)),
                         { position: 'top-center' }
                     }}
                   >
@@ -205,7 +205,7 @@ export default function Home() {
                 height:'2.5rem',
                 margin: '1rem',
                 backgroundColor:
-                  commitDescription.length < 6 ||
+                  commitDescription.length < 2 ||
                     commitDescription.length > 35 ||
                     !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
                     ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
@@ -218,7 +218,7 @@ export default function Home() {
                 size="small"
                 suffix= {!priceApi.isLoading && formatUsd(maticPrice * commitAmount)}
                 disabled={
-                  commitDescription.length < 6 ||
+                  commitDescription.length < 2 ||
                   commitDescription.length > 35 ||
                   !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
                   ((validThrough - Date.now()) / 3600 / 1000) > 24 ||

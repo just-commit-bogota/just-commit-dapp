@@ -5,14 +5,14 @@ import { useRouter } from 'next/router'
 
 export default function Header({dropdownLabel}) {
 
-  var dropdownLabel = dropdownLabel == null ? <img src="./logo.png" /> : dropdownLabel
+  var dropdownLabel = dropdownLabel == null ? <img src="./logo-svg.svg" /> : dropdownLabel
   
   return (
     <>
-      <div className="header w-full inline-grid justify-between header--absolute bg-white">
+      <div className="header w-full inline-grid justify-between header--absolute bg-white gap-0">
         <div className="flex items-center">
           <Dropdown
-            style = {{ boxShadow: "0 2px 8px rgb(0 0 0 / 30%)", borderRadius: "10px" }}
+            style = {{ boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
             inner
             shortThrow
             chevron = {false}
@@ -23,7 +23,7 @@ export default function Header({dropdownLabel}) {
               { label: <Link href="http://turf.dev/plots/301"
                              target="_blank" rel="noopener noreferrer">
                              Headquarters</Link>, color: 'text' },
-              { label: <Link href="https://danielbelfort.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78"
+              { label: <Link href="https://justcommit.notion.site"
                              target="_blank" rel="noopener noreferrer">
                              About</Link>, color: 'textTertiary' }, 
             ]}
