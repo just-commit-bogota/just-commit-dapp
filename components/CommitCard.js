@@ -136,14 +136,16 @@ export default function CommitCard({ ...props }) {
                           :
                           (context.name && triggerProveContractFunctions) ?
                           <div>
-                            <Tag
+                            <a
                               className="text-2xl hover:cursor-pointer"
-                              tone="accent"
-                              size="large"
-                              onClick={() => { location.reload() }}
+                              href="#"
+                              onClick={(e) => { 
+                                e.preventDefault();
+                                location.reload(); 
+                              }}
                             >
                               &nbsp;🔁&nbsp;
-                            </Tag>
+                          </a>
                           </div>
                           :
                           <div>
@@ -267,10 +269,10 @@ export default function CommitCard({ ...props }) {
               </div>
             </div>
             <div className="flex flex-row w-1/5 align-center justify-center"
-              style={{ border: "2px solid rgba(50, 50, 50, .5)", borderRadius: "10px" }}>
+              style={{ border: "2px solid rgba(130, 71, 229)", borderRadius: "6px" }}>
               <div className="flex flex-row p-1">
                 <div className="flex flex-col align-center justify-center">
-                  <img className="h-4" src="./ethereum-logo.png" />
+                  <img className="h-4" src="./polygon-logo-tilted.svg" />
                 </div>
                 <div className="flex flex-col font-semibold align-center justify-center text-xs">&nbsp;{props.stakeAmount}</div>
               </div>
@@ -284,13 +286,14 @@ export default function CommitCard({ ...props }) {
                   className="text-2xl hover:cursor-pointer"
                   tone="accent"
                   size="medium"
-                  onClick={() => { toast("ℹ️ Refresh the page if you've uploaded the image yet see the card") }}
+                  onClick={() => { toast("ℹ️ Refresh the page if you've uploaded the image yet see the card as Active") }}
                 >
-                  &nbsp;{CommitStatusEmoji[props.status]}&nbsp;
+                  &nbsp;{"ℹ️"}&nbsp;
                 </Tag>
             }
             </div>
-            <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600 text-xs rounded-lg bg-sky-200 hover:bg-sky-400">
+            <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600
+              text-xs rounded-lg bg-sky-200 hover:bg-sky-400 hover:cursor-pointer">
               <a onClick={() => { toast("⏳ Working on it...") }}>
                 {/*}
               <a href={`https://${chain?.id === 5 ? 'goerli.' : ''

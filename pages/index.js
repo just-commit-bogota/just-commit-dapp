@@ -188,7 +188,7 @@ export default function Home() {
                     tone="green"
                     size="small"
                     onClick={() => {
-                      toast('⚠️ Only address allowed in Beta'),
+                      toast('⚠️ Only this address allowed in Beta'),
                         { position: 'top-center' }
                     }}
                   >
