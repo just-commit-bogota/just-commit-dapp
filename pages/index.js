@@ -14,7 +14,9 @@ import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManage
 export default function Home() {
 
   useEffect(() => {
-    setLoadingState('loaded')
+    setTimeout(() => {
+      setLoadingState("loaded");
+    }, 1000);
   }, []);
 
   // state

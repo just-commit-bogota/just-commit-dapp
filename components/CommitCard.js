@@ -82,7 +82,7 @@ export default function CommitCard({ ...props }) {
         removeItem('ipfsHash', "session")
         setItem('ipfsHash', cid, "session")
         setTriggerProveContractFunctions(true)
-        // hacky workaround to avoid user refresh
+
         if (!proveWrite.write) {
           toast.error("Refresh and upload again")
           return
@@ -108,9 +108,14 @@ export default function CommitCard({ ...props }) {
             <div className="flex align-left space-x-2">
               <div className="text-sm text-slate-400 opacity-80" style={{ whiteSpace: "nowrap" }}>
                 {
-                  (props.validThrough > Date.now() && props.commitProved == false) ?
+                  // active
+                  (props.status == "Pending") ?
                     <Countdown date={props.validThrough} daysInHours></Countdown> :
-                    moment(props.createdAt * 1000).fromNow()
+                    // waiting or verify
+                    (props.status == "Waiting") ?
+                    <>Due in <Countdown date={props.judgeDeadline} daysInHours></Countdown></> :
+                      // my history or feed
+                      moment(props.createdAt * 1000).fromNow()
                 }
               </div>
             </div>
@@ -129,7 +134,7 @@ export default function CommitCard({ ...props }) {
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
                   <div className="flex">
-                    <FileInput maxSize={1} onChange={(file) => uploadFile()}>
+                    <FileInput maxSize={10} onChange={(file) => uploadFile()}>
                       {(context) =>
                         (isProveWaitLoading || proveWrite.isLoading) ?
                           <Spinner />

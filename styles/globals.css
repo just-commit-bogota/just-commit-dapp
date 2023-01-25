@@ -371,7 +371,7 @@ a {
 
 @media screen and (max-width: 640px) {
   .header {
-    justify-content: space-around;
+    justify-content: space-evenly;
     padding: 1rem 1rem;
   }
   .form {

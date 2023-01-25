@@ -13,7 +13,7 @@ export default function Commitments() {
 
   useEffect(() => {
     buildCommitArray()
-    setLoadingState('loaded')
+    setLoadingState("loaded");
   }, []);
 
   // state
@@ -83,6 +83,7 @@ export default function Commitments() {
 
       newArray.push(newCommitStruct);
       console.log("isApproved: " + newCommitStruct.isApproved);
+      console.log(newCommitStruct)
 
       // ----------
 
@@ -100,6 +101,7 @@ export default function Commitments() {
 
     newArray.sort((a, b) => (a.createdAt > b.createdAt) ? 1 : -1)
     setCommitArray(newArray);
+    // setLoadingState('loaded')
     
     console.log(newArray);
   }
@@ -123,7 +125,7 @@ export default function Commitments() {
           <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
         </Head>
   
-        <Header dropdownLabel="&emsp;Commitments&emsp;" />
+        <Header dropdownLabel="&nbsp;Commitments&nbsp;" />
   
         <div className="flex h-screen">
           <div className="w-8/10 sm:w-1/2 mx-auto p-0 lg:p-10 mt-20">

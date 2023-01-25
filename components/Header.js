@@ -5,27 +5,45 @@ import { useRouter } from 'next/router'
 
 export default function Header({dropdownLabel}) {
 
-  var dropdownLabel = dropdownLabel == null ? <img src="./logo-svg.svg" /> : dropdownLabel
+  var dropdownLabel = dropdownLabel == null ? <img src="./logo-135w.svg" /> : dropdownLabel
   
   return (
     <>
       <div className="header w-full inline-grid justify-between header--absolute bg-white gap-0">
         <div className="flex items-center">
           <Dropdown
-            style = {{ boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
+            style = {{ padding: "0px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
             inner
             shortThrow
             chevron = {false}
             label= {dropdownLabel}
             items= {[   
-              { label: <Link href="./">Home</Link>, color: 'green'},
-              { label: <Link href="./commitments">Commitments</Link>, color: 'text' },
-              { label: <Link href="http://turf.dev/plots/301"
-                             target="_blank" rel="noopener noreferrer">
-                             Headquarters</Link>, color: 'text' },
-              { label: <Link href="https://justcommit.notion.site"
-                             target="_blank" rel="noopener noreferrer">
-                             About</Link>, color: 'textTertiary' }, 
+              { label:
+                <Link href="/">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  Home
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </Link>, color: 'green'},
+              { label:
+                <Link href="/commitments">
+                &nbsp;
+                  Commitments
+                &nbsp;
+                </Link>, color: 'text' },
+              { label: 
+                <Link href="http://turf.dev/plots/301"
+                      target="_blank" rel="noopener noreferrer">
+                &nbsp;&nbsp;
+                   Headquarters
+                &nbsp;&nbsp;
+                </Link>, color: 'text' },
+              { label: 
+                <Link href="https://justcommit.notion.site"
+                      target="_blank" rel="noopener noreferrer">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  About
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </Link>, color: 'textTertiary' }, 
             ]}
           />
         </div>
