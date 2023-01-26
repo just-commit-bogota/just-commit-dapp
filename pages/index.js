@@ -3,9 +3,8 @@ import { useState, useEffect } from 'react'
 import useFetch from '../hooks/fetch'
 import { ethers } from 'ethers'
 import { Tag, Input, Button as ButtonThorin } from '@ensdomains/thorin'
-import Button from '@mui/material/Button'
 import toast, { Toaster } from 'react-hot-toast'
-import { useAccount, useNetwork, useContractWrite, useContractRead, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import { useAccount, useNetwork, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
 import { Placeholders } from "../components/Placeholders.js";
 import Spinner from "../components/Spinner.js";
@@ -190,7 +189,7 @@ export default function Home() {
                     tone="green"
                     size="small"
                     onClick={() => {
-                      toast('⚠️ Only this address allowed in Beta'),
+                      toast('⚠️ Disabled for now (Beta)'),
                         { position: 'top-center' }
                     }}
                   >
@@ -249,8 +248,8 @@ export default function Home() {
                   size="small"
                   variant="transparent"
                   as="a"
-                  href={`https://${chain?.id === 5 ? 'goerli.' : ''
-                    }etherscan.io/tx/${commitWriteData.hash}`}
+                  href={`https://${chain?.id === 80001 ? 'mumbai.' : ''
+                    }polygonscan.com/tx/${commitWriteData.hash}`}
                   target="_blank"
                   rel="noreferrer"
                 >

@@ -1,5 +1,5 @@
 import { FileInput, Tag, Button as ButtonThorin } from '@ensdomains/thorin'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import classNames from 'classnames'
 import Countdown from 'react-countdown';
 import { Web3Storage } from 'web3.storage'
@@ -7,7 +7,6 @@ import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
 import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
-import Button from '@mui/material/Button'
 import { useStorage } from '../hooks/useStorage.ts'
 import toast, { Toaster } from 'react-hot-toast'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
@@ -64,11 +63,15 @@ export default function CommitCard({ ...props }) {
   // wait
   const { wait: proveWait, data: proveWaitData, isLoading: isProveWaitLoading } = useWaitForTransaction({
     hash: proveWrite.data?.hash,
-    onSettled() { location.reload() }
+    onSettled() {
+      location.reload()
+    }
   })
   const { wait: judgeWait, data: judgeWaitData, isLoading: isJudgeWaitLoading } = useWaitForTransaction({
     hash: judgeWrite.data?.hash,
-    onSettled() { location.reload() }
+    onSettled() {
+      location.reload()
+    }
   })
 
   // functions
@@ -84,7 +87,7 @@ export default function CommitCard({ ...props }) {
         setTriggerProveContractFunctions(true)
 
         if (!proveWrite.write) {
-          toast.error("Refresh and upload again")
+          toast("🔁 Refresh and upload a dummy pic", {duration: 3000})
           return
         }
         proveWrite.write?.()
@@ -149,7 +152,7 @@ export default function CommitCard({ ...props }) {
                                 location.reload(); 
                               }}
                             >
-                              &nbsp;🔁&nbsp;
+                              &nbsp;✅&nbsp;
                           </a>
                           </div>
                           :
@@ -291,7 +294,7 @@ export default function CommitCard({ ...props }) {
                   className="text-2xl hover:cursor-pointer"
                   tone="accent"
                   size="medium"
-                  onClick={() => { toast("ℹ️ Refresh the page if you've uploaded the image yet see the card Active") }}
+                  onClick={() => { toast("ℹ️ It's the first pic that counts!") }}
                 >
                   &nbsp;{"ℹ️"}&nbsp;
                 </Tag>

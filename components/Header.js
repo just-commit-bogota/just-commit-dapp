@@ -39,9 +39,9 @@ export default function Header({dropdownLabel}) {
               { label: 
                 <Link href="https://justcommit.notion.site"
                       target="_blank" rel="noopener noreferrer">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   About
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </Link>, color: 'textTertiary' }, 
             ]}
           />
