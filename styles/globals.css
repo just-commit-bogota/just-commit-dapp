@@ -260,9 +260,9 @@ a {
 
 .continent_nav > li {
   border: solid;
-  border-width: 1px;
+  border-width: 1.5px;
   border-color: rgba(211, 211, 211, .8);
-  border-radius: 16px;
+  border-radius: 10px;
   padding: 8px 8px;
   font-size: smaller;
   flex: none;

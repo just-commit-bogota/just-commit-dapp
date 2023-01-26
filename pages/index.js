@@ -217,7 +217,7 @@ export default function Home() {
                 boxShadow: "0rem 0.4rem 0.4rem 0rem lightGrey",
               }}
                 size="small"
-                suffix= {!priceApi.isLoading && formatUsd(maticPrice * commitAmount)}
+                suffix= {!priceApi.isLoading && "(" + formatUsd(maticPrice * commitAmount) + ")"}
                 disabled={
                   commitDescription.length < 2 ||
                   commitDescription.length > 35 ||

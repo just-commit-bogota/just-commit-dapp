@@ -61,7 +61,7 @@ export default function CommitCardList({ cardList }) {
         <ul className="flex flex-row continent_nav">
           {filters_right.map(f =>
             <li key={f} id={f} className="filterOption"
-              style={{ borderColor: "rgba(29, 180, 151, .5)" }}>
+              style={{ borderColor: "rgba(33, 173, 133, .8)" }}>
               <a onClick={() => onCategoryClick(f)}>{f}</a>
             </li>)}
         </ul>
