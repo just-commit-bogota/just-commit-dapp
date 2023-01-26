@@ -1,4 +1,6 @@
-Unused dependencies
+Need to install the following packages:
+  depcheck@1.4.3
+Ok to proceed? (y) Unused dependencies
 * @emotion/css
 * @tanstack/query-core
 * @tanstack/react-query
