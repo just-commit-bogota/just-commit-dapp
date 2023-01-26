@@ -1,4 +1,4 @@
-import { FileInput, Tag, CloseSVG, Button as ButtonThorin } from '@ensdomains/thorin'
+import { FileInput, Tag, Button as ButtonThorin } from '@ensdomains/thorin'
 import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import Countdown from 'react-countdown';
@@ -48,7 +48,7 @@ export default function CommitCard({ ...props }) {
   const { config: judgeCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
-    functionName: "judgeCommit",
+    functionName: "judgeTheCommit",
     args: [props.id, getItem('isApproved', 'session')],
     enabled: triggerJudgeContractFunctions,
   })

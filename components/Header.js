@@ -1,7 +1,6 @@
 import { Dropdown } from '@ensdomains/thorin'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 
 export default function Header({dropdownLabel}) {
 
