@@ -1,10 +1,11 @@
 import Head from 'next/head'
-
+import Link from 'next/link'
 import Header from "../components/Header.js"
 import CommitCardList from "../components/CommitCardList.js"
 import { Placeholders } from "../components/Placeholders.js"
 import { useState, useEffect } from 'react'
 import { useAccount, useContractRead } from 'wagmi'
+import { useStorage } from '../hooks/useStorage.ts'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 import PullToRefresh from 'react-simple-pull-to-refresh';
 

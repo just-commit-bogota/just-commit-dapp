@@ -1,4 +1,4 @@
-import { FileInput, Tag, Button as ButtonThorin } from '@ensdomains/thorin'
+import { FileInput, Tag, CloseSVG, Button as ButtonThorin } from '@ensdomains/thorin'
 import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import Countdown from 'react-countdown';
@@ -7,6 +7,7 @@ import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
 import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
+import Button from '@mui/material/Button'
 import { useStorage } from '../hooks/useStorage.ts'
 import toast, { Toaster } from 'react-hot-toast'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
@@ -47,7 +48,7 @@ export default function CommitCard({ ...props }) {
   const { config: judgeCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
-    functionName: "judgeTheCommit",
+    functionName: "judgeCommit",
     args: [props.id, getItem('isApproved', 'session')],
     enabled: triggerJudgeContractFunctions,
   })
