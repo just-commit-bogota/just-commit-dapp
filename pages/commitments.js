@@ -51,8 +51,8 @@ export default function Commitments() {
         status = "Waiting";
         console.log("WAITING")
       }
-      // is approved or the commit expired but had a proof
-      else if (commit.isApproved || (commit.judgeDeadline < Date.now() && commit.ipfsHash != "")) {
+      // is approved or the commit expired and was proved
+      else if (commit.isApproved || (commit.judgeDeadline < Date.now() && commit.commitProved)) {
         status = "Success";
         console.log("SUCCESS")
       }
