@@ -46,8 +46,8 @@ export default function Commitments() {
         status = "Pending";
         console.log("PENDING")
       }
-      // is valid, has not expired, has a proof but has not been judged
-      else if (commit.validThrough > Date.now() && commit.judgeDeadline > Date.now() && commit.commitProved && !commit.commitJudged) {
+      // has not expired, has a proof, but has not been judged
+      else if (commit.judgeDeadline > Date.now() && commit.commitProved && !commit.commitJudged) {
         status = "Waiting";
         console.log("WAITING")
       }
