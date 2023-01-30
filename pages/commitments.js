@@ -38,7 +38,6 @@ export default function Commitments() {
     for (let commit of commitData) {
       let newCommitStruct = {}
 
-      // classify status
       let status = "";
 
       // is valid and does not have a proof
@@ -72,6 +71,7 @@ export default function Commitments() {
       newCommitStruct.stakeAmount = commit.stakeAmount;
       newCommitStruct.message = commit.message;
       newCommitStruct.ipfsHash = commit.ipfsHash;
+      newCommitStruct.filename = commit.filename;
       newCommitStruct.commitProved = commit.commitProved;
       newCommitStruct.commitJudged = commit.commitJudged;
       newCommitStruct.isApproved = commit.isApproved;

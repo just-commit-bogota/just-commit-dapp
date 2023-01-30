@@ -41,7 +41,7 @@ export default function CommitCard({ ...props }) {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "proveCommit",
-    args: [props.id, getItem('ipfsHash', 'session')],
+    args: [props.id, getItem('ipfsHash', 'session'), getItem('filename', 'session')],
     enabled: triggerProveContractFunctions,
   })
   const { config: judgeCommitConfig } = usePrepareContractWrite({
@@ -77,6 +77,10 @@ export default function CommitCard({ ...props }) {
   // functions
   const uploadFile = () => {
     const fileInput = document.querySelector('input[type="file"]')
+    
+    removeItem('filename', "session")
+    setItem('filename', fileInput.files[0].name, "session")
+    
     if (fileInput.size > 0) {
       client.put(fileInput.files, {
         name: 'fileInput',
@@ -87,7 +91,7 @@ export default function CommitCard({ ...props }) {
         setTriggerProveContractFunctions(true)
 
         if (!proveWrite.write) {
-          toast("🔁 Refresh and upload a dummy pic", {duration: 3000})
+          toast("🔁 Refresh and upload a dummy pic (bug)", {duration: 4000})
           return
         }
         proveWrite.write?.()
@@ -152,7 +156,7 @@ export default function CommitCard({ ...props }) {
                                 location.reload(); 
                               }}
                             >
-                              &nbsp;✅&nbsp;
+                              &nbsp;🔁&nbsp;
                           </a>
                           </div>
                           :
@@ -164,7 +168,6 @@ export default function CommitCard({ ...props }) {
                               size="large"
                             >
                               &nbsp;📷&nbsp;
-                              {console.log(context)}
                             </Tag>
                           </div>
                       }
@@ -199,24 +202,23 @@ export default function CommitCard({ ...props }) {
             {/* WAITING/VERIFY OR SUCCESS BODY */}
             {(props.status == "Waiting" || props.status == "Success") &&
               <>
-                <div className="flex flex-col gap-10" style={{ alignItems: "center" }}>
-                  <Tag
-                    className="text-2xl hover:cursor-pointer"
-                    tone="accent"
-                    size="large"
-                    onClick={() => {
-                      window.open(
-                        `https://ipfs.io/ipfs/${props.ipfsHash}`,
-                        "_blank",
-                        "noopener,noreferrer")
-                    }}
-                  >
-                    &nbsp;📸&nbsp;
-                  </Tag>
+                <div className="flex flex-col" style={{ alignItems: "center" }}>
+                  {/* <Tag </Tag> */}
+
+                  <img 
+                    src={`https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`} 
+                    style={{
+                      width: "300px",
+                      height: "300px",
+                      objectFit: "cover",
+                      borderRadius: "10px"
+                    }} 
+                  />
+                  
                   {/* THE VERIFY VARIANT */}
                   {props.commitTo == address && props.judgeDeadline > Date.now() && !props.commitJudged && (
                     <div>
-                      <div className="flex flex-row gap-5" style={{ justifyContent: "space-between", marginBottom: "-30px" }}>
+                      <div className="flex flex-row gap-5 p-5" style={{ justifyContent: "space-between", marginBottom: "-30px" }}>
                         {
                           isJudgeWaitLoading ?
                             <Spinner /> :
@@ -261,7 +263,7 @@ export default function CommitCard({ ...props }) {
           </div>
 
           {/* FOOTER */}
-          <div className="flex flex-row text-xs pt-4" style={{ justifyContent: "space-between" }}>
+          <div className="flex flex-row text-xs pt-2" style={{ justifyContent: "space-between" }}>
             <div className="flex flex-col w-1/2 lg:w-1/3" style={{
               justifyContent: "space-between",
               borderLeft: "2px solid rgba(0, 0, 0, 0.18)",
@@ -294,7 +296,7 @@ export default function CommitCard({ ...props }) {
                   className="text-2xl hover:cursor-pointer"
                   tone="accent"
                   size="medium"
-                  onClick={() => { toast("ℹ️ It's the first pic that counts!") }}
+                  onClick={() => { toast("🔁 Refresh if you've confirmed the pic upload but see the card as Active (bug)", {duration: 4000}) }}
                 >
                   &nbsp;{"ℹ️"}&nbsp;
                 </Tag>

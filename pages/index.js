@@ -123,7 +123,7 @@ export default function Home() {
                   <Tag
                     className="hover:cursor-pointer"
                     tone="green"
-                    size="small"
+                    size="large"
                     onClick={() => {
                       toast('📸 Can a pic or screenshot prove this?'),
                         { position: 'top-center' }
@@ -145,7 +145,7 @@ export default function Home() {
                   <Tag
                     className="hover:cursor-pointer"
                     tone="green"
-                    size="small"
+                    size="large"
                     onClick={() => {
                       toast('1 MATIC 🟰 ' + formatUsd(maticPrice)),
                         { position: 'top-center' }
@@ -187,7 +187,7 @@ export default function Home() {
                   <Tag
                     className="hover:cursor-pointer"
                     tone="green"
-                    size="small"
+                    size="large"
                     onClick={() => {
                       toast('⚠️ Disabled for now (Beta)'),
                         { position: 'top-center' }

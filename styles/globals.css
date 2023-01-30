@@ -129,20 +129,21 @@ a {
   margin: 40px auto 40px auto
 }
 
-/* .pictureArea--waiting {
-  margin: 15px auto 0px auto
+.pictureArea--pending {
+  margin: 40px auto 40px auto
+}
+
+.pictureArea--waiting {
+  margin: 20px auto 20px auto
 }
 
 .pictureArea--success {
-  margin: 15px auto 0px auto
-} */
+  margin: 20px auto 20px auto
+}
 
 .pictureArea--failure {
   margin: 0px auto 0px auto;
   height: 2rem;
-}
-
-.pictureArea--pending {
 }
 
 .pictureArea:hover {
