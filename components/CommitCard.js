@@ -208,7 +208,7 @@ export default function CommitCard({ ...props }) {
                       window.open(
                         `https://ipfs.io/ipfs/${props.ipfsHash}`,
                         "_blank",
-                        "noopener, noreferrer")
+                        "noopener,noreferrer")
                     }}
                   >
                     &nbsp;📸&nbsp;
