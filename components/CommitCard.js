@@ -278,15 +278,14 @@ export default function CommitCard({ ...props }) {
                 {/*<b>&nbsp;To </b>{props.commitTo.slice(0, 5)}...{props.commitTo.slice(-4)}&nbsp;*/}
               </div>
             </div>
-            <div className="flex flex-row w-1/5 align-center justify-center"
-              style={{ border: "2px solid rgba(130, 71, 229)", borderRadius: "6px" }}>
-              <div className="flex flex-row p-1">
-                <div className="flex flex-col align-center justify-center">
-                  <img className="h-4" src="./polygon-logo-tilted.svg" />
-                </div>
-                <div className="flex flex-col font-semibold align-center justify-center text-xs">&nbsp;{props.stakeAmount}</div>
+           
+            <div className="flex flex-row p-1">
+              <div className="flex flex-col align-center justify-center">
+                <img className="h-6" src="./polygon-logo-tilted.svg" />
               </div>
+              <div className="flex flex-col font-semibold align-center justify-center text-l ml-1">{parseFloat(props.stakeAmount)}</div>
             </div>
+            
             <div className="flex flex-col align-center justify-center text-lg">
             {
               props.status != "Pending" ?
