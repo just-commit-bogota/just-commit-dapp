@@ -75,11 +75,17 @@ export default function CommitCard({ ...props }) {
   })
 
   // functions
-  const uploadFile = () => {
+  const uploadFile = () => {  
     const fileInput = document.querySelector('input[type="file"]')
     
     removeItem('filename', "session")
     setItem('filename', fileInput.files[0].name, "session")
+
+    console.log((getItem('filename', 'session').split(".").pop().toUpperCase()))
+
+    if ((getItem('filename', 'session').split(".").pop().toUpperCase()) == "HEIC") {
+      console.log("A HEIC image")
+    }
     
     if (fileInput.size > 0) {
       client.put(fileInput.files, {
@@ -141,7 +147,7 @@ export default function CommitCard({ ...props }) {
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
                   <div className="flex">
-                    <FileInput maxSize={10} onChange={(file) => uploadFile()}>
+                    <FileInput maxSize={20} onChange={(file) => uploadFile()}>
                       {(context) =>
                         (isProveWaitLoading || proveWrite.isLoading) ?
                           <Spinner />

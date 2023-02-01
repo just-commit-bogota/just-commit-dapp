@@ -129,7 +129,7 @@ export default function Home() {
                         { position: 'top-center' }
                     }}
                   >
-                    i
+                    <b>i</b>
                   </Tag>
                 }
                 error={(commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
@@ -151,7 +151,7 @@ export default function Home() {
                         { position: 'top-center' }
                     }}
                   >
-                    i
+                    <b>i</b>
                   </Tag>
                 }
                 min={0}
@@ -173,6 +173,19 @@ export default function Home() {
                 type="number"
                 units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
                 error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
+                labelSecondary={
+                  <Tag
+                    className="hover:cursor-pointer"
+                    tone="green"
+                    size="large"
+                    onClick={() => {
+                      toast("⏳ How many hours max until you can prove it?"),
+                        { position: 'top-center' }
+                    }}
+                  >
+                    <b>i</b>
+                  </Tag>
+                }
                 onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
                 required
               />
@@ -193,7 +206,7 @@ export default function Home() {
                         { position: 'top-center' }
                     }}
                   >
-                    i
+                    <b>i</b>
                   </Tag>
                 }
               />
