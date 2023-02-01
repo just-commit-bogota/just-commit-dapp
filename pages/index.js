@@ -22,7 +22,7 @@ export default function Home() {
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState(CONTRACT_OWNER)
   const [commitAmount, setCommitAmount] = useState('5')
-  const [validThrough, setValidThrough] = useState((1 * 3600 * 1000) + Date.now()) // == 1 hour
+  const [validThrough, setValidThrough] = useState((24 * 3600 * 1000) + Date.now()) // == 24 hours
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
 
@@ -129,7 +129,7 @@ export default function Home() {
                         { position: 'top-center' }
                     }}
                   >
-                    i
+                    <b>i</b>
                   </Tag>
                 }
                 error={(commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
@@ -151,7 +151,7 @@ export default function Home() {
                         { position: 'top-center' }
                     }}
                   >
-                    i
+                    <b>i</b>
                   </Tag>
                 }
                 min={0}
@@ -165,7 +165,7 @@ export default function Home() {
               />
               <Input
                 label="Duration"
-                placeholder="1"
+                placeholder="24"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 min={1}
                 max={24}
@@ -173,6 +173,19 @@ export default function Home() {
                 type="number"
                 units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
                 error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
+                labelSecondary={
+                  <Tag
+                    className="hover:cursor-pointer"
+                    tone="green"
+                    size="large"
+                    onClick={() => {
+                      toast("⏳ How many hours (max) until you can prove it?"),
+                        { position: 'top-center' }
+                    }}
+                  >
+                    <b>i</b>
+                  </Tag>
+                }
                 onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
                 required
               />
@@ -193,7 +206,7 @@ export default function Home() {
                         { position: 'top-center' }
                     }}
                   >
-                    i
+                    <b>i</b>
                   </Tag>
                 }
               />
