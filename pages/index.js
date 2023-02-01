@@ -22,7 +22,7 @@ export default function Home() {
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState(CONTRACT_OWNER)
   const [commitAmount, setCommitAmount] = useState('5')
-  const [validThrough, setValidThrough] = useState((1 * 3600 * 1000) + Date.now()) // == 1 hour
+  const [validThrough, setValidThrough] = useState((24 * 3600 * 1000) + Date.now()) // == 24 hours
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
 
@@ -165,7 +165,7 @@ export default function Home() {
               />
               <Input
                 label="Duration"
-                placeholder="1"
+                placeholder="24"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 min={1}
                 max={24}
