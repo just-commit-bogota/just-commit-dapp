@@ -216,7 +216,7 @@ export default function CommitCard({ ...props }) {
                     style={{
                       width: "300px",
                       height: "300px",
-                      objectFit: "cover",
+                      objectFit: "contain",
                       borderRadius: "10px"
                     }} 
                   />
