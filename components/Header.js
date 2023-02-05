@@ -22,7 +22,7 @@ export default function Header({dropdownLabel}) {
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   Home
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </Link>, color: 'green'},
+                </Link>, color: 'text'},
               { label:
                 <Link href="/commitments">
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -32,17 +32,18 @@ export default function Header({dropdownLabel}) {
               { label: 
                 <Link href="http://turf.dev/plots/301"
                       target="_blank" rel="noopener noreferrer">
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                   Headquarters
-                &nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;
+                   Headquarters ↗
+                
+                
                 </Link>, color: 'text' },
               { label: 
                 <Link href="https://justcommit.notion.site"
                       target="_blank" rel="noopener noreferrer">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  About
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </Link>, color: 'textTertiary' }, 
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  About ↗
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </Link>, color: 'text' }, 
             ]}
           />
         </div>
