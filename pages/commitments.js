@@ -123,7 +123,7 @@ export default function Commitments() {
           <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
         </Head>
   
-        <Header />
+        <Header currentPage = "commitments"/>
   
         <div className="flex h-screen">
           <div className="w-8/10 sm:w-1/2 mx-auto p-0 lg:p-10 mt-20">

@@ -78,7 +78,7 @@ export default function Home() {
         <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
       </Head>
 
-      <Header />
+      <Header currentPage = "home"/>
 
       <div className="container container--flex">
         <div className="heading text-3xl font-bold">
