@@ -19,8 +19,8 @@ export default function CommitCard({ ...props }) {
   // variables
   const { getItem, setItem, removeItem } = useStorage()
   const CommitStatusEmoji = {
-    "Pending": "❓", // picture not yet submitted
-    "Waiting": "⏳", // picture submitted waiting for commitTo judging
+    "Pending": "⚡", // picture not yet submitted
+    "Waiting": "⏳", // picture submitted and waiting
     "Failure": "❌", // time expired or picture denied
     "Success": "✅", // picture accepted :) 
   }
@@ -296,17 +296,7 @@ export default function CommitCard({ ...props }) {
             
             <div className="flex flex-col align-center justify-center text-lg">
             {
-              props.status != "Pending" ?
-                CommitStatusEmoji[props.status]
-              :
-                <Tag
-                  className="text-2xl hover:cursor-pointer"
-                  tone="accent"
-                  size="medium"
-                  onClick={() => { toast("🔁 Refresh if you've confirmed the pic upload but see the card as Active (bug)", {duration: 4000}) }}
-                >
-                  &nbsp;{"ℹ️"}&nbsp;
-                </Tag>
+              CommitStatusEmoji[props.status]
             }
             </div>
             <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600
