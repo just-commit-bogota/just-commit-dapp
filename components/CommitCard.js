@@ -142,7 +142,7 @@ export default function CommitCard({ ...props }) {
             'pictureArea': true,
             'pictureArea--waiting': props.status == "Waiting",
             'pictureArea--success': props.status == "Success",
-            'pictureArea--failure': props.status == "Failure" && !props.commitJudged,
+            'pictureArea--failure': props.status == "Failure" && !props.commitProved,
             'pictureArea--pending': props.status == "Pending",
           })}>
             {/* CARD BODY */}
