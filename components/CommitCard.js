@@ -28,6 +28,7 @@ export default function CommitCard({ ...props }) {
   // state
   const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
+  const [uploadClicked, setUploadClicked] = useState(false)
 
   // smart contract data 
   const provider = useProvider()
@@ -75,7 +76,10 @@ export default function CommitCard({ ...props }) {
   })
 
   // functions
-  const uploadFile = () => {  
+  const uploadFile = () => {
+
+    setUploadClicked(true)
+    
     const fileInput = document.querySelector('input[type="file"]')
     
     removeItem('filename', "session")
@@ -97,7 +101,8 @@ export default function CommitCard({ ...props }) {
         setTriggerProveContractFunctions(true)
 
         if (!proveWrite.write) {
-          toast("🔁 Refresh and upload a dummy pic (bug)", {duration: 4000})
+          setUploadClicked(false)
+          toast("🔁 Refresh and upload again (bug)", {duration: 4000})
           return
         }
         proveWrite.write?.()
@@ -126,7 +131,7 @@ export default function CommitCard({ ...props }) {
                     <Countdown date={props.validThrough} daysInHours></Countdown> :
                     // waiting or verify
                     (props.status == "Waiting") ?
-                    <>Due in <Countdown date={props.judgeDeadline} daysInHours></Countdown></> :
+                      "wait " + moment(props.judgeDeadline).fromNow(true) :
                       // my history or feed
                       moment(props.createdAt * 1000).fromNow()
                 }
@@ -147,9 +152,9 @@ export default function CommitCard({ ...props }) {
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
                   <div className="flex">
-                    <FileInput maxSize={20} onChange={(file) => uploadFile()}>
+                     <FileInput maxSize={20} onChange={(file) => uploadFile()}>
                       {(context) =>
-                        (isProveWaitLoading || proveWrite.isLoading) ?
+                        (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ?
                           <Spinner />
                           :
                           (context.name && triggerProveContractFunctions) ?
@@ -193,13 +198,10 @@ export default function CommitCard({ ...props }) {
             isProveWaitLoading: {String(isProveWaitLoading)}
             <br></br>
             <br></br>
-            isProveLoading: {String(isProveLoading)}
-            <br></br>
-            <br></br>
             */}
-
+            
             {/*
-            validThrou.: {validThrough}
+            validThrough: {validThrough}
             <br></br>
             <br></br>
             Date.now(): {Date.now()}

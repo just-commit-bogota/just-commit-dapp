@@ -43,7 +43,7 @@ export default function Header({currentPage}) {
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   About ↗
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </Link>, }, 
+                </Link>, },
             ]}
           />
         </div>
