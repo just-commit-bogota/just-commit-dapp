@@ -1,5 +1,5 @@
 import { FileInput, Tag, Button as ButtonThorin } from '@ensdomains/thorin'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import Countdown from 'react-countdown';
 import { Web3Storage } from 'web3.storage'
