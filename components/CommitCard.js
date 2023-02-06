@@ -132,7 +132,7 @@ export default function CommitCard({ ...props }) {
                     <Countdown date={props.validThrough} daysInHours></Countdown> :
                     // waiting or verify
                     (props.status == "Waiting") ?
-                      "wait " + moment(props.judgeDeadline).fromNow(true) :
+                      moment(props.judgeDeadline).fromNow(true) + " remaining":
                       // my history or feed
                       moment(props.createdAt * 1000).fromNow()
                 }
@@ -212,27 +212,16 @@ export default function CommitCard({ ...props }) {
             {(props.status == "Waiting" || props.status == "Success") &&
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
-                  <div
-                    onClick={() => setIsExpanded(!isExpanded)}
+                  
+                  <img 
+                    src={`https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`} 
                     style={{
                       width: "300px",
                       height: "300px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <img 
-                      src={`https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`} 
-                      style={{
-                        width: "100%",
-                        borderRadius: "10px",
-                        height: isExpanded ? null : "100%",
-                        objectFit: "cover",
-                        transition: "transform 0.25s ease",
-                        marginTop: isExpanded ? "-120px" : "0px",
-                        transform: isExpanded ? "scale(1.01)" : "scale(1)",
-                      }} 
-                    />
-                  </div>
+                      objectFit: "cover",
+                      borderRadius: "10px"
+                    }} 
+                  />
                   
                   {/* THE VERIFY VARIANT */}
                   {props.commitTo == address && props.judgeDeadline > Date.now() && !props.commitJudged && (
