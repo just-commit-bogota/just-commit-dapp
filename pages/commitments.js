@@ -50,8 +50,8 @@ export default function Commitments() {
         status = "Waiting";
         console.log("WAITING")
       }
-      // is approved or the commit expired and was proved
-      else if (commit.isApproved || (commit.judgeDeadline < Date.now() && commit.commitProved)) {
+      // is approved or the commit expired and was approved
+      else if (commit.isApproved || (commit.judgeDeadline < Date.now() && commit.isApproved)) {
         status = "Success";
         console.log("SUCCESS")
       }
