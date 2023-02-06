@@ -4,6 +4,7 @@ import CommitCardList from "../components/CommitCardList.js"
 import { Placeholders } from "../components/Placeholders.js"
 import { useState, useEffect } from 'react'
 import { useAccount, useContractRead } from 'wagmi'
+import { ethers } from "ethers"
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 import PullToRefresh from 'react-simple-pull-to-refresh';
 
@@ -11,12 +12,10 @@ export default function Commitments() {
 
   useEffect(() => {
     buildCommitArray()
-    setLoadingState("loaded");
   }, []);
 
   // state
   const { address } = useAccount()
-  const [loadingState, setLoadingState] = useState('loading')
   const [commitArray, setCommitArray] = useState([])
 
   // smart contract
@@ -28,7 +27,9 @@ export default function Commitments() {
 
   // functions
   function buildCommitArray() {
-    console.log("building commit array")
+    
+    console.log("buildCommitArray() call")
+    
     if (!commitData) {
       return
     }
@@ -43,22 +44,18 @@ export default function Commitments() {
       // is valid and does not have a proof
       if (commit.validThrough > Date.now() && !commit.commitProved) {
         status = "Pending";
-        console.log("PENDING")
       }
       // has not expired, has a proof, but has not been judged
       else if (commit.judgeDeadline > Date.now() && commit.commitProved && !commit.commitJudged) {
         status = "Waiting";
-        console.log("WAITING")
       }
       // is approved or the commit expired and was approved
       else if (commit.isApproved || (commit.judgeDeadline < Date.now() && commit.isApproved)) {
         status = "Success";
-        console.log("SUCCESS")
       }
       // commit has been denied or commit has expired
       else {
         status = "Failure";
-        console.log("FAILURE")
       }
 
       // from start contract
@@ -75,7 +72,6 @@ export default function Commitments() {
       newCommitStruct.commitProved = commit.commitProved;
       newCommitStruct.commitJudged = commit.commitJudged;
       newCommitStruct.isApproved = commit.isApproved;
-
       // front-end only
       newCommitStruct.status = status;
 
@@ -125,12 +121,9 @@ export default function Commitments() {
         <div className="flex h-screen">
           <div className="w-8/10 sm:w-1/2 mx-auto p-0 lg:p-10 mt-20">
             <div className="flex flex-col justify-center items-center">
-              {
-                loadingState === 'loading' && <Placeholders loadingStyle="commitmentsLoadingStyle" number={6} />
-              }
-              {
-                loadingState === 'loaded' && <CommitCardList cardList={commitArray} />
-              }
+
+              <CommitCardList cardList={commitArray} />
+              
             </div>
           </div>
         </div>
