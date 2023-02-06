@@ -142,12 +142,12 @@ export default function CommitCard({ ...props }) {
             'pictureArea': true,
             'pictureArea--waiting': props.status == "Waiting",
             'pictureArea--success': props.status == "Success",
-            'pictureArea--failure': props.status == "Failure",
+            'pictureArea--failure': props.status == "Failure" && !props.commitJudged,
             'pictureArea--pending': props.status == "Pending",
           })}>
             {/* CARD BODY */}
 
-            {/* ACTIVE BODY */}
+            {/* card is active */}
             {props.status == "Pending" &&
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
@@ -207,8 +207,8 @@ export default function CommitCard({ ...props }) {
             Date.now(): {Date.now()}
             */}
 
-            {/* WAITING/VERIFY OR SUCCESS BODY */}
-            {(props.status == "Waiting" || props.status == "Success") &&
+            {/* show the image if there's an image to show */}
+            {(props.commitProved) &&
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
                   
@@ -222,7 +222,7 @@ export default function CommitCard({ ...props }) {
                     }} 
                   />
                   
-                  {/* THE VERIFY VARIANT */}
+                  {/* "to verify" buttons */}
                   {props.commitTo == address && props.judgeDeadline > Date.now() && !props.commitJudged && (
                     <div>
                       <div className="flex flex-row gap-5 p-5" style={{ justifyContent: "space-between", marginBottom: "-30px" }}>
