@@ -29,6 +29,7 @@ export default function CommitCard({ ...props }) {
   const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // smart contract data 
   const provider = useProvider()
@@ -211,17 +212,27 @@ export default function CommitCard({ ...props }) {
             {(props.status == "Waiting" || props.status == "Success") &&
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
-                  {/* <Tag </Tag> */}
-
-                  <img 
-                    src={`https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`} 
+                  <div
+                    onClick={() => setIsExpanded(!isExpanded)}
                     style={{
                       width: "300px",
                       height: "300px",
-                      objectFit: "contain",
-                      borderRadius: "10px"
-                    }} 
-                  />
+                      cursor: "pointer",
+                    }}
+                  >
+                    <img 
+                      src={`https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`} 
+                      style={{
+                        width: "100%",
+                        borderRadius: "10px",
+                        height: isExpanded ? null : "100%",
+                        objectFit: "cover",
+                        transition: "transform 0.25s ease",
+                        marginTop: isExpanded ? "-120px" : "0px",
+                        transform: isExpanded ? "scale(1.01)" : "scale(1)",
+                      }} 
+                    />
+                  </div>
                   
                   {/* THE VERIFY VARIANT */}
                   {props.commitTo == address && props.judgeDeadline > Date.now() && !props.commitJudged && (
