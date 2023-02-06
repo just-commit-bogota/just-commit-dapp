@@ -20,15 +20,15 @@ export default function Header({currentPage}) {
               { label:
                 <Link href="/">
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  Home
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </Link>, color: currentPage == "home" && "green"},
-              { label:
-                <Link href="/commitments">
-                &nbsp;&nbsp;&nbsp;&nbsp;
                   Commitments
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </Link>, color: currentPage == "commitments" && "green"},
+              { label:
+                <Link href="/commit">
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                </Link>, color: currentPage == "commitments" && "green" },
+                  Commit
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                </Link>, color: currentPage == "commit" && "green" },
               { label: 
                 <Link href="http://turf.dev/plots/301"
                       target="_blank" rel="noopener noreferrer">
