@@ -8,7 +8,8 @@ import { ThemeProvider } from 'styled-components'
 import { ThorinGlobalStyles, lightTheme as lightThemeENS } from '@ensdomains/thorin'
 
 const { chains, provider } = configureChains(
-  [/*chain.mainnet, chain.goerli, chain.polygon*/ chain.polygonMumbai],
+  [chain.polygon], // BETA
+  //[chain.polygonMumbai], // DANI-DEV
   [infuraProvider({}), publicProvider()]
 )
 
