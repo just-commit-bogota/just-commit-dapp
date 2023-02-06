@@ -9,8 +9,8 @@ export default function CommitCardList({ cardList }) {
   const { address: connectedAddress } = useAccount()
 
   // variables
-  const filters_left = ["Active", "Waiting", "Verify"]
-  const filters_right = ["My History", "Feed"]
+  const filters_left = ["Feed", "My History"]
+  const filters_right = ["Active", "Waiting", "Verify"]
   const cardListToDisplay =
     // Feed: Failure or Success
     selectedFilter == "Feed" ?
@@ -28,10 +28,10 @@ export default function CommitCardList({ cardList }) {
             // Active: connectedAddress is commitFrom and Pending
             cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Pending"))
 
-  // set Active filter to active
+  // set Feed filter to active
   useEffect(() => {
-    setSelectedFilter("Active")
-    const element = document.getElementById("Active");
+    setSelectedFilter("Feed")
+    const element = document.getElementById("Feed");
     element.classList.add("active");
   }, [])
 
@@ -52,14 +52,15 @@ export default function CommitCardList({ cardList }) {
       <div className="flex justify-center gap-2 lg:gap-16 text-small mt-4 mb-10">
         <ul className="flex flex-row continent_nav">
           {filters_left.map(f =>
-            <li key={f} id={f} className="filterOption">
+            <li key={f} id={f} className="filterOption"
+              style={{ borderColor: "rgba(53, 72, 98, 1)", borderWidth: "2px"}}>
               <a onClick={() => onCategoryClick(f)}>{f}</a>
             </li>)}
         </ul>
         <ul className="flex flex-row continent_nav">
           {filters_right.map(f =>
             <li key={f} id={f} className="filterOption"
-              style={{ borderColor: "rgba(33, 173, 133, .8)" }}>
+              style={{ borderColor: "rgba(18, 74, 56, .5)" }}>
               <a onClick={() => onCategoryClick(f)}>{f}</a>
             </li>)}
         </ul>

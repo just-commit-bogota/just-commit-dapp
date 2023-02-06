@@ -1,5 +1,5 @@
 import { FileInput, Tag, Button as ButtonThorin } from '@ensdomains/thorin'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import Countdown from 'react-countdown';
 import { Web3Storage } from 'web3.storage'
@@ -19,8 +19,8 @@ export default function CommitCard({ ...props }) {
   // variables
   const { getItem, setItem, removeItem } = useStorage()
   const CommitStatusEmoji = {
-    "Pending": "❓", // picture not yet submitted
-    "Waiting": "⏳", // picture submitted waiting for commitTo judging
+    "Pending": "⚡", // picture not yet submitted
+    "Waiting": "⏳", // picture submitted and waiting
     "Failure": "❌", // time expired or picture denied
     "Success": "✅", // picture accepted :) 
   }
@@ -28,6 +28,7 @@ export default function CommitCard({ ...props }) {
   // state
   const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
+  const [uploadClicked, setUploadClicked] = useState(false)
 
   // smart contract data 
   const provider = useProvider()
@@ -75,7 +76,10 @@ export default function CommitCard({ ...props }) {
   })
 
   // functions
-  const uploadFile = () => {  
+  const uploadFile = () => {
+
+    setUploadClicked(true)
+    
     const fileInput = document.querySelector('input[type="file"]')
     
     removeItem('filename', "session")
@@ -97,7 +101,8 @@ export default function CommitCard({ ...props }) {
         setTriggerProveContractFunctions(true)
 
         if (!proveWrite.write) {
-          toast("🔁 Refresh and upload a dummy pic (bug)", {duration: 4000})
+          setUploadClicked(false)
+          toast("🔁 Refresh and upload again (bug)", {duration: 4000})
           return
         }
         proveWrite.write?.()
@@ -126,7 +131,7 @@ export default function CommitCard({ ...props }) {
                     <Countdown date={props.validThrough} daysInHours></Countdown> :
                     // waiting or verify
                     (props.status == "Waiting") ?
-                    <>Due in <Countdown date={props.judgeDeadline} daysInHours></Countdown></> :
+                      moment(props.judgeDeadline).fromNow(true) + " remaining":
                       // my history or feed
                       moment(props.createdAt * 1000).fromNow()
                 }
@@ -147,9 +152,9 @@ export default function CommitCard({ ...props }) {
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
                   <div className="flex">
-                    <FileInput maxSize={20} onChange={(file) => uploadFile()}>
+                     <FileInput maxSize={20} onChange={(file) => uploadFile()}>
                       {(context) =>
-                        (isProveWaitLoading || proveWrite.isLoading) ?
+                        (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ?
                           <Spinner />
                           :
                           (context.name && triggerProveContractFunctions) ?
@@ -193,13 +198,10 @@ export default function CommitCard({ ...props }) {
             isProveWaitLoading: {String(isProveWaitLoading)}
             <br></br>
             <br></br>
-            isProveLoading: {String(isProveLoading)}
-            <br></br>
-            <br></br>
             */}
-
+            
             {/*
-            validThrou.: {validThrough}
+            validThrough: {validThrough}
             <br></br>
             <br></br>
             Date.now(): {Date.now()}
@@ -209,8 +211,7 @@ export default function CommitCard({ ...props }) {
             {(props.status == "Waiting" || props.status == "Success") &&
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
-                  {/* <Tag </Tag> */}
-
+                  
                   <img 
                     src={`https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`} 
                     style={{
@@ -294,17 +295,7 @@ export default function CommitCard({ ...props }) {
             
             <div className="flex flex-col align-center justify-center text-lg">
             {
-              props.status != "Pending" ?
-                CommitStatusEmoji[props.status]
-              :
-                <Tag
-                  className="text-2xl hover:cursor-pointer"
-                  tone="accent"
-                  size="medium"
-                  onClick={() => { toast("🔁 Refresh if you've confirmed the pic upload but see the card as Active (bug)", {duration: 4000}) }}
-                >
-                  &nbsp;{"ℹ️"}&nbsp;
-                </Tag>
+              CommitStatusEmoji[props.status]
             }
             </div>
             <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600
