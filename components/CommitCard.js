@@ -29,7 +29,6 @@ export default function CommitCard({ ...props }) {
   const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
-  const [isExpanded, setIsExpanded] = useState(false);
 
   // smart contract data 
   const provider = useProvider()

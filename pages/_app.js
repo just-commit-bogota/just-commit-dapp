@@ -9,7 +9,7 @@ import { ThorinGlobalStyles, lightTheme as lightThemeENS } from '@ensdomains/tho
 
 const { chains, provider } = configureChains(
   [chain.polygon], // BETA
-  //[chain.polygonMumbai], // DANI-DEV
+  //[chain.polygonMumbai], // DEV
   [infuraProvider({}), publicProvider()]
 )
 
