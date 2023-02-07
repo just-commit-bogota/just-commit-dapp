@@ -3,99 +3,107 @@ import Header from "../components/Header.js"
 import CommitCardList from "../components/CommitCardList.js"
 import { Placeholders } from "../components/Placeholders.js"
 import { useState, useEffect } from 'react'
-import { useAccount, useContractRead } from 'wagmi'
-import { ethers } from "ethers"
+import { useAccount, useProvider, useNetwork, useContract } from 'wagmi'
+import { ethers } from 'ethers'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 import PullToRefresh from 'react-simple-pull-to-refresh';
 
 export default function Commitments() {
 
-  useEffect(() => {
-    buildCommitArray()
-  }, []);
+  // global variables
+  const { address: connectedAddress } = useAccount()
+  const { chain, chains } = useNetwork()
+  const provider = useProvider()
 
-  // state
-  const { address } = useAccount()
-  const [commitArray, setCommitArray] = useState([])
+  // state variables
+  const [allCommits, setAllCommits] = useState([])
 
-  // smart contract
-  const { data: commitData, isError } = useContractRead({
-    addressOrName: CONTRACT_ADDRESS,
-    contractInterface: ABI,
-    functionName: "getAllCommits",
-  })
+  // getter for all of the contract commits (always listening)
+  const getAllCommits = async() => {
+    console.log("getAllCommits() call")
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const commitManagerContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
+        const commits = await commitManagerContract.getAllCommits();
+        if (!commits) {
+          return
+        }
+        // classify each commit
+        let commitsClassified = [];
+        commits.forEach(commit => {
+          commitsClassified.push({
+            status: determineStatus(commit),
+            id: commit.id.toNumber(),
+            commitFrom: commit.commitFrom,
+            commitTo: commit.commitTo,
+            createdAt: commit.createdAt.toNumber(),
+            validThrough: commit.validThrough.toNumber(),
+            judgeDeadline: commit.judgeDeadline.toNumber(),
+            stakeAmount: commit.stakeAmount,
+            message: commit.message,
+            ipfsHash: commit.ipfsHash,
+            filename: commit.filename,
+            commitProved: commit.commitProved,
+            commitJudged: commit.commitJudged,
+            isApproved: commit.isApproved,           
+          });
+        });
+        setAllCommits(commitsClassified);
+
+        // on each new commit: announce it and change the allCommits state
+        // TODO
+        //
+        //
+        //
+
+        // sort according to their creation date
+        commitsClassified.sort((a, b) => (a.createdAt > b.createdAt) ? 1 : -1)
+        setAllCommits(commitsClassified)
+    
+        console.log(commitsClassified);
+        
+      } else {
+        console.log("Ethereum object doesn't exist!")
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   // functions
-  function buildCommitArray() {
-    
-    console.log("buildCommitArray() call")
-    
-    if (!commitData) {
-      return
+  function determineStatus(commit) {
+    let status = "";
+    // is valid and does not have a proof
+    if (commit.validThrough > Date.now() && !commit.commitProved) {
+      status = "Pending";
     }
-
-    // build commit array
-    let newArray = [];
-    for (let commit of commitData) {
-      let newCommitStruct = {}
-
-      let status = "";
-
-      // is valid and does not have a proof
-      if (commit.validThrough > Date.now() && !commit.commitProved) {
-        status = "Pending";
-      }
-      // has not expired, has a proof, but has not been judged
-      else if (commit.judgeDeadline > Date.now() && commit.commitProved && !commit.commitJudged) {
-        status = "Waiting";
-      }
-      // is approved or the commit expired and was approved
-      else if (commit.isApproved || (commit.judgeDeadline < Date.now() && commit.isApproved)) {
-        status = "Success";
-      }
-      // commit has been denied or commit has expired
-      else {
-        status = "Failure";
-      }
-
-      // from start contract
-      newCommitStruct.id = commit.id.toNumber();
-      newCommitStruct.commitFrom = commit.commitFrom;
-      newCommitStruct.commitTo = commit.commitTo;
-      newCommitStruct.createdAt = commit.createdAt.toNumber();
-      newCommitStruct.validThrough = commit.validThrough.toNumber();
-      newCommitStruct.judgeDeadline = commit.judgeDeadline.toNumber();
-      newCommitStruct.stakeAmount = commit.stakeAmount;
-      newCommitStruct.message = commit.message;
-      newCommitStruct.ipfsHash = commit.ipfsHash;
-      newCommitStruct.filename = commit.filename;
-      newCommitStruct.commitProved = commit.commitProved;
-      newCommitStruct.commitJudged = commit.commitJudged;
-      newCommitStruct.isApproved = commit.isApproved;
-      // front-end only
-      newCommitStruct.status = status;
-
-      newArray.push(newCommitStruct);
-
-      // ----------
-
-      // DEBUGGING
-
-      // console.log("validThrough: " + commit.validThrough)
-      // console.log("ipfsHash: " + commit.ipfsHash)
-      // console.log("Date.now(): " + Date.now())
-
-      // END OF DEBUGGING
-
-      // ----------
-
+    // has not expired, has a proof, but has not been judged
+    else if (commit.judgeDeadline > Date.now() && commit.commitProved && !commit.commitJudged) {
+      status = "Waiting";
     }
-
-    newArray.sort((a, b) => (a.createdAt > b.createdAt) ? 1 : -1)
-    setCommitArray(newArray)
-    
-    console.log(newArray);
+    // is approved or the commit expired and was approved
+    else if (commit.isApproved || (commit.judgeDeadline < Date.now() && commit.isApproved)) {
+      status = "Success";
+    }
+    // commit has been denied or commit has expired
+    else {
+      status = "Failure";
+    }    
+    return status
   }
+
+  /// STATE EFFECTS
+
+  // first page pass
+  useEffect(() => {
+    getAllCommits()
+  }, [])
+  
+  // render when there's a new commit or account connects
+  useEffect(() => {
+    <CommitCardList cardList={allCommits} />
+  }, [allCommits, connectedAddress])
 
   return (
     <PullToRefresh onRefresh={() => {
@@ -122,7 +130,7 @@ export default function Commitments() {
           <div className="w-8/10 sm:w-1/2 mx-auto p-0 lg:p-10 mt-20">
             <div className="flex flex-col justify-center items-center">
 
-              <CommitCardList cardList={commitArray} />
+              <CommitCardList cardList={allCommits} />
               
             </div>
           </div>
