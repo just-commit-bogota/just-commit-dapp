@@ -66,8 +66,7 @@ export default function CommitCard({ ...props }) {
     hash: proveWrite.data?.hash,
     onSettled() {
       // wait 6 seconds
-      setTimeout(() => {
-      }, 6000);
+      setTimeout(() => {}, 6000);
       location.reload()
     }
   })
@@ -105,7 +104,7 @@ export default function CommitCard({ ...props }) {
 
         if (!proveWrite.write) {
           setUploadClicked(false)
-          toast("🔁 Refresh and upload again (bug)", { duration: 4000 })
+          toast("🔁 Upload again (bug)", { duration: 4000 })
           return
         }
         proveWrite.write?.()
@@ -158,23 +157,9 @@ export default function CommitCard({ ...props }) {
                     <FileInput maxSize={20} onChange={(file) => uploadFile()}>
                       {(context) =>
                         (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ?
-                          <div className="justifyCenter">
+                          <div className="flex flex-col" style={{ alignItems: "center" }}>
                             <Spinner />
-                            <div className="heartbeat">don't refresh</div>
-                          </div>
-                          :
-                          (context.name && triggerProveContractFunctions) ?
-                          <div>
-                            <a
-                              className="text-4xl hover:cursor-pointer"
-                              href="#"
-                              onClick={(e) => { 
-                                e.preventDefault();
-                                location.reload(); 
-                              }}
-                            >
-                              &nbsp;🔁&nbsp;
-                          </a>
+                            <div className="heartbeat text-xs">(Dont Refresh)</div>
                           </div>
                           :
                           (context.name && triggerProveContractFunctions) ?

@@ -10,7 +10,7 @@ import { Placeholders } from "../components/Placeholders.js";
 import Spinner from "../components/Spinner.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 
-export default function Home() {
+export default function Commit() {
 
   useEffect(() => {
     setTimeout(() => {
@@ -78,7 +78,7 @@ export default function Home() {
         <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
       </Head>
 
-      <Header currentPage = "commit"/>
+      <Header currentPage="commit" />
 
       <div className="container container--flex">
         <div className="heading text-3xl font-bold">
@@ -216,7 +216,7 @@ export default function Home() {
             {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
               <ButtonThorin style={{
                 width: '60%',
-                height:'2.5rem',
+                height: '2.5rem',
                 margin: '1rem',
                 backgroundColor:
                   commitDescription.length < 2 ||
@@ -230,7 +230,7 @@ export default function Home() {
                 boxShadow: "0rem 0.4rem 0.4rem 0rem lightGrey",
               }}
                 size="small"
-                suffix= {!priceApi.isLoading && "(" + formatUsd(maticPrice * commitAmount) + ")"}
+                suffix={!priceApi.isLoading && "(" + formatUsd(maticPrice * commitAmount) + ")"}
                 disabled={
                   commitDescription.length < 2 ||
                   commitDescription.length > 35 ||
@@ -297,7 +297,7 @@ export default function Home() {
             <br></br>
             <br></br>
             */}
-            
+
             {/*
             validThrou.: {validThrough}
             <br></br>
