@@ -3,6 +3,7 @@ import Header from "../components/Header.js"
 import CommitCardList from "../components/CommitCardList.js"
 import { Placeholders } from "../components/Placeholders.js"
 import { useState, useEffect } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useProvider, useNetwork } from 'wagmi'
 import { ethers } from 'ethers'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
@@ -94,6 +95,7 @@ export default function Commitments() {
         
       } else {
         console.log("Ethereum object doesn't exist!")
+        toast.error("This browser is not supported", { duration: Infinity, id: 'unique', })
       }
     } catch (error) {
       console.log(error);
@@ -152,7 +154,7 @@ export default function Commitments() {
           <meta property="og:description" content="Just Commit" />
           <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
         </Head>
-  
+        
         <Header currentPage = "commitments"/>
   
         <div className="flex h-screen">
@@ -164,6 +166,9 @@ export default function Commitments() {
             </div>
           </div>
         </div>
+
+        <Toaster />
+        
       </>
     </PullToRefresh>
   );
