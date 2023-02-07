@@ -30,9 +30,7 @@ export default function CommitCard({ ...props }) {
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
 
-  // smart contract data 
-  const provider = useProvider()
-  const { chain, chains } = useNetwork()
+  // smart contract data
   const { address } = useAccount()
 
   // smart contract functions
@@ -48,7 +46,7 @@ export default function CommitCard({ ...props }) {
   const { config: judgeCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
-    functionName: "judgeTheCommit",
+    functionName: "judgeCommit",
     args: [props.id, getItem('isApproved', 'session')],
     enabled: triggerJudgeContractFunctions,
   })
@@ -131,7 +129,7 @@ export default function CommitCard({ ...props }) {
                     <Countdown date={props.validThrough} daysInHours></Countdown> :
                     // waiting or verify
                     (props.status == "Waiting") ?
-                      moment(props.judgeDeadline).fromNow(true) + " remaining":
+                      moment(props.judgeDeadline).fromNow(true) + " left":
                       // my history or feed
                       moment(props.createdAt * 1000).fromNow()
                 }
@@ -142,12 +140,12 @@ export default function CommitCard({ ...props }) {
             'pictureArea': true,
             'pictureArea--waiting': props.status == "Waiting",
             'pictureArea--success': props.status == "Success",
-            'pictureArea--failure': props.status == "Failure",
+            'pictureArea--failure': props.status == "Failure" && !props.commitProved,
             'pictureArea--pending': props.status == "Pending",
           })}>
             {/* CARD BODY */}
 
-            {/* ACTIVE BODY */}
+            {/* card is active */}
             {props.status == "Pending" &&
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
@@ -207,8 +205,8 @@ export default function CommitCard({ ...props }) {
             Date.now(): {Date.now()}
             */}
 
-            {/* WAITING/VERIFY OR SUCCESS BODY */}
-            {(props.status == "Waiting" || props.status == "Success") &&
+            {/* show the image if there's an image to show */}
+            {(props.commitProved) &&
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
                   
@@ -222,7 +220,7 @@ export default function CommitCard({ ...props }) {
                     }} 
                   />
                   
-                  {/* THE VERIFY VARIANT */}
+                  {/* "to verify" buttons */}
                   {props.commitTo == address && props.judgeDeadline > Date.now() && !props.commitJudged && (
                     <div>
                       <div className="flex flex-row gap-5 p-5" style={{ justifyContent: "space-between", marginBottom: "-30px" }}>
