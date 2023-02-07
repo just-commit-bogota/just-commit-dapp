@@ -104,7 +104,7 @@ export default function CommitCard({ ...props }) {
 
         if (!proveWrite.write) {
           setUploadClicked(false)
-          toast("🔁 Refresh and upload again (bug)", { duration: 4000 })
+          toast("🔁 Upload again (bug)", { duration: 4000 })
           return
         }
         proveWrite.write?.()
