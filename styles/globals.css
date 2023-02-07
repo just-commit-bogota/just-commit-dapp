@@ -282,6 +282,13 @@ a {
   animation: fade 4s infinite;
 }
 
+.justifyCenter {
+	justify-content: center;
+	text-align: center;
+  position: relative;
+  width: 100%;
+}
+
 /*
  * source: https://loading.io/css/
  * license: CC0 (Creative Commons)
