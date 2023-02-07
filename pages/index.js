@@ -9,7 +9,7 @@ import { ethers } from 'ethers'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 import PullToRefresh from 'react-simple-pull-to-refresh';
 
-export default function Commitments() {
+export default function Home() {
 
   // global variables
   const { address: connectedAddress } = useAccount()
