@@ -65,6 +65,9 @@ export default function CommitCard({ ...props }) {
   const { wait: proveWait, data: proveWaitData, isLoading: isProveWaitLoading } = useWaitForTransaction({
     hash: proveWrite.data?.hash,
     onSettled() {
+      // wait 6 seconds
+      setTimeout(() => {
+      }, 6000);
       location.reload()
     }
   })
@@ -157,7 +160,7 @@ export default function CommitCard({ ...props }) {
                         (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ?
                           <div className="justifyCenter">
                             <Spinner />
-                            <div className="heartbeat">don't refresh :)</div>
+                            <div className="heartbeat">don't refresh</div>
                           </div>
                           :
                           (context.name && triggerProveContractFunctions) ?
