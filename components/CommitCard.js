@@ -66,7 +66,7 @@ export default function CommitCard({ ...props }) {
     hash: proveWrite.data?.hash,
     onSettled() {
       // wait 6 seconds
-      setTimeout(() => {}, 6000);
+      setTimeout(() => {},6000);
       location.reload()
     }
   })
