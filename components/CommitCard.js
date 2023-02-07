@@ -153,7 +153,10 @@ export default function CommitCard({ ...props }) {
                      <FileInput maxSize={20} onChange={(file) => uploadFile()}>
                       {(context) =>
                         (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ?
-                          <Spinner />
+                          <div className="justifyCenter">
+                            <Spinner />
+                            <div className="heartbeat">don't refresh :)</div>
+                          </div>
                           :
                           (context.name && triggerProveContractFunctions) ?
                           <div>

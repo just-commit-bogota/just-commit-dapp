@@ -273,6 +273,15 @@ a {
   cursor: pointer;
 }
 
+.heartbeat {
+	font-size: 12px;
+	color: #78a578;
+	animation: beat .25s infinite alternate;
+	transform-origin: center;
+  height: 30px;
+  animation: fade 4s infinite;
+}
+
 /*
  * source: https://loading.io/css/
  * license: CC0 (Creative Commons)
