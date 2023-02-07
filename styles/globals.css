@@ -275,18 +275,16 @@ a {
 
 .heartbeat {
 	font-size: 12px;
-	color: #78a578;
+	color: rgba(53, 72, 98, 1);
 	animation: beat .25s infinite alternate;
 	transform-origin: center;
-  height: 30px;
+  height: 0px;
   animation: fade 4s infinite;
 }
 
-.justifyCenter {
-	justify-content: center;
-	text-align: center;
-  position: relative;
-  width: 100%;
+@keyframes fade {
+  0%,100% { opacity: 0 }
+  50% { opacity: 1 }
 }
 
 /*
