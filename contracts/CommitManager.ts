@@ -1,5 +1,5 @@
 //export const CONTRACT_ADDRESS = "0xb235Cf57d17aCeb97CF4DA5474A7023e3d3a390E" // BETA
-export const CONTRACT_ADDRESS = "0x0507b4704f882240E11a3B41dAC88F1573a20c0E" // DEV
+export const CONTRACT_ADDRESS = "0xe6A22b60A884CB8df4C29534dF5A6C2d191AAe0e" // DEV
 
 export const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
@@ -9,6 +9,91 @@ export const ABI =
       "inputs": [],
       "stateMutability": "nonpayable",
       "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "id",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "commitFrom",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "commitTo",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "createdAt",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "validThrough",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "judgeDeadline",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "stakeAmount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "message",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "ipfsHash",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "filename",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "commitProved",
+          "type": "bool"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "commitJudged",
+          "type": "bool"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isApproved",
+          "type": "bool"
+        }
+      ],
+      "name": "NewCommit",
+      "type": "event"
     },
     {
       "anonymous": false,
@@ -124,7 +209,7 @@ export const ABI =
               "type": "bool"
             }
           ],
-          "internalType": "struct CommitManagerContract.Commit[]",
+          "internalType": "struct CommitPortal.Commit[]",
           "name": "",
           "type": "tuple[]"
         }
@@ -158,7 +243,7 @@ export const ABI =
           "type": "bool"
         }
       ],
-      "name": "judgeTheCommit",
+      "name": "judgeCommit",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

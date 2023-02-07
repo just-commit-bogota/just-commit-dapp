@@ -48,7 +48,7 @@ export default function CommitCard({ ...props }) {
   const { config: judgeCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
-    functionName: "judgeTheCommit",
+    functionName: "judgeCommit",
     args: [props.id, getItem('isApproved', 'session')],
     enabled: triggerJudgeContractFunctions,
   })

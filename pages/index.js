@@ -3,7 +3,7 @@ import Header from "../components/Header.js"
 import CommitCardList from "../components/CommitCardList.js"
 import { Placeholders } from "../components/Placeholders.js"
 import { useState, useEffect } from 'react'
-import { useAccount, useProvider, useNetwork, useContract } from 'wagmi'
+import { useAccount, useProvider, useNetwork } from 'wagmi'
 import { ethers } from 'ethers'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 import PullToRefresh from 'react-simple-pull-to-refresh';
@@ -24,8 +24,8 @@ export default function Commitments() {
     try {
       const { ethereum } = window;
       if (ethereum) {
-        const commitManagerContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
-        const commits = await commitManagerContract.getAllCommits();
+        const commitPortal = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
+        const commits = await commitPortal.getAllCommits();
         if (!commits) {
           return
         }
@@ -52,11 +52,40 @@ export default function Commitments() {
         setAllCommits(commitsClassified);
 
         // on each new commit: announce it and change the allCommits state
-        // TODO
-        //
-        //
-        //
-
+        commitPortal.on("NewCommit", (
+          id,
+          commitFrom,
+          commitTo,
+          createdAt,
+          validThrough,
+          judgeDeadline,
+          stakeAmount,
+          message,
+          ipfsHash,
+          filename,
+          commitProved,
+          commitJudged,
+          isApproved
+        ) => {
+          console.log("NewCommit");
+          setAllCommits(prevState => [...prevState, {
+            status: "Pending",
+            id: id,
+            commitFrom: commitFrom,
+            commitTo: commitTo,
+            createdAt: createdAt,
+            validThrough: validThrough,
+            judgeDeadline: judgeDeadline,
+            stakeAmount: stakeAmount,
+            message: message,
+            ipfsHash: ipfsHash,
+            filename: filename,
+            commitProved: commitProved,
+            commitJudged: commitJudged,
+            isApproved: isApproved  
+          }]);
+        });
+        
         // sort according to their creation date
         commitsClassified.sort((a, b) => (a.createdAt > b.createdAt) ? 1 : -1)
         setAllCommits(commitsClassified)
