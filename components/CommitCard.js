@@ -159,7 +159,7 @@ export default function CommitCard({ ...props }) {
                         (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ?
                           <div className="flex flex-col" style={{ alignItems: "center" }}>
                             <Spinner />
-                            <div className="heartbeat text-xs">(Don&apos;t Refresh)</div>
+                            <div className="heartbeat text-xs">(Dont Refresh)</div>
                           </div>
                           :
                           (context.name && triggerProveContractFunctions) ?
