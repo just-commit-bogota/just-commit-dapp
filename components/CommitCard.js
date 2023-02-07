@@ -65,8 +65,8 @@ export default function CommitCard({ ...props }) {
   const { wait: proveWait, data: proveWaitData, isLoading: isProveWaitLoading } = useWaitForTransaction({
     hash: proveWrite.data?.hash,
     onSettled() {
-      // wait 6 seconds
-      setTimeout(() => {}, 6000);
+      // wait 10 seconds
+      setTimeout(() => {}, 10000);
       location.reload()
     }
   })
