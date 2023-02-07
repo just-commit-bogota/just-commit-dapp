@@ -276,7 +276,7 @@ export default function Home() {
                   size="small"
                   variant="secondary"
                   as="a"
-                  href="./commitments"
+                  href="./"
                 >
                   Commitment
                 </ButtonThorin>
