@@ -32,10 +32,8 @@ export default function CommitCardList({ cardList }) {
   useEffect(() => {
     setSelectedFilter("Feed")
     const element = document.getElementById("Feed");
-    element.addEventListener("touchstart", (event) => {
-      event.target.classList.add("active");
-    }, { passive: true });
-  }, []);
+    element.classList.add("active");
+  }, [])
 
   // functions
   const onCategoryClick = (filter) => {
