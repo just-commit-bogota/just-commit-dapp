@@ -50,15 +50,17 @@ export default function CommitCard({ ...props }) {
     args: [props.id, getItem('isApproved', 'session')],
     enabled: triggerJudgeContractFunctions,
   })
-  
+
   // write
-  const proveWrite = useContractWrite({...proveCommitConfig,
-    onSettled() {{ proveWait }},
+  const proveWrite = useContractWrite({
+    ...proveCommitConfig,
+    onSettled() { { proveWait } },
   })
-  const judgeWrite = useContractWrite({...judgeCommitConfig,
-    onSettled() {{ judgeWait }},
+  const judgeWrite = useContractWrite({
+    ...judgeCommitConfig,
+    onSettled() { { judgeWait } },
   })
-  
+
   // wait
   const { wait: proveWait, data: proveWaitData, isLoading: isProveWaitLoading } = useWaitForTransaction({
     hash: proveWrite.data?.hash,
@@ -77,9 +79,9 @@ export default function CommitCard({ ...props }) {
   const uploadFile = () => {
 
     setUploadClicked(true)
-    
+
     const fileInput = document.querySelector('input[type="file"]')
-    
+
     removeItem('filename', "session")
     setItem('filename', fileInput.files[0].name, "session")
 
@@ -88,7 +90,7 @@ export default function CommitCard({ ...props }) {
     if ((getItem('filename', 'session').split(".").pop().toUpperCase()) == "HEIC") {
       console.log("A HEIC image")
     }
-    
+
     if (fileInput.size > 0) {
       client.put(fileInput.files, {
         name: 'fileInput',
@@ -100,7 +102,7 @@ export default function CommitCard({ ...props }) {
 
         if (!proveWrite.write) {
           setUploadClicked(false)
-          toast("🔁 Refresh and upload again (bug)", {duration: 4000})
+          toast("🔁 Refresh and upload again (bug)", { duration: 4000 })
           return
         }
         proveWrite.write?.()
@@ -129,7 +131,7 @@ export default function CommitCard({ ...props }) {
                     <Countdown date={props.validThrough} daysInHours></Countdown> :
                     // waiting or verify
                     (props.status == "Waiting") ?
-                      moment(props.judgeDeadline).fromNow(true) + " left":
+                      moment(props.judgeDeadline).fromNow(true) + " left" :
                       // my history or feed
                       moment(props.createdAt * 1000).fromNow()
                 }
@@ -150,35 +152,38 @@ export default function CommitCard({ ...props }) {
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
                   <div className="flex">
-                     <FileInput maxSize={20} onChange={(file) => uploadFile()}>
+                    <FileInput maxSize={20} onChange={(file) => uploadFile()}>
                       {(context) =>
                         (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ?
-                          <Spinner />
+                          <div className="justifyCenter">
+                            <Spinner />
+                            <div className="heartbeat">don't refresh :)</div>
+                          </div>
                           :
                           (context.name && triggerProveContractFunctions) ?
-                          <div>
-                            <a
-                              className="text-4xl hover:cursor-pointer"
-                              href="#"
-                              onClick={(e) => { 
-                                e.preventDefault();
-                                location.reload(); 
-                              }}
-                            >
-                              &nbsp;🔁&nbsp;
-                          </a>
-                          </div>
-                          :
-                          <div>
-                            <Tag
-                              className="text-2xl hover:cursor-pointer"
-                              tone="accent"
-                              variation="primary"
-                              size="large"
-                            >
-                              &nbsp;📷&nbsp;
-                            </Tag>
-                          </div>
+                            <div>
+                              <a
+                                className="text-4xl hover:cursor-pointer"
+                                href="#"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  location.reload();
+                                }}
+                              >
+                                &nbsp;🔁&nbsp;
+                              </a>
+                            </div>
+                            :
+                            <div>
+                              <Tag
+                                className="text-2xl hover:cursor-pointer"
+                                tone="accent"
+                                variation="primary"
+                                size="large"
+                              >
+                                &nbsp;📷&nbsp;
+                              </Tag>
+                            </div>
                       }
                     </FileInput>
                   </div>
@@ -197,7 +202,7 @@ export default function CommitCard({ ...props }) {
             <br></br>
             <br></br>
             */}
-            
+
             {/*
             validThrough: {validThrough}
             <br></br>
@@ -209,17 +214,17 @@ export default function CommitCard({ ...props }) {
             {(props.commitProved) &&
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
-                  
-                  <img 
-                    src={`https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`} 
+
+                  <img
+                    src={`https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`}
                     style={{
                       width: "300px",
                       height: "300px",
                       objectFit: "cover",
                       borderRadius: "10px"
-                    }} 
+                    }}
                   />
-                  
+
                   {/* "to verify" buttons */}
                   {props.commitTo == address && props.judgeDeadline > Date.now() && !props.commitJudged && (
                     <div>
@@ -283,18 +288,18 @@ export default function CommitCard({ ...props }) {
                 {/*<b>&nbsp;To </b>{props.commitTo.slice(0, 5)}...{props.commitTo.slice(-4)}&nbsp;*/}
               </div>
             </div>
-           
+
             <div className="flex flex-row p-1">
               <div className="flex flex-col align-center justify-center">
                 <img className="h-6" src="./polygon-logo-tilted.svg" />
               </div>
               <div className="flex flex-col font-semibold align-center justify-center text-l ml-1">{parseFloat(props.stakeAmount)}</div>
             </div>
-            
+
             <div className="flex flex-col align-center justify-center text-lg">
-            {
-              CommitStatusEmoji[props.status]
-            }
+              {
+                CommitStatusEmoji[props.status]
+              }
             </div>
             <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600
               text-xs rounded-lg bg-sky-200 hover:bg-sky-400 hover:cursor-pointer">
