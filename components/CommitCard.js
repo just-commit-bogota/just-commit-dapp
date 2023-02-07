@@ -164,6 +164,20 @@ export default function CommitCard({ ...props }) {
                           </div>
                           :
                           (context.name && triggerProveContractFunctions) ?
+                          <div>
+                            <a
+                              className="text-4xl hover:cursor-pointer"
+                              href="#"
+                              onClick={(e) => { 
+                                e.preventDefault();
+                                location.reload(); 
+                              }}
+                            >
+                              &nbsp;🔁&nbsp;
+                          </a>
+                          </div>
+                          :
+                          (context.name && triggerProveContractFunctions) ?
                             <div>
                               <a
                                 className="text-4xl hover:cursor-pointer"
