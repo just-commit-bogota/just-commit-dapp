@@ -20,7 +20,7 @@ export default function Commitments() {
   const [allCommits, setAllCommits] = useState([])
 
   // getter for all of the contract commits (always listening)
-  const getAllCommits = async() => {
+  const getAllCommits = async () => {
     console.log("getAllCommits() call")
     try {
       const { ethereum } = window;
@@ -47,12 +47,12 @@ export default function Commitments() {
             filename: commit.filename,
             commitProved: commit.commitProved,
             commitJudged: commit.commitJudged,
-            isApproved: commit.isApproved,           
+            isApproved: commit.isApproved,
           });
         });
         setAllCommits(commitsClassified);
 
-        // on each new commit: announce it and change the allCommits state
+        // on each new commit: change the allCommits state
         commitPortal.on("NewCommit", (
           id,
           commitFrom,
@@ -83,19 +83,31 @@ export default function Commitments() {
             filename: filename,
             commitProved: commitProved,
             commitJudged: commitJudged,
-            isApproved: isApproved  
+            isApproved: isApproved
           }]);
         });
-        
+
         // sort according to their creation date
         commitsClassified.sort((a, b) => (a.createdAt > b.createdAt) ? 1 : -1)
         setAllCommits(commitsClassified)
-    
+
         console.log(commitsClassified);
-        
+
+        // FOR LATER USE (unused events/emits):
+
+        // on a NewProve event
+        commitPortal.on("NewProve", (commitId, ipfsHash, filename, provedAt) => {
+          console.log("New Prove Event:", commitId, ipfsHash, filename, provedAt);
+        });
+
+        // on a NewJudge event
+        commitPortal.on("NewJudge", (commitId, isApproved, judgedAt) => {
+          console.log("New Judge Event:", commitId, isApproved, judgedAt);
+        });
+
       } else {
         console.log("Ethereum object doesn't exist!")
-        toast.error("This browser is not supported", { duration: Infinity, id: 'unique', })
+        toast.error("This browser is not supported", { duration: Infinity, id: 'unique', position: 'bottom-center' })
       }
     } catch (error) {
       console.log(error);
@@ -120,7 +132,7 @@ export default function Commitments() {
     // commit has been denied or commit has expired
     else {
       status = "Failure";
-    }    
+    }
     return status
   }
 
@@ -130,7 +142,7 @@ export default function Commitments() {
   useEffect(() => {
     getAllCommits()
   }, [])
-  
+
   // render when there's a new commit or account connects
   useEffect(() => {
     <CommitCardList cardList={allCommits} />
@@ -154,21 +166,21 @@ export default function Commitments() {
           <meta property="og:description" content="Just Commit" />
           <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
         </Head>
-        
-        <Header currentPage = "commitments"/>
-  
+
+        <Header currentPage="commitments" />
+
         <div className="flex h-screen">
           <div className="w-8/10 sm:w-1/2 mx-auto p-0 lg:p-10 mt-20">
             <div className="flex flex-col justify-center items-center">
 
               <CommitCardList cardList={allCommits} />
-              
+
             </div>
           </div>
         </div>
 
         <Toaster />
-        
+
       </>
     </PullToRefresh>
   );

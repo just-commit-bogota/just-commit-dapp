@@ -30,9 +30,7 @@ export default function CommitCard({ ...props }) {
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
 
-  // smart contract data 
-  const provider = useProvider()
-  const { chain, chains } = useNetwork()
+  // smart contract data
   const { address } = useAccount()
 
   // smart contract functions
@@ -131,7 +129,7 @@ export default function CommitCard({ ...props }) {
                     <Countdown date={props.validThrough} daysInHours></Countdown> :
                     // waiting or verify
                     (props.status == "Waiting") ?
-                      moment(props.judgeDeadline).fromNow(true) + " remaining":
+                      moment(props.judgeDeadline).fromNow(true) + " left":
                       // my history or feed
                       moment(props.createdAt * 1000).fromNow()
                 }

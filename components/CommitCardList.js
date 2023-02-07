@@ -32,8 +32,10 @@ export default function CommitCardList({ cardList }) {
   useEffect(() => {
     setSelectedFilter("Feed")
     const element = document.getElementById("Feed");
-    element.classList.add("active");
-  }, [])
+    element.addEventListener("touchstart", (event) => {
+      event.target.classList.add("active");
+    }, { passive: true });
+  }, []);
 
   // functions
   const onCategoryClick = (filter) => {
@@ -53,7 +55,7 @@ export default function CommitCardList({ cardList }) {
         <ul className="flex flex-row continent_nav">
           {filters_left.map(f =>
             <li key={f} id={f} className="filterOption"
-              style={{ borderColor: "rgba(53, 72, 98, 1)", borderWidth: "2px"}}>
+              style={{ borderColor: "rgba(53, 72, 98, 1)", borderWidth: "2px" }}>
               <a onClick={() => onCategoryClick(f)}>{f}</a>
             </li>)}
         </ul>

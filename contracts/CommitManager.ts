@@ -1,5 +1,5 @@
-//export const CONTRACT_ADDRESS = "0xb235Cf57d17aCeb97CF4DA5474A7023e3d3a390E" // BETA
-export const CONTRACT_ADDRESS = "0xe6A22b60A884CB8df4C29534dF5A6C2d191AAe0e" // DEV
+export const CONTRACT_ADDRESS = "0x6e4Ec56de995B22fb5613ad8E4ffbb48a1927713" // BETA
+//export const CONTRACT_ADDRESS = "0xA713e59f3aE53693B9853BA42CD2Bbf29a2D41fF" // DEV
 
 export const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
@@ -20,13 +20,13 @@ export const ABI =
           "type": "uint256"
         },
         {
-          "indexed": false,
+          "indexed": true,
           "internalType": "address",
           "name": "commitFrom",
           "type": "address"
         },
         {
-          "indexed": false,
+          "indexed": true,
           "internalType": "address",
           "name": "commitTo",
           "type": "address"
@@ -93,6 +93,62 @@ export const ABI =
         }
       ],
       "name": "NewCommit",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "commitId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isApproved",
+          "type": "bool"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "judgedAt",
+          "type": "uint256"
+        }
+      ],
+      "name": "NewJudge",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "commitId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "ipfsHash",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "filename",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "provedAt",
+          "type": "uint256"
+        }
+      ],
+      "name": "NewProve",
       "type": "event"
     },
     {
