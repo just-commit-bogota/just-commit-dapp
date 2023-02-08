@@ -19,30 +19,29 @@ export default function Header({currentPage}) {
             items= {[   
               { label:
                 <Link href="/">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;
                   Commitments
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;
                 </Link>, color: currentPage == "commitments" && "green"},
               { label:
                 <Link href="/commit">
-                &nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   Commit
-                &nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </Link>, color: currentPage == "commit" && "green" },
               { label: 
                 <Link href="http://turf.dev/plots/301"
                       target="_blank" rel="noopener noreferrer">
-                &nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;
                    Headquarters ↗
-                
-                
+                &nbsp;
                 </Link>, },
               { label: 
                 <Link href="https://justcommit.notion.site"
                       target="_blank" rel="noopener noreferrer">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   About ↗
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </Link>, },
             ]}
           />
