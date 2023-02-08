@@ -218,7 +218,7 @@ export default function CommitCard({ ...props }) {
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
 
                   <img
-                    src={`https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`}
+                    src={`https://${props.ipfsHash}.ipfs.w3s.link/${props.filename}`}
                     style={{
                       width: "300px",
                       height: "300px",
