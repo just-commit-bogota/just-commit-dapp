@@ -359,7 +359,7 @@ a {
   }
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1024px) {
   .header {
     text-align: center;
     padding: 1rem 3rem;
@@ -377,7 +377,7 @@ a {
   }
 }
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 1024px) {
   .continent_nav {
     justify-content: left;
     gap: 1rem;
