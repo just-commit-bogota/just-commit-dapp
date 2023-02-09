@@ -106,8 +106,8 @@ export default function Home() {
         });
 
       } else {
-        console.log("Ethereum object doesn't exist!")
-        toast.error("This browser is not supported", { duration: Infinity, id: 'unique', position: 'bottom-center' })
+        console.log("Ethereum object doesn't exist")
+        toast.error("ETH wallet not detected", { duration: Infinity, id: 'unique', position: 'bottom-center' })
       }
     } catch (error) {
       console.log(error);
