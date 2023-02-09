@@ -8,6 +8,7 @@ import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from
 import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
 import { useStorage } from '../hooks/useStorage.ts'
+import Image from 'next/image'
 import toast, { Toaster } from 'react-hot-toast'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 
@@ -217,13 +218,16 @@ export default function CommitCard({ ...props }) {
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
 
-                  <img
-                    src={`https://${props.ipfsHash}.ipfs.w3s.link/${props.filename}`}
+                  <Image
+                    className="object-cover"
+                    unoptimized
+                    loader = {() => `https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`}
+                    src={`https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`}
+                    alt="IPFS picture"
+                    width={300}
+                    height={300}
                     style={{
-                      width: "300px",
-                      height: "300px",
-                      objectFit: "cover",
-                      borderRadius: "10px"
+                      borderRadius: "10px",
                     }}
                   />
 
