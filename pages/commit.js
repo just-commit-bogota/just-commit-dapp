@@ -179,7 +179,7 @@ export default function Commit() {
                     tone="green"
                     size="large"
                     onClick={() => {
-                      toast("⏳ How many hours (max) until you can prove it?"),
+                      toast("⏳ How many hours until you can prove it?"),
                         { position: 'top-center' }
                     }}
                   >
