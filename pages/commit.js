@@ -192,23 +192,14 @@ export default function Commit() {
               <Input
                 label="To"
                 required
-                disabled
+                readOnly
                 placeholder="justcommit.eth"
                 maxLength={42}
                 onChange={(e) => setCommitTo(e.target.value)}
-                labelSecondary={
-                  <Tag
-                    className="hover:cursor-pointer"
-                    tone="green"
-                    size="large"
-                    onClick={() => {
-                      toast('⚠️ Disabled for now (Beta)'),
-                        { position: 'top-center' }
-                    }}
-                  >
-                    <b>i</b>
-                  </Tag>
-                }
+                onClick={() => {
+                  toast('⚠️ Only option for now (Beta)'),
+                    { position: 'top-center' }
+                }}
               />
             </div>
 

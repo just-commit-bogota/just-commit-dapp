@@ -308,7 +308,7 @@ export default function CommitCard({ ...props }) {
               }
             </div>
             <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600
-              text-xl rounded-lg bg-sky-200 hover:bg-sky-400 hover:cursor-pointer">
+              text-l rounded-lg bg-sky-200 hover:bg-sky-400 hover:cursor-pointer">
               <a onClick={() => { toast("⏳ Coming Soon...") }}>
                 {/*}
               <a href={`https://${chain?.id === 5 ? 'goerli.' : ''
@@ -317,7 +317,7 @@ export default function CommitCard({ ...props }) {
                 rel="noreferrer"
               >
               */}
-                &nbsp;&nbsp;🔎&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;🔎&nbsp;&nbsp;&nbsp;
               </a>
             </div>
           </div>
