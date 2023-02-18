@@ -72,10 +72,11 @@ export default function CommitCardList({ cardList }) {
               {filterCounts.find(filterCount => filterCount.filter === f).count > 0 &&
                 <Tag
                   className="hover:cursor-pointer"
-                  tone = "blue"
-                  size="small"
-                  style= {{ marginTop:  f == "Verify" ? "-2.85em" : "-2.9em", position: "absolute",
-                            marginLeft: f == "Waiting" ? "3.2em" : "2.6em" }}
+                  size = "small"
+                  style= {{ marginTop:  f == "Verify" ? "-2.85em" : "-2.6em", position: "absolute",
+                            marginLeft: f == "Waiting" ? "3.2em" : "2.4em",
+                            color: "rgba(255, 255, 255, 1)",
+                            backgroundColor: "rgba(255, 80, 80, 1)" }}
                 >
                   <b>{filterCounts.find(filterCount => filterCount.filter === f).count}</b>
                 </Tag>
