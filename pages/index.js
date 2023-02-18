@@ -11,12 +11,12 @@ import PullToRefresh from 'react-simple-pull-to-refresh';
 
 export default function Home() {
 
-  // global variables
+  // variables
   const { address: connectedAddress } = useAccount()
   const { chain, chains } = useNetwork()
   const provider = useProvider()
 
-  // state variables
+  // state
   const [allCommits, setAllCommits] = useState([])
 
   // getter for all of the contract commits (always listening)

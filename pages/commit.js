@@ -193,7 +193,7 @@ export default function Commit() {
                 label="To"
                 required
                 readOnly
-                placeholder="justcommit.eth"
+                placeholder="Just Commit"
                 maxLength={42}
                 onChange={(e) => setCommitTo(e.target.value)}
                 onClick={() => {
