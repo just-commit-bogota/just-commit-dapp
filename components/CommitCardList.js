@@ -69,15 +69,19 @@ export default function CommitCardList({ cardList }) {
             <li key={f} id={f} className="filterOption"
               style={{ borderColor: "rgba(18, 74, 56, .5)" }}>
               <a onClick={() => onCategoryClick(f)}>{f}</a>
-              <Tag
-                className="hover:cursor-pointer ml-10"
-                tone="blue"
-                size="extraSmall"
-                style= {{ marginTop: f == "Waiting" ? "-2.2em" : "-2.2em", position: "absolute" }}
-              >
-                 <b>{filterCounts.find(filterCount => filterCount.filter === f).count}</b>
-              </Tag>
-            </li>)}
+              {filterCounts.find(filterCount => filterCount.filter === f).count > 0 &&
+                <Tag
+                  className="hover:cursor-pointer"
+                  tone = "blue"
+                  size="small"
+                  style= {{ marginTop:  f == "Verify" ? "-2.85em" : "-2.9em", position: "absolute",
+                            marginLeft: f == "Waiting" ? "3.2em" : "2.6em" }}
+                >
+                  <b>{filterCounts.find(filterCount => filterCount.filter === f).count}</b>
+                </Tag>
+              }
+            </li>
+         )}
         </ul>
       </div>
 
