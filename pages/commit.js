@@ -125,8 +125,9 @@ export default function Commit() {
                     tone="green"
                     size="large"
                     onClick={() => {
-                      toast('📸 Can a pic or screenshot prove this?'),
-                        { position: 'top-center' }
+                      toast('📸 Can a pic or screenshot prove this?',
+                        { position: 'top-center', id: 'unique' }
+                      )
                     }}
                   >
                     <b>i</b>
@@ -147,8 +148,9 @@ export default function Commit() {
                     tone="green"
                     size="large"
                     onClick={() => {
-                      toast('1 MATIC 🟰 ' + formatUsd(maticPrice)),
-                        { position: 'top-center' }
+                      toast('1 MATIC 🟰 ' + formatUsd(maticPrice),
+                        { position: 'top-center', id: 'unique' }
+                      )
                     }}
                   >
                     <b>i</b>
@@ -179,8 +181,9 @@ export default function Commit() {
                     tone="green"
                     size="large"
                     onClick={() => {
-                      toast("⏳ How many hours until you can prove it?"),
-                        { position: 'top-center' }
+                      toast("⏳ How many hours until you can prove it?",
+                        { position: 'top-center', id: 'unique' }
+                      )
                     }}
                   >
                     <b>i</b>
@@ -197,8 +200,9 @@ export default function Commit() {
                 maxLength={42}
                 onChange={(e) => setCommitTo(e.target.value)}
                 onClick={() => {
-                  toast('⚠️ Only option for now (Beta)'),
-                    { position: 'top-center' }
+                  toast('⚠️ Only option for now (Beta)',
+                    { position: 'top-center', id: 'unique' }
+                  )
                 }}
               />
             </div>
