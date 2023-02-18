@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import CommitCard from "./CommitCard.js"
 import { ethers } from 'ethers'
 import { useAccount } from 'wagmi'
+import { Tag } from '@ensdomains/thorin'
 
 export default function CommitCardList({ cardList }) {
   // state
@@ -15,19 +16,25 @@ export default function CommitCardList({ cardList }) {
     // Feed: Failure or Success
     selectedFilter == "Feed" ?
       cardList.filter(c => (c.status == "Failure" || c.status == "Success")) :
-      // My History: connectedAddress is commitFrom and Failure or Success
-      selectedFilter == "My History" ?
-        cardList.filter(c => (c.commitFrom == connectedAddress &&
-          (c.status == "Failure" || c.status == "Success"))) :
-        // Verify: connectedAddress is commitTo and Waiting
-        selectedFilter == "Verify" ?
-          cardList.filter(c => (c.commitTo == connectedAddress && c.status == "Waiting")) :
-          // Waiting: connectedAddress is commitFrom and Waiting
-          selectedFilter == "Waiting" ?
-            cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Waiting")) :
-            // Active: connectedAddress is commitFrom and Pending
-            cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Pending"))
-
+    // My History: connectedAddress is commitFrom and Failure or Success
+    selectedFilter == "My History" ?
+      cardList.filter(c => (c.commitFrom == connectedAddress &&
+      (c.status == "Failure" || c.status == "Success"))) :
+    // Verify: connectedAddress is commitTo and Waiting
+    selectedFilter == "Verify" ?
+      cardList.filter(c => (c.commitTo == connectedAddress && c.status == "Waiting")) :
+    // Waiting: connectedAddress is commitFrom and Waiting
+    selectedFilter == "Waiting" ?
+      cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Waiting")) :
+    // Active: connectedAddress is commitFrom and Pending
+      cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Pending"))
+  
+  const filterCounts = [
+    { filter: "Verify", count: cardList.filter(c => (c.commitTo == connectedAddress && c.status == "Waiting")).length },
+    { filter: "Waiting", count: cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Waiting")).length },
+    { filter: "Active", count: cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Pending")).length }
+  ]
+  
   // set Feed filter to active
   useEffect(() => {
     setSelectedFilter("Feed")
@@ -62,7 +69,19 @@ export default function CommitCardList({ cardList }) {
             <li key={f} id={f} className="filterOption"
               style={{ borderColor: "rgba(18, 74, 56, .5)" }}>
               <a onClick={() => onCategoryClick(f)}>{f}</a>
-            </li>)}
+              {filterCounts.find(filterCount => filterCount.filter === f).count > 0 &&
+                <Tag
+                  className="hover:cursor-pointer"
+                  tone = "blue"
+                  size="small"
+                  style= {{ marginTop:  f == "Verify" ? "-2.85em" : "-2.9em", position: "absolute",
+                            marginLeft: f == "Waiting" ? "3.2em" : "2.6em" }}
+                >
+                  <b>{filterCounts.find(filterCount => filterCount.filter === f).count}</b>
+                </Tag>
+              }
+            </li>
+         )}
         </ul>
       </div>
 

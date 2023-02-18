@@ -106,8 +106,11 @@ export default function Home() {
         });
 
       } else {
-        console.log("Ethereum object doesn't exist!")
-        toast.error("This browser is not supported", { duration: Infinity, id: 'unique', position: 'bottom-center' })
+        toast("🚨 ETH wallet not detected.\n\n" + 
+              "Solutions:\n\n" +
+              "1. Desktop: download Metamask extension\n" +
+              "2. Mobile: Metamask or Brave broswer\n",
+          { duration: Infinity, id: 'unique', position: 'bottom-center' })
       }
     } catch (error) {
       console.log(error);
