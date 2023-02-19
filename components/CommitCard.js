@@ -124,6 +124,7 @@ export default function CommitCard({ ...props }) {
           name: name || props.commitFrom.slice(0, 5) + '…' + props.commitFrom.slice(-4)
         })
       } catch (error) {
+        console.log(error)
         setResolvedENS({ name: props.commitFrom.slice(0, 5) + '…' + props.commitFrom.slice(-4) })
       }
     }
