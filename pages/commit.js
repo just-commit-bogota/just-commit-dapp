@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import useFetch from '../hooks/fetch'
 import { ethers } from 'ethers'
-import { Tag, Input, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Input, Heading, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useNetwork, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
@@ -81,8 +81,10 @@ export default function Commit() {
       <Header currentPage="commit" />
 
       <div className="container container--flex">
-        <div className="heading text-3xl font-bold">
-          Make a Commitment
+        <div className="heading">
+          <Heading level="2">
+            Make a Commitment
+          </Heading>
         </div>
 
         {
