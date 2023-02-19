@@ -82,7 +82,7 @@ export default function Commit() {
 
       <div className="container container--flex">
         <div className="heading">
-          <Heading level="2" style={{fontWeight: "normal"}}>
+          <Heading level="2" style={{fontWeight: "500", letterSpacing: "0.018em"}}>
             Make a Commitment
           </Heading>
         </div>
