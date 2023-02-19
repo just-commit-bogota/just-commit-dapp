@@ -19,9 +19,9 @@ export default function Header({currentPage}) {
             items= {[   
               { label:
                 <Link href="/">
-                  &nbsp;&nbsp;&nbsp;&nbsp;
-                  Commitments
-                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  Home
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </Link>, color: currentPage == "commitments" && "green"},
               { label:
                 <Link href="/commit">

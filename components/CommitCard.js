@@ -30,12 +30,12 @@ export default function CommitCard({ ...props }) {
   const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
+  const [resolvedENS, setResolvedENS] = useState("")
 
-  // smart contract data
+  // variables
   const { address } = useAccount()
-
-  // smart contract functions
-
+  const provider = useProvider()
+  
   // prepare
   const { config: proveCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
@@ -79,6 +79,8 @@ export default function CommitCard({ ...props }) {
   })
 
   // functions
+
+  // upload the pic
   const uploadFile = () => {
 
     setUploadClicked(true)
@@ -112,6 +114,22 @@ export default function CommitCard({ ...props }) {
       })
     }
   }
+
+  // ENS name resolution (doesn't work in Polygon)
+  useEffect(() => {
+    async function resolveENS() {
+      try {
+        const name = await provider.lookupAddress(props.commitFrom)
+        setResolvedENS({
+          name: name || props.commitFrom.slice(0, 5) + '…' + props.commitFrom.slice(-4)
+        })
+      } catch (error) {
+        console.log(error)
+        setResolvedENS({ name: props.commitFrom.slice(0, 5) + '…' + props.commitFrom.slice(-4) })
+      }
+    }
+    resolveENS()
+  }, [props.commitFrom, provider])
 
   return (
     <>
@@ -287,10 +305,10 @@ export default function CommitCard({ ...props }) {
               borderRadius: "6px",
             }}>
               <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
-                <b>&nbsp;From </b>{props.commitFrom.slice(0, 5)}...{props.commitFrom.slice(-4)}&nbsp;
+                <b>&nbsp;From </b>{resolvedENS?.name}&nbsp;
               </div>
               <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
-                <b>&nbsp;To </b>justcommit.eth&nbsp;
+                <b>&nbsp;To </b>Just Commit&nbsp;
                 {/*<b>&nbsp;To </b>{props.commitTo.slice(0, 5)}...{props.commitTo.slice(-4)}&nbsp;*/}
               </div>
             </div>

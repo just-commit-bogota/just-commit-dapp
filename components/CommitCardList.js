@@ -66,22 +66,25 @@ export default function CommitCardList({ cardList }) {
         </ul>
         <ul className="flex flex-row continent_nav">
           {filters_right.map(f =>
-            <li key={f} id={f} className="filterOption"
-              style={{ borderColor: "rgba(18, 74, 56, .5)" }}>
+            <li key={f} id={f} className="filterOption" style={{ position: "relative", borderColor: "rgba(18, 74, 56, .5)" }}>
               <a onClick={() => onCategoryClick(f)}>{f}</a>
               {filterCounts.find(filterCount => filterCount.filter === f).count > 0 &&
                 <Tag
                   className="hover:cursor-pointer"
-                  tone = "blue"
                   size="small"
-                  style= {{ marginTop:  f == "Verify" ? "-2.85em" : "-2.9em", position: "absolute",
-                            marginLeft: f == "Waiting" ? "3.2em" : "2.6em" }}
+                  style={{
+                    position: "absolute",
+                    top: "-10px",
+                    right: "-8px",
+                    color: "rgba(255, 255, 255, 1)",
+                    backgroundColor: f == "Waiting" ? "rgba(255, 201, 67, 1)" : "rgba(255, 90, 90, 1)"
+                  }}
                 >
-                  <b>{filterCounts.find(filterCount => filterCount.filter === f).count}</b>
+                  {filterCounts.find(filterCount => filterCount.filter === f).count}
                 </Tag>
               }
             </li>
-         )}
+          )}
         </ul>
       </div>
 

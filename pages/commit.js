@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import useFetch from '../hooks/fetch'
 import { ethers } from 'ethers'
-import { Tag, Input, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Input, Heading, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useNetwork, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
@@ -81,8 +81,10 @@ export default function Commit() {
       <Header currentPage="commit" />
 
       <div className="container container--flex">
-        <div className="heading text-3xl font-bold">
-          Make a Commitment
+        <div className="heading">
+          <Heading level="2" style={{fontWeight: "400", letterSpacing: "0.014em"}}>
+            Make a Commitment
+          </Heading>
         </div>
 
         {
@@ -125,8 +127,9 @@ export default function Commit() {
                     tone="green"
                     size="large"
                     onClick={() => {
-                      toast('📸 Can a pic or screenshot prove this?'),
-                        { position: 'top-center' }
+                      toast('📸 Can a pic or screenshot prove this?',
+                        { position: 'top-center', id: 'unique' }
+                      )
                     }}
                   >
                     <b>i</b>
@@ -147,8 +150,9 @@ export default function Commit() {
                     tone="green"
                     size="large"
                     onClick={() => {
-                      toast('1 MATIC 🟰 ' + formatUsd(maticPrice)),
-                        { position: 'top-center' }
+                      toast('1 MATIC 🟰 ' + formatUsd(maticPrice),
+                        { position: 'top-center', id: 'unique' }
+                      )
                     }}
                   >
                     <b>i</b>
@@ -179,8 +183,9 @@ export default function Commit() {
                     tone="green"
                     size="large"
                     onClick={() => {
-                      toast("⏳ How many hours until you can prove it?"),
-                        { position: 'top-center' }
+                      toast("⏳ How many hours until you can prove it?",
+                        { position: 'top-center', id: 'unique' }
+                      )
                     }}
                   >
                     <b>i</b>
@@ -193,12 +198,13 @@ export default function Commit() {
                 label="To"
                 required
                 readOnly
-                placeholder="justcommit.eth"
+                placeholder="Just Commit"
                 maxLength={42}
                 onChange={(e) => setCommitTo(e.target.value)}
                 onClick={() => {
-                  toast('⚠️ Only option for now (Beta)'),
-                    { position: 'top-center' }
+                  toast('⚠️ Only option for now (Beta)',
+                    { position: 'top-center', id: 'unique' }
+                  )
                 }}
               />
             </div>
@@ -206,8 +212,8 @@ export default function Commit() {
             {/* Commit Button */}
             {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
               <ButtonThorin style={{
-                width: '60%',
-                height: '2.5rem',
+                width: '55%',
+                height: '2.8rem',
                 margin: '1rem',
                 backgroundColor:
                   commitDescription.length < 2 ||
@@ -218,9 +224,11 @@ export default function Commit() {
                     "rgb(30 174 131 / 36%)" : "rgb(30 174 131)",
                 borderRadius: 12,
                 color: "white",
-                boxShadow: "0rem 0.4rem 0.4rem 0rem lightGrey",
+                transition: "transform 0.2s ease-in-out",        
               }}
                 size="small"
+                shadowless
+                type="submit"
                 suffix={!priceApi.isLoading && "(" + formatUsd(maticPrice * commitAmount) + ")"}
                 disabled={
                   commitDescription.length < 2 ||
