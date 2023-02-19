@@ -82,7 +82,7 @@ export default function Commit() {
 
       <div className="container container--flex">
         <div className="heading">
-          <Heading level="2" style={{fontWeight: "500", letterSpacing: "0.018em"}}>
+          <Heading level="2" style={{fontWeight: "400", letterSpacing: "0.014em"}}>
             Make a Commitment
           </Heading>
         </div>
@@ -212,8 +212,8 @@ export default function Commit() {
             {/* Commit Button */}
             {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
               <ButtonThorin style={{
-                width: '60%',
-                height: '2.5rem',
+                width: '55%',
+                height: '2.8rem',
                 margin: '1rem',
                 backgroundColor:
                   commitDescription.length < 2 ||
@@ -224,9 +224,11 @@ export default function Commit() {
                     "rgb(30 174 131 / 36%)" : "rgb(30 174 131)",
                 borderRadius: 12,
                 color: "white",
-                boxShadow: "0rem 0.4rem 0.4rem 0rem lightGrey",
+                transition: "transform 0.2s ease-in-out",        
               }}
                 size="small"
+                shadowless
+                type="submit"
                 suffix={!priceApi.isLoading && "(" + formatUsd(maticPrice * commitAmount) + ")"}
                 disabled={
                   commitDescription.length < 2 ||
