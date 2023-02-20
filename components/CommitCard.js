@@ -327,7 +327,7 @@ export default function CommitCard({ ...props }) {
             </div>
             <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600
               text-l rounded-lg bg-sky-200 hover:bg-sky-400 hover:cursor-pointer">
-              <a onClick={() => { toast("⏳ Coming Soon...") }}>
+              <a onClick={() => { toast("⏳ Coming Soon...", { id: 'unique' }) }}>
                 {/*}
               <a href={`https://${chain?.id === 5 ? 'goerli.' : ''
                 }etherscan.io/tx/${props.txnHash}`} // FIX 
