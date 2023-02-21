@@ -40,6 +40,9 @@ export default function Commit() {
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
+    onError(error) {
+      toast.error(error)
+    },
     onSettled(commitWriteData, error) {
       { wait }
     },

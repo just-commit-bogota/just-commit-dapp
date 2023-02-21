@@ -7,7 +7,6 @@ import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useProvider, useNetwork } from 'wagmi'
 import { ethers } from 'ethers'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
-import PullToRefresh from 'react-simple-pull-to-refresh';
 
 export default function Home() {
 
@@ -68,7 +67,6 @@ export default function Home() {
           commitJudged,
           isApproved
         ) => {
-          console.log("NewCommit");
           setAllCommits(prevState => [...prevState, {
             status: "Pending",
             id: id,
@@ -152,13 +150,6 @@ export default function Home() {
   }, [allCommits, connectedAddress])
 
   return (
-    <PullToRefresh onRefresh={() => {
-      try {
-        return location.reload()
-      } catch (error) {
-        return
-      }
-    }}>
       <>
         <Head>
           <meta charSet="utf-8" />
@@ -185,6 +176,5 @@ export default function Home() {
         <Toaster />
 
       </>
-    </PullToRefresh>
   );
 }
