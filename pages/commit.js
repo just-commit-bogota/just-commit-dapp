@@ -36,7 +36,10 @@ export default function Commit() {
     contractInterface: ABI,
     functionName: "createCommit",
     args: [commitDescription, commitTo, validThrough,
-      { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }]
+      { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
+    onError: (err) => {
+      toast.error(err.message, { duration: Infinity })
+    }
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
