@@ -40,9 +40,6 @@ export default function Commit() {
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
-    onError(error) {
-      toast.error(error)
-    },
     onSettled(commitWriteData, error) {
       { wait }
     },
@@ -113,7 +110,7 @@ export default function Commit() {
                 return toast.error('Switch to a supported network')
               }
               // commiting to self?
-              if (address == commitTo) {
+              if (address.toUpperCase() == commitTo.toUpperCase()) {
                 return toast.error('Cannot commit to self')
               }
             }}>
