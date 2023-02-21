@@ -3,6 +3,7 @@ import CommitCard from "./CommitCard.js"
 import { ethers } from 'ethers'
 import { useAccount } from 'wagmi'
 import { Tag } from '@ensdomains/thorin'
+import { useStorage } from '../hooks/useStorage.ts'
 
 export default function CommitCardList({ cardList }) {
   // state
@@ -10,6 +11,7 @@ export default function CommitCardList({ cardList }) {
   const { address: connectedAddress } = useAccount()
 
   // variables
+  const { getItem, setItem, removeItem } = useStorage()
   const filters_left = ["Feed", "My History"]
   const filters_right = ["Active", "Waiting", "Verify"]
   const cardListToDisplay =
@@ -35,20 +37,28 @@ export default function CommitCardList({ cardList }) {
     { filter: "Active", count: cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Pending")).length }
   ]
   
-  // set Feed filter to active
+  // select the filter to active
   useEffect(() => {
-    setSelectedFilter("Feed")
-    const element = document.getElementById("Feed");
-    element.classList.add("active");
+    const savedFilter = localStorage.getItem("selectedFilter");
+    if (savedFilter) {
+      setSelectedFilter(savedFilter);
+      const element = document.getElementById(savedFilter);
+      element.classList.add("active");
+    } else {
+      setSelectedFilter("Feed");
+      const element = document.getElementById("Feed");
+      element.classList.add("active");
+    }
   }, [])
-
+  
   // functions
-  const onCategoryClick = (filter) => {
+  const onFilterClick = (filter) => {
     const oldFilter = selectedFilter
     if (filter != oldFilter) {
       const oldSelected = document.getElementById(oldFilter);
       oldSelected.classList.toggle("active");
       setSelectedFilter(filter);
+      localStorage.setItem("selectedFilter", filter);
       const newSelected = document.getElementById(filter);
       newSelected.classList.toggle("active");
     }
@@ -61,13 +71,13 @@ export default function CommitCardList({ cardList }) {
           {filters_left.map(f =>
             <li key={f} id={f} className="filterOption"
               style={{ borderColor: "rgba(53, 72, 98, 1)", borderWidth: "2px" }}>
-              <a onClick={() => onCategoryClick(f)}>{f}</a>
+              <a onClick={() => onFilterClick(f)}>{f}</a>
             </li>)}
         </ul>
         <ul className="flex flex-row continent_nav">
           {filters_right.map(f =>
             <li key={f} id={f} className="filterOption" style={{ position: "relative", borderColor: "rgba(18, 74, 56, .5)" }}>
-              <a onClick={() => onCategoryClick(f)}>{f}</a>
+              <a onClick={() => onFilterClick(f)}>{f}</a>
               {filterCounts.find(filterCount => filterCount.filter === f).count > 0 &&
                 <Tag
                   className="hover:cursor-pointer"
