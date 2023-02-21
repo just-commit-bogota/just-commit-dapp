@@ -1,3 +1,5 @@
+commitcardlist.js
+
 import { useEffect, useState } from "react"
 import CommitCard from "./CommitCard.js"
 import { ethers } from 'ethers'
@@ -12,14 +14,13 @@ export default function CommitCardList({ cardList }) {
 
   // variables
   const { getItem, setItem, removeItem } = useStorage()
-  const filters_left = ["Feed", "My History"]
-  const filters_right = ["Active", "Waiting", "Verify"]
+  const filters = ["Feed", "History", "Active", "Waiting", "Verify"]
   const cardListToDisplay =
     // Feed: Failure or Success
     selectedFilter == "Feed" ?
       cardList.filter(c => (c.status == "Failure" || c.status == "Success")) :
-    // My History: connectedAddress is commitFrom and Failure or Success
-    selectedFilter == "My History" ?
+    // History: connectedAddress is commitFrom and Failure or Success
+    selectedFilter == "History" ?
       cardList.filter(c => (c.commitFrom == connectedAddress &&
       (c.status == "Failure" || c.status == "Success"))) :
     // Verify: connectedAddress is commitTo and Waiting
@@ -68,17 +69,16 @@ export default function CommitCardList({ cardList }) {
     <>
       <div className="flex justify-center gap-2 lg:gap-16 text-small mt-4 mb-10">
         <ul className="flex flex-row continent_nav">
-          {filters_left.map(f =>
-            <li key={f} id={f} className="filterOption"
-              style={{ borderColor: "rgba(53, 72, 98, 1)", borderWidth: "2px" }}>
+          {filters.map(f =>
+            <li key={f} id={f} title={f} className="filterOption"
+              style={{
+                position: "relative",
+                borderColor: (f == "Active" || f == "Waiting" || f == "Verify") ?
+                  "rgba(18, 74, 56, .5)" : "rgba(53, 72, 98, 1)",
+                borderWidth: "2px"
+            }}>
               <a onClick={() => onFilterClick(f)}>{f}</a>
-            </li>)}
-        </ul>
-        <ul className="flex flex-row continent_nav">
-          {filters_right.map(f =>
-            <li key={f} id={f} className="filterOption" style={{ position: "relative", borderColor: "rgba(18, 74, 56, .5)" }}>
-              <a onClick={() => onFilterClick(f)}>{f}</a>
-              {filterCounts.find(filterCount => filterCount.filter === f).count > 0 &&
+              {["Active", "Waiting", "Verify"].includes(f) && filterCounts.find(filterCount => filterCount.filter === f)?.count > 0 &&
                 <Tag
                   className="hover:cursor-pointer"
                   size="small"
