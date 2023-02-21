@@ -4,7 +4,7 @@ import useFetch from '../hooks/fetch'
 import { ethers } from 'ethers'
 import { Tag, Input, Heading, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
-import { useAccount, useNetwork, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
 import { Placeholders } from "../components/Placeholders.js";
 import Spinner from "../components/Spinner.js";
@@ -13,22 +13,29 @@ import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManage
 export default function Commit() {
 
   useEffect(() => {
+    getWalletMaticBalance()
     setTimeout(() => {
       setLoadingState("loaded");
     }, 1000);
-  }, []);
+  })
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState(CONTRACT_OWNER)
-  const [commitAmount, setCommitAmount] = useState('5')
-  const [validThrough, setValidThrough] = useState((24 * 3600 * 1000) + Date.now()) // == 24 hours
+  const [commitAmount, setCommitAmount] = useState('0')
+  const [validThrough, setValidThrough] = useState((24 * 3600 * 1000) + Date.now()) // 24 hours
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
+  const [walletMaticBalance, setWalletMaticBalance] = useState(null)
+
+  useEffect(() => {
+    console.log(commitAmount)
+  }, [commitAmount])
 
   // smart contract data
   const { chain, chains } = useNetwork()
   const { address } = useAccount()
+  const provider = useProvider()
 
   // smart contract functions
   const { config: createCommitConfig } = usePrepareContractWrite({
@@ -38,7 +45,6 @@ export default function Commit() {
     args: [commitDescription, commitTo, validThrough,
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
     onError: (err) => {
-      toast.error(err.message, { duration: Infinity })
     }
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
@@ -72,6 +78,16 @@ export default function Commit() {
     })
   }
 
+  async function getWalletMaticBalance() {
+    try {
+      const balanceMatic = await provider.getBalance(address)
+      setWalletMaticBalance(parseFloat((Number(ethers.utils.formatEther(balanceMatic)))))
+    } catch (err) {
+      console.error("Error getting wallet balance:", err);
+      return null;
+    }
+  }
+
   // polygon stats
   const priceApi = useFetch('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd')
   const maticPrice = parseFloat(priceApi.data?.["matic-network"].usd)
@@ -93,7 +109,7 @@ export default function Commit() {
 
       <div className="container container--flex">
         <div className="heading">
-          <Heading level="2" style={{fontWeight: "400", letterSpacing: "0.014em"}}>
+          <Heading level="2" style={{ fontWeight: "400", letterSpacing: "0.014em" }}>
             Make a Commitment
           </Heading>
         </div>
@@ -109,7 +125,7 @@ export default function Commit() {
             id="form"
             className="form"
 
-            // Toast Checks (which have priority over the Commit Button onClick)
+            // Toast Checks
             onSubmit={async (e) => {
               e.preventDefault()
               // is wallet connected?
@@ -123,6 +139,14 @@ export default function Commit() {
               // commiting to self?
               if (address.toUpperCase() == commitTo.toUpperCase()) {
                 return toast.error('Cannot commit to self')
+              }
+              // is commitAmount not set?
+              if (maticPrice * commitAmount == 0) {
+                return toast.error('Set a commitment amount')
+              }
+              // is duration == 0?
+              if (validThrough == 0) {
+                return toast.error('Set a commitment duration')
               }
             }}>
 
@@ -174,8 +198,13 @@ export default function Commit() {
                 max={9999}
                 type="number"
                 units="MATIC"
-                error={(commitAmount) > 9999 ? "Maximum of 9999" : null}
-                onChange={(e) => setCommitAmount(e.target.value)}
+                error={
+                  commitAmount > walletMaticBalance ? "Insufficient Funds":
+                  commitAmount > 9999 ? "Up to 9999" : null
+                }
+                onChange={(e) => (
+                  setCommitAmount(e.target.value)
+                )}
                 required
               />
               <Input
@@ -213,7 +242,7 @@ export default function Commit() {
                 maxLength={42}
                 onChange={(e) => setCommitTo(e.target.value)}
                 onClick={() => {
-                  toast('⚠️ Only option for now (Beta)',
+                  toast('⚠️ Disabled (Beta)',
                     { position: 'top-center', id: 'unique' }
                   )
                 }}
@@ -227,26 +256,30 @@ export default function Commit() {
                 height: '2.8rem',
                 margin: '1rem',
                 backgroundColor:
+                  commitAmount == 0 || commitAmount == "" ||
                   commitDescription.length < 2 ||
-                    commitDescription.length > 35 ||
-                    !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                    ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
-                    (commitAmount > 9999) ?
-                    "rgb(30 174 131 / 36%)" : "rgb(30 174 131)",
+                  commitDescription.length > 35 ||
+                  !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
+                  ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
+                  commitAmount > 9999 ||
+                  commitAmount > walletMaticBalance ?
+                  "rgb(30 174 131 / 36%)" : "rgb(30 174 131)",
                 borderRadius: 12,
                 color: "white",
-                transition: "transform 0.2s ease-in-out",        
+                transition: "transform 0.2s ease-in-out",
               }}
                 size="small"
                 shadowless
                 type="submit"
                 suffix={!priceApi.isLoading && "(" + formatUsd(maticPrice * commitAmount) + ")"}
                 disabled={
+                  commitAmount == 0 || commitAmount == "" ||
                   commitDescription.length < 2 ||
                   commitDescription.length > 35 ||
                   !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
                   ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
-                  (commitAmount > 9999)
+                  commitAmount > 9999 ||
+                  commitAmount > walletMaticBalance
                 }
                 onClick={commitWrite}
               >
@@ -265,7 +298,7 @@ export default function Commit() {
             {hasCommitted &&
               <div className="flex flex-row mt-5 mb-2 gap-4">
                 <ButtonThorin
-                  style = {{ padding: "12px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
+                  style={{ padding: "12px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
                   outlined
                   shape="rounded"
                   tone="grey"
@@ -281,7 +314,7 @@ export default function Commit() {
                 </ButtonThorin>
                 <div className="text-2xl font-bold">⚡</div>
                 <ButtonThorin
-                  style = {{ padding: "12px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
+                  style={{ padding: "12px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
                   outlined
                   shape="rounded"
                   tone="green"
@@ -302,15 +335,12 @@ export default function Commit() {
             */}
 
             {/*
-            isWriteLoading: {String(isWriteLoading)}
+            maticPrice * commitAmount: {typeof(maticPrice * commitAmount)}
             <br></br>
             <br></br>
             isWaitLoading: {String(isWaitLoading)}
             <br></br>
             <br></br>
-            */}
-
-            {/*
             validThrou.: {validThrough}
             <br></br>
             <br></br>
