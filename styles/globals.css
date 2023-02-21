@@ -249,8 +249,8 @@ a {
 }
 
 .active {
+  background-color: rgba(211, 211, 211, .8);
   font-weight: bold;
-  background-color: rgba(211, 211, 211, .4);
 }
 
 .continent_nav {
@@ -259,7 +259,8 @@ a {
   gap: 6px;
 }
 
-.continent_nav > li {
+.filterOption {
+  position: relative;
   border: solid;
   border-width: 1.5px;
   border-color: rgba(211, 211, 211, .8);
@@ -269,8 +270,16 @@ a {
   flex: none;
 }
 
-.filterOption {
+.filterOption::after {
   cursor: pointer;
+  display: block;
+  content: attr(title);
+  font-weight: bold;
+  height: 1px;
+  width: 1px;
+  color: transparent;
+  overflow: hidden;
+  visibility: hidden;
 }
 
 .heartbeat {

@@ -1,5 +1,3 @@
-commitcardlist.js
-
 import { useEffect, useState } from "react"
 import CommitCard from "./CommitCard.js"
 import { ethers } from 'ethers'
