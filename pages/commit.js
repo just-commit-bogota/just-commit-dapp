@@ -254,11 +254,12 @@ export default function Commit() {
             {hasCommitted &&
               <div className="flex flex-row mt-5 mb-2 gap-4">
                 <ButtonThorin
+                  style = {{ padding: "12px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
                   outlined
                   shape="rounded"
                   tone="grey"
                   size="small"
-                  variant="transparent"
+                  variant="secondary"
                   as="a"
                   href={`https://${chain?.id === 80001 ? 'mumbai.' : ''
                     }polygonscan.com/tx/${commitWriteData.hash}`}
@@ -269,11 +270,12 @@ export default function Commit() {
                 </ButtonThorin>
                 <div className="text-2xl font-bold">⚡</div>
                 <ButtonThorin
+                  style = {{ padding: "12px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
                   outlined
                   shape="rounded"
                   tone="green"
                   size="small"
-                  variant="secondary"
+                  variant="primary"
                   as="a"
                   href="./"
                 >
