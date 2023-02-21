@@ -144,10 +144,6 @@ export default function Commit() {
               if (maticPrice * commitAmount == 0) {
                 return toast.error('Set a commitment amount')
               }
-              // is duration == 0?
-              if (validThrough == 0) {
-                return toast.error('Set a commitment duration')
-              }
             }}>
 
             <div className="flex flex-col gap-3 w-full">
