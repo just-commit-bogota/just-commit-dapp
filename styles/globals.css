@@ -280,6 +280,7 @@ a {
   color: transparent;
   overflow: hidden;
   visibility: hidden;
+  {/* width: 1px; */}
 }
 
 .heartbeat {
@@ -425,11 +426,6 @@ a {
 }
 
 @media screen and (min-width: 640px) {
-  .modal .modal {
-    width: 35rem;
-    max-width: 100%;
-    justify-content: center;
-  }
   .continent_nav {
     display: inline-flex;
     gap: 1rem;

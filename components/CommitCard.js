@@ -298,7 +298,7 @@ export default function CommitCard({ ...props }) {
 
           {/* FOOTER */}
           <div className="flex flex-row text-xs pt-2" style={{ justifyContent: "space-between" }}>
-            <div className="flex flex-col w-1/2 lg:w-1/3" style={{
+            <div className="flex flex-col w-1/2 lg:w-1/2" style={{
               justifyContent: "space-between",
               borderLeft: "2px solid rgba(0, 0, 0, 0.18)",
               borderRight: "2px solid rgba(0, 0, 0, 0.18)",
