@@ -43,6 +43,14 @@ export default function Commit() {
     onSettled(commitWriteData, error) {
       { wait }
     },
+    onError: (err) => {
+      const regex = /code=(.*?),/;
+      const match = regex.exec(err.message);
+      const code = match ? match[1] : null;
+      if (code === "ACTION_REJECTED") {
+        toast.error("Transaction Rejected")
+      }
+    }
   })
   const { wait, data: waitData, isLoading: isWaitLoading } = useWaitForTransaction({
     hash: commitWriteData?.hash,
@@ -212,7 +220,7 @@ export default function Commit() {
             {/* Commit Button */}
             {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
               <ButtonThorin style={{
-                width: '55%',
+                width: '60%',
                 height: '2.8rem',
                 margin: '1rem',
                 backgroundColor:
