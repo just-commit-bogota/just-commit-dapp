@@ -13,7 +13,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 
 // dummy token
-const client = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
+const client = new Web3Storage({ token: process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN })
 
 export default function CommitCard({ ...props }) {
 
@@ -35,7 +35,7 @@ export default function CommitCard({ ...props }) {
   // variables
   const { address } = useAccount()
   const provider = useProvider()
-  
+
   // prepare
   const { config: proveCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
@@ -67,7 +67,7 @@ export default function CommitCard({ ...props }) {
     hash: proveWrite.data?.hash,
     onSettled() {
       // wait 10 seconds
-      setTimeout(() => {}, 10000);
+      setTimeout(() => { }, 10000);
       location.reload()
     }
   })
@@ -239,7 +239,7 @@ export default function CommitCard({ ...props }) {
                   <Image
                     className="object-cover"
                     unoptimized
-                    loader = {() => `https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`}
+                    loader={() => `https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`}
                     src={`https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`}
                     alt="IPFS picture"
                     width={300}

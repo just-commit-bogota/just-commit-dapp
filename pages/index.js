@@ -20,7 +20,7 @@ export default function Home() {
 
   // getter for all of the contract commits (always listening)
   const getAllCommits = async () => {
-    console.log("getAllCommits() call")
+    // console.log("getAllCommits() call")
     try {
       const { ethereum } = window;
       if (ethereum) {
@@ -104,10 +104,10 @@ export default function Home() {
         });
 
       } else {
-        toast("🚨 ETH wallet not detected.\n\n" + 
-              "Solutions:\n\n" +
-              "1. Desktop: download Metamask extension\n" +
-              "2. Mobile: Metamask or Brave broswer\n",
+        toast("🚨 ETH wallet not detected.\n\n" +
+          "Solutions:\n\n" +
+          "1. Desktop: download Metamask extension\n" +
+          "2. Mobile: Metamask or Brave broswer\n",
           { duration: Infinity, id: 'unique', position: 'bottom-center' })
       }
     } catch (error) {
@@ -150,31 +150,31 @@ export default function Home() {
   }, [allCommits, connectedAddress])
 
   return (
-      <>
-        <Head>
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width" />
-          <title>Just Commit</title>
-          <meta property="og:title" content="Just Commit" />
-          <meta name="description" content="Just Commit" />
-          <meta property="og:description" content="Just Commit" />
-          <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
-        </Head>
+    <>
+      <Head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Just Commit</title>
+        <meta property="og:title" content="Just Commit" />
+        <meta name="description" content="Just Commit" />
+        <meta property="og:description" content="Just Commit" />
+        <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
+      </Head>
 
-        <Header currentPage="commitments" />
+      <Header currentPage="commitments" />
 
-        <div className="flex h-screen">
-          <div className="w-8/10 mx-auto p-0 lg:p-10 mt-20">
-            <div className="flex flex-col justify-center items-center">
+      <div className="flex h-screen">
+        <div className="w-8/10 mx-auto p-0 lg:p-10 mt-20">
+          <div className="flex flex-col justify-center items-center">
 
-              <CommitCardList cardList={allCommits} />
+            <CommitCardList cardList={allCommits} />
 
-            </div>
           </div>
         </div>
+      </div>
 
-        <Toaster />
+      <Toaster />
 
-      </>
+    </>
   );
 }

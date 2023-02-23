@@ -28,10 +28,6 @@ export default function Commit() {
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
 
-  useEffect(() => {
-    console.log(commitAmount)
-  }, [commitAmount])
-
   // smart contract data
   const { chain, chains } = useNetwork()
   const { address } = useAccount()
