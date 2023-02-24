@@ -2,7 +2,6 @@ import { FileInput, Tag, Button as ButtonThorin } from '@ensdomains/thorin'
 import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import Countdown from 'react-countdown';
-import { Web3Storage } from 'web3.storage'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
 import moment from 'moment/moment';
@@ -11,11 +10,19 @@ import { useStorage } from '../hooks/useStorage.ts'
 import Image from 'next/image'
 import toast, { Toaster } from 'react-hot-toast'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
-
-// dummy token
-const client = new Web3Storage({ token: process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN })
+import { Web3Storage } from 'web3.storage'
 
 export default function CommitCard({ ...props }) {
+
+  // clients
+  const client_storage = new Web3Storage({ token: process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN })
+  // const client_twilio = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
+  // tokens
+  const TWILIO_ACCOUNT_SID = process.env.NEXT_PUBLIC_TWILIO_ACCOUNT_SID
+  const TWILIO_AUTH_TOKEN = process.env.NEXT_PUBLIC_TWILIO_AUTH_TOKEN
+  const TWILIO_NUMBER = process.env.NEXT_PUBLIC_TWILIO_NUMBER
+  const DESTINATION_NUMBER = process.env.NEXT_PUBLIC_DESTINATION_NUMBER
 
   // variables
   const { getItem, setItem, removeItem } = useStorage()
@@ -97,7 +104,7 @@ export default function CommitCard({ ...props }) {
     }
 
     if (fileInput.size > 0) {
-      client.put(fileInput.files, {
+      client_storage.put(fileInput.files, {
         name: 'fileInput',
         maxRetries: 3,
       }).then(cid => {
