@@ -17,7 +17,7 @@ export default function Commit() {
     setTimeout(() => {
       setLoadingState("loaded");
     }, 1000);
-  })
+  }, [])
 
   // state
   const [commitDescription, setCommitDescription] = useState('')

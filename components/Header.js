@@ -29,6 +29,12 @@ export default function Header({currentPage}) {
                   Commit
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </Link>, color: currentPage == "commit" && "green" },
+              { label:
+                <Link href="/treasury">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  Treasury
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </Link>, color: currentPage == "treasury" && "green" },
               { label: 
                 <Link href="http://turf.dev/plots/301"
                       target="_blank" rel="noopener noreferrer">
