@@ -7,7 +7,6 @@ import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useProvider, useNetwork } from 'wagmi'
 import { ethers } from 'ethers'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
-import PullToRefresh from 'react-simple-pull-to-refresh';
 
 export default function Home() {
 
@@ -21,7 +20,7 @@ export default function Home() {
 
   // getter for all of the contract commits (always listening)
   const getAllCommits = async () => {
-    console.log("getAllCommits() call")
+    // console.log("getAllCommits() call")
     try {
       const { ethereum } = window;
       if (ethereum) {
@@ -68,7 +67,6 @@ export default function Home() {
           commitJudged,
           isApproved
         ) => {
-          console.log("NewCommit");
           setAllCommits(prevState => [...prevState, {
             status: "Pending",
             id: id,
@@ -106,10 +104,10 @@ export default function Home() {
         });
 
       } else {
-        toast("🚨 ETH wallet not detected.\n\n" + 
-              "Solutions:\n\n" +
-              "1. Desktop: download Metamask extension\n" +
-              "2. Mobile: Metamask or Brave broswer\n",
+        toast("🚨 ETH wallet not detected.\n\n" +
+          "Solutions →\n\n" +
+          "1. Download the Metamask extension\t(Desktop)\n\n" +
+          "2. Use Metamask or the Brave broswer\t(Mobile)\n",
           { duration: Infinity, id: 'unique', position: 'bottom-center' })
       }
     } catch (error) {
@@ -152,39 +150,31 @@ export default function Home() {
   }, [allCommits, connectedAddress])
 
   return (
-    <PullToRefresh onRefresh={() => {
-      try {
-        return location.reload()
-      } catch (error) {
-        return
-      }
-    }}>
-      <>
-        <Head>
-          <meta charSet="utf-8" />
-          <meta name="viewport" content="width=device-width" />
-          <title>Just Commit</title>
-          <meta property="og:title" content="Just Commit" />
-          <meta name="description" content="Just Commit" />
-          <meta property="og:description" content="Just Commit" />
-          <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
-        </Head>
+    <>
+      <Head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Just Commit</title>
+        <meta property="og:title" content="Just Commit" />
+        <meta name="description" content="Just Commit" />
+        <meta property="og:description" content="Just Commit" />
+        <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
+      </Head>
 
-        <Header currentPage="commitments" />
+      <Header currentPage="commitments" />
 
-        <div className="flex h-screen">
-          <div className="w-8/10 mx-auto p-0 lg:p-10 mt-20">
-            <div className="flex flex-col justify-center items-center">
+      <div className="flex h-screen">
+        <div className="w-8/10 mx-auto p-0 lg:p-10 mt-20">
+          <div className="flex flex-col justify-center items-center">
 
-              <CommitCardList cardList={allCommits} />
+            <CommitCardList cardList={allCommits} />
 
-            </div>
           </div>
         </div>
+      </div>
 
-        <Toaster />
+      <Toaster />
 
-      </>
-    </PullToRefresh>
+    </>
   );
 }

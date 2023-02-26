@@ -2,7 +2,6 @@ import { FileInput, Tag, Button as ButtonThorin } from '@ensdomains/thorin'
 import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import Countdown from 'react-countdown';
-import { Web3Storage } from 'web3.storage'
 import { useAccount, useNetwork, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
 import moment from 'moment/moment';
@@ -11,11 +10,20 @@ import { useStorage } from '../hooks/useStorage.ts'
 import Image from 'next/image'
 import toast, { Toaster } from 'react-hot-toast'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
-
-// dummy token
-const client = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
+import { Web3Storage } from 'web3.storage'
+//import { twilio } from 'twilio'
 
 export default function CommitCard({ ...props }) {
+
+  // clients
+  const client_storage = new Web3Storage({ token: process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN })
+  //const client_twilio = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
+  // tokens
+  const TWILIO_ACCOUNT_SID = process.env.NEXT_PUBLIC_TWILIO_ACCOUNT_SID
+  const TWILIO_AUTH_TOKEN = process.env.NEXT_PUBLIC_TWILIO_AUTH_TOKEN
+  const TWILIO_NUMBER = process.env.NEXT_PUBLIC_TWILIO_NUMBER
+  const DESTINATION_NUMBER = process.env.NEXT_PUBLIC_DESTINATION_NUMBER
 
   // variables
   const { getItem, setItem, removeItem } = useStorage()
@@ -35,7 +43,7 @@ export default function CommitCard({ ...props }) {
   // variables
   const { address } = useAccount()
   const provider = useProvider()
-  
+
   // prepare
   const { config: proveCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
@@ -67,7 +75,7 @@ export default function CommitCard({ ...props }) {
     hash: proveWrite.data?.hash,
     onSettled() {
       // wait 10 seconds
-      setTimeout(() => {}, 10000);
+      setTimeout(() => { }, 10000);
       location.reload()
     }
   })
@@ -97,7 +105,7 @@ export default function CommitCard({ ...props }) {
     }
 
     if (fileInput.size > 0) {
-      client.put(fileInput.files, {
+      client_storage.put(fileInput.files, {
         name: 'fileInput',
         maxRetries: 3,
       }).then(cid => {
@@ -239,7 +247,7 @@ export default function CommitCard({ ...props }) {
                   <Image
                     className="object-cover"
                     unoptimized
-                    loader = {() => `https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`}
+                    loader={() => `https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`}
                     src={`https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`}
                     alt="IPFS picture"
                     width={300}
@@ -298,7 +306,7 @@ export default function CommitCard({ ...props }) {
 
           {/* FOOTER */}
           <div className="flex flex-row text-xs pt-2" style={{ justifyContent: "space-between" }}>
-            <div className="flex flex-col w-1/2 lg:w-1/3" style={{
+            <div className="flex flex-col w-1/2 lg:w-1/2" style={{
               justifyContent: "space-between",
               borderLeft: "2px solid rgba(0, 0, 0, 0.18)",
               borderRight: "2px solid rgba(0, 0, 0, 0.18)",
