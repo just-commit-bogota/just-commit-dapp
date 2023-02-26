@@ -105,9 +105,9 @@ export default function Home() {
 
       } else {
         toast("🚨 ETH wallet not detected.\n\n" +
-          "Solutions:\n\n" +
-          "1. Desktop: download Metamask extension\n" +
-          "2. Mobile: Metamask or Brave broswer\n",
+          "Solutions →\n\n" +
+          "1. Download the Metamask extension\t(Desktop)\n\n" +
+          "2. Use Metamask or the Brave broswer\t(Mobile)\n",
           { duration: Infinity, id: 'unique', position: 'bottom-center' })
       }
     } catch (error) {
