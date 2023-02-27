@@ -61,7 +61,7 @@ export default function Treasury() {
         <div className="container container--flex">
           {/* <CurrencyToggle /> */}
           <div className="flex flex-row gap-5 mt-4">
-            <div className="flex flex-col justify-center mt-4">
+            <div className="flex flex-col justify-center mt-4 lg:mt-0">
               <img className="h-16" src="./polygon-logo-tilted.svg" />
             </div>
             <div className="heading">
@@ -70,11 +70,18 @@ export default function Treasury() {
               </Heading>
             </div>
           </div>
-          <div className="italic">
+          <div className="mt-4">
             <Typography weight="light" font="sans" style={{ lineHeight: "1.5" }}>
               Total amount of money in the smart contract<br />(from failed commitments).
             </Typography>
           </div>
+          <div className="italic mt-8">
+            <Typography className="text-sm" weight="normal" font="sans" style={{ lineHeight: "1.5" }}>
+              Soon to be goverened by the Just Commit DAO
+            </Typography>
+          </div>
+
+          
           {/* Table
           <div class="mt-10 border border-gray-300 p-1"
                style = {{minHeight: "50vh", minWidth: "80vw"}}
@@ -106,6 +113,8 @@ export default function Treasury() {
             </div>
           </div>
         */ }
+
+          
         </div>
       </div>
     </>
