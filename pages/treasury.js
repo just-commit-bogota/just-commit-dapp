@@ -70,8 +70,8 @@ export default function Treasury() {
               </Heading>
             </div>
           </div>
-          <div className="flex flex-row w-4/5 mt-10 lg:mb-6 lg:justify-center" style={{ }}>
-            <Typography className="" font="sans" variant="large" style={{ lineHeight: "1.5" }}>
+          <div className="flex flex-row text-xl mt-10 mb-8 lg:mb-6 lg:justify-center" style={{ }}>
+            <Typography className="" font="sans" variant="extraLargearge" style={{ lineHeight: "1.5" }}>
               Just Commit ⚡ <b>Treasury</b>
             </Typography>
           </div>
