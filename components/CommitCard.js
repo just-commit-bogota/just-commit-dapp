@@ -2,7 +2,7 @@ import { FileInput, Tag, Button as ButtonThorin } from '@ensdomains/thorin'
 import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import Countdown from 'react-countdown';
-import { useAccount, useNetwork, useProvider } from 'wagmi'
+import { useAccount, useEnsName, useProvider } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
 import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
@@ -38,11 +38,19 @@ export default function CommitCard({ ...props }) {
   const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
-  const [resolvedENS, setResolvedENS] = useState("")
 
   // variables
   const { address } = useAccount()
   const provider = useProvider()
+
+  // function to resolve ENS name on ETH mainnet
+  const { data: ensName } = useEnsName({
+    address: props.commitFrom,
+    chainId: 1, // ETH Mainnet
+    onError(err) {
+      console.log(err)
+    },
+  })
 
   // prepare
   const { config: proveCommitConfig } = usePrepareContractWrite({
@@ -86,11 +94,10 @@ export default function CommitCard({ ...props }) {
     }
   })
 
-  // functions
-
+  // FUNCTIONS
+  
   // upload the pic
   const uploadFile = () => {
-
     setUploadClicked(true)
 
     const fileInput = document.querySelector('input[type="file"]')
@@ -122,22 +129,6 @@ export default function CommitCard({ ...props }) {
       })
     }
   }
-
-  // ENS name resolution (doesn't work in Polygon)
-  useEffect(() => {
-    async function resolveENS() {
-      try {
-        const name = await provider.lookupAddress(props.commitFrom)
-        setResolvedENS({
-          name: name || props.commitFrom.slice(0, 5) + '…' + props.commitFrom.slice(-4)
-        })
-      } catch (error) {
-        console.log(error)
-        setResolvedENS({ name: props.commitFrom.slice(0, 5) + '…' + props.commitFrom.slice(-4) })
-      }
-    }
-    resolveENS()
-  }, [props.commitFrom, provider])
 
   return (
     <>
@@ -313,7 +304,7 @@ export default function CommitCard({ ...props }) {
               borderRadius: "6px",
             }}>
               <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
-                <b>&nbsp;From </b>{resolvedENS?.name}&nbsp;
+                <b>&nbsp;From </b>{ensName || props.commitFrom.slice(0, 5) + '…' + props.commitFrom.slice(-4)}&nbsp;
               </div>
               <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
                 <b>&nbsp;To </b>Just Commit&nbsp;

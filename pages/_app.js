@@ -9,13 +9,13 @@ import { ThorinGlobalStyles, lightTheme as lightThemeENS } from '@ensdomains/tho
 import PullToRefresh from 'react-simple-pull-to-refresh';
 
 const { chains, provider } = configureChains(
-  //[chain.polygon], // BETA
-  [chain.polygonMumbai], // DEV
+  [chain.polygon], // BETA
+  //[chain.polygonMumbai], // DEV
   [infuraProvider({}), publicProvider()]
 )
 
 const { connectors } = getDefaultWallets({
-  appName: "My RainbowKit App",
+  appName: "Just Commit dApp",
   chains
 })
 
