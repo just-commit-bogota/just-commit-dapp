@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Header from "../components/Header.js"
 import { useState, useEffect } from 'react'
-import { Heading, Typography } from '@ensdomains/thorin'
+import { Heading, Typography, CurrencyToggle } from '@ensdomains/thorin'
 import { ethers } from 'ethers'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts'
 import { useProvider } from 'wagmi'
@@ -59,29 +59,26 @@ export default function Treasury() {
 
       <div className="flex h-screen">
         <div className="container container--flex">
-         {/* <CurrencyToggle /> */}
-          <div className="flex flex-row gap-5 mt-8">
-            <div className="flex flex-col justify-center mt-4 lg:mt-0">
+
+          <div className="flex flex-row justify-center align-center gap-5 border border-solid border-4 rounded-xl mt-10 p-6">
+            <div className="flex flex-col justify-center lg:mt-0">
               <img className="h-16" src="./polygon-logo-tilted.svg" />
             </div>
-            <div className="heading">
+            <div className="">
               <Heading level="1" style={{ fontWeight: "400", letterSpacing: "0.014em" }}>
                 {balanceContract}
               </Heading>
             </div>
           </div>
-          <div className="flex flex-row text-xl mt-10 mb-8 lg:mb-6 lg:justify-center" style={{ }}>
-            <Typography className="" font="sans" variant="extraLargearge" style={{ lineHeight: "1.5" }}>
-              Just Commit ⚡ <b>Treasury</b>
-            </Typography>
-          </div>
-          <div className="flex flex-row w-4.5/5 mt-4 lg:justify-center lg:align-center">
-            <Typography className="text-xs" weight="normal" font="sans" style={{ lineHeight: "1.5" }}>
+          <div className="flex flex-row w-full mt-10 lg:justify-center lg:align-center">
+            <Typography className="" variant="small" weight="light" font="sans" style={{ lineHeight: "1" }}>
               This is all of the failed commitments money.
+              <br />
               <br />
               Soon to be goverened by the <b>Just Commit DAO.</b>
             </Typography>
           </div>
+          {/*<CurrencyToggle size="small" />*/}
           
           {/* Table
           <div class="mt-10 border border-gray-300 p-1"
