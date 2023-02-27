@@ -70,14 +70,16 @@ export default function Treasury() {
               </Heading>
             </div>
           </div>
-          <div className="flex flex-row w-4/5 mt-10 lg:justify-center lg:align-center" style={{ }}>
+          <div className="flex flex-row w-4/5 mt-10 lg:mb-6 lg:justify-center" style={{ }}>
             <Typography className="" font="sans" variant="large" style={{ lineHeight: "1.5" }}>
               Just Commit ⚡ <b>Treasury</b>
             </Typography>
           </div>
-          <div className="flex flex-row w-4/5 italic mt-4 lg:justify-center lg:align-center">
+          <div className="flex flex-row w-4.5/5 mt-4 lg:justify-center lg:align-center">
             <Typography className="text-xs" weight="normal" font="sans" style={{ lineHeight: "1.5" }}>
-              Soon to be goverened by the Just Commit DAO
+              This is all of the failed commitments money.
+              <br />
+              Soon to be goverened by the <b>Just Commit DAO.</b>
             </Typography>
           </div>
           
