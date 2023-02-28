@@ -193,10 +193,10 @@ export default function Home() {
             height: "54px",
             fontSize: "1.5rem",
           }}
-          className="hover:cursor-pointer tag-wrapper"
+          className="hover:cursor-pointer"
         >
           <img
-            className="h-20 w-full h-full"
+            className="h-12 w-full h-full"
             src="./commit-icon.svg"
             alt="Commit Icon"
           />
