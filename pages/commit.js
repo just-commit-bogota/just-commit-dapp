@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import useFetch from '../hooks/fetch'
 import { ethers } from 'ethers'
-import { Tag, Input, Heading, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Input, Heading, Tooltip, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
@@ -230,7 +230,7 @@ export default function Commit() {
                 label="To"
                 required
                 readOnly
-                placeholder="Just Commit"
+                placeholder="justcommit.eth"
                 maxLength={42}
                 onChange={(e) => setCommitTo(e.target.value)}
                 onClick={() => {

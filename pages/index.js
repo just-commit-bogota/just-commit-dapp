@@ -1,7 +1,9 @@
 import Head from 'next/head'
 import Header from "../components/Header.js"
+import { Link } from 'react-router-dom';
 import CommitCardList from "../components/CommitCardList.js"
 import { Placeholders } from "../components/Placeholders.js"
+import { Tag } from '@ensdomains/thorin'
 import { useState, useEffect } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useProvider, useNetwork } from 'wagmi'
@@ -166,11 +168,40 @@ export default function Home() {
       <div className="flex h-screen">
         <div className="w-8/10 mx-auto p-0 lg:p-10 mt-20">
           <div className="flex flex-col justify-center items-center">
-
             <CommitCardList cardList={allCommits} />
-
           </div>
         </div>
+      </div>
+
+      {/* the commit shortcut icon */}
+      <div
+        style={{
+          position: "fixed",
+          bottom: "25px",
+          right: "25px",
+          zIndex: "999",
+        }}
+        className="hover:cursor-pointer"
+        onClick={() => {
+          window.location.href = "./commit"
+        }}
+      >
+        <Tag
+          style={{
+            color: "rgba(255, 255, 255, 1)",
+            backgroundColor: "rgb(30 174 131)",
+            width: "54px",
+            height: "54px",
+            fontSize: "1.5rem",
+          }}
+          className="hover:scale-110 hover:cursor-pointer"
+        >
+          <img
+            style={{height:"2.5rem"}}
+            src="./commit-icon.svg"
+            alt="Commit Icon"
+          />
+        </Tag>
       </div>
 
       <Toaster />

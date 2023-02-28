@@ -121,7 +121,7 @@ export default function CommitCardList({ cardList }) {
         ) : (
           <Typography weight="normal" variant="base" className="flex flex-row text-m block mt-6 bg-slate-200 rounded-xl p-3 lg:justify-center lg:align-center"
             style={{ justifyContent: "center" }}>
-              Nothing to display.
+              Nothing to show
           </Typography>
         )}
       </div>

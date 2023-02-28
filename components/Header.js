@@ -53,7 +53,7 @@ export default function Header({currentPage}) {
           />
         </div>
         <div className="flex space-x-0 sm:space-x-10 text-sm sm:text-base items-center gap-10 sm:gap-0">
-          <ConnectButton className="hover:shadow-lg" />
+          <ConnectButton chainStatus="none" className="hover:shadow-lg" />
         </div>
       </div>
     </>
