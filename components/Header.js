@@ -8,8 +8,8 @@ export default function Header({currentPage}) {
   
   return (
     <>
-      <div className="header w-full inline-grid justify-between header--absolute bg-white gap-1">
-        <div className="flex items-center">
+      <div className="header w-full inline-grid header--absolute bg-white gap-1" style={{justifyContent:"space-between"}}>
+        <div className="flex items-center ml-2">
           <Dropdown
             style = {{ padding: "0px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
             inner
@@ -52,7 +52,7 @@ export default function Header({currentPage}) {
             ]}
           />
         </div>
-        <div className="flex items-center text-xs sm:text-base ">
+        <div className="flex items-center text-xs sm:text-base mr-2">
           <ConnectButton chainStatus="none" accountStatus="address" className="hover:shadow-lg" />
         </div>
       </div>
