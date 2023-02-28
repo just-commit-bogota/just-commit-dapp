@@ -2,7 +2,7 @@ import { FileInput, Tag, Button as ButtonThorin } from '@ensdomains/thorin'
 import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import Countdown from 'react-countdown';
-import { useAccount, useEnsName, useProvider } from 'wagmi'
+import { useAccount, useEnsName } from 'wagmi'
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
 import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
@@ -41,12 +41,12 @@ export default function CommitCard({ ...props }) {
 
   // variables
   const { address } = useAccount()
-  const provider = useProvider()
 
   // function to resolve ENS name on ETH mainnet
   const { data: ensName } = useEnsName({
     address: props.commitFrom,
     chainId: 1, // ETH Mainnet
+    staleTime: 0,
     onError(err) {
       console.log(err)
     },
