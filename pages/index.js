@@ -196,7 +196,7 @@ export default function Home() {
           variant="primary"
           size="large"
         >
-          <b>&nbsp;✍🏼&nbsp;</b>
+          <img className="h-16" src="./commit-icon.svg" />
         </Tag>
       </div>
 
