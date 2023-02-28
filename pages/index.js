@@ -173,16 +173,17 @@ export default function Home() {
         </div>
       </div>
 
+      {/* the commit shortcut icon */}
       <div
         style={{
           position: "fixed",
-          bottom: "20px",
-          right: "20px",
+          bottom: "25px",
+          right: "25px",
           zIndex: "999",
         }}
         className="hover:cursor-pointer"
         onClick={() => {
-          window.location.href = "./commit";
+          window.location.href = "./commit"
         }}
       >
         <Tag
@@ -193,7 +194,7 @@ export default function Home() {
             height: "54px",
             fontSize: "1.5rem",
           }}
-          className="hover:cursor-pointer"
+          className="hover:scale-110 hover:cursor-pointer"
         >
           <img
             className="h-12 w-full h-full"
