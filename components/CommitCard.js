@@ -72,6 +72,15 @@ export default function CommitCard({ ...props }) {
   const proveWrite = useContractWrite({
     ...proveCommitConfig,
     onSettled() { { proveWait } },
+    onError: (err) => {
+      setUploadClicked(false)
+      const regex = /code=(.*?),/;
+      const match = regex.exec(err.message);
+      const code = match ? match[1] : null;
+      if (code === "ACTION_REJECTED") {
+        toast.error("Transaction Rejected")
+      }
+    }
   })
   const judgeWrite = useContractWrite({
     ...judgeCommitConfig,
@@ -112,6 +121,7 @@ export default function CommitCard({ ...props }) {
     }
 
     if (fileInput.size > 0) {
+      console.log(fileInput.files)
       client_storage.put(fileInput.files, {
         name: 'fileInput',
         maxRetries: 3,
@@ -177,7 +187,7 @@ export default function CommitCard({ ...props }) {
                         (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ?
                           <div className="flex flex-col" style={{ alignItems: "center" }}>
                             <Spinner />
-                            <div className="heartbeat text-xs">(Dont Refresh)</div>
+                            <div className="heartbeat text-xs">(Don&#39;t Refresh)</div>
                           </div>
                           :
                           (context.name && triggerProveContractFunctions) ?
