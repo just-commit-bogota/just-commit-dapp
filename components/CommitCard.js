@@ -307,7 +307,7 @@ export default function CommitCard({ ...props }) {
                 <b>&nbsp;From </b>{ensName || props.commitFrom.slice(0, 5) + '…' + props.commitFrom.slice(-4)}&nbsp;
               </div>
               <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
-                <b>&nbsp;To </b>Just Commit&nbsp;
+                <b>&nbsp;To </b>justcommit.eth&nbsp;
                 {/*<b>&nbsp;To </b>{props.commitTo.slice(0, 5)}...{props.commitTo.slice(-4)}&nbsp;*/}
               </div>
             </div>
@@ -358,3 +358,5 @@ export default function CommitCard({ ...props }) {
     </>
   )
 }
+
+

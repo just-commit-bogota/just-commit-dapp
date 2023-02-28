@@ -182,21 +182,24 @@ export default function Home() {
         }}
         className="hover:cursor-pointer"
         onClick={() => {
-          window.location.href = './commit';
+          window.location.href = "./commit";
         }}
       >
         <Tag
           style={{
             color: "rgba(255, 255, 255, 1)",
             backgroundColor: "rgb(30 174 131)",
-            fontSize: "xxx-large",
+            width: "54px",
+            height: "54px",
+            fontSize: "1.5rem",
           }}
-          className="hover:cursor-pointer"
-          tone="green"
-          variant="primary"
-          size="large"
+          className="hover:cursor-pointer tag-wrapper"
         >
-          <img className="h-16" src="./commit-icon.svg" />
+          <img
+            className="h-20 w-full h-full"
+            src="./commit-icon.svg"
+            alt="Commit Icon"
+          />
         </Tag>
       </div>
 

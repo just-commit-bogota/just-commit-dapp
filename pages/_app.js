@@ -9,7 +9,7 @@ import { ThorinGlobalStyles, lightTheme as lightThemeENS } from '@ensdomains/tho
 import PullToRefresh from 'react-simple-pull-to-refresh';
   
 const { chains, provider } = configureChains(
-  //[chain.polygon], // BETA
+  //[chain.polygon, chain.mainnet], // BETA
   [chain.polygonMumbai, chain.mainnet], // DEV
   [infuraProvider({}), publicProvider()]
 )
