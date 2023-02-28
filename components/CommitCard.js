@@ -114,14 +114,14 @@ export default function CommitCard({ ...props }) {
     removeItem('filename', "session")
     setItem('filename', fileInput.files[0].name, "session")
 
-    console.log((getItem('filename', 'session').split(".").pop().toUpperCase()))
-
-    if ((getItem('filename', 'session').split(".").pop().toUpperCase()) == "HEIC") {
-      console.log("A HEIC image")
-    }
-
     if (fileInput.size > 0) {
-      console.log(fileInput.files)
+
+      if (fileInput.files[0].lastModified < props.createdAt * 1000) {
+          setUploadClicked(false)
+          toast.error("This pic is older than the commitment", { duration: 4000 })
+          return
+      }
+
       client_storage.put(fileInput.files, {
         name: 'fileInput',
         maxRetries: 3,
