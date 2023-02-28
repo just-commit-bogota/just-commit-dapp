@@ -53,7 +53,7 @@ export default function Header({currentPage}) {
           />
         </div>
         <div className="flex items-center text-xs sm:text-base ">
-          <ConnectButton chainStatus="none" className="hover:shadow-lg" />
+          <ConnectButton chainStatus="none" accountStatus="address" className="hover:shadow-lg" />
         </div>
       </div>
     </>
