@@ -8,7 +8,7 @@ export default function Header({currentPage}) {
   
   return (
     <>
-      <div className="header w-full inline-grid justify-between header--absolute bg-white gap-0">
+      <div className="header w-full inline-grid justify-between header--absolute bg-white gap-1">
         <div className="flex items-center">
           <Dropdown
             style = {{ padding: "0px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
@@ -45,14 +45,14 @@ export default function Header({currentPage}) {
               { label: 
                 <Link href="https://justcommit.notion.site"
                       target="_blank" rel="noopener noreferrer">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   About ↗
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 </Link>, },
             ]}
           />
         </div>
-        <div className="flex space-x-0 sm:space-x-10 text-sm sm:text-base items-center gap-10 sm:gap-0">
+        <div className="flex items-center text-xs sm:text-base ">
           <ConnectButton chainStatus="none" className="hover:shadow-lg" />
         </div>
       </div>
