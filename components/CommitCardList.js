@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import CommitCard from "./CommitCard.js"
 import { ethers } from 'ethers'
 import { useAccount } from 'wagmi'
-import { Tag } from '@ensdomains/thorin'
+import { Tag, Typography } from '@ensdomains/thorin'
 import { useStorage } from '../hooks/useStorage.ts'
 
 export default function CommitCardList({ cardList }) {
@@ -76,6 +76,7 @@ export default function CommitCardList({ cardList }) {
                 borderWidth: "2px"
             }}>
               <a onClick={() => onFilterClick(f)}>{f}</a>
+              {/* Counter Badge */}
               {["Active", "Waiting", "Verify"].includes(f) && filterCounts.find(filterCount => filterCount.filter === f)?.count > 0 &&
                 <Tag
                   className="hover:cursor-pointer"
@@ -97,25 +98,32 @@ export default function CommitCardList({ cardList }) {
       </div>
 
       <div className="w-full">
-        {cardListToDisplay.map((card, index) => (
-          <CommitCard
-            key={index}
-            id={card.id}
-            commitFrom={card.commitFrom}
-            commitTo={card.commitTo}
-            createdAt={card.createdAt}
-            validThrough={card.validThrough}
-            judgeDeadline={card.judgeDeadline}
-            stakeAmount={ethers.utils.formatEther(card.stakeAmount)}
-            message={card.message}
-            ipfsHash={card.ipfsHash}
-            commitProved={card.commitProved}
-            commitJudged={card.commitJudged}
-            isApproved={card.isApproved}
-            status={card.status}
-            filename={card.filename}
-          />
-        )).reverse()}
+        {cardListToDisplay.length > 0 ? (
+          cardListToDisplay.map((card, index) => (
+            <CommitCard
+              key={index}
+              id={card.id}
+              commitFrom={card.commitFrom}
+              commitTo={card.commitTo}
+              createdAt={card.createdAt}
+              validThrough={card.validThrough}
+              judgeDeadline={card.judgeDeadline}
+              stakeAmount={ethers.utils.formatEther(card.stakeAmount)}
+              message={card.message}
+              ipfsHash={card.ipfsHash}
+              commitProved={card.commitProved}
+              commitJudged={card.commitJudged}
+              isApproved={card.isApproved}
+              status={card.status}
+              filename={card.filename}
+            />
+          )).reverse()
+        ) : (
+          <Typography weight="normal" variant="base" className="flex flex-row text-m block mt-6 bg-slate-200 rounded-xl p-3 lg:justify-center lg:align-center"
+            style={{ justifyContent: "center" }}>
+              Nothing to display.
+          </Typography>
+        )}
       </div>
     </>
   )
