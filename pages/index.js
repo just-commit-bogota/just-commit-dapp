@@ -197,7 +197,7 @@ export default function Home() {
           className="hover:scale-110 hover:cursor-pointer"
         >
           <img
-            className="h-12 w-full h-full"
+            style={{height:"2.5rem"}}
             src="./commit-icon.svg"
             alt="Commit Icon"
           />
