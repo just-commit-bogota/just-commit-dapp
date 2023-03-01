@@ -77,9 +77,6 @@ export default function Treasury() {
           <div className="flex flex-row w-full mt-10 lg:justify-center lg:align-center">
             <Typography className="" variant="small" weight="light" font="sans" style={{ lineHeight: "1" }}>
               This is all of the failed commitments money.
-              <br />
-              <br />
-              Soon to be goverened by the <b>Just Commit DAO.</b>
             </Typography>
           </div>
           {/*<CurrencyToggle size="small" />*/}
