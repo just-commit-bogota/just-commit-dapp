@@ -109,7 +109,7 @@ export default function Commit() {
       <div className="container container--flex h-screen">
         <div className="mt-5 sm:mt-3" style={{padding:"10px"}}>
           <FieldSet
-            legend={<Heading color="text" style={{fontSize:"46px"}}>Bet On Yourself</Heading>}
+            legend={<Heading color="textSecondary" style={{fontWeight: "700", fontSize:"46px"}}>Bet On Yourself</Heading>}
           >
             <RadioButtonGroup
               className="items-start place-self-center"
