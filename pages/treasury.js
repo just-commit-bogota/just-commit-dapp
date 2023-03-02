@@ -59,12 +59,12 @@ export default function Treasury() {
 
       <div className="flex h-screen">
         <div className="container container--flex">
-          <div className="flex flex-row mt-10 w-full lg:justify-center lg:align-center" style={{ fontSize: "1.5rem", justifyContent: "center" }}>
+          <div className="flex flex-row mt-10 w-full lg:justify-center lg:align-center" style={{ fontSize: "1.6rem", justifyContent: "center" }}>
             <Typography color="text" style={{ lineHeight: "1.5" }}>
               Just Commit Treasury ⚡
             </Typography>
           </div>
-          <div className="flex flex-row justify-center align-center gap-5 border border-2 border-emerald-700 bg-slate-300 rounded-md mt-10 p-6">
+          <div className="flex flex-row justify-center align-center gap-5 border border-2 bg-slate-300 rounded-md mt-10 p-6">
             <div className="flex flex-col justify-center lg:mt-0">
               <img className="h-16" src="./polygon-logo-tilted.svg" />
             </div>
@@ -77,6 +77,8 @@ export default function Treasury() {
           <div className="flex flex-row w-full mt-10 lg:justify-center lg:align-center">
             <Typography className="" variant="small" weight="light" font="sans" style={{ lineHeight: "1" }}>
               This is all of the failed commitments money.
+              <br />
+              <br />
             </Typography>
           </div>
           {/*<CurrencyToggle size="small" />*/}
