@@ -293,11 +293,11 @@ export default function Commit() {
                       className="items-start items-center"
                       value={challengeDays}
                       onChange={(e) => {
-                      setChallengeDays(e.target.value);
-                      if (e.target.value === '60') {
-                        setCanMiss('30');
-                      } else { setCanMiss('15'); }
-                    }}
+                        setChallengeDays(e.target.value);
+                        if (e.target.value === '60') {
+                          setCanMiss('30');
+                        } else { setCanMiss('15'); }
+                      }}
                     >
                       <div className="flex gap-2">
                         <RadioButton
@@ -308,7 +308,6 @@ export default function Commit() {
                           value="30"
                         />
                         <RadioButton
-                          // disabled
                           checked={challengeDays == '60'}
                           id="60"
                           label="60"
@@ -437,6 +436,9 @@ export default function Commit() {
                   variant="primary"
                   as="a"
                   href="./"
+                  onClick={() => {
+                    localStorage.setItem("selectedFilter", "Active");
+                  }}
                 >
                   Commitment
                 </ButtonThorin>
