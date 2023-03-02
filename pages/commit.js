@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import useFetch from '../hooks/fetch'
 import { ethers } from 'ethers'
-import { Tag, Input, Heading, Tooltip, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Input, Heading, FieldSet, RadioButton, RadioButtonGroup, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
@@ -27,6 +27,7 @@ export default function Commit() {
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
+  const [radiobuttongroup, setRadiobuttongroup] = useState('once')
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -104,10 +105,35 @@ export default function Commit() {
       <Header currentPage="commit" />
 
       <div className="container container--flex">
-        <div className="heading">
-          <Heading level="2" style={{ fontWeight: "400", letterSpacing: "0.014em" }}>
-            Make a Commitment
-          </Heading>
+        <div>
+          <div className="mt-5 sm:mt-3" style={{padding:"10px"}}>
+            <FieldSet
+              legend={<Heading color="text" style={{fontSize:"46px"}}>Bet On Yourself</Heading>}
+            >
+              <RadioButtonGroup
+                className="items-start place-self-center"
+                value={radiobuttongroup}
+                onChange={(e) => setRadiobuttongroup(e.target.value)}
+              >
+              <div className="flex gap-4">
+                <RadioButton
+                  checked={radiobuttongroup == 'once'}
+                  id="once"
+                  label="Once"
+                  name="RadioButtonGroup"
+                  value="once"
+                />
+                <RadioButton
+                  disabled
+                  id="challenge"
+                  label="Challenge"
+                  name="RadioButtonGroup"
+                  value="challenge"
+                />
+              </div>
+              </RadioButtonGroup>
+            </FieldSet>
+          </div>
         </div>
 
         {
