@@ -29,7 +29,8 @@ export default function Commit() {
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
   const [radiobuttongroup, setRadiobuttongroup] = useState('once')
   const [challengeDays, setChallengeDays] = useState('30')
-  const [canMiss, setCanMiss] = useState('20')
+  const [canMiss, setCanMiss] = useState('15')
+  const [betModality, setBetModality] = useState('Pro-Rated')
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -109,7 +110,7 @@ export default function Commit() {
       <div className="container container--flex h-screen">
         <div className="mt-5 sm:mt-3" style={{padding:"10px"}}>
           <FieldSet
-            legend={<Heading color="textSecondary" style={{fontWeight: "700", fontSize:"46px"}}>Bet On Yourself</Heading>}
+            legend={<Heading color="textSecondary" style={{fontWeight: "700", fontSize:"45px"}}>Bet On Yourself</Heading>}
           >
             <RadioButtonGroup
               className="items-start place-self-center"
@@ -193,102 +194,6 @@ export default function Commit() {
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
               />
-              {radiobuttongroup == "once" ? (
-                <Input
-                  label="I'll Prove It In"
-                  placeholder="24"
-                  disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
-                  min={1}
-                  max={24}
-                  step={1}
-                  type="number"
-                  units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
-                  error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
-                  labelSecondary={
-                    <Tag
-                      className="hover:cursor-pointer"
-                      tone="green"
-                      size="large"
-                      onClick={() => {
-                        toast("⏳ How many hours until you can prove it?",
-                          { position: 'top-center', id: 'unique' }
-                        )
-                      }}
-                    >
-                      <b>i</b>
-                    </Tag>
-                  }
-                  onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
-                  required
-                />
-              ) : (
-              <>
-                <div className="flex flex-row gap-4 w-full sm:justify-evenly">
-                  <div className="border rounded-xl border-2 p-1 flex flex-row gap-2 sm:gap-4">
-                    <Typography className="text-xs flex"
-                      style={{alignItems:"center", color:"rgb(0,0,0,0.4)", fontWeight:"550"}}>
-                        For the next {challengeDays} days
-                    </Typography>
-                    <RadioButtonGroup
-                      className="items-start"
-                      value={challengeDays}
-                      onChange={(e) => setChallengeDays(e.target.value)}
-                    >
-                      <div className="block">
-                        <RadioButton
-                          checked={challengeDays == '30'}
-                          id="30"
-                          label="30"
-                          name="30"
-                          value="30"
-                        />
-                        <RadioButton
-                          // disabled
-                          checked={challengeDays == '60'}
-                          id="60"
-                          label="60"
-                          name="60"
-                          value="60"
-                        />
-                      </div>
-                    </RadioButtonGroup>
-                    {/* <Typography className="flex text-s"
-                      style={{alignItems:"center", color:"rgb(0,0,0,0.4)", fontWeight:"550"}}>
-                        Days
-                    </Typography> */}
-                    </div>
-                    <div className="border rounded-xl border-2 p-1 flex flex-row gap-2 sm:gap-4">
-                      <Typography className="flex text-xs"
-                        style={{alignItems:"center", color:"rgb(0,0,0,0.4)", fontWeight:"550"}}>
-                          Missing at most {canMiss} days
-                      </Typography>
-                      <RadioButtonGroup
-                        className="items-start"
-                        value={canMiss}
-                        onChange={(e) => setCanMiss(e.target.value)}
-                      >
-                        <div className="block gap-2">
-                          <RadioButton
-                            checked={canMiss == '20'}
-                            id="20"
-                            label="20"
-                            name="20"
-                            value="20"
-                          />
-                          <RadioButton
-                            // disabled
-                            checked={canMiss == '40'}
-                            id="40"
-                            label="40"
-                            name="40"
-                            value="40"
-                          />
-                        </div>
-                      </RadioButtonGroup>
-                    </div>
-                  </div>
-              </>
-              )}
               <Input
                 label="Or Else I'll Lose"
                 placeholder="5"
@@ -320,7 +225,130 @@ export default function Commit() {
                   setCommitAmount(e.target.value)
                 )}
                 required
+                suffix=
+                {radiobuttongroup == "challenge" && (
+                  <div className="flex flex-col text-xs gap-2">
+                    <RadioButtonGroup
+                      className="items-start items-center"
+                      value={betModality}
+                      onChange={(e) => setBetModality(e.target.value)}
+                    >
+                      <div className="flex gap-2" style={{ whiteSpace: 'nowrap' }}>
+                        <RadioButton
+                          checked={betModality == 'Pro-Rated'}
+                          id="Pro-Rated"
+                          name="Pro-Rated"
+                          label="Pro-Rated"
+                          value="Pro-Rated"
+                        />
+                        <RadioButton
+                          checked={betModality == 'All-In'}
+                          id="All-In"
+                          name="All-In"
+                          label="All-In"
+                          value="All-In"
+                        />
+                      </div>
+                    </RadioButtonGroup>
+                  </div>
+                )}
               />
+              {radiobuttongroup == "once" ? (
+                <Input
+                  label="I'll Prove It In"
+                  placeholder="24"
+                  disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
+                  min={1}
+                  max={24}
+                  step={1}
+                  type="number"
+                  units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
+                  error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
+                  labelSecondary={
+                    <Tag
+                      className="hover:cursor-pointer"
+                      tone="green"
+                      size="large"
+                      onClick={() => {
+                        toast("⏳ How many hours until you can prove it?",
+                          { position: 'top-center', id: 'unique' }
+                        )
+                      }}
+                    >
+                      <b>i</b>
+                    </Tag>
+                  }
+                  onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
+                  required
+                />
+              ) : (
+              <>
+                <div className="flex flex-row gap-3 w-full mt-3 mb-3 justify-between sm:justify-evenly">
+                  <div className="flex flex-col gap-2">
+                    <Typography className="text-base"
+                      style={{alignItems:"center", color:"rgb(0,0,0,0.4)", fontWeight:"550"}}>
+                        Duration → <b>{challengeDays}</b> Days
+                    </Typography>
+                    <RadioButtonGroup
+                      className="items-start items-center"
+                      value={challengeDays}
+                      onChange={(e) => {
+                      setChallengeDays(e.target.value);
+                      if (e.target.value === '60') {
+                        setCanMiss('30');
+                      } else { setCanMiss('15'); }
+                    }}
+                    >
+                      <div className="flex gap-2">
+                        <RadioButton
+                          checked={challengeDays == '30'}
+                          id="30"
+                          label="30"
+                          name="30"
+                          value="30"
+                        />
+                        <RadioButton
+                          // disabled
+                          checked={challengeDays == '60'}
+                          id="60"
+                          label="60"
+                          name="60"
+                          value="60"
+                        />
+                      </div>
+                    </RadioButtonGroup>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Typography className="text-base"
+                        style={{alignItems:"center", color:"rgb(0,0,0,0.4)", fontWeight:"550"}}>
+                          Can Miss → <b>{canMiss}</b> Days
+                      </Typography>
+                      <RadioButtonGroup
+                        className="items-start items-center"
+                        value={canMiss}
+                        onChange={(e) => setCanMiss(e.target.value)}
+                      >
+                        <div className="flex gap-2">
+                          <RadioButton
+                            checked={challengeDays == '30' ? canMiss == '15' : canMiss == '30'}
+                            id="half"
+                            name="half"
+                            label={challengeDays == '30' ? '15' : '30'}
+                            value={challengeDays == '30' ? '15' : '30'}
+                          />
+                          <RadioButton
+                            checked={challengeDays == '30' ? canMiss == '20' : canMiss == '40'}
+                            id="two-thirds"
+                            name="two-thirds"
+                            label={challengeDays == '30' ? '20' : '40'}
+                            value={challengeDays == '30' ? '20' : '40'}
+                          />
+                        </div>
+                      </RadioButtonGroup>
+                    </div>
+                  </div>
+              </>
+              )}
               <Input
                 label="Verified By"
                 required
