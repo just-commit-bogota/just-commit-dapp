@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import useFetch from '../hooks/fetch'
 import { ethers } from 'ethers'
-import { Tag, Input, Heading, FieldSet, RadioButton, RadioButtonGroup, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Input, Heading, Typography, FieldSet, RadioButton, RadioButtonGroup, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
@@ -28,6 +28,8 @@ export default function Commit() {
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
   const [radiobuttongroup, setRadiobuttongroup] = useState('once')
+  const [challengeDays, setChallengeDays] = useState('30')
+  const [canMiss, setCanMiss] = useState('20')
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -104,36 +106,34 @@ export default function Commit() {
 
       <Header currentPage="commit" />
 
-      <div className="container container--flex">
-        <div>
-          <div className="mt-5 sm:mt-3" style={{padding:"10px"}}>
-            <FieldSet
-              legend={<Heading color="text" style={{fontSize:"46px"}}>Bet On Yourself</Heading>}
+      <div className="container container--flex h-screen">
+        <div className="mt-5 sm:mt-3" style={{padding:"10px"}}>
+          <FieldSet
+            legend={<Heading color="text" style={{fontSize:"46px"}}>Bet On Yourself</Heading>}
+          >
+            <RadioButtonGroup
+              className="items-start place-self-center"
+              value={radiobuttongroup}
+              onChange={(e) => setRadiobuttongroup(e.target.value)}
             >
-              <RadioButtonGroup
-                className="items-start place-self-center"
-                value={radiobuttongroup}
-                onChange={(e) => setRadiobuttongroup(e.target.value)}
-              >
-              <div className="flex gap-4">
-                <RadioButton
-                  checked={radiobuttongroup == 'once'}
-                  id="once"
-                  label="Once"
-                  name="RadioButtonGroup"
-                  value="once"
-                />
-                <RadioButton
-                  disabled
-                  id="challenge"
-                  label="Challenge"
-                  name="RadioButtonGroup"
-                  value="challenge"
-                />
-              </div>
-              </RadioButtonGroup>
-            </FieldSet>
-          </div>
+            <div className="flex gap-4">
+              <RadioButton
+                checked={radiobuttongroup == 'once'}
+                id="once"
+                label="Once"
+                name="RadioButtonGroup"
+                value="once"
+              />
+              <RadioButton
+                // disabled
+                id="challenge"
+                label="Challenge"
+                name="RadioButtonGroup"
+                value="challenge"
+              />
+            </div>
+            </RadioButtonGroup>
+          </FieldSet>
         </div>
 
         {
@@ -193,6 +193,102 @@ export default function Commit() {
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
               />
+              {radiobuttongroup == "once" ? (
+                <Input
+                  label="I'll Prove It In"
+                  placeholder="24"
+                  disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
+                  min={1}
+                  max={24}
+                  step={1}
+                  type="number"
+                  units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
+                  error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
+                  labelSecondary={
+                    <Tag
+                      className="hover:cursor-pointer"
+                      tone="green"
+                      size="large"
+                      onClick={() => {
+                        toast("⏳ How many hours until you can prove it?",
+                          { position: 'top-center', id: 'unique' }
+                        )
+                      }}
+                    >
+                      <b>i</b>
+                    </Tag>
+                  }
+                  onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
+                  required
+                />
+              ) : (
+              <>
+                <div className="flex flex-row gap-4 w-full sm:justify-evenly">
+                  <div className="border rounded-xl border-2 p-1 flex flex-row gap-2 sm:gap-4">
+                    <Typography className="text-xs flex"
+                      style={{alignItems:"center", color:"rgb(0,0,0,0.4)", fontWeight:"550"}}>
+                        For the next {challengeDays} days
+                    </Typography>
+                    <RadioButtonGroup
+                      className="items-start"
+                      value={challengeDays}
+                      onChange={(e) => setChallengeDays(e.target.value)}
+                    >
+                      <div className="block">
+                        <RadioButton
+                          checked={challengeDays == '30'}
+                          id="30"
+                          label="30"
+                          name="30"
+                          value="30"
+                        />
+                        <RadioButton
+                          // disabled
+                          checked={challengeDays == '60'}
+                          id="60"
+                          label="60"
+                          name="60"
+                          value="60"
+                        />
+                      </div>
+                    </RadioButtonGroup>
+                    {/* <Typography className="flex text-s"
+                      style={{alignItems:"center", color:"rgb(0,0,0,0.4)", fontWeight:"550"}}>
+                        Days
+                    </Typography> */}
+                    </div>
+                    <div className="border rounded-xl border-2 p-1 flex flex-row gap-2 sm:gap-4">
+                      <Typography className="flex text-xs"
+                        style={{alignItems:"center", color:"rgb(0,0,0,0.4)", fontWeight:"550"}}>
+                          Missing at most {canMiss} days
+                      </Typography>
+                      <RadioButtonGroup
+                        className="items-start"
+                        value={canMiss}
+                        onChange={(e) => setCanMiss(e.target.value)}
+                      >
+                        <div className="block gap-2">
+                          <RadioButton
+                            checked={canMiss == '20'}
+                            id="20"
+                            label="20"
+                            name="20"
+                            value="20"
+                          />
+                          <RadioButton
+                            // disabled
+                            checked={canMiss == '40'}
+                            id="40"
+                            label="40"
+                            name="40"
+                            value="40"
+                          />
+                        </div>
+                      </RadioButtonGroup>
+                    </div>
+                  </div>
+              </>
+              )}
               <Input
                 label="Or Else I'll Lose"
                 placeholder="5"
@@ -223,33 +319,6 @@ export default function Commit() {
                 onChange={(e) => (
                   setCommitAmount(e.target.value)
                 )}
-                required
-              />
-              <Input
-                label="I'll Prove It In"
-                placeholder="24"
-                disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
-                min={1}
-                max={24}
-                step={1}
-                type="number"
-                units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
-                error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
-                labelSecondary={
-                  <Tag
-                    className="hover:cursor-pointer"
-                    tone="green"
-                    size="large"
-                    onClick={() => {
-                      toast("⏳ How many hours until you can prove it?",
-                        { position: 'top-center', id: 'unique' }
-                      )
-                    }}
-                  >
-                    <b>i</b>
-                  </Tag>
-                }
-                onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
                 required
               />
               <Input
