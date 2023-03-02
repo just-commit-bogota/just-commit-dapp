@@ -144,7 +144,7 @@ export default function Commit() {
 
             <div className="flex flex-col gap-3 w-full">
               <Input
-                label="Commitment"
+                label="I Want To"
                 maxLength={140}
                 placeholder=""
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
@@ -168,7 +168,7 @@ export default function Commit() {
                 required
               />
               <Input
-                label="Amount"
+                label="Or Else I'll Lose"
                 placeholder="5"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 labelSecondary={
@@ -200,7 +200,7 @@ export default function Commit() {
                 required
               />
               <Input
-                label="Duration"
+                label="I'll Prove It In"
                 placeholder="24"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 min={1}
@@ -227,7 +227,7 @@ export default function Commit() {
                 required
               />
               <Input
-                label="To"
+                label="Verified By"
                 required
                 readOnly
                 placeholder="justcommit.eth"
