@@ -115,7 +115,7 @@ export default function Commit() {
             <RadioButtonGroup
               className="items-start place-self-center"
               value={isChallenge ? "challenge" : "once"}
-              onChange={(e) => setIsChallenge(e.target.value === "challenge")}
+              //onChange={(e) => setIsChallenge(e.target.value === "challenge")}
             >
               <div className="flex gap-4">
                 <RadioButton
@@ -132,7 +132,10 @@ export default function Commit() {
                   label="Challenge"
                   name="challenge"
                   value="challenge"
-                  onChange={() => setIsChallenge(true)}
+                  onChange={() => {
+                    //setIsChallenge(true);
+                    toast('⏳ Coming Soon', { id: 'unique' });
+                  }}
                 />
               </div>
             </RadioButtonGroup>
