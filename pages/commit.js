@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import useFetch from '../hooks/fetch'
 import { ethers } from 'ethers'
-import { Tag, Input, Heading, Tooltip, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Input, Heading, Typography, FieldSet, RadioButton, RadioButtonGroup, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
@@ -27,6 +27,10 @@ export default function Commit() {
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
+  const [isChallenge, setIsChallenge] = useState(false)
+  const [challengeDays, setChallengeDays] = useState('30')
+  const [canMiss, setCanMiss] = useState('15')
+  const [betModality, setBetModality] = useState('Pro-Rated')
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -103,11 +107,39 @@ export default function Commit() {
 
       <Header currentPage="commit" />
 
-      <div className="container container--flex">
-        <div className="heading">
-          <Heading level="2" style={{ fontWeight: "400", letterSpacing: "0.014em" }}>
-            Make a Commitment
-          </Heading>
+      <div className="container container--flex h-screen">
+        <div className="mt-5 sm:mt-3" style={{padding:"10px"}}>
+          <FieldSet
+            legend={<Heading color="textSecondary" style={{fontWeight: "700", fontSize:"45px"}}>Bet On Yourself</Heading>}
+          >
+            <RadioButtonGroup
+              className="items-start place-self-center"
+              value={isChallenge ? "challenge" : "once"}
+              //onChange={(e) => setIsChallenge(e.target.value === "challenge")}
+            >
+              <div className="flex gap-4">
+                <RadioButton
+                  checked={!isChallenge}
+                  id="once"
+                  label="Once"
+                  name="once"
+                  value="once"
+                  onChange={() => setIsChallenge(false)}
+                />
+                <RadioButton
+                  checked={isChallenge}
+                  id="challenge"
+                  label="Challenge"
+                  name="challenge"
+                  value="challenge"
+                  onChange={() => {
+                    //setIsChallenge(true);
+                    toast('⏳ Coming Soon', { id: 'unique' });
+                  }}
+                />
+              </div>
+            </RadioButtonGroup>
+          </FieldSet>
         </div>
 
         {
@@ -144,7 +176,7 @@ export default function Commit() {
 
             <div className="flex flex-col gap-3 w-full">
               <Input
-                label="Commitment"
+                label="I Want To"
                 maxLength={140}
                 placeholder=""
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
@@ -168,7 +200,7 @@ export default function Commit() {
                 required
               />
               <Input
-                label="Amount"
+                label="Or Else I'll Lose"
                 placeholder="5"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 labelSecondary={
@@ -198,36 +230,131 @@ export default function Commit() {
                   setCommitAmount(e.target.value)
                 )}
                 required
+                suffix=
+                {isChallenge && (
+                  <div className="flex flex-col text-xs gap-2">
+                    <RadioButtonGroup
+                      className="items-start items-center"
+                      value={betModality}
+                      onChange={(e) => setBetModality(e.target.value)}
+                    >
+                      <div className="flex gap-2" style={{ whiteSpace: 'nowrap' }}>
+                        <RadioButton
+                          checked={betModality == 'Pro-Rated'}
+                          id="Pro-Rated"
+                          name="Pro-Rated"
+                          label="Pro-Rated"
+                          value="Pro-Rated"
+                        />
+                        <RadioButton
+                          checked={betModality == 'All-In'}
+                          id="All-In"
+                          name="All-In"
+                          label="All-In"
+                          value="All-In"
+                        />
+                      </div>
+                    </RadioButtonGroup>
+                  </div>
+                )}
               />
+              {!isChallenge ? (
+                <Input
+                  label="I'll Prove It In"
+                  placeholder="24"
+                  disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
+                  min={1}
+                  max={24}
+                  step={1}
+                  type="number"
+                  units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
+                  error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
+                  labelSecondary={
+                    <Tag
+                      className="hover:cursor-pointer"
+                      tone="green"
+                      size="large"
+                      onClick={() => {
+                        toast("⏳ How many hours until you can prove it?",
+                          { position: 'top-center', id: 'unique' }
+                        )
+                      }}
+                    >
+                      <b>i</b>
+                    </Tag>
+                  }
+                  onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
+                  required
+                />
+              ) : (
+              <>
+                <div className="flex flex-row gap-3 w-full mt-3 mb-3 justify-between sm:justify-evenly">
+                  <div className="flex flex-col gap-2">
+                    <Typography className="text-base"
+                      style={{alignItems:"center", color:"rgb(0,0,0,0.4)", fontWeight:"550"}}>
+                        Duration → <b>{challengeDays}</b> Days
+                    </Typography>
+                    <RadioButtonGroup
+                      className="items-start items-center"
+                      value={challengeDays}
+                      onChange={(e) => {
+                        setChallengeDays(e.target.value);
+                        if (e.target.value === '60') {
+                          setCanMiss('30');
+                        } else { setCanMiss('15'); }
+                      }}
+                    >
+                      <div className="flex gap-2">
+                        <RadioButton
+                          checked={challengeDays == '30'}
+                          id="30"
+                          label="30"
+                          name="30"
+                          value="30"
+                        />
+                        <RadioButton
+                          checked={challengeDays == '60'}
+                          id="60"
+                          label="60"
+                          name="60"
+                          value="60"
+                        />
+                      </div>
+                    </RadioButtonGroup>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Typography className="text-base"
+                        style={{alignItems:"center", color:"rgb(0,0,0,0.4)", fontWeight:"550"}}>
+                          Can Miss → <b>{canMiss}</b> Days
+                      </Typography>
+                      <RadioButtonGroup
+                        className="items-start items-center"
+                        value={canMiss}
+                        onChange={(e) => setCanMiss(e.target.value)}
+                      >
+                        <div className="flex gap-2">
+                          <RadioButton
+                            checked={challengeDays == '30' ? canMiss == '15' : canMiss == '30'}
+                            id="half"
+                            name="half"
+                            label={challengeDays == '30' ? '15' : '30'}
+                            value={challengeDays == '30' ? '15' : '30'}
+                          />
+                          <RadioButton
+                            checked={challengeDays == '30' ? canMiss == '20' : canMiss == '40'}
+                            id="two-thirds"
+                            name="two-thirds"
+                            label={challengeDays == '30' ? '20' : '40'}
+                            value={challengeDays == '30' ? '20' : '40'}
+                          />
+                        </div>
+                      </RadioButtonGroup>
+                    </div>
+                  </div>
+              </>
+              )}
               <Input
-                label="Duration"
-                placeholder="24"
-                disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
-                min={1}
-                max={24}
-                step={1}
-                type="number"
-                units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
-                error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
-                labelSecondary={
-                  <Tag
-                    className="hover:cursor-pointer"
-                    tone="green"
-                    size="large"
-                    onClick={() => {
-                      toast("⏳ How many hours until you can prove it?",
-                        { position: 'top-center', id: 'unique' }
-                      )
-                    }}
-                  >
-                    <b>i</b>
-                  </Tag>
-                }
-                onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
-                required
-              />
-              <Input
-                label="To"
+                label="Verified By"
                 required
                 readOnly
                 placeholder="justcommit.eth"
@@ -314,6 +441,9 @@ export default function Commit() {
                   variant="primary"
                   as="a"
                   href="./"
+                  onClick={() => {
+                    localStorage.setItem("selectedFilter", "Active");
+                  }}
                 >
                   Commitment
                 </ButtonThorin>
