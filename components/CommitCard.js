@@ -152,7 +152,22 @@ export default function CommitCard({ ...props }) {
       })}>
         <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px" }}>
           <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
-            <div className="w-4/5 text-sm block">{props.message}</div>
+            <div className="flex flex-row inline gap-2" style={{ whiteSpace: "nowrap" }}>
+              <div className="text-sm block">{props.message}</div>
+              {props.isChallenge && (
+                <div className="flex">
+                  <Tag
+                      className="text-xs justify-center align-center hover:cursor-pointer"
+                      tone="blue"
+                      variant="secondary"
+                      size="large"
+                      onClick={() => {}}
+                    >
+                    {props.id + 1}/{localStorage.getItem("challengeDays")}
+                    </Tag>
+                </div>
+              )}
+            </div>
             <div className="flex align-left space-x-2">
               <div className="text-sm text-slate-400 opacity-80" style={{ whiteSpace: "nowrap" }}>
                 {

@@ -12,12 +12,24 @@ import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManage
 
 export default function Commit() {
 
+  // first pass
   useEffect(() => {
     getWalletMaticBalance()
     setTimeout(() => {
       setLoadingState("loaded");
     }, 1000);
   }, [])
+
+  // to keep track of challenge related variables
+  useEffect(() => {
+    localStorage.setItem("challengeDays", challengeDays);
+  }, [challengeDays]);
+  useEffect(() => {
+    localStorage.setItem("canMiss", canMiss);
+  }, [canMiss]);
+  useEffect(() => {
+    localStorage.setItem("betModality", betModality);
+  }, [betModality]);
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
