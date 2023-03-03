@@ -1,5 +1,6 @@
-//export const CONTRACT_ADDRESS = "0xA794728b33d21A2a0153BD8d97962fFf3Aa13361" // BETA
-export const CONTRACT_ADDRESS = "0xA713e59f3aE53693B9853BA42CD2Bbf29a2D41fF" // DEV
+// export const CONTRACT_ADDRESS = "0xA794728b33d21A2a0153BD8d97962fFf3Aa13361" // BETA
+// export const CONTRACT_ADDRESS = "0xA713e59f3aE53693B9853BA42CD2Bbf29a2D41fF" // DEV
+export const CONTRACT_ADDRESS = "0x06e936EDd2D2f00158633e4d243993bBCBdce936" // DEV (testing challenges)
 
 export const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
@@ -89,6 +90,12 @@ export const ABI =
           "indexed": false,
           "internalType": "bool",
           "name": "isApproved",
+          "type": "bool"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isChallenge",
           "type": "bool"
         }
       ],
@@ -186,6 +193,11 @@ export const ABI =
           "internalType": "uint256",
           "name": "validThrough",
           "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "commitsToCreate",
+          "type": "uint256"
         }
       ],
       "name": "createCommit",
@@ -263,6 +275,11 @@ export const ABI =
               "internalType": "bool",
               "name": "isApproved",
               "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "isChallenge",
+              "type": "bool"
             }
           ],
           "internalType": "struct CommitPortal.Commit[]",
@@ -281,6 +298,19 @@ export const ABI =
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "hasPendingCommits",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
         }
       ],
       "stateMutability": "view",

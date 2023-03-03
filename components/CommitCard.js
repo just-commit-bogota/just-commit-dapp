@@ -116,7 +116,7 @@ export default function CommitCard({ ...props }) {
 
     if (fileInput.size > 0) {
 
-      if (fileInput.files[0].lastModified < props.createdAt * 1000) {
+      if (fileInput.files[0].lastModified < props.createdAt) {
           setUploadClicked(false)
           toast.error("This pic is older than the commitment", { duration: 4000 })
           return
@@ -158,12 +158,14 @@ export default function CommitCard({ ...props }) {
                 {
                   // active
                   (props.status == "Pending") ?
-                    <Countdown date={props.validThrough} daysInHours></Countdown> :
-                    // waiting or verify
-                    (props.status == "Waiting") ?
-                      moment(props.judgeDeadline).fromNow(true) + " left" :
-                      // my history or feed
-                      moment(props.createdAt * 1000).fromNow()
+                    ((moment(props.validThrough).diff(moment(), 'days') >= 2) ?
+                      "> " + moment(props.validThrough).diff(moment(), 'days') + " days left" :
+                      <Countdown date={props.validThrough} daysInHours={true} />) :
+                  // waiting or verify
+                  (props.status == "Waiting") ?
+                    moment(props.judgeDeadline).fromNow(true) + " left (verifier)" :
+                  // my history or feed
+                    moment(props.createdAt).fromNow()
                 }
               </div>
             </div>
@@ -326,7 +328,7 @@ export default function CommitCard({ ...props }) {
               <div className="flex flex-col align-center justify-center">
                 <img className="h-6" src="./polygon-logo-tilted.svg" />
               </div>
-              <div className="flex flex-col font-semibold align-center justify-center text-l ml-1">{parseFloat(props.stakeAmount)}</div>
+              <div className="flex flex-col font-semibold align-center justify-center text-l ml-1">{parseFloat(props.stakeAmount).toFixed(2)}</div>
             </div>
 
             <div className="flex flex-col align-center justify-center text-lg">

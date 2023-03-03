@@ -15,16 +15,6 @@ export default function Treasury() {
   // state
   const [balanceContract, setBalanceContract] = useState(null)
   
-  // functions
-  function formatUsd(number) {
-    return number.toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      maximumFractionDigits: 2,
-      minimumFractionDigits: 2,
-    })
-  }
-  
   async function getSmartContractBalance() {
     try {
       const { ethereum } = window;

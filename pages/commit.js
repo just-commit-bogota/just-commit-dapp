@@ -42,7 +42,7 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitDescription, commitTo, validThrough,
+    args: [commitDescription, commitTo, validThrough, isChallenge ? challengeDays : 1,
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
     onError: (err) => {
     }
@@ -110,12 +110,12 @@ export default function Commit() {
       <div className="container container--flex h-screen">
         <div className="mt-5 sm:mt-3" style={{padding:"10px"}}>
           <FieldSet
-            legend={<Heading color="textSecondary" style={{fontWeight: "700", fontSize:"45px"}}>Bet On Yourself</Heading>}
+            legend={<Heading color="textSecondary" style={{fontWeight: "700", fontSize:"40px"}}>Bet On Yourself</Heading>}
           >
             <RadioButtonGroup
               className="items-start place-self-center"
               value={isChallenge ? "challenge" : "once"}
-              //onChange={(e) => setIsChallenge(e.target.value === "challenge")}
+              onChange={(e) => setIsChallenge(e.target.value === "challenge")}
             >
               <div className="flex gap-4">
                 <RadioButton
@@ -133,8 +133,8 @@ export default function Commit() {
                   name="challenge"
                   value="challenge"
                   onChange={() => {
-                    //setIsChallenge(true);
-                    toast('⏳ Coming Soon', { id: 'unique' });
+                    setIsChallenge(true);
+                    // toast('⏳ Coming Soon', { id: 'unique' });
                   }}
                 />
               </div>
