@@ -191,9 +191,9 @@ export default function CommitCard({ ...props }) {
                       <Countdown date={props.validThrough} daysInHours={true} />) :
                     // waiting or verify
                     (props.status == "Waiting") ?
-                      moment(props.judgeDeadline).fromNow(true) + " left (verifier)" :
+                      moment(props.judgeDeadline).fromNow(true) + " left" :
                       // my history or feed
-                      moment(props.createdAt).fromNow()
+                      moment(props.createdAt * 1000).fromNow()
                 }
               </div>
             </div>

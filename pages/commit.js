@@ -54,7 +54,7 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitDescription, commitTo, validThrough, isChallenge ? challengeDays : 1,
+    args: [commitDescription, commitTo, validThrough,//, isChallenge ? challengeDays : 1,
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
     onError: (err) => {
     }
@@ -127,7 +127,7 @@ export default function Commit() {
             <RadioButtonGroup
               className="items-start place-self-center"
               value={isChallenge ? "challenge" : "once"}
-              onChange={(e) => setIsChallenge(e.target.value === "challenge")} // comment this out to hide recurring feature
+              //onChange={(e) => setIsChallenge(e.target.value === "challenge")} // comment this out to hide recurring feature
             >
               <div className="flex gap-4">
                 <RadioButton
@@ -145,8 +145,8 @@ export default function Commit() {
                   name="challenge"
                   value="challenge"
                   onChange={() => {
-                    setIsChallenge(true); // comment this out to hide recurring feature
-                    // toast('⏳ Coming Soon', { id: 'unique' });
+                    //setIsChallenge(true); // comment this out to hide recurring feature
+                    toast('⏳ Coming Soon', { id: 'unique' });
                   }}
                 />
               </div>

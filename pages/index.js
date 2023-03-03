@@ -49,8 +49,8 @@ export default function Home() {
             commitProved: commit.commitProved,
             commitJudged: commit.commitJudged,
             isApproved: commit.isApproved,
-            isChallenge: commit.isChallenge,
-            challengeId: commit.challengeId
+            //isChallenge: commit.isChallenge,
+            //challengeId: commit.challengeId
           });
         });
         setAllCommits(commitsClassified);
@@ -70,8 +70,8 @@ export default function Home() {
           commitProved,
           commitJudged,
           isApproved,
-          isChallenge,
-          challengeId
+          //isChallenge,
+          //challengeId
         ) => {
           setAllCommits(prevState => [...prevState, {
             status: "Pending",
@@ -88,8 +88,8 @@ export default function Home() {
             commitProved: commitProved,
             commitJudged: commitJudged,
             isApproved: isApproved,
-            isChallenge: isChallenge,
-            challengeId: challengeId
+            //isChallenge: isChallenge,
+            //challengeId: challengeId
           }]);
         });
 
