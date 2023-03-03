@@ -54,7 +54,7 @@ export default function Treasury() {
               Just Commit Treasury ⚡
             </Typography>
           </div>
-          <div className="flex flex-row justify-center align-center gap-5 border border-2 bg-slate-300 rounded-md mt-10 p-6">
+          <div className="flex flex-row justify-center align-center gap-5 border border-2 bg-[#35486280] rounded-md mt-10 p-6">
             <div className="flex flex-col justify-center lg:mt-0">
               <img className="h-16" src="./polygon-logo-tilted.svg" />
             </div>
@@ -66,9 +66,36 @@ export default function Treasury() {
           </div>
           <div className="flex flex-row w-full mt-10 lg:justify-center lg:align-center">
             <Typography className="" variant="small" weight="light" font="sans" style={{ lineHeight: "1" }}>
-              This is all of the failed commitments money.
+              This is all of the failed commitments money -
               <br />
               <br />
+              how it's routed will be completely transparent.
+              <br />
+              <br />
+              <br />
+              <br />
+              Yet I'm still figuring it out how to manage it.
+              <br />
+              <br />
+              <br />
+              • Donate it to a charity?
+              <br />
+              <br />
+              • Incentivize a Just Commit power user?
+              <br />
+              <br />
+              • Have it be governed by the JC DAO?
+              <br />
+              <br />
+              <br />
+              <br />
+              <hr />
+              <br />
+              <br />
+              Feel free to send in any feedback → 
+              <br />
+              <br />
+              <b>daniel@belfort.com</b>
             </Typography>
           </div>
           {/*<CurrencyToggle size="small" />*/}

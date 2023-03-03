@@ -49,6 +49,7 @@ export default function Home() {
             commitProved: commit.commitProved,
             commitJudged: commit.commitJudged,
             isApproved: commit.isApproved,
+            isChallenge: commit.isChallenge,
           });
         });
         setAllCommits(commitsClassified);

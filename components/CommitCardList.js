@@ -116,12 +116,13 @@ export default function CommitCardList({ cardList }) {
               isApproved={card.isApproved}
               status={card.status}
               filename={card.filename}
+              isChallenge={card.isChallenge}
             />
           )).reverse()
         ) : (
-          <Typography weight="normal" variant="base" className="flex flex-row text-m block mt-6 bg-slate-200 rounded-xl p-3 lg:justify-center lg:align-center"
+          <Typography weight="normal" variant="base" className="flex flex-row text-m block mt-6 text-black font-bold rounded-md p-3 lg:justify-center lg:align-center"
             style={{ justifyContent: "center" }}>
-              Nothing to show
+              Nothing to show.
           </Typography>
         )}
       </div>
