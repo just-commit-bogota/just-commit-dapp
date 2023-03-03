@@ -1,6 +1,6 @@
 // export const CONTRACT_ADDRESS = "0xA794728b33d21A2a0153BD8d97962fFf3Aa13361" // BETA
 // export const CONTRACT_ADDRESS = "0xA713e59f3aE53693B9853BA42CD2Bbf29a2D41fF" // DEV
-export const CONTRACT_ADDRESS = "0xe9450a77eC04186a2B7A9Dfd4eA5E7494417D200" // DEV (testing challenges)
+export const CONTRACT_ADDRESS = "0x424A643515d6a5a2Dbb81317198E7019Cdd5787c" // DEV (testing challenges)
 
 export const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
@@ -97,6 +97,12 @@ export const ABI =
           "internalType": "bool",
           "name": "isChallenge",
           "type": "bool"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "challengeId",
+          "type": "uint256"
         }
       ],
       "name": "NewCommit",
@@ -280,6 +286,11 @@ export const ABI =
               "internalType": "bool",
               "name": "isChallenge",
               "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "challengeId",
+              "type": "uint256"
             }
           ],
           "internalType": "struct CommitPortal.Commit[]",

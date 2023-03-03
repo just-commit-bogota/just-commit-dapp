@@ -104,7 +104,7 @@ export default function CommitCard({ ...props }) {
   })
 
   // FUNCTIONS
-  
+
   // upload the pic
   const uploadFile = () => {
     setUploadClicked(true)
@@ -117,9 +117,9 @@ export default function CommitCard({ ...props }) {
     if (fileInput.size > 0) {
 
       if (fileInput.files[0].lastModified < props.createdAt) {
-          setUploadClicked(false)
-          toast.error("This pic is older than the commitment", { duration: 4000 })
-          return
+        setUploadClicked(false)
+        toast.error("This pic is older than the commitment", { duration: 4000 })
+        return
       }
 
       client_storage.put(fileInput.files, {
@@ -152,35 +152,48 @@ export default function CommitCard({ ...props }) {
       })}>
         <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px" }}>
           <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
-            <div className="flex flex-row inline gap-2" style={{ whiteSpace: "nowrap" }}>
-              <div className="text-sm block">{props.message}</div>
-              {props.isChallenge && (
-                <div className="flex">
-                  <Tag
+            <div className="text-sm block">{props.message}</div>
+            <div className="flex space-x-2" style={{ whiteSpace: "nowrap" }}>
+              <div className="span flex text-sm text-slate-400 gap-2 opacity-80" style={{ whiteSpace: "nowrap" }}>
+                {props.isChallenge && (
+                  <div className="flex">
+                    <Tag
                       className="text-xs justify-center align-center hover:cursor-pointer"
                       tone="blue"
-                      variant="secondary"
                       size="large"
-                      onClick={() => {}}
+                      onClick={() => { }}
                     >
-                    {props.id + 1}/{localStorage.getItem("challengeDays")}
+                      {localStorage.getItem("commitIndex")}
+                      /
+                      {localStorage.getItem("challengeDays")}
                     </Tag>
-                </div>
-              )}
-            </div>
-            <div className="flex align-left space-x-2">
-              <div className="text-sm text-slate-400 opacity-80" style={{ whiteSpace: "nowrap" }}>
+                  </div>
+                )}
+                {props.isChallenge && (
+                  <div className="flex -ml-1">
+                    <Tag
+                      className="text-xs justify-center align-center hover:cursor-pointer"
+                      tone="red"
+                      size="large"
+                      onClick={() => { }}
+                    >
+                      {localStorage.getItem("totalFailedSoFarInChallenge")}
+                      /
+                      {localStorage.getItem("canMiss")}
+                    </Tag>
+                  </div>
+                )}
                 {
                   // active
                   (props.status == "Pending") ?
                     ((moment(props.validThrough).diff(moment(), 'days') >= 2) ?
                       "> " + moment(props.validThrough).diff(moment(), 'days') + " days left" :
                       <Countdown date={props.validThrough} daysInHours={true} />) :
-                  // waiting or verify
-                  (props.status == "Waiting") ?
-                    moment(props.judgeDeadline).fromNow(true) + " left (verifier)" :
-                  // my history or feed
-                    moment(props.createdAt).fromNow()
+                    // waiting or verify
+                    (props.status == "Waiting") ?
+                      moment(props.judgeDeadline).fromNow(true) + " left (verifier)" :
+                      // my history or feed
+                      moment(props.createdAt).fromNow()
                 }
               </div>
             </div>

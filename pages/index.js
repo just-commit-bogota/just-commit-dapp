@@ -50,6 +50,7 @@ export default function Home() {
             commitJudged: commit.commitJudged,
             isApproved: commit.isApproved,
             isChallenge: commit.isChallenge,
+            challengeId: commit.challengeId
           });
         });
         setAllCommits(commitsClassified);
@@ -68,7 +69,9 @@ export default function Home() {
           filename,
           commitProved,
           commitJudged,
-          isApproved
+          isApproved,
+          isChallenge,
+          challengeId
         ) => {
           setAllCommits(prevState => [...prevState, {
             status: "Pending",
@@ -84,18 +87,21 @@ export default function Home() {
             filename: filename,
             commitProved: commitProved,
             commitJudged: commitJudged,
-            isApproved: isApproved
+            isApproved: isApproved,
+            isChallenge: isChallenge,
+            challengeId: challengeId
           }]);
         });
 
         // sort according to their creation date
         commitsClassified.sort((a, b) => (a.createdAt > b.createdAt) ? 1 : -1)
         setAllCommits(commitsClassified)
+        
+        challengeStats(commitsClassified)
 
-        console.log(commitsClassified);
+        console.log(commitsClassified)
 
         // FOR LATER USE (unused events/emits):
-
         // on a NewProve event
         commitPortal.on("NewProve", (commitId, ipfsHash, filename, provedAt) => {
           console.log("New Prove Event:", commitId, ipfsHash, filename, provedAt);
@@ -138,6 +144,24 @@ export default function Home() {
       status = "Failure";
     }
     return status
+  }
+
+  function challengeStats(commitsClassified) {
+    // failed in challenge so far
+    const totalFailedSoFarInChallenge = commitsClassified.reduce((total, commit) => {
+      if (commit.challengeId && commit.status == "Failure") {
+        return total + 1;
+      }
+      return total;
+    }, 0);
+    localStorage.setItem("totalFailedSoFarInChallenge", totalFailedSoFarInChallenge.toString());
+    // index of the commit in the challenge
+    const challengeId = localStorage.getItem("challengeId");
+    console.log(challengeId) // null
+    console.log(commit.challengeId) // commit is not defined
+    const filteredCommits = commitsClassified.filter(commit => commit.challengeId === challengeId);
+    const commitIndex = filteredCommits.findIndex(commit => commit.id === props.id);
+    localStorage.setItem("commitIndex", commitIndex)
   }
 
   /// STATE EFFECTS
@@ -198,7 +222,7 @@ export default function Home() {
           className="hover:scale-110 hover:cursor-pointer"
         >
           <img
-            style={{height:"2.5rem"}}
+            style={{ height: "2.5rem" }}
             src="./commit-icon.svg"
             alt="Commit Icon"
           />

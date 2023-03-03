@@ -20,17 +20,6 @@ export default function Commit() {
     }, 1000);
   }, [])
 
-  // to keep track of challenge related variables
-  useEffect(() => {
-    localStorage.setItem("challengeDays", challengeDays);
-  }, [challengeDays]);
-  useEffect(() => {
-    localStorage.setItem("canMiss", canMiss);
-  }, [canMiss]);
-  useEffect(() => {
-    localStorage.setItem("betModality", betModality);
-  }, [betModality]);
-
   // state
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState(CONTRACT_OWNER)
@@ -43,6 +32,17 @@ export default function Commit() {
   const [challengeDays, setChallengeDays] = useState('30')
   const [canMiss, setCanMiss] = useState('15')
   const [betModality, setBetModality] = useState('Pro-Rated')
+
+  // to keep track of challenge related variables
+  useEffect(() => {
+    localStorage.setItem("challengeDays", challengeDays);
+  }, [challengeDays]);
+  useEffect(() => {
+    localStorage.setItem("canMiss", canMiss);
+  }, [canMiss]);
+  useEffect(() => {
+    localStorage.setItem("betModality", betModality);
+  }, [betModality]);
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -127,7 +127,7 @@ export default function Commit() {
             <RadioButtonGroup
               className="items-start place-self-center"
               value={isChallenge ? "challenge" : "once"}
-              onChange={(e) => setIsChallenge(e.target.value === "challenge")}
+              onChange={(e) => setIsChallenge(e.target.value === "challenge")} // comment this out to hide recurring feature
             >
               <div className="flex gap-4">
                 <RadioButton
@@ -145,7 +145,7 @@ export default function Commit() {
                   name="challenge"
                   value="challenge"
                   onChange={() => {
-                    setIsChallenge(true);
+                    setIsChallenge(true); // comment this out to hide recurring feature
                     // toast('⏳ Coming Soon', { id: 'unique' });
                   }}
                 />

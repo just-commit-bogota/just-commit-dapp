@@ -17,25 +17,25 @@ export default function CommitCardList({ cardList }) {
     // Feed: Failure or Success
     selectedFilter == "Feed" ?
       cardList.filter(c => (c.status == "Failure" || c.status == "Success")) :
-    // History: connectedAddress is commitFrom and Failure or Success
-    selectedFilter == "History" ?
-      cardList.filter(c => (c.commitFrom == connectedAddress &&
-      (c.status == "Failure" || c.status == "Success"))) :
-    // Verify: connectedAddress is commitTo and Waiting
-    selectedFilter == "Verify" ?
-      cardList.filter(c => (c.commitTo == connectedAddress && c.status == "Waiting")) :
-    // Waiting: connectedAddress is commitFrom and Waiting
-    selectedFilter == "Waiting" ?
-      cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Waiting")) :
-    // Active: connectedAddress is commitFrom and Pending
-      cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Pending"))
-  
+      // History: connectedAddress is commitFrom and Failure or Success
+      selectedFilter == "History" ?
+        cardList.filter(c => (c.commitFrom == connectedAddress &&
+          (c.status == "Failure" || c.status == "Success"))) :
+        // Verify: connectedAddress is commitTo and Waiting
+        selectedFilter == "Verify" ?
+          cardList.filter(c => (c.commitTo == connectedAddress && c.status == "Waiting")) :
+          // Waiting: connectedAddress is commitFrom and Waiting
+          selectedFilter == "Waiting" ?
+            cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Waiting")) :
+            // Active: connectedAddress is commitFrom and Pending
+            cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Pending"))
+
   const filterCounts = [
     { filter: "Verify", count: cardList.filter(c => (c.commitTo == connectedAddress && c.status == "Waiting")).length },
     { filter: "Waiting", count: cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Waiting")).length },
     { filter: "Active", count: cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Pending")).length }
   ]
-  
+
   // select the filter to active
   useEffect(() => {
     const savedFilter = localStorage.getItem("selectedFilter");
@@ -49,7 +49,7 @@ export default function CommitCardList({ cardList }) {
       element.classList.add("active");
     }
   }, [])
-  
+
   // functions
   const onFilterClick = (filter) => {
     const oldFilter = selectedFilter
@@ -74,7 +74,7 @@ export default function CommitCardList({ cardList }) {
                 borderColor: (f == "Active" || f == "Waiting" || f == "Verify") ?
                   "rgba(18, 74, 56, .5)" : "rgba(53, 72, 98, 1)",
                 borderWidth: "2px"
-            }}>
+              }}>
               <a onClick={() => onFilterClick(f)}>{f}</a>
               {/* Counter Badge */}
               {["Active", "Waiting", "Verify"].includes(f) && filterCounts.find(filterCount => filterCount.filter === f)?.count > 0 &&
@@ -117,12 +117,13 @@ export default function CommitCardList({ cardList }) {
               status={card.status}
               filename={card.filename}
               isChallenge={card.isChallenge}
+              challengeId={card.challengeId}
             />
           )).reverse()
         ) : (
           <Typography weight="normal" variant="base" className="flex flex-row text-m block mt-6 text-black font-bold rounded-md p-3 lg:justify-center lg:align-center"
             style={{ justifyContent: "center" }}>
-              Nothing to show.
+            Nothing to show.
           </Typography>
         )}
       </div>
