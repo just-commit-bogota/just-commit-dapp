@@ -69,12 +69,12 @@ export default function Treasury() {
               This is all of the failed commitments money -
               <br />
               <br />
-              how it's routed will be completely transparent.
+              how it&#39;s routed will be completely transparent.
               <br />
               <br />
               <br />
               <br />
-              Yet I'm still figuring it out how to manage it.
+              Yet I&#39;m still figuring it out how to manage it.
               <br />
               <br />
               <br />
