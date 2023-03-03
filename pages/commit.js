@@ -27,7 +27,7 @@ export default function Commit() {
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
-  const [radiobuttongroup, setRadiobuttongroup] = useState('once')
+  const [isChallenge, setIsChallenge] = useState(false)
   const [challengeDays, setChallengeDays] = useState('30')
   const [canMiss, setCanMiss] = useState('15')
   const [betModality, setBetModality] = useState('Pro-Rated')
@@ -114,25 +114,27 @@ export default function Commit() {
           >
             <RadioButtonGroup
               className="items-start place-self-center"
-              value={radiobuttongroup}
-              onChange={(e) => setRadiobuttongroup(e.target.value)}
+              value={isChallenge ? "challenge" : "once"}
+              onChange={(e) => setIsChallenge(e.target.value === "challenge")}
             >
-            <div className="flex gap-4">
-              <RadioButton
-                checked={radiobuttongroup == 'once'}
-                id="once"
-                label="Once"
-                name="RadioButtonGroup"
-                value="once"
-              />
-              <RadioButton
-                // disabled
-                id="challenge"
-                label="Challenge"
-                name="RadioButtonGroup"
-                value="challenge"
-              />
-            </div>
+              <div className="flex gap-4">
+                <RadioButton
+                  checked={!isChallenge}
+                  id="once"
+                  label="Once"
+                  name="once"
+                  value="once"
+                  onChange={() => setIsChallenge(false)}
+                />
+                <RadioButton
+                  checked={isChallenge}
+                  id="challenge"
+                  label="Challenge"
+                  name="challenge"
+                  value="challenge"
+                  onChange={() => setIsChallenge(true)}
+                />
+              </div>
             </RadioButtonGroup>
           </FieldSet>
         </div>
@@ -226,7 +228,7 @@ export default function Commit() {
                 )}
                 required
                 suffix=
-                {radiobuttongroup == "challenge" && (
+                {isChallenge && (
                   <div className="flex flex-col text-xs gap-2">
                     <RadioButtonGroup
                       className="items-start items-center"
@@ -253,7 +255,7 @@ export default function Commit() {
                   </div>
                 )}
               />
-              {radiobuttongroup == "once" ? (
+              {!isChallenge ? (
                 <Input
                   label="I'll Prove It In"
                   placeholder="24"
