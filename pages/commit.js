@@ -322,38 +322,42 @@ export default function Commit() {
             )}
 
             {hasCommitted &&
-              <div className="flex flex-row mt-5 mb-2 gap-4">
-                <ButtonThorin
-                  style={{ padding: "12px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
-                  outlined
-                  shape="rounded"
-                  tone="grey"
-                  size="small"
-                  variant="secondary"
-                  as="a"
-                  href={`https://${chain?.id === 80001 ? 'mumbai.' : ''
-                    }polygonscan.com/tx/${commitWriteData.hash}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Transaction
-                </ButtonThorin>
-                <div className="text-2xl font-bold">⚡</div>
-                <ButtonThorin
-                  style={{ padding: "12px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
-                  outlined
-                  shape="rounded"
-                  tone="green"
-                  size="small"
-                  variant="primary"
-                  as="a"
-                  href="./"
-                  onClick={() => {
-                    localStorage.setItem("selectedFilter", "Active");
-                  }}
-                >
-                  Commitment
-                </ButtonThorin>
+              <div className="w-full relative">
+                <div className="absolute w-full p-5" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <div className="flex justify-center w-3/10">
+                      <ButtonThorin
+                        className="flex"
+                        style={{ padding: "20px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
+                        outlined
+                        shape="rounded"
+                        tone="green"
+                        size="small"
+                        variant="primary"
+                        as="a"
+                        href="./"
+                        onClick={() => {
+                          localStorage.setItem("selectedFilter", "Active");
+                        }}
+                      >
+                        Commitment
+                      </ButtonThorin>
+                  </div>
+                </div>
+                <div className="flex justify-end w-full">
+                  <div className="flex" style={{width:"52px"}}>
+                    <ButtonThorin
+                      className="flex align-center mt-6 mb-5 sm:mb-0 justify-center rounded-lg hover:cursor-pointer"
+                      style={{ background: "#bae6fd", zIndex: 2, fontSize: "1.2rem", padding: "5px" }}
+                      as="a"
+                      href={`https://${chain?.id === 80001 ? 'mumbai.' : ''
+                        }polygonscan.com/tx/${commitWriteData.hash}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      🔎
+                    </ButtonThorin>
+                  </div>
+                </div>
               </div>
             }
 
