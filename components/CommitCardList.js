@@ -116,8 +116,6 @@ export default function CommitCardList({ cardList }) {
               isApproved={card.isApproved}
               status={card.status}
               filename={card.filename}
-              //isChallenge={card.isChallenge}
-             // challengeId={card.challengeId}
             />
           )).reverse()
         ) : (

@@ -17,7 +17,7 @@ export default function CommitCard({ ...props }) {
 
   // clients
   // new Web3Storage({ token: process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN })
-  const client_storage = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E"
+  const client_storage = new Web3Storage({ token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
 
   //const client_twilio = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
@@ -157,45 +157,17 @@ export default function CommitCard({ ...props }) {
             <div className="text-sm block">{props.message}</div>
             <div className="flex space-x-2" style={{ whiteSpace: "nowrap" }}>
               <div className="span flex text-sm text-slate-400 gap-2 opacity-80" style={{ whiteSpace: "nowrap" }}>
-                {props.isChallenge && (
-                  <div className="flex">
-                    <Tag
-                      className="text-xs justify-center align-center hover:cursor-pointer"
-                      tone="blue"
-                      size="large"
-                      onClick={() => { }}
-                    >
-                      {localStorage.getItem("commitIndex")}
-                      /
-                      {localStorage.getItem("challengeDays")}
-                    </Tag>
-                  </div>
-                )}
-                {props.isChallenge && (
-                  <div className="flex -ml-1">
-                    <Tag
-                      className="text-xs justify-center align-center hover:cursor-pointer"
-                      tone="red"
-                      size="large"
-                      onClick={() => { }}
-                    >
-                      {localStorage.getItem("totalFailedSoFarInChallenge")}
-                      /
-                      {localStorage.getItem("canMiss")}
-                    </Tag>
-                  </div>
-                )}
                 {
                   // active
                   (props.status == "Pending") ?
                     ((moment(props.validThrough).diff(moment(), 'days') >= 2) ?
                       "> " + moment(props.validThrough).diff(moment(), 'days') + " days left" :
                       <Countdown date={props.validThrough} daysInHours={true} />) :
-                    // waiting or verify
-                    (props.status == "Waiting") ?
-                      moment(props.judgeDeadline).fromNow(true) + " left" :
-                      // my history or feed
-                      moment(props.createdAt * 1000).fromNow()
+                  // waiting or verify
+                  (props.status == "Waiting") ?
+                    moment(props.judgeDeadline).fromNow(true) + " left" :
+                  // my history or feed
+                  moment(props.createdAt * 1000).fromNow()
                 }
               </div>
             </div>

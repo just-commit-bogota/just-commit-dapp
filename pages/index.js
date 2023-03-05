@@ -49,8 +49,6 @@ export default function Home() {
             commitProved: commit.commitProved,
             commitJudged: commit.commitJudged,
             isApproved: commit.isApproved,
-            //isChallenge: commit.isChallenge,
-            //challengeId: commit.challengeId
           });
         });
         setAllCommits(commitsClassified);
@@ -70,8 +68,6 @@ export default function Home() {
           commitProved,
           commitJudged,
           isApproved,
-          //isChallenge,
-          //challengeId
         ) => {
           setAllCommits(prevState => [...prevState, {
             status: "Pending",
@@ -88,8 +84,6 @@ export default function Home() {
             commitProved: commitProved,
             commitJudged: commitJudged,
             isApproved: isApproved,
-            //isChallenge: isChallenge,
-            //challengeId: challengeId
           }]);
         });
 
@@ -144,24 +138,6 @@ export default function Home() {
       status = "Failure";
     }
     return status
-  }
-
-  function challengeStats(commitsClassified) {
-    // failed in challenge so far
-    const totalFailedSoFarInChallenge = commitsClassified.reduce((total, commit) => {
-      if (commit.challengeId && commit.status == "Failure") {
-        return total + 1;
-      }
-      return total;
-    }, 0);
-    localStorage.setItem("totalFailedSoFarInChallenge", totalFailedSoFarInChallenge.toString());
-    // index of the commit in the challenge
-    const challengeId = localStorage.getItem("challengeId");
-    console.log(challengeId) // null
-    console.log(commit.challengeId) // commit is not defined
-    const filteredCommits = commitsClassified.filter(commit => commit.challengeId === challengeId);
-    const commitIndex = filteredCommits.findIndex(commit => commit.id === props.id);
-    localStorage.setItem("commitIndex", commitIndex)
   }
 
   /// STATE EFFECTS
