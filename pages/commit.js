@@ -184,6 +184,7 @@ export default function Commit() {
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 labelSecondary={
                   <Tag
+                    style={{background:"#21AD85"}}
                     className="hover:cursor-pointer"
                     tone="green"
                     size="large"
@@ -193,7 +194,7 @@ export default function Commit() {
                       )
                     }}
                   >
-                    <b>i</b>
+                    <b style={{color:"white"}}>?</b>
                   </Tag>
                 }
                 error={(commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
@@ -207,8 +208,10 @@ export default function Commit() {
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 labelSecondary={
                   <Tag
+                    style={{background:"#21AD85"}}
                     className="hover:cursor-pointer"
                     tone="green"
+                    variant=""
                     size="large"
                     onClick={() => {
                       toast('1 MATIC 🟰 ' + formatUsd(maticPrice),
@@ -216,7 +219,7 @@ export default function Commit() {
                       )
                     }}
                   >
-                    <b>i</b>
+                    <b style={{color:"white"}}>?</b>
                   </Tag>
                 }
                 min={0}
@@ -234,7 +237,7 @@ export default function Commit() {
                 required
               />
               <Input
-                label="I'll Prove It In"
+                label="Expires In"
                 placeholder="24"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 min={1}
@@ -245,6 +248,7 @@ export default function Commit() {
                 error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
                 labelSecondary={
                   <Tag
+                    style={{background:"#21AD85"}}
                     className="hover:cursor-pointer"
                     tone="green"
                     size="large"
@@ -254,7 +258,7 @@ export default function Commit() {
                       )
                     }}
                   >
-                    <b>i</b>
+                    <b style={{color:"white"}}>?</b>
                   </Tag>
                 }
                 onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
