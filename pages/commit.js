@@ -217,6 +217,7 @@ export default function Commit() {
                     data-tooltip-id="my-tooltip"
                     data-tooltip-content={`1 MATIC 🟰 ${formatUsd(maticPrice)}`}
                     data-tooltip-place="right"
+                    data-tooltip-delay-hide={1000}
                   >
                     <Tag
                       style={{ background: '#21AD85' }}
@@ -308,7 +309,7 @@ export default function Commit() {
             )}
 
             <Toaster toastOptions={{ duration: 2000 }} />
-            <Tooltip id="my-tooltip" data-tooltip-delay-hide={1000} style={{ backgroundColor: "rgb(199, 247, 212, 0.4)", color: "#222" }} />
+            <Tooltip id="my-tooltip" style={{ backgroundColor: "rgb(199, 247, 212, 0.4)", color: "#222" }} />
 
             {(((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
               <div className="justifyCenter">
