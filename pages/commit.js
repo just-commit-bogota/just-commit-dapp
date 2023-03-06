@@ -217,7 +217,6 @@ export default function Commit() {
                     data-tooltip-id="my-tooltip"
                     data-tooltip-content={`1 MATIC 🟰 ${formatUsd(maticPrice)}`}
                     data-tooltip-place="right"
-                    data-tooltip-delay-hide={1000}
                   >
                     <Tag
                       style={{ background: '#21AD85' }}
@@ -267,6 +266,33 @@ export default function Commit() {
                     { position: 'top-center', id: 'unique' }
                   )
                 }}
+                suffix = 
+                  <div className="flex flex-col gap-2" style={{fontSize: "x-large", opacity:"1"}}>
+                    <RadioButtonGroup
+                      className="items-start items-center"
+                      // value=
+                      // onChange={(e) => set(e.target.value)}
+                    >
+                      <div className="flex gap-2" style={{ whiteSpace: 'nowrap' }}>
+                        <RadioButton
+                          // checked={}
+                          
+                          id="camera"
+                          name="camera"
+                          label=<div className="size-xxl">📸</div>
+                          value="camera"
+                        />
+                        <RadioButton
+                          // checked={}
+                          disabled
+                          id="no-camera"
+                          name="no-camera"
+                          label="🤝🏼"
+                          value="no-camera"
+                        />
+                      </div>
+                    </RadioButtonGroup>
+                  </div>
               />
             </div>
 
