@@ -267,7 +267,7 @@ export default function Commit() {
                   )
                 }}
                 suffix = 
-                  <div className="flex flex-col gap-2" style={{fontSize: "x-large", opacity:"1"}}>
+                  <div className="flex flex-col gap-2" style={{fontSize: "x-large"}}>
                     <RadioButtonGroup
                       className="items-start items-center"
                       // value=
