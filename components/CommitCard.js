@@ -167,7 +167,7 @@ export default function CommitCard({ ...props }) {
                   (props.status == "Waiting") ?
                     moment(props.judgeDeadline).fromNow(true) + " left" :
                   // my history or feed
-                  moment(props.createdAt * 1000).fromNow()
+                  moment(props.createdAt).fromNow()
                 }
               </div>
             </div>

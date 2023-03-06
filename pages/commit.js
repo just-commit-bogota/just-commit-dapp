@@ -4,6 +4,8 @@ import useFetch from '../hooks/fetch'
 import { ethers } from 'ethers'
 import { Tag, Input, Heading, Typography, FieldSet, RadioButton, RadioButtonGroup, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip } from 'react-tooltip';
 import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
 import { Placeholders } from "../components/Placeholders.js";
@@ -29,6 +31,7 @@ export default function Commit() {
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
   const [betModality, setBetModality] = useState('solo')
+  const [showTooltip, setShowTooltip] = useState(false);
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -183,22 +186,25 @@ export default function Commit() {
                 placeholder=""
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 labelSecondary={
-                  <Tag
-                    style={{background:"#21AD85"}}
-                    className="hover:cursor-pointer"
-                    tone="green"
-                    size="large"
-                    onClick={() => {
-                      toast('📸 Can a pic or screenshot prove this?',
-                        { position: 'top-center', id: 'unique' }
-                      )
-                    }}
+                  <a
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content="📸 Can you prove it?" 
+                    data-tooltip-place="right"
                   >
-                    <b style={{color:"white"}}>?</b>
-                  </Tag>
+                    <Tag
+                      style={{ background: '#21AD85' }}
+                      tone="green"
+                      size="large"
+                    >
+                      <b style={{ color: 'white' }}>?</b>
+                    </Tag>
+                  </a>
                 }
-                error={(commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                  commitDescription.length == 0) ? null : "Alphanumeric only"}
+                error={
+                  commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) || commitDescription.length === 0
+                    ? null
+                    : 'Alphanumeric only'
+                }
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
               />
@@ -207,20 +213,19 @@ export default function Commit() {
                 placeholder="5"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 labelSecondary={
-                  <Tag
-                    style={{background:"#21AD85"}}
-                    className="hover:cursor-pointer"
-                    tone="green"
-                    variant=""
-                    size="large"
-                    onClick={() => {
-                      toast('1 MATIC 🟰 ' + formatUsd(maticPrice),
-                        { position: 'top-center', id: 'unique' }
-                      )
-                    }}
+                  <a
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content={`1 MATIC 🟰 ${formatUsd(maticPrice)}`}
+                    data-tooltip-place="right"
                   >
-                    <b style={{color:"white"}}>?</b>
-                  </Tag>
+                    <Tag
+                      style={{ background: '#21AD85' }}
+                      tone="green"
+                      size="large"
+                    >
+                      <b style={{ color: 'white' }}>?</b>
+                    </Tag>
+                  </a>
                 }
                 min={0}
                 step="any"
@@ -246,26 +251,11 @@ export default function Commit() {
                 type="number"
                 units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
                 error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
-                labelSecondary={
-                  <Tag
-                    style={{background:"#21AD85"}}
-                    className="hover:cursor-pointer"
-                    tone="green"
-                    size="large"
-                    onClick={() => {
-                      toast("⏳ How many hours until you can prove it?",
-                        { position: 'top-center', id: 'unique' }
-                      )
-                    }}
-                  >
-                    <b style={{color:"white"}}>?</b>
-                  </Tag>
-                }
                 onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
                 required
               />
               <Input
-                label="Verified By"
+                label="Approved By"
                 required
                 readOnly
                 placeholder="justcommit.eth"
@@ -273,7 +263,7 @@ export default function Commit() {
                 onChange={(e) => setCommitTo(e.target.value)}
                 onClick={() => {
                   toast('⚠️ Disabled (Beta)',
-                    { position: 'top-center', id: 'unique' }
+                    { position: 'bottom-center', id: 'unique' }
                   )
                 }}
               />
@@ -318,6 +308,7 @@ export default function Commit() {
             )}
 
             <Toaster toastOptions={{ duration: 2000 }} />
+            <Tooltip id="my-tooltip" data-tooltip-delay-hide={1000} style={{ backgroundColor: "rgb(199, 247, 212, 0.4)", color: "#222" }} />
 
             {(((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
               <div className="justifyCenter">
