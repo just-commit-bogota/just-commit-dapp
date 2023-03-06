@@ -264,7 +264,7 @@ export default function Commit() {
                 onChange={(e) => setCommitTo(e.target.value)}
                 onClick={() => {
                   toast('⚠️ Disabled (Beta)',
-                    { position: 'bottom-center', id: 'unique' }
+                    { position: 'top-center', id: 'unique' }
                   )
                 }}
               />
