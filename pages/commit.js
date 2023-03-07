@@ -185,7 +185,7 @@ export default function Commit() {
                 labelSecondary={
                   <a
                     data-tooltip-id="my-tooltip"
-                    data-tooltip-content="📸 → picture proof"
+                    data-tooltip-content="📸 → picture proof required"
                     data-tooltip-place="right"
                   >
                     <Tag
