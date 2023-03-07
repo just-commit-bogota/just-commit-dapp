@@ -96,6 +96,8 @@ export default function Treasury() {
               <br />
               <br />
               <b>daniel@belfort.com</b>
+              <br />
+              <br />
             </Typography>
           </div>
           {/*<CurrencyToggle size="small" />*/}
