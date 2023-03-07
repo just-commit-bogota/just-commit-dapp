@@ -1,6 +1,6 @@
 import Head from 'next/head'
-import { useState, useEffect } from 'react'
 import useFetch from '../hooks/fetch'
+import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 import { Tag, Input, Heading, Typography, FieldSet, RadioButton, RadioButtonGroup, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
@@ -8,8 +8,8 @@ import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip';
 import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
-import { Placeholders } from "../components/Placeholders.js";
 import Spinner from "../components/Spinner.js";
+import { Placeholders } from "../components/Placeholders.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 
 export default function Commit() {
@@ -45,12 +45,10 @@ export default function Commit() {
     functionName: "createCommit",
     args: [commitDescription, commitTo, validThrough,
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
-    onError: (err) => {
-    }
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
-    onSettled(commitWriteData, error) {
+    onSettled() {
       { wait }
     },
     onError: (err) => {
@@ -62,9 +60,9 @@ export default function Commit() {
       }
     }
   })
-  const { wait, data: waitData, isLoading: isWaitLoading } = useWaitForTransaction({
+  const { wait, isLoading: isWaitLoading } = useWaitForTransaction({
     hash: commitWriteData?.hash,
-    onSettled(waitData, error) {
+    onSettled() {
       setHasCommited(true)
     },
   })
@@ -109,9 +107,9 @@ export default function Commit() {
       <Header currentPage="commit" />
 
       <div className="container container--flex h-screen">
-        <div className="mt-5 sm:mt-3" style={{padding:"10px"}}>
+        <div className="mt-5 sm:mt-3" style={{ padding: "10px" }}>
           <FieldSet
-            legend={<Heading color="textSecondary" style={{fontWeight: "700", fontSize:"40px"}}>Bet On Yourself</Heading>}
+            legend={<Heading color="textSecondary" style={{ fontWeight: "700", fontSize: "40px" }}>Bet On Yourself</Heading>}
           >
             <RadioButtonGroup
               className="items-start place-self-center"
@@ -132,7 +130,7 @@ export default function Commit() {
                   label="1v1"
                   name="1v1"
                   value="1v1"
-                  onChange={() => toast('⏳ Coming Soon', { id: 'unique' }) }
+                  onChange={() => toast('⏳ Coming Soon', { id: 'unique' })}
                 />
                 <RadioButton
                   checked={false} // {betModality == "multiplayer"}
@@ -140,7 +138,7 @@ export default function Commit() {
                   label="Multiplayer"
                   name="multiplayer"
                   value="multiplayer"
-                  onChange={() => toast('⏳ Coming Soon', { id: 'unique' }) }
+                  onChange={() => toast('⏳ Coming Soon', { id: 'unique' })}
                 />
               </div>
             </RadioButtonGroup>
@@ -188,7 +186,7 @@ export default function Commit() {
                 labelSecondary={
                   <a
                     data-tooltip-id="my-tooltip"
-                    data-tooltip-content="📸 Can you prove it?" 
+                    data-tooltip-content="📸 Can you prove it?"
                     data-tooltip-place="right"
                   >
                     <Tag
@@ -233,8 +231,8 @@ export default function Commit() {
                 type="number"
                 units="MATIC"
                 error={
-                  commitAmount > walletMaticBalance ? "Insufficient Funds":
-                  commitAmount > 9999 ? "Up to 9999" : null
+                  commitAmount > walletMaticBalance ? "Insufficient Funds" :
+                    commitAmount > 9999 ? "Up to 9999" : null
                 }
                 onChange={(e) => (
                   setCommitAmount(e.target.value)
@@ -266,17 +264,17 @@ export default function Commit() {
                     { position: 'top-center', id: 'unique' }
                   )
                 }}
-                suffix = 
-                  <div className="flex flex-col gap-2" style={{fontSize: "x-large"}}>
+                suffix= 
+                  <div className="flex flex-col gap-2" style={{ fontSize: "x-large" }}>
                     <RadioButtonGroup
                       className="items-start items-center"
-                      // value=
-                      // onChange={(e) => set(e.target.value)}
+                    // value=
+                    // onChange={(e) => set(e.target.value)}
                     >
                       <div className="flex gap-2" style={{ whiteSpace: 'nowrap' }}>
                         <RadioButton
                           // checked={}
-                          
+    
                           id="camera"
                           name="camera"
                           label=<div className="size-xxl">📸</div>
@@ -293,8 +291,8 @@ export default function Commit() {
                       </div>
                     </RadioButtonGroup>
                   </div>
-              />
-            </div>
+                />
+              </div>
 
             {/* Commit Button */}
             {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
@@ -304,13 +302,13 @@ export default function Commit() {
                 margin: '1rem',
                 backgroundColor:
                   commitAmount == 0 || commitAmount == "" ||
-                  commitDescription.length < 2 ||
-                  commitDescription.length > 35 ||
-                  !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                  ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
-                  commitAmount > 9999 ||
-                  commitAmount > walletMaticBalance ?
-                  "rgb(30 174 131 / 36%)" : "rgb(30 174 131)",
+                    commitDescription.length < 2 ||
+                    commitDescription.length > 35 ||
+                    !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
+                    ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
+                    commitAmount > 9999 ||
+                    commitAmount > walletMaticBalance ?
+                    "rgb(30 174 131 / 36%)" : "rgb(30 174 131)",
                 borderRadius: 12,
                 color: "white",
                 transition: "transform 0.2s ease-in-out",
@@ -346,27 +344,27 @@ export default function Commit() {
             {hasCommitted &&
               <div className="w-full relative">
                 <div className="absolute w-full p-5" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                    <div className="flex justify-center w-3/10">
-                      <ButtonThorin
-                        className="flex"
-                        style={{ padding: "20px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
-                        outlined
-                        shape="rounded"
-                        tone="green"
-                        size="small"
-                        variant="primary"
-                        as="a"
-                        href="./"
-                        onClick={() => {
-                          localStorage.setItem("selectedFilter", "Active");
-                        }}
-                      >
-                        Commitment
-                      </ButtonThorin>
+                  <div className="flex justify-center w-3/10">
+                    <ButtonThorin
+                      className="flex"
+                      style={{ padding: "20px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
+                      outlined
+                      shape="rounded"
+                      tone="green"
+                      size="small"
+                      variant="primary"
+                      as="a"
+                      href="./"
+                      onClick={() => {
+                        localStorage.setItem("selectedFilter", "Active");
+                      }}
+                    >
+                      Commitment
+                    </ButtonThorin>
                   </div>
                 </div>
                 <div className="flex justify-end w-full">
-                  <div className="flex" style={{width:"52px"}}>
+                  <div className="flex" style={{ width: "52px" }}>
                     <ButtonThorin
                       className="flex align-center mt-6 mb-5 sm:mb-0 justify-center rounded-lg hover:cursor-pointer"
                       style={{ background: "#bae6fd", zIndex: 2, fontSize: "1.2rem", padding: "5px" }}
@@ -389,7 +387,6 @@ export default function Commit() {
             ---------
             */}
 
-            
             {/* betModality: {betModality}
             <br></br>
             <br></br>
@@ -403,7 +400,6 @@ export default function Commit() {
             <br></br>
             <br></br>
             Date.now(): {Date.now()} */}
-            
 
           </form>
         }
