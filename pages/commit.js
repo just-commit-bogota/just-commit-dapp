@@ -129,7 +129,7 @@ export default function Commit() {
                   label="1v1"
                   name="1v1"
                   value="1v1"
-                  onChange={() => toast('⏳ Coming Soon', { id: 'unique' })}
+                  onChange={() => toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' })}
                 />
                 <RadioButton
                   checked={false} // {betModality == "multiplayer"}
@@ -137,7 +137,7 @@ export default function Commit() {
                   label="Multiplayer"
                   name="multiplayer"
                   value="multiplayer"
-                  onChange={() => toast('⏳ Coming Soon', { id: 'unique' })}
+                  onChange={() => toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' })}
                 />
               </div>
             </RadioButtonGroup>
@@ -185,8 +185,9 @@ export default function Commit() {
                 labelSecondary={
                   <a
                     data-tooltip-id="my-tooltip"
-                    data-tooltip-content="📸 → picture proof required"
+                    data-tooltip-content="📸 → proof required"
                     data-tooltip-place="right"
+                    
                   >
                     <Tag
                       style={{ background: '#21AD85' }}
@@ -221,21 +222,7 @@ export default function Commit() {
                 label="Or Else I'll Lose"
                 placeholder="5"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
-                labelSecondary={
-                  <a
-                    data-tooltip-id="my-tooltip"
-                    data-tooltip-content={`1 MATIC 🟰 ${formatUsd(maticPrice)}`}
-                    data-tooltip-place="right"
-                  >
-                    <Tag
-                      style={{ background: '#21AD85' }}
-                      tone="green"
-                      size="large"
-                    >
-                      <b style={{ color: 'white' }}>?</b>
-                    </Tag>
-                  </a>
-                }
+
                 min={0}
                 step="any"
                 max={9999}
@@ -249,6 +236,14 @@ export default function Commit() {
                   setCommitAmount(e.target.value)
                 )}
                 required
+                suffix =
+                {commitAmount != '0' && (
+                  <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
+                    <div className="flex gap-2" style={{ color:'grey', whiteSpace: 'nowrap' }}>
+                      {`(${formatUsd(maticPrice * commitAmount)})`}
+                    </div>
+                  </div>
+                )}
               />
               <Input
                 label="Expires In"
@@ -272,7 +267,7 @@ export default function Commit() {
                 onChange={(e) => setCommitTo(e.target.value)}
                 onClick={() => {
                   toast('⚠️ Disabled (Beta)',
-                    { position: 'top-center', id: 'unique' }
+                    { position: 'bottom-center', id: 'unique' }
                   )
                 }}
               />
