@@ -185,7 +185,7 @@ export default function Commit() {
                 labelSecondary={
                   <a
                     data-tooltip-id="my-tooltip"
-                    data-tooltip-content="📸 Can you prove it?"
+                    data-tooltip-content="📸 → picture proof"
                     data-tooltip-place="right"
                   >
                     <Tag
@@ -317,7 +317,9 @@ export default function Commit() {
             )}
 
             <Toaster toastOptions={{ duration: 2000 }} />
-            <Tooltip id="my-tooltip" style={{ backgroundColor: "rgb(199, 247, 212, 0.4)", color: "#222" }} />
+            <Tooltip id="my-tooltip"
+              style={{ backgroundColor: "rgb(199, 247, 212, 1)", color: "#222" }}
+            />
 
             {(((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
               <div className="justifyCenter">
