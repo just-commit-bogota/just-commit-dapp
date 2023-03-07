@@ -2,7 +2,7 @@ import Head from 'next/head'
 import useFetch from '../hooks/fetch'
 import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
-import { Tag, Input, Heading, Typography, FieldSet, RadioButton, RadioButtonGroup, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Input, Heading, Checkbox, FieldSet, RadioButton, RadioButtonGroup, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip';
@@ -31,7 +31,6 @@ export default function Commit() {
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
   const [betModality, setBetModality] = useState('solo')
-  const [showTooltip, setShowTooltip] = useState(false);
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -205,6 +204,18 @@ export default function Commit() {
                 }
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
+                suffix=
+                {
+                  <div className="flex flex-col gap-2" style={{ fontSize: "x-large" }}>
+                    <div className="flex gap-2" style={{ whiteSpace: 'nowrap' }}>
+                      <Checkbox
+                        checked={true} // {betModality=="solo"}
+                        label=<p className="text-white">📸</p>
+                        value="camera"
+                      />
+                    </div>
+                  </div>
+                }
               />
               <Input
                 label="Or Else I'll Lose"
@@ -264,35 +275,8 @@ export default function Commit() {
                     { position: 'top-center', id: 'unique' }
                   )
                 }}
-                suffix= 
-                  <div className="flex flex-col gap-2" style={{ fontSize: "x-large" }}>
-                    <RadioButtonGroup
-                      className="items-start items-center"
-                    // value=
-                    // onChange={(e) => set(e.target.value)}
-                    >
-                      <div className="flex gap-2" style={{ whiteSpace: 'nowrap' }}>
-                        <RadioButton
-                          // checked={}
-    
-                          id="camera"
-                          name="camera"
-                          label=<p className="text-white">📸</p>
-                          value="camera"
-                        />
-                        <RadioButton
-                          // checked={}
-                          disabled
-                          id="no-camera"
-                          name="no-camera"
-                          label=<p className="text-white">🤝🏼</p>
-                          value="no-camera"
-                        />
-                      </div>
-                    </RadioButtonGroup>
-                  </div>
-                />
-              </div>
+              />
+            </div>
 
             {/* Commit Button */}
             {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
