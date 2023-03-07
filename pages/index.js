@@ -67,7 +67,7 @@ export default function Home() {
           filename,
           commitProved,
           commitJudged,
-          isApproved
+          isApproved,
         ) => {
           setAllCommits(prevState => [...prevState, {
             status: "Pending",
@@ -83,18 +83,19 @@ export default function Home() {
             filename: filename,
             commitProved: commitProved,
             commitJudged: commitJudged,
-            isApproved: isApproved
+            isApproved: isApproved,
           }]);
         });
 
         // sort according to their creation date
         commitsClassified.sort((a, b) => (a.createdAt > b.createdAt) ? 1 : -1)
         setAllCommits(commitsClassified)
+        
+        challengeStats(commitsClassified)
 
-        console.log(commitsClassified);
+        console.log(commitsClassified)
 
         // FOR LATER USE (unused events/emits):
-
         // on a NewProve event
         commitPortal.on("NewProve", (commitId, ipfsHash, filename, provedAt) => {
           console.log("New Prove Event:", commitId, ipfsHash, filename, provedAt);
@@ -197,7 +198,7 @@ export default function Home() {
           className="hover:scale-110 hover:cursor-pointer"
         >
           <img
-            style={{height:"2.5rem"}}
+            style={{ height: "2.5rem" }}
             src="./commit-icon.svg"
             alt="Commit Icon"
           />

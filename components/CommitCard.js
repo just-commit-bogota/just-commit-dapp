@@ -17,6 +17,7 @@ export default function CommitCard({ ...props }) {
 
   // clients
   const client_storage = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
+
   //const client_twilio = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
   // tokens
@@ -104,7 +105,7 @@ export default function CommitCard({ ...props }) {
   })
 
   // FUNCTIONS
-  
+
   // upload the pic
   const uploadFile = () => {
     setUploadClicked(true)
@@ -115,11 +116,10 @@ export default function CommitCard({ ...props }) {
     setItem('filename', fileInput.files[0].name, "session")
 
     if (fileInput.size > 0) {
-
       if (fileInput.files[0].lastModified < props.createdAt * 1000) {
-          setUploadClicked(false)
-          toast.error("This pic is older than the commitment", { duration: 4000 })
-          return
+        setUploadClicked(false)
+        toast.error("This pic is older than the commitment", { duration: 4000 })
+        return
       }
 
       client_storage.put(fileInput.files, {
@@ -148,17 +148,18 @@ export default function CommitCard({ ...props }) {
         'styledBorder--success': props.status == "Success",
         'styledBorder--failure': props.status == "Failure",
         'styledBorder--pending': props.status == "Pending",
-
       })}>
         <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px" }}>
           <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
-            <div className="w-4/5 text-sm block">{props.message}</div>
-            <div className="flex align-left space-x-2">
-              <div className="text-sm text-slate-400 opacity-80" style={{ whiteSpace: "nowrap" }}>
+            <div className="text-sm block">{props.message}</div>
+            <div className="flex space-x-2" style={{ whiteSpace: "nowrap" }}>
+              <div className="span flex text-sm text-slate-400 gap-2 opacity-80" style={{ whiteSpace: "nowrap" }}>
                 {
                   // active
                   (props.status == "Pending") ?
-                    <Countdown date={props.validThrough} daysInHours></Countdown> :
+                    ((moment(props.validThrough).diff(moment(), 'days') >= 2) ?
+                      "> " + moment(props.validThrough).diff(moment(), 'days') + " days left" :
+                      <Countdown date={props.validThrough} daysInHours={true} />) :
                     // waiting or verify
                     (props.status == "Waiting") ?
                       moment(props.judgeDeadline).fromNow(true) + " left" :
@@ -326,7 +327,7 @@ export default function CommitCard({ ...props }) {
               <div className="flex flex-col align-center justify-center">
                 <img className="h-6" src="./polygon-logo-tilted.svg" />
               </div>
-              <div className="flex flex-col font-semibold align-center justify-center text-l ml-1">{parseFloat(props.stakeAmount)}</div>
+              <div className="flex flex-col font-semibold align-center justify-center text-l ml-1">{parseFloat(props.stakeAmount).toFixed(2)}</div>
             </div>
 
             <div className="flex flex-col align-center justify-center text-lg">
@@ -368,5 +369,3 @@ export default function CommitCard({ ...props }) {
     </>
   )
 }
-
-

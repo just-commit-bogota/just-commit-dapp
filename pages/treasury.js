@@ -49,7 +49,7 @@ export default function Treasury() {
 
       <div className="flex h-screen">
         <div className="container container--flex">
-          <div className="flex flex-row mt-10 w-full lg:justify-center lg:align-center" style={{ fontSize: "1.6rem", justifyContent: "center" }}>
+          <div className="flex flex-row mt-8 w-full lg:justify-center lg:align-center" style={{ fontSize: "1.6rem", justifyContent: "center" }}>
             <Typography color="text" style={{ lineHeight: "1.5" }}>
               Just Commit Treasury ⚡
             </Typography>

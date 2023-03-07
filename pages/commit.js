@@ -1,17 +1,20 @@
 import Head from 'next/head'
-import { useState, useEffect } from 'react'
 import useFetch from '../hooks/fetch'
+import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
-import { Tag, Input, Heading, Typography, FieldSet, RadioButton, RadioButtonGroup, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Input, Heading, Checkbox, FieldSet, RadioButton, RadioButtonGroup, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip } from 'react-tooltip';
 import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
-import { Placeholders } from "../components/Placeholders.js";
 import Spinner from "../components/Spinner.js";
+import { Placeholders } from "../components/Placeholders.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 
 export default function Commit() {
 
+  // first pass
   useEffect(() => {
     getWalletMaticBalance()
     setTimeout(() => {
@@ -27,10 +30,7 @@ export default function Commit() {
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
-  const [isChallenge, setIsChallenge] = useState(false)
-  const [challengeDays, setChallengeDays] = useState('30')
-  const [canMiss, setCanMiss] = useState('15')
-  const [betModality, setBetModality] = useState('Pro-Rated')
+  const [betModality, setBetModality] = useState('solo')
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -44,12 +44,10 @@ export default function Commit() {
     functionName: "createCommit",
     args: [commitDescription, commitTo, validThrough,
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
-    onError: (err) => {
-    }
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
-    onSettled(commitWriteData, error) {
+    onSettled() {
       { wait }
     },
     onError: (err) => {
@@ -61,9 +59,9 @@ export default function Commit() {
       }
     }
   })
-  const { wait, data: waitData, isLoading: isWaitLoading } = useWaitForTransaction({
+  const { wait, isLoading: isWaitLoading } = useWaitForTransaction({
     hash: commitWriteData?.hash,
-    onSettled(waitData, error) {
+    onSettled() {
       setHasCommited(true)
     },
   })
@@ -108,34 +106,38 @@ export default function Commit() {
       <Header currentPage="commit" />
 
       <div className="container container--flex h-screen">
-        <div className="mt-5 sm:mt-3" style={{padding:"10px"}}>
+        <div className="mt-5 sm:mt-3" style={{ padding: "10px" }}>
           <FieldSet
             legend={<Heading color="textSecondary" style={{fontWeight: "700", fontSize:"40px"}}>Bet On Yourself</Heading>}
           >
             <RadioButtonGroup
               className="items-start place-self-center"
-              value={isChallenge ? "challenge" : "once"}
-              //onChange={(e) => setIsChallenge(e.target.value === "challenge")}
+              value={betModality}
+              onChange={(e) => setBetModality(e.target.value)}
             >
               <div className="flex gap-4">
                 <RadioButton
-                  checked={!isChallenge}
-                  id="once"
-                  label="Once"
-                  name="once"
-                  value="once"
-                  onChange={() => setIsChallenge(false)}
+                  checked={true} // betModality == "solo"}
+                  id="solo"
+                  label="Solo"
+                  name="solo"
+                  value="solo"
                 />
                 <RadioButton
-                  checked={isChallenge}
-                  id="challenge"
-                  label="Challenge"
-                  name="challenge"
-                  value="challenge"
-                  onChange={() => {
-                    //setIsChallenge(true);
-                    toast('⏳ Coming Soon', { id: 'unique' });
-                  }}
+                  checked={false} // {betModality == "1v1"}
+                  id="1v1"
+                  label="1v1"
+                  name="1v1"
+                  value="1v1"
+                  onChange={() => toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' })}
+                />
+                <RadioButton
+                  checked={false} // {betModality == "multiplayer"}
+                  id="multiplayer"
+                  label="Multiplayer"
+                  name="multiplayer"
+                  value="multiplayer"
+                  onChange={() => toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' })}
                 />
               </div>
             </RadioButtonGroup>
@@ -181,180 +183,83 @@ export default function Commit() {
                 placeholder=""
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 labelSecondary={
-                  <Tag
-                    className="hover:cursor-pointer"
-                    tone="green"
-                    size="large"
-                    onClick={() => {
-                      toast('📸 Can a pic or screenshot prove this?',
-                        { position: 'top-center', id: 'unique' }
-                      )
-                    }}
+                  <a
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content="📸 → proof required"
+                    data-tooltip-place="right"
+                    
                   >
-                    <b>i</b>
-                  </Tag>
+                    <Tag
+                      style={{ background: '#21AD85' }}
+                      tone="green"
+                      size="large"
+                    >
+                      <b style={{ color: 'white' }}>?</b>
+                    </Tag>
+                  </a>
                 }
-                error={(commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                  commitDescription.length == 0) ? null : "Alphanumeric only"}
+                error={
+                  commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) || commitDescription.length === 0
+                    ? null
+                    : 'Alphanumeric only'
+                }
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
+                suffix=
+                {
+                  <div className="flex flex-col gap-2" style={{ fontSize: "x-large" }}>
+                    <div className="flex gap-2" style={{ whiteSpace: 'nowrap' }}>
+                      <Checkbox
+                        checked={true} // {betModality=="solo"}
+                        label=<p className="text-white">📸</p>
+                        value="camera"
+                      />
+                    </div>
+                  </div>
+                }
               />
               <Input
                 label="Or Else I'll Lose"
                 placeholder="5"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
-                labelSecondary={
-                  <Tag
-                    className="hover:cursor-pointer"
-                    tone="green"
-                    size="large"
-                    onClick={() => {
-                      toast('1 MATIC 🟰 ' + formatUsd(maticPrice),
-                        { position: 'top-center', id: 'unique' }
-                      )
-                    }}
-                  >
-                    <b>i</b>
-                  </Tag>
-                }
+
                 min={0}
                 step="any"
                 max={9999}
                 type="number"
                 units="MATIC"
                 error={
-                  commitAmount > walletMaticBalance ? "Insufficient Funds":
-                  commitAmount > 9999 ? "Up to 9999" : null
+                  commitAmount > walletMaticBalance ? "Insufficient Funds" :
+                    commitAmount > 9999 ? "Up to 9999" : null
                 }
                 onChange={(e) => (
                   setCommitAmount(e.target.value)
                 )}
                 required
-                suffix=
-                {isChallenge && (
-                  <div className="flex flex-col text-xs gap-2">
-                    <RadioButtonGroup
-                      className="items-start items-center"
-                      value={betModality}
-                      onChange={(e) => setBetModality(e.target.value)}
-                    >
-                      <div className="flex gap-2" style={{ whiteSpace: 'nowrap' }}>
-                        <RadioButton
-                          checked={betModality == 'Pro-Rated'}
-                          id="Pro-Rated"
-                          name="Pro-Rated"
-                          label="Pro-Rated"
-                          value="Pro-Rated"
-                        />
-                        <RadioButton
-                          checked={betModality == 'All-In'}
-                          id="All-In"
-                          name="All-In"
-                          label="All-In"
-                          value="All-In"
-                        />
-                      </div>
-                    </RadioButtonGroup>
+                suffix =
+                {commitAmount != '0' && (
+                  <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
+                    <div className="flex gap-2" style={{ color:'grey', whiteSpace: 'nowrap' }}>
+                      {`(${formatUsd(maticPrice * commitAmount)})`}
+                    </div>
                   </div>
                 )}
               />
-              {!isChallenge ? (
-                <Input
-                  label="I'll Prove It In"
-                  placeholder="24"
-                  disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
-                  min={1}
-                  max={24}
-                  step={1}
-                  type="number"
-                  units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
-                  error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
-                  labelSecondary={
-                    <Tag
-                      className="hover:cursor-pointer"
-                      tone="green"
-                      size="large"
-                      onClick={() => {
-                        toast("⏳ How many hours until you can prove it?",
-                          { position: 'top-center', id: 'unique' }
-                        )
-                      }}
-                    >
-                      <b>i</b>
-                    </Tag>
-                  }
-                  onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
-                  required
-                />
-              ) : (
-              <>
-                <div className="flex flex-row gap-3 w-full mt-3 mb-3 justify-between sm:justify-evenly">
-                  <div className="flex flex-col gap-2">
-                    <Typography className="text-base"
-                      style={{alignItems:"center", color:"rgb(0,0,0,0.4)", fontWeight:"550"}}>
-                        Duration → <b>{challengeDays}</b> Days
-                    </Typography>
-                    <RadioButtonGroup
-                      className="items-start items-center"
-                      value={challengeDays}
-                      onChange={(e) => {
-                        setChallengeDays(e.target.value);
-                        if (e.target.value === '60') {
-                          setCanMiss('30');
-                        } else { setCanMiss('15'); }
-                      }}
-                    >
-                      <div className="flex gap-2">
-                        <RadioButton
-                          checked={challengeDays == '30'}
-                          id="30"
-                          label="30"
-                          name="30"
-                          value="30"
-                        />
-                        <RadioButton
-                          checked={challengeDays == '60'}
-                          id="60"
-                          label="60"
-                          name="60"
-                          value="60"
-                        />
-                      </div>
-                    </RadioButtonGroup>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <Typography className="text-base"
-                        style={{alignItems:"center", color:"rgb(0,0,0,0.4)", fontWeight:"550"}}>
-                          Can Miss → <b>{canMiss}</b> Days
-                      </Typography>
-                      <RadioButtonGroup
-                        className="items-start items-center"
-                        value={canMiss}
-                        onChange={(e) => setCanMiss(e.target.value)}
-                      >
-                        <div className="flex gap-2">
-                          <RadioButton
-                            checked={challengeDays == '30' ? canMiss == '15' : canMiss == '30'}
-                            id="half"
-                            name="half"
-                            label={challengeDays == '30' ? '15' : '30'}
-                            value={challengeDays == '30' ? '15' : '30'}
-                          />
-                          <RadioButton
-                            checked={challengeDays == '30' ? canMiss == '20' : canMiss == '40'}
-                            id="two-thirds"
-                            name="two-thirds"
-                            label={challengeDays == '30' ? '20' : '40'}
-                            value={challengeDays == '30' ? '20' : '40'}
-                          />
-                        </div>
-                      </RadioButtonGroup>
-                    </div>
-                  </div>
-              </>
-              )}
               <Input
-                label="Verified By"
+                label="Expires In"
+                placeholder="24"
+                disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
+                min={1}
+                max={24}
+                step={1}
+                type="number"
+                units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
+                error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
+                onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
+                required
+              />
+              <Input
+                label="Attested By"
                 required
                 readOnly
                 placeholder="justcommit.eth"
@@ -362,7 +267,7 @@ export default function Commit() {
                 onChange={(e) => setCommitTo(e.target.value)}
                 onClick={() => {
                   toast('⚠️ Disabled (Beta)',
-                    { position: 'top-center', id: 'unique' }
+                    { position: 'bottom-center', id: 'unique' }
                   )
                 }}
               />
@@ -376,13 +281,13 @@ export default function Commit() {
                 margin: '1rem',
                 backgroundColor:
                   commitAmount == 0 || commitAmount == "" ||
-                  commitDescription.length < 2 ||
-                  commitDescription.length > 35 ||
-                  !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                  ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
-                  commitAmount > 9999 ||
-                  commitAmount > walletMaticBalance ?
-                  "rgb(30 174 131 / 36%)" : "rgb(30 174 131)",
+                    commitDescription.length < 2 ||
+                    commitDescription.length > 35 ||
+                    !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
+                    ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
+                    commitAmount > 9999 ||
+                    commitAmount > walletMaticBalance ?
+                    "rgb(30 174 131 / 36%)" : "rgb(30 174 131)",
                 borderRadius: 12,
                 color: "white",
                 transition: "transform 0.2s ease-in-out",
@@ -407,6 +312,9 @@ export default function Commit() {
             )}
 
             <Toaster toastOptions={{ duration: 2000 }} />
+            <Tooltip id="my-tooltip"
+              style={{ backgroundColor: "rgb(199, 247, 212, 1)", color: "#222" }}
+            />
 
             {(((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
               <div className="justifyCenter">
@@ -415,38 +323,42 @@ export default function Commit() {
             )}
 
             {hasCommitted &&
-              <div className="flex flex-row mt-5 mb-2 gap-4">
-                <ButtonThorin
-                  style={{ padding: "12px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
-                  outlined
-                  shape="rounded"
-                  tone="grey"
-                  size="small"
-                  variant="secondary"
-                  as="a"
-                  href={`https://${chain?.id === 80001 ? 'mumbai.' : ''
-                    }polygonscan.com/tx/${commitWriteData.hash}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Transaction
-                </ButtonThorin>
-                <div className="text-2xl font-bold">⚡</div>
-                <ButtonThorin
-                  style={{ padding: "12px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
-                  outlined
-                  shape="rounded"
-                  tone="green"
-                  size="small"
-                  variant="primary"
-                  as="a"
-                  href="./"
-                  onClick={() => {
-                    localStorage.setItem("selectedFilter", "Active");
-                  }}
-                >
-                  Commitment
-                </ButtonThorin>
+              <div className="w-full relative">
+                <div className="absolute w-full p-5" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  <div className="flex justify-center w-3/10">
+                    <ButtonThorin
+                      className="flex"
+                      style={{ padding: "20px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
+                      outlined
+                      shape="rounded"
+                      tone="green"
+                      size="small"
+                      variant="primary"
+                      as="a"
+                      href="./"
+                      onClick={() => {
+                        localStorage.setItem("selectedFilter", "Active");
+                      }}
+                    >
+                      Commitment
+                    </ButtonThorin>
+                  </div>
+                </div>
+                <div className="flex justify-end w-full">
+                  <div className="flex" style={{ width: "52px" }}>
+                    <ButtonThorin
+                      className="flex align-center mt-6 mb-5 sm:mb-0 justify-center rounded-lg hover:cursor-pointer"
+                      style={{ background: "#bae6fd", zIndex: 2, fontSize: "1.2rem", padding: "5px" }}
+                      as="a"
+                      href={`https://${chain?.id === 80001 ? 'mumbai.' : ''
+                        }polygonscan.com/tx/${commitWriteData.hash}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      🔎
+                    </ButtonThorin>
+                  </div>
+                </div>
               </div>
             }
 
@@ -456,7 +368,9 @@ export default function Commit() {
             ---------
             */}
 
-            {/*
+            {/* betModality: {betModality}
+            <br></br>
+            <br></br>
             maticPrice * commitAmount: {typeof(maticPrice * commitAmount)}
             <br></br>
             <br></br>
@@ -466,8 +380,7 @@ export default function Commit() {
             validThrou.: {validThrough}
             <br></br>
             <br></br>
-            Date.now(): {Date.now()}
-            */}
+            Date.now(): {Date.now()} */}
 
           </form>
         }
