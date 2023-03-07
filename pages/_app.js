@@ -13,6 +13,7 @@ const { chains, provider } = configureChains(
   
   //[chain.polygon], // BETA
   [chain.polygonMumbai], // DEV
+  
   [infuraProvider({}), publicProvider()]
 )
 
