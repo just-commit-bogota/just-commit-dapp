@@ -90,8 +90,6 @@ export default function Home() {
         // sort according to their creation date
         commitsClassified.sort((a, b) => (a.createdAt > b.createdAt) ? 1 : -1)
         setAllCommits(commitsClassified)
-        
-        challengeStats(commitsClassified)
 
         console.log(commitsClassified)
 
