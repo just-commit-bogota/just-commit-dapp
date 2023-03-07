@@ -17,7 +17,7 @@ export default function CommitCard({ ...props }) {
 
   // clients
   // new Web3Storage({ token: process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN })
-  const client_storage = new Web3Storage({ token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
+  const client_storage = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
 
   //const client_twilio = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
@@ -117,9 +117,7 @@ export default function CommitCard({ ...props }) {
     setItem('filename', fileInput.files[0].name, "session")
 
     if (fileInput.size > 0) {
-      console.log(fileInput.files[0].lastModified)
-      console.log(props.createdAt)
-      if (fileInput.files[0].lastModified < props.createdAt) {
+      if (fileInput.files[0].lastModified < props.createdAt * 1000) {
         setUploadClicked(false)
         toast.error("This pic is older than the commitment", { duration: 4000 })
         return
@@ -163,11 +161,11 @@ export default function CommitCard({ ...props }) {
                     ((moment(props.validThrough).diff(moment(), 'days') >= 2) ?
                       "> " + moment(props.validThrough).diff(moment(), 'days') + " days left" :
                       <Countdown date={props.validThrough} daysInHours={true} />) :
-                  // waiting or verify
-                  (props.status == "Waiting") ?
-                    moment(props.judgeDeadline).fromNow(true) + " left" :
-                  // my history or feed
-                  moment(props.createdAt * 1000).fromNow()
+                    // waiting or verify
+                    (props.status == "Waiting") ?
+                      moment(props.judgeDeadline).fromNow(true) + " left" :
+                      // my history or feed
+                      moment(props.createdAt * 1000).fromNow()
                 }
               </div>
             </div>
