@@ -16,7 +16,6 @@ import { Web3Storage } from 'web3.storage'
 export default function CommitCard({ ...props }) {
 
   // clients
-  // new Web3Storage({ token: process.env.NEXT_PUBLIC_WEB3_STORAGE_TOKEN })
   const client_storage = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
 
   //const client_twilio = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
