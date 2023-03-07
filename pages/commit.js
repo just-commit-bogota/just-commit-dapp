@@ -277,7 +277,7 @@ export default function Commit() {
     
                           id="camera"
                           name="camera"
-                          label=<div className="size-xxl">📸</div>
+                          label=<p className="text-white">📸</p>
                           value="camera"
                         />
                         <RadioButton
@@ -285,7 +285,7 @@ export default function Commit() {
                           disabled
                           id="no-camera"
                           name="no-camera"
-                          label="🤝🏼"
+                          label=<p className="text-white">🤝🏼</p>
                           value="no-camera"
                         />
                       </div>
