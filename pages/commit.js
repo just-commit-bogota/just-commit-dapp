@@ -264,7 +264,7 @@ export default function Commit() {
                 required
               />
               <Input
-                label="Approved By"
+                label="Attested By"
                 required
                 readOnly
                 placeholder="justcommit.eth"
