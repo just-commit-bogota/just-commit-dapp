@@ -117,7 +117,8 @@ export default function CommitCard({ ...props }) {
     setItem('filename', fileInput.files[0].name, "session")
 
     if (fileInput.size > 0) {
-
+      console.log(fileInput.files[0].lastModified)
+      console.log(props.createdAt)
       if (fileInput.files[0].lastModified < props.createdAt) {
         setUploadClicked(false)
         toast.error("This pic is older than the commitment", { duration: 4000 })
@@ -150,7 +151,6 @@ export default function CommitCard({ ...props }) {
         'styledBorder--success': props.status == "Success",
         'styledBorder--failure': props.status == "Failure",
         'styledBorder--pending': props.status == "Pending",
-
       })}>
         <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px" }}>
           <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
@@ -167,7 +167,7 @@ export default function CommitCard({ ...props }) {
                   (props.status == "Waiting") ?
                     moment(props.judgeDeadline).fromNow(true) + " left" :
                   // my history or feed
-                  moment(props.createdAt).fromNow()
+                  moment(props.createdAt * 1000).fromNow()
                 }
               </div>
             </div>
