@@ -24,9 +24,10 @@ export default function Commit() {
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState(CONTRACT_OWNER)
+  const [commitTo, setCommitTo] = useState([CONTRACT_OWNER])
   const [commitAmount, setCommitAmount] = useState('0')
-  const [validThrough, setValidThrough] = useState((24 * 3600 * 1000) + Date.now()) // 24 hours
+  const [startsAt, setStartsAt] = useState((24 * 3600 * 1000) + Date.now()) // startsAt is pre-set to 24h after commiting
+  const [endsAt, setEndsAt] = useState((24 * 3600 * 1000) + Date.now()) // duration is pre-set to 24h
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
@@ -42,7 +43,7 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitDescription, commitTo, validThrough,
+    args: [commitDescription, commitTo, betModality == "solo" ? Date.now() : startsAt, endsAt,
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
@@ -167,8 +168,8 @@ export default function Commit() {
                 return toast.error('Switch to a supported network')
               }
               // commiting to self?
-              if (address.toUpperCase() == commitTo.toUpperCase()) {
-                return toast.error('Cannot commit to self')
+              if (commitTo.includes(address.toUpperCase())) {
+                return toast.error('Cannot commit to self');
               }
               // is commitAmount not set?
               if (maticPrice * commitAmount == 0) {
@@ -253,9 +254,9 @@ export default function Commit() {
                 max={24}
                 step={1}
                 type="number"
-                units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
-                error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
-                onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
+                units={((endsAt - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
+                error={((endsAt - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
+                onChange={(e) => setEndsAt((e.target.value * 3600 * 1000) + Date.now())}
                 required
               />
               <Input
@@ -263,8 +264,7 @@ export default function Commit() {
                 required
                 readOnly
                 placeholder="justcommit.eth"
-                maxLength={42}
-                onChange={(e) => setCommitTo(e.target.value)}
+                onChange={(e) => setCommitTo(e.target.value.split(",").map((address) => address.trim()))}
                 onClick={() => {
                   toast('⚠️ Disabled (Beta)',
                     { position: 'bottom-center', id: 'unique' }
@@ -284,7 +284,7 @@ export default function Commit() {
                     commitDescription.length < 2 ||
                     commitDescription.length > 35 ||
                     !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                    ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
+                    ((endsAt - Date.now()) / 3600 / 1000) > 24 ||
                     commitAmount > 9999 ||
                     commitAmount > walletMaticBalance ?
                     "rgb(30 174 131 / 36%)" : "rgb(30 174 131)",
@@ -301,7 +301,7 @@ export default function Commit() {
                   commitDescription.length < 2 ||
                   commitDescription.length > 35 ||
                   !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                  ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
+                  ((endsAt - Date.now()) / 3600 / 1000) > 24 ||
                   commitAmount > 9999 ||
                   commitAmount > walletMaticBalance
                 }
@@ -377,7 +377,7 @@ export default function Commit() {
             isWaitLoading: {String(isWaitLoading)}
             <br></br>
             <br></br>
-            validThrou.: {validThrough}
+            endsAt: {endsAt}
             <br></br>
             <br></br>
             Date.now(): {Date.now()} */}

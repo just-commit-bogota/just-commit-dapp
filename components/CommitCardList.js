@@ -21,9 +21,9 @@ export default function CommitCardList({ cardList }) {
       selectedFilter == "History" ?
         cardList.filter(c => (c.commitFrom == connectedAddress &&
           (c.status == "Failure" || c.status == "Success"))) :
-        // Verify: connectedAddress is commitTo and Waiting
+        // Verify: connectedAddress includes commitTo and Waiting
         selectedFilter == "Verify" ?
-          cardList.filter(c => (c.commitTo == connectedAddress && c.status == "Waiting")) :
+          cardList.filter(c => (c.commitTo.includes(connectedAddress) && c.status == "Waiting")) :
           // Waiting: connectedAddress is commitFrom and Waiting
           selectedFilter == "Waiting" ?
             cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Waiting")) :
@@ -31,7 +31,7 @@ export default function CommitCardList({ cardList }) {
             cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Pending"))
 
   const filterCounts = [
-    { filter: "Verify", count: cardList.filter(c => (c.commitTo == connectedAddress && c.status == "Waiting")).length },
+    { filter: "Verify", count: cardList.filter(c => (c.commitTo.includes(connectedAddress) && c.status == "Waiting")).length },
     { filter: "Waiting", count: cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Waiting")).length },
     { filter: "Active", count: cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Pending")).length }
   ]

@@ -40,7 +40,7 @@ export default function Home() {
             commitFrom: commit.commitFrom,
             commitTo: commit.commitTo,
             createdAt: commit.createdAt.toNumber(),
-            validThrough: commit.validThrough.toNumber(),
+            endsAt: commit.endsAt.toNumber(),
             judgeDeadline: commit.judgeDeadline.toNumber(),
             stakeAmount: commit.stakeAmount,
             message: commit.message,
@@ -59,7 +59,7 @@ export default function Home() {
           commitFrom,
           commitTo,
           createdAt,
-          validThrough,
+          endsAt,
           judgeDeadline,
           stakeAmount,
           message,
@@ -75,7 +75,7 @@ export default function Home() {
             commitFrom: commitFrom,
             commitTo: commitTo,
             createdAt: createdAt,
-            validThrough: validThrough,
+            endsAt: endsAt,
             judgeDeadline: judgeDeadline,
             stakeAmount: stakeAmount,
             message: message,
@@ -120,7 +120,7 @@ export default function Home() {
   function determineStatus(commit) {
     let status = "";
     // is valid and does not have a proof
-    if (commit.validThrough > Date.now() && !commit.commitProved) {
+    if (commit.endsAt > Date.now() && !commit.commitProved) {
       status = "Pending";
     }
     // has not expired, has a proof, but has not been judged

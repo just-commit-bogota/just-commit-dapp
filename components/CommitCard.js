@@ -260,7 +260,7 @@ export default function CommitCard({ ...props }) {
                   />
 
                   {/* "to verify" buttons */}
-                  {props.commitTo == address && props.judgeDeadline > Date.now() && !props.commitJudged && (
+                  {props.commitTo.includes(address) && props.judgeDeadline > Date.now() && !props.commitJudged && (
                     <div>
                       <div className="flex flex-row gap-5 p-5" style={{ justifyContent: "space-between", marginBottom: "-30px" }}>
                         {
