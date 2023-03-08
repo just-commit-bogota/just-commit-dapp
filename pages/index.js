@@ -49,6 +49,7 @@ export default function Home() {
             commitProved: commit.commitProved,
             commitJudged: commit.commitJudged,
             isApproved: commit.isApproved,
+            isSolo: commit.isSolo,
           });
         });
         setAllCommits(commitsClassified);
@@ -68,6 +69,7 @@ export default function Home() {
           commitProved,
           commitJudged,
           isApproved,
+          isSolo,
         ) => {
           setAllCommits(prevState => [...prevState, {
             status: "Pending",
@@ -84,6 +86,7 @@ export default function Home() {
             commitProved: commitProved,
             commitJudged: commitJudged,
             isApproved: isApproved,
+            isSolo: isSolo,
           }]);
         });
 
@@ -92,6 +95,7 @@ export default function Home() {
         setAllCommits(commitsClassified)
 
         console.log(commitsClassified)
+        console.log("commitsClassified")
 
         // FOR LATER USE (unused events/emits):
         // on a NewProve event

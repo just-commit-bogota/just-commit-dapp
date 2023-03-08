@@ -43,7 +43,7 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitDescription, commitTo, betModality == "solo" ? Date.now() : startsAt, endsAt,
+    args: [commitDescription, commitTo, betModality == "solo" ? Date.now() : startsAt, endsAt, betModality == "solo",
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
@@ -109,7 +109,7 @@ export default function Commit() {
       <div className="container container--flex h-screen">
         <div className="mt-5 sm:mt-3" style={{ padding: "10px" }}>
           <FieldSet
-            legend={<Heading color="textSecondary" style={{fontWeight: "700", fontSize:"40px"}}>Bet On Yourself</Heading>}
+            legend={<Heading color="textSecondary" style={{ fontWeight: "700", fontSize: "40px" }}>Bet On Yourself</Heading>}
           >
             <RadioButtonGroup
               className="items-start place-self-center"
@@ -188,7 +188,7 @@ export default function Commit() {
                     data-tooltip-id="my-tooltip"
                     data-tooltip-content="📸 → proof required"
                     data-tooltip-place="right"
-                    
+
                   >
                     <Tag
                       style={{ background: '#21AD85' }}
@@ -213,7 +213,7 @@ export default function Commit() {
                       <Checkbox
                         checked={true} // {betModality=="solo"}
                         label=<p className="text-white">📸</p>
-                        value="camera"
+                      value="camera"
                       />
                     </div>
                   </div>
@@ -237,10 +237,10 @@ export default function Commit() {
                   setCommitAmount(e.target.value)
                 )}
                 required
-                suffix =
+                suffix=
                 {commitAmount != '0' && (
                   <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
-                    <div className="flex gap-2" style={{ color:'grey', whiteSpace: 'nowrap' }}>
+                    <div className="flex gap-2" style={{ color: 'grey', whiteSpace: 'nowrap' }}>
                       {`(${formatUsd(maticPrice * commitAmount)})`}
                     </div>
                   </div>

@@ -1,5 +1,5 @@
 //export const CONTRACT_ADDRESS = "0xA794728b33d21A2a0153BD8d97962fFf3Aa13361" // BETA
-export const CONTRACT_ADDRESS = "0xA713e59f3aE53693B9853BA42CD2Bbf29a2D41fF" // DEV
+export const CONTRACT_ADDRESS = "0x492f85A3937014C033282a2803F16c8a50e2DDC3" // DEV
 
 export const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
@@ -27,9 +27,9 @@ export const ABI =
         },
         {
           "indexed": true,
-          "internalType": "address",
+          "internalType": "address[]",
           "name": "commitTo",
-          "type": "address"
+          "type": "address[]"
         },
         {
           "indexed": false,
@@ -40,7 +40,13 @@ export const ABI =
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "validThrough",
+          "name": "startsAt",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "endsAt",
           "type": "uint256"
         },
         {
@@ -89,6 +95,12 @@ export const ABI =
           "indexed": false,
           "internalType": "bool",
           "name": "isApproved",
+          "type": "bool"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isSolo",
           "type": "bool"
         }
       ],
@@ -178,14 +190,24 @@ export const ABI =
           "type": "string"
         },
         {
-          "internalType": "address",
+          "internalType": "address[]",
           "name": "commitTo",
-          "type": "address"
+          "type": "address[]"
         },
         {
           "internalType": "uint256",
-          "name": "validThrough",
+          "name": "startsAt",
           "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "endsAt",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "isSolo",
+          "type": "bool"
         }
       ],
       "name": "createCommit",
@@ -210,9 +232,9 @@ export const ABI =
               "type": "address"
             },
             {
-              "internalType": "address",
+              "internalType": "address[]",
               "name": "commitTo",
-              "type": "address"
+              "type": "address[]"
             },
             {
               "internalType": "uint256",
@@ -221,7 +243,12 @@ export const ABI =
             },
             {
               "internalType": "uint256",
-              "name": "validThrough",
+              "name": "startsAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "endsAt",
               "type": "uint256"
             },
             {
@@ -263,6 +290,11 @@ export const ABI =
               "internalType": "bool",
               "name": "isApproved",
               "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "isSolo",
+              "type": "bool"
             }
           ],
           "internalType": "struct CommitPortal.Commit[]",
@@ -281,6 +313,19 @@ export const ABI =
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "hasPendingCommits",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
         }
       ],
       "stateMutability": "view",
