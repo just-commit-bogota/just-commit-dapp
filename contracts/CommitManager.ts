@@ -1,5 +1,5 @@
 //export const CONTRACT_ADDRESS = "0xA794728b33d21A2a0153BD8d97962fFf3Aa13361" // BETA
-export const CONTRACT_ADDRESS = "0x9c072bB771D16C36E16C674B38BA9876262ba08d" // DEV
+export const CONTRACT_ADDRESS = "0x034536d1fa44D7b8b2978f15fBFb7230e2378f66" // DEV
 
 export const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
   
@@ -312,19 +312,6 @@ export const ABI = [
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "hasPendingCommits",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
 			}
 		],
 		"stateMutability": "view",

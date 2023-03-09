@@ -136,6 +136,9 @@ export default function Commit() {
                   onClick={() => {
                     toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' });
                     setStartsAt(Date.now() + (12 * 3600 * 1000));
+                    // DEBUGGING
+                    toast("commitTo includes address? " + JSON.stringify(commitTo).toUpperCase().includes(address.toUpperCase()));
+                    toast("address = " + address.toUpperCase())
                   }}
                 />
                 <RadioButton
@@ -176,13 +179,13 @@ export default function Commit() {
               if (!chains.some((c) => c.id === chain.id)) {
                 return toast.error('Switch to a supported network')
               }
-              // commiting to self?
-              if (commitTo.includes(address.toUpperCase())) {
-                return toast.error('Cannot commit to self');
-              }
               // is commitAmount not set?
               if (maticPrice * commitAmount == 0) {
                 return toast.error('Set a commitment amount')
+              }
+              // commiting to self?
+              if (JSON.stringify(commitTo).toUpperCase().includes(address.toUpperCase())) {
+                return toast.error('Cannot attest yourself');
               }
             }}>
 
