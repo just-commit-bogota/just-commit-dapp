@@ -26,12 +26,12 @@ export default function Commit() {
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState([CONTRACT_OWNER])
   const [commitAmount, setCommitAmount] = useState('0')
-  const [startsAt, setStartsAt] = useState((24 * 3600 * 1000) + Date.now()) // startsAt is pre-set to 24h after commiting
+  const [startsAt, setStartsAt] = useState(Date.now()) // startsAt is pre-set to 12h after commiting
   const [endsAt, setEndsAt] = useState((24 * 3600 * 1000) + Date.now()) // duration is pre-set to 24h
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
-  const [betModality, setBetModality] = useState('solo')
+  const [betModality, setBetModality] = useState("solo")
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -43,9 +43,8 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitDescription, commitTo, betModality == "solo" ? Date.now() : startsAt, endsAt, betModality == "solo",
+    args: [commitDescription, commitTo, startsAt, endsAt, betModality == "solo",
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
-    enabled: true
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
@@ -123,7 +122,10 @@ export default function Commit() {
                   label="Solo"
                   name="solo"
                   value="solo"
-                  onClick={(e) => setBetModality('solo')}
+                  onClick={() => {
+                    setBetModality("solo");
+                    setStartsAt(Date.now());
+                  }}
                 />
                 <RadioButton
                   checked={false} // {betModality == "1v1"}
@@ -131,7 +133,10 @@ export default function Commit() {
                   label="1v1"
                   name="1v1"
                   value="1v1"
-                  onClick={() => toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' })}
+                  onClick={() => {
+                    toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' });
+                    setStartsAt(Date.now() + (12 * 3600 * 1000));
+                  }}
                 />
                 <RadioButton
                   checked={false} // {betModality == "multiplayer"}
@@ -139,7 +144,10 @@ export default function Commit() {
                   label="Multiplayer"
                   name="multiplayer"
                   value="multiplayer"
-                  onClick={() => toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' })}
+                  onClick={() => {
+                    toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' });
+                    setStartsAt(Date.now() + (12 * 3600 * 1000));
+                  }}
                 />
               </div>
             </RadioButtonGroup>
@@ -369,6 +377,7 @@ export default function Commit() {
             ---------
             */}
 
+            {/*
             betModality: {betModality}
             
             <br></br>
