@@ -157,9 +157,9 @@ export default function CommitCard({ ...props }) {
                 {
                   // active
                   (props.status == "Pending") ?
-                    ((moment(props.validThrough).diff(moment(), 'days') >= 2) ?
-                      "> " + moment(props.validThrough).diff(moment(), 'days') + " days left" :
-                      <Countdown date={props.validThrough} daysInHours={true} />) :
+                    ((moment(props.endsAt).diff(moment(), 'days') >= 2) ?
+                      "> " + moment(props.endsAt).diff(moment(), 'days') + " days left" :
+                      <Countdown date={props.endsAt} daysInHours={true} />) :
                     // waiting or verify
                     (props.status == "Waiting") ?
                       moment(props.judgeDeadline).fromNow(true) + " left" :
@@ -235,7 +235,7 @@ export default function CommitCard({ ...props }) {
             */}
 
             {/*
-            validThrough: {validThrough}
+            endsAt: {endsAt}
             <br></br>
             <br></br>
             Date.now(): {Date.now()}
@@ -356,7 +356,7 @@ export default function CommitCard({ ...props }) {
         {/*
           <br></br>
           {hasProved}
-          {props.validThrough}
+          {props.endsAt}
           <br></br>
           {props.createdAt}
           <br></br>

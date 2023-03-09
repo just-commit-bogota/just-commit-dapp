@@ -95,7 +95,6 @@ export default function Home() {
         setAllCommits(commitsClassified)
 
         console.log(commitsClassified)
-        console.log("commitsClassified")
 
         // FOR LATER USE (unused events/emits):
         // on a NewProve event
