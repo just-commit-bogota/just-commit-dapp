@@ -11,20 +11,12 @@ import Image from 'next/image'
 import toast, { Toaster } from 'react-hot-toast'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 import { Web3Storage } from 'web3.storage'
-//import { twilio } from 'twilio'
+import supabase from '../lib/db'
 
 export default function CommitCard({ ...props }) {
 
   // clients
   const client_storage = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
-
-  //const client_twilio = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-
-  // tokens
-  const TWILIO_ACCOUNT_SID = process.env.NEXT_PUBLIC_TWILIO_ACCOUNT_SID
-  const TWILIO_AUTH_TOKEN = process.env.NEXT_PUBLIC_TWILIO_AUTH_TOKEN
-  const TWILIO_NUMBER = process.env.NEXT_PUBLIC_TWILIO_NUMBER
-  const DESTINATION_NUMBER = process.env.NEXT_PUBLIC_DESTINATION_NUMBER
 
   // variables
   const { getItem, setItem, removeItem } = useStorage()
