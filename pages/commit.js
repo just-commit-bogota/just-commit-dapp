@@ -137,8 +137,8 @@ export default function Commit() {
                     toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' });
                     setStartsAt(Date.now() + (12 * 3600 * 1000));
                     // DEBUGGING
-                    toast("commitTo includes address? " + JSON.stringify(commitTo).toUpperCase().includes(address.toUpperCase()));
-                    toast("address = " + address.toUpperCase())
+                    //toast("commitTo includes address? " + JSON.stringify(commitTo).toUpperCase().includes(address.toUpperCase()));
+                    //toast("address = " + address.toUpperCase())
                   }}
                 />
                 <RadioButton
