@@ -31,6 +31,7 @@ export default function CommitCard({ ...props }) {
   const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
+  const [imageUrl, setImageUrl] = useState(null);
 
   // variables
   const { address } = useAccount()
@@ -50,7 +51,7 @@ export default function CommitCard({ ...props }) {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "proveCommit",
-    args: [props.id, getItem('ipfsHash', 'session'), getItem('filename', 'session')],
+    args: [props.id],
     enabled: triggerProveContractFunctions,
   })
   const { config: judgeCommitConfig } = usePrepareContractWrite({
@@ -99,37 +100,43 @@ export default function CommitCard({ ...props }) {
   // FUNCTIONS
 
   // upload the pic
-  const uploadFile = () => {
+  const uploadFile = async (file) => {
     setUploadClicked(true)
 
-    const fileInput = document.querySelector('input[type="file"]')
+    const { data, error } = await supabase.storage.from("images").upload(file.name, file);
 
-    removeItem('filename', "session")
-    setItem('filename', fileInput.files[0].name, "session")
-
-    if (fileInput.size > 0) {
-      if (fileInput.files[0].lastModified < props.createdAt * 1000) {
-        setUploadClicked(false)
-        toast.error("This pic is older than the commitment", { duration: 4000 })
-        return
-      }
-
-      client_storage.put(fileInput.files, {
-        name: 'fileInput',
-        maxRetries: 3,
-      }).then(cid => {
-        removeItem('ipfsHash', "session")
-        setItem('ipfsHash', cid, "session")
-        setTriggerProveContractFunctions(true)
-
-        if (!proveWrite.write) {
-          setUploadClicked(false)
-          toast("🔁 Upload again (bug)", { duration: 4000 })
-          return
-        }
-        proveWrite.write?.()
-      })
+    // error checks
+    if (error) {
+      console.log(error);
+      setUploadClicked(false);
+      return;
+    } else if (file.size.lastModified < props.createdAt * 1000) {
+      setUploadClicked(false);
+      toast.error("This pic is older than the commitment", { duration: 4000 })
+      return;
     }
+
+    console.log(data);
+
+    setTriggerProveContractFunctions(true)
+    console.log(proveWrite.write);
+    if (!proveWrite.write) {
+      setUploadClicked(false)
+      toast("🔁 Upload again (bug)", { duration: 4000 })
+      return
+    }
+  }
+
+  // retrieve the pic
+  const getImageUrl = async (imageName) => {
+    const { signedURL, error } = await supabase.storage.from("images").getSignedUrl(imageName);
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    setImageUrl(signedURL);
   }
 
   return (
@@ -175,40 +182,41 @@ export default function CommitCard({ ...props }) {
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
                   <div className="flex">
-                    <FileInput maxSize={20} onChange={(file) => uploadFile()}>
-                      {(context) =>
+                    <div>
+                      <input type="file" accept="image/*" onChange={(e) => uploadFile(e.target.files[0])} />
+                      {
                         (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ?
-                          <div className="flex flex-col" style={{ alignItems: "center" }}>
-                            <Spinner />
-                            <div className="heartbeat text-xs">(Don&#39;t Refresh)</div>
-                          </div>
-                          :
-                          (context.name && triggerProveContractFunctions) ?
-                            <div>
-                              <a
-                                className="text-4xl hover:cursor-pointer"
-                                href="#"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  location.reload();
-                                }}
-                              >
-                                &nbsp;🔁&nbsp;
-                              </a>
-                            </div>
-                            :
-                            <div>
-                              <Tag
-                                className="text-2xl hover:cursor-pointer"
-                                tone="accent"
-                                variation="primary"
-                                size="large"
-                              >
-                                &nbsp;📷&nbsp;
-                              </Tag>
-                            </div>
+                        <div className="flex flex-col" style={{ alignItems: "center" }}>
+                          <Spinner />
+                          <div className="heartbeat text-xs">(Don&#39;t Refresh)</div>
+                        </div>
+                        :
+                        (triggerProveContractFunctions) ?
+                        <div>
+                          <a
+                            className="text-4xl hover:cursor-pointer"
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              location.reload();
+                            }}
+                          >
+                            &nbsp;🔁&nbsp;
+                          </a>
+                        </div>
+                        :
+                        <div>
+                          <Tag
+                            className="text-2xl hover:cursor-pointer"
+                            tone="accent"
+                            variation="primary"
+                            size="large"
+                          >
+                            &nbsp;📷&nbsp;
+                          </Tag>
+                        </div>
                       }
-                    </FileInput>
+                    </div>
                   </div>
                 </div>
               </>
@@ -240,15 +248,12 @@ export default function CommitCard({ ...props }) {
 
                   <Image
                     className="object-cover"
-                    unoptimized
-                    loader={() => `https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`}
-                    src={`https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`}
-                    alt="IPFS picture"
+                    src={imageUrl}
+                    alt={imageName}
                     width={300}
                     height={300}
-                    style={{
-                      borderRadius: "10px",
-                    }}
+                    objectFit="cover"
+                    style={{ borderRadius: "10px" }}
                   />
 
                   {/* "to verify" buttons */}
