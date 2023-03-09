@@ -45,6 +45,7 @@ export default function Commit() {
     functionName: "createCommit",
     args: [commitDescription, commitTo, betModality == "solo" ? Date.now() : startsAt, endsAt, betModality == "solo",
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
+    enabled: true
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
@@ -113,16 +114,16 @@ export default function Commit() {
           >
             <RadioButtonGroup
               className="items-start place-self-center"
-              value={betModality}
               onChange={(e) => setBetModality(e.target.value)}
             >
               <div className="flex gap-4">
                 <RadioButton
-                  checked={true} // betModality == "solo"}
+                  checked={true}
                   id="solo"
                   label="Solo"
                   name="solo"
                   value="solo"
+                  onClick={(e) => setBetModality('solo')}
                 />
                 <RadioButton
                   checked={false} // {betModality == "1v1"}
@@ -130,7 +131,7 @@ export default function Commit() {
                   label="1v1"
                   name="1v1"
                   value="1v1"
-                  onChange={() => toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' })}
+                  onClick={() => toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' })}
                 />
                 <RadioButton
                   checked={false} // {betModality == "multiplayer"}
@@ -138,7 +139,7 @@ export default function Commit() {
                   label="Multiplayer"
                   name="multiplayer"
                   value="multiplayer"
-                  onChange={() => toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' })}
+                  onClick={() => toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' })}
                 />
               </div>
             </RadioButtonGroup>
@@ -368,7 +369,8 @@ export default function Commit() {
             ---------
             */}
 
-            {/* betModality: {betModality}
+            betModality: {betModality}
+            
             <br></br>
             <br></br>
             maticPrice * commitAmount: {typeof(maticPrice * commitAmount)}
