@@ -24,13 +24,14 @@ export default function Commit() {
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState(CONTRACT_OWNER)
+  const [commitTo, setCommitTo] = useState([CONTRACT_OWNER])
   const [commitAmount, setCommitAmount] = useState('0')
-  const [validThrough, setValidThrough] = useState((24 * 3600 * 1000) + Date.now()) // 24 hours
+  const [startsAt, setStartsAt] = useState(Date.now()) // startsAt is pre-set to 12h after commiting
+  const [endsAt, setEndsAt] = useState((24 * 3600 * 1000) + Date.now()) // duration is pre-set to 24h
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
-  const [betModality, setBetModality] = useState('solo')
+  const [betModality, setBetModality] = useState("solo")
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -42,7 +43,7 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitDescription, commitTo, validThrough,
+    args: [commitDescription, commitTo, startsAt, endsAt, betModality == "solo",
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
@@ -108,20 +109,23 @@ export default function Commit() {
       <div className="container container--flex h-screen">
         <div className="mt-5 sm:mt-3" style={{ padding: "10px" }}>
           <FieldSet
-            legend={<Heading color="textSecondary" style={{fontWeight: "700", fontSize:"40px"}}>Bet On Yourself</Heading>}
+            legend={<Heading color="textSecondary" style={{ fontWeight: "700", fontSize: "40px" }}>Bet On Yourself</Heading>}
           >
             <RadioButtonGroup
               className="items-start place-self-center"
-              value={betModality}
               onChange={(e) => setBetModality(e.target.value)}
             >
               <div className="flex gap-4">
                 <RadioButton
-                  checked={true} // betModality == "solo"}
+                  checked={true}
                   id="solo"
                   label="Solo"
                   name="solo"
                   value="solo"
+                  onClick={() => {
+                    setBetModality("solo");
+                    setStartsAt(Date.now());
+                  }}
                 />
                 <RadioButton
                   checked={false} // {betModality == "1v1"}
@@ -129,7 +133,13 @@ export default function Commit() {
                   label="1v1"
                   name="1v1"
                   value="1v1"
-                  onChange={() => toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' })}
+                  onClick={() => {
+                    toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' });
+                    setStartsAt(Date.now() + (12 * 3600 * 1000));
+                    // DEBUGGING
+                    //toast("commitTo includes address? " + JSON.stringify(commitTo).toUpperCase().includes(address.toUpperCase()));
+                    //toast("address = " + address.toUpperCase())
+                  }}
                 />
                 <RadioButton
                   checked={false} // {betModality == "multiplayer"}
@@ -137,7 +147,10 @@ export default function Commit() {
                   label="Multiplayer"
                   name="multiplayer"
                   value="multiplayer"
-                  onChange={() => toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' })}
+                  onClick={() => {
+                    toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' });
+                    setStartsAt(Date.now() + (12 * 3600 * 1000));
+                  }}
                 />
               </div>
             </RadioButtonGroup>
@@ -166,13 +179,13 @@ export default function Commit() {
               if (!chains.some((c) => c.id === chain.id)) {
                 return toast.error('Switch to a supported network')
               }
-              // commiting to self?
-              if (address.toUpperCase() == commitTo.toUpperCase()) {
-                return toast.error('Cannot commit to self')
-              }
               // is commitAmount not set?
               if (maticPrice * commitAmount == 0) {
                 return toast.error('Set a commitment amount')
+              }
+              // commiting to self?
+              if (JSON.stringify(commitTo).toUpperCase().includes(address.toUpperCase())) {
+                return toast.error('Cannot attest yourself');
               }
             }}>
 
@@ -187,7 +200,7 @@ export default function Commit() {
                     data-tooltip-id="my-tooltip"
                     data-tooltip-content="📸 → proof required"
                     data-tooltip-place="right"
-                    
+
                   >
                     <Tag
                       style={{ background: '#21AD85' }}
@@ -212,7 +225,7 @@ export default function Commit() {
                       <Checkbox
                         checked={true} // {betModality=="solo"}
                         label=<p className="text-white">📸</p>
-                        value="camera"
+                      value="camera"
                       />
                     </div>
                   </div>
@@ -236,10 +249,10 @@ export default function Commit() {
                   setCommitAmount(e.target.value)
                 )}
                 required
-                suffix =
+                suffix=
                 {commitAmount != '0' && (
                   <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
-                    <div className="flex gap-2" style={{ color:'grey', whiteSpace: 'nowrap' }}>
+                    <div className="flex gap-2" style={{ color: 'grey', whiteSpace: 'nowrap' }}>
                       {`(${formatUsd(maticPrice * commitAmount)})`}
                     </div>
                   </div>
@@ -253,9 +266,9 @@ export default function Commit() {
                 max={24}
                 step={1}
                 type="number"
-                units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
-                error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
-                onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
+                units={((endsAt - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
+                error={((endsAt - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
+                onChange={(e) => setEndsAt((e.target.value * 3600 * 1000) + Date.now())}
                 required
               />
               <Input
@@ -263,8 +276,7 @@ export default function Commit() {
                 required
                 readOnly
                 placeholder="justcommit.eth"
-                maxLength={42}
-                onChange={(e) => setCommitTo(e.target.value)}
+                onChange={(e) => setCommitTo(e.target.value.split(",").map((address) => address.trim()))}
                 onClick={() => {
                   toast('⚠️ Disabled (Beta)',
                     { position: 'bottom-center', id: 'unique' }
@@ -284,7 +296,7 @@ export default function Commit() {
                     commitDescription.length < 2 ||
                     commitDescription.length > 35 ||
                     !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                    ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
+                    ((endsAt - Date.now()) / 3600 / 1000) > 24 ||
                     commitAmount > 9999 ||
                     commitAmount > walletMaticBalance ?
                     "rgb(30 174 131 / 36%)" : "rgb(30 174 131)",
@@ -301,7 +313,7 @@ export default function Commit() {
                   commitDescription.length < 2 ||
                   commitDescription.length > 35 ||
                   !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                  ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
+                  ((endsAt - Date.now()) / 3600 / 1000) > 24 ||
                   commitAmount > 9999 ||
                   commitAmount > walletMaticBalance
                 }
@@ -368,7 +380,9 @@ export default function Commit() {
             ---------
             */}
 
-            {/* betModality: {betModality}
+            {/*
+            betModality: {betModality}
+            
             <br></br>
             <br></br>
             maticPrice * commitAmount: {typeof(maticPrice * commitAmount)}
@@ -377,7 +391,7 @@ export default function Commit() {
             isWaitLoading: {String(isWaitLoading)}
             <br></br>
             <br></br>
-            validThrou.: {validThrough}
+            endsAt: {endsAt}
             <br></br>
             <br></br>
             Date.now(): {Date.now()} */}
