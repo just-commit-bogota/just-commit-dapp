@@ -5,6 +5,8 @@ import { useAccount } from 'wagmi'
 import { Tag, Typography } from '@ensdomains/thorin'
 import { useStorage } from '../hooks/useStorage.ts'
 
+// TODO - is the commitTo.includes() logic done right?
+
 export default function CommitCardList({ cardList }) {
   // state
   const [selectedFilter, setSelectedFilter] = useState("Feed")

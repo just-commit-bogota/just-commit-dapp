@@ -121,13 +121,15 @@ export default function CommitCard({ ...props }) {
       setUploadClicked(false);
       return;
     }
-
-    if (!proveWrite.write) {
+    
+    if (!proveWrite.write) { // this - for some reason - is ALWAYS true
       setUploadClicked(false)
       toast("🔁 Upload again (bug)", { duration: 4000 })
       return
     }
 
+    proveWrite.write?.() // smart contract call
+    getImageUrl(file) // needed to render the <Image>
   }
 
   // retrieve the pic
@@ -259,6 +261,8 @@ export default function CommitCard({ ...props }) {
                   />
 
                   {/* "to verify" buttons */}
+
+                  {/* TODO - is the props.commitTo check done right? */}
                   {props.commitTo.includes(address) && props.judgeDeadline > Date.now() && !props.commitJudged && (
                     <div>
                       <div className="flex flex-row gap-5 p-5" style={{ justifyContent: "space-between", marginBottom: "-30px" }}>
