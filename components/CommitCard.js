@@ -30,7 +30,6 @@ export default function CommitCard({ ...props }) {
   // state
   const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
-  const [isProveComplete, setIsProveComplete] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
   const [imageUrl, setImageUrl] = useState(null);
 
