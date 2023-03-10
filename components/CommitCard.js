@@ -30,6 +30,7 @@ export default function CommitCard({ ...props }) {
   // state
   const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
+  const [isProveComplete, setIsProveComplete] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
   const [imageUrl, setImageUrl] = useState(null);
 
@@ -63,8 +64,7 @@ export default function CommitCard({ ...props }) {
   })
 
   // write
-  const proveWrite = useContractWrite({
-    ...proveCommitConfig,
+  const proveWrite = useContractWrite({...proveCommitConfig,
     onSettled() { { proveWait } },
     onError: (err) => {
       setUploadClicked(false)
@@ -103,28 +103,31 @@ export default function CommitCard({ ...props }) {
   const uploadFile = async (file) => {
     setUploadClicked(true)
 
-    const { data, error } = await supabase.storage.from("images").upload(file.name, file);
+    const { data, error } = await supabase.storage.from("images").upload(file.name, file); // this works
 
-    // error checks
-    if (error) {
-      console.log(error);
-      setUploadClicked(false);
+    // on data
+    if (data) {
+      if (file.size.lastModified < props.createdAt * 1000) {
+        toast.error("This pic is older than the commitment", { duration: 4000 })
       return;
-    } else if (file.size.lastModified < props.createdAt * 1000) {
+      }
+      setTriggerProveContractFunctions(true)
+    }
+    // on error
+    if (error) {
+      if (error.statusCode == "409") {
+        toast.error("This picture is a duplicate", { duration: 4000 })
+      }
       setUploadClicked(false);
-      toast.error("This pic is older than the commitment", { duration: 4000 })
       return;
     }
 
-    console.log(data);
-
-    setTriggerProveContractFunctions(true)
-    console.log(proveWrite.write);
     if (!proveWrite.write) {
       setUploadClicked(false)
       toast("🔁 Upload again (bug)", { duration: 4000 })
       return
     }
+
   }
 
   // retrieve the pic
@@ -182,41 +185,40 @@ export default function CommitCard({ ...props }) {
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
                   <div className="flex">
-                    <div>
-                      <input type="file" accept="image/*" onChange={(e) => uploadFile(e.target.files[0])} />
-                      {
+                    <FileInput maxSize={20} onChange={(file) => uploadFile(file)}>
+                      {(context) =>
                         (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ?
-                        <div className="flex flex-col" style={{ alignItems: "center" }}>
-                          <Spinner />
-                          <div className="heartbeat text-xs">(Don&#39;t Refresh)</div>
-                        </div>
-                        :
-                        (triggerProveContractFunctions) ?
-                        <div>
-                          <a
-                            className="text-4xl hover:cursor-pointer"
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              location.reload();
-                            }}
-                          >
-                            &nbsp;🔁&nbsp;
-                          </a>
-                        </div>
-                        :
-                        <div>
-                          <Tag
-                            className="text-2xl hover:cursor-pointer"
-                            tone="accent"
-                            variation="primary"
-                            size="large"
-                          >
-                            &nbsp;📷&nbsp;
-                          </Tag>
-                        </div>
+                          <div className="flex flex-col" style={{ alignItems: "center" }}>
+                            <Spinner />
+                            <div className="heartbeat text-xs">(Don&#39;t Refresh)</div>
+                          </div>
+                          :
+                          (context.name && triggerProveContractFunctions) ?
+                            <div>
+                              <a
+                                className="text-4xl hover:cursor-pointer"
+                                href="#"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  location.reload();
+                                }}
+                              >
+                                &nbsp;🔁&nbsp;
+                              </a>
+                            </div>
+                            :
+                            <div>
+                              <Tag
+                                className="text-2xl hover:cursor-pointer"
+                                tone="accent"
+                                variation="primary"
+                                size="large"
+                              >
+                                &nbsp;📷&nbsp;
+                              </Tag>
+                            </div>
                       }
-                    </div>
+                    </FileInput>
                   </div>
                 </div>
               </>
@@ -273,7 +275,6 @@ export default function CommitCard({ ...props }) {
                                   removeItem('isApproved', "session")
                                   setItem('isApproved', false, "session")
                                   setTriggerJudgeContractFunctions(true)
-                                  // console.log(judgeCommitConfig)
                                   judgeWrite.write?.()
                                 }}
                               >
