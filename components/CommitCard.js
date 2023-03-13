@@ -31,7 +31,7 @@ export default function CommitCard({ ...props }) {
   const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
-  const [imageUrl, setImageUrl] = useState(null);
+  const [imageUrl, setImageUrl] = useState('/');
 
   // variables
   const { address } = useAccount()
@@ -121,26 +121,27 @@ export default function CommitCard({ ...props }) {
       return;
     }
     
-    if (!proveWrite.write) { // this - for some reason - is ALWAYS true
+    if (!proveWrite.write) { // this if statement is ALWAYS true in its first call
       setUploadClicked(false)
       toast("🔁 Upload again (bug)", { duration: 4000 })
       return
     }
 
-    proveWrite.write?.() // smart contract call
-    getImageUrl(file) // needed to render the <Image>
+    proveWrite.write?.() // smart contract call 
+    getImageUrl(file.name) // needed to render the <Image>
   }
 
   // retrieve the pic
   const getImageUrl = async (imageName) => {
-    const { signedURL, error } = await supabase.storage.from("images").getSignedUrl(imageName);
+    const { imageUrl, error } = await supabase.storage.from("images").getPublicUrl(imageName);
 
     if (error) {
       console.log(error);
       return;
     }
 
-    setImageUrl(signedURL);
+    console.log("imageUrl: ", imageUrl)
+    setImageUrl(imageUrl);
   }
 
   return (
@@ -248,11 +249,11 @@ export default function CommitCard({ ...props }) {
             {(props.commitProved) &&
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
-
+                  
                   <Image
                     className="object-cover"
                     src={imageUrl}
-                    alt={imageName}
+                    // alt={imageName}
                     width={300}
                     height={300}
                     objectFit="cover"
