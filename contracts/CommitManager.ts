@@ -1,5 +1,5 @@
 //export const CONTRACT_ADDRESS = "0xA794728b33d21A2a0153BD8d97962fFf3Aa13361" // BETA
-export const CONTRACT_ADDRESS = "0x666c63FB5036538F58ABf8cF47e8667d8e2644E7" // DEV
+export const CONTRACT_ADDRESS = "0x1C833412618c40e7A16e25BA106590ef061920ad" // DEV
 
 export const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
@@ -69,12 +69,6 @@ export const ABI = [
       {
         "indexed": false,
         "internalType": "string",
-        "name": "ipfsHash",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
         "name": "filename",
         "type": "string"
       },
@@ -139,6 +133,12 @@ export const ABI = [
         "internalType": "uint256",
         "name": "commitId",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "filename",
+        "type": "string"
       },
       {
         "indexed": false,
@@ -255,11 +255,6 @@ export const ABI = [
           },
           {
             "internalType": "string",
-            "name": "ipfsHash",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
             "name": "filename",
             "type": "string"
           },
@@ -342,6 +337,11 @@ export const ABI = [
         "internalType": "uint256",
         "name": "commitId",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_filename",
+        "type": "string"
       }
     ],
     "name": "proveCommit",

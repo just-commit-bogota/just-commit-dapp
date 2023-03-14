@@ -35,7 +35,9 @@ export default function Home() {
         let commitsClassified = [];
         commits.forEach(commit => {
           commitsClassified.push({
+            // front-end
             status: determineStatus(commit),
+            // back-end
             id: commit.id.toNumber(),
             commitFrom: commit.commitFrom,
             commitTo: commit.commitTo,
@@ -45,7 +47,6 @@ export default function Home() {
             judgeDeadline: commit.judgeDeadline.toNumber(),
             stakeAmount: commit.stakeAmount,
             message: commit.message,
-            ipfsHash: commit.ipfsHash,
             filename: commit.filename,
             commitProved: commit.commitProved,
             commitJudged: commit.commitJudged,
@@ -66,7 +67,6 @@ export default function Home() {
           judgeDeadline,
           stakeAmount,
           message,
-          ipfsHash,
           filename,
           commitProved,
           commitJudged,
@@ -84,7 +84,6 @@ export default function Home() {
             judgeDeadline: judgeDeadline,
             stakeAmount: stakeAmount,
             message: message,
-            ipfsHash: ipfsHash,
             filename: filename,
             commitProved: commitProved,
             commitJudged: commitJudged,
@@ -101,8 +100,8 @@ export default function Home() {
 
         // FOR LATER USE (unused events/emits):
         // on a NewProve event
-        commitPortal.on("NewProve", (commitId, ipfsHash, filename, provedAt) => {
-          console.log("New Prove Event:", commitId, ipfsHash, filename, provedAt);
+        commitPortal.on("NewProve", (commitId, filename, provedAt) => {
+          console.log("New Prove Event:", commitId, filename, provedAt);
         });
 
         // on a NewJudge event

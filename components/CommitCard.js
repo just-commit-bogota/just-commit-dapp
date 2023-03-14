@@ -31,7 +31,6 @@ export default function CommitCard({ ...props }) {
   const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
-  const [imageUrl, setImageUrl] = useState('/');
 
   // variables
   const { address } = useAccount()
@@ -51,7 +50,7 @@ export default function CommitCard({ ...props }) {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "proveCommit",
-    args: [props.id],
+    args: [props.id, getItem('filename', 'session')],
     enabled: triggerProveContractFunctions,
   })
   const { config: judgeCommitConfig } = usePrepareContractWrite({
@@ -63,7 +62,8 @@ export default function CommitCard({ ...props }) {
   })
 
   // write
-  const proveWrite = useContractWrite({...proveCommitConfig,
+  const proveWrite = useContractWrite({
+    ...proveCommitConfig,
     onSettled() { { proveWait } },
     onError: (err) => {
       setUploadClicked(false)
@@ -101,18 +101,22 @@ export default function CommitCard({ ...props }) {
   // upload the pic
   const uploadFile = async (file) => {
     setUploadClicked(true)
-
+    
     const { data, error } = await supabase.storage.from("images").upload(file.name, file); // this works
 
-    // on data
+    // on data checks
     if (data) {
-      if (file.size.lastModified < props.createdAt * 1000) {
+      if (file.lastModified < props.createdAt * 1000) {
         toast.error("This pic is older than the commitment", { duration: 4000 })
-      return;
+        setUploadClicked(false);
+        return
+      } else {
+        setTriggerProveContractFunctions(true)
+        removeItem('filename', "session")
+        setItem('filename', file.name, "session")
       }
-      setTriggerProveContractFunctions(true)
     }
-    // on error
+    // on error checks
     if (error) {
       if (error.statusCode == "409") {
         toast.error("This picture is a duplicate", { duration: 4000 })
@@ -120,28 +124,28 @@ export default function CommitCard({ ...props }) {
       setUploadClicked(false);
       return;
     }
-    
+
     if (!proveWrite.write) { // this if statement is ALWAYS true in its first call
+      // delete the recent db entry
+      const { error } = await supabase.storage
+        .from('images')
+        .remove([file.name])
+      if (error) {
+        console.error(error)
+      }
+      // appropriate UX/UI
       setUploadClicked(false)
       toast("🔁 Upload again (bug)", { duration: 4000 })
       return
     }
 
-    proveWrite.write?.() // smart contract call 
-    getImageUrl(file.name) // needed to render the <Image>
+    proveWrite.write?.() // smart contract call
+
   }
 
-  // retrieve the pic
-  const getImageUrl = async (imageName) => {
-    const { imageUrl, error } = await supabase.storage.from("images").getPublicUrl(imageName);
-
-    if (error) {
-      console.log(error);
-      return;
-    }
-
-    console.log("imageUrl: ", imageUrl)
-    setImageUrl(imageUrl);
+  function getPublicUrl(filename) {
+    const urlPrefix = "https://yrjyojfejukxkmxacefq.supabase.co/storage/v1/object/public/images/"
+    return (urlPrefix + filename.replace(/ /g, "%20"))
   }
 
   return (
@@ -249,15 +253,18 @@ export default function CommitCard({ ...props }) {
             {(props.commitProved) &&
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
-                  
+
                   <Image
                     className="object-cover"
-                    src={imageUrl}
-                    // alt={imageName}
+                    unoptimized
+                    loader={() => {getPublicUrl(props.filename)}}
+                    src={getPublicUrl(props.filename)}
+                    alt="Supabase picture"
                     width={300}
                     height={300}
-                    objectFit="cover"
-                    style={{ borderRadius: "10px" }}
+                    style={{
+                      borderRadius: "10px",
+                    }}
                   />
 
                   {/* "to verify" buttons */}

@@ -104,6 +104,9 @@ export default function CommitCardList({ cardList }) {
           cardListToDisplay.map((card, index) => (
             <CommitCard
               key={index}
+              
+              status={card.status}
+
               id={card.id}
               commitFrom={card.commitFrom}
               commitTo={card.commitTo}
@@ -113,12 +116,11 @@ export default function CommitCardList({ cardList }) {
               judgeDeadline={card.judgeDeadline}
               stakeAmount={ethers.utils.formatEther(card.stakeAmount)}
               message={card.message}
-              ipfsHash={card.ipfsHash}
+              filename={card.filename}
               commitProved={card.commitProved}
               commitJudged={card.commitJudged}
               isApproved={card.isApproved}
-              status={card.status}
-              filename={card.filename}
+              isSolo={card.isSolo}
             />
           )).reverse()
         ) : (
