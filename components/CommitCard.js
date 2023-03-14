@@ -101,7 +101,7 @@ export default function CommitCard({ ...props }) {
   // upload the pic
   const uploadFile = async (file) => {
     setUploadClicked(true)
-    
+
     const { data, error } = await supabase.storage.from("images").upload(file.name, file); // this works
 
     // on data checks
@@ -144,7 +144,7 @@ export default function CommitCard({ ...props }) {
   }
 
   function getPublicUrl(filename) {
-    const urlPrefix = "https://yrjyojfejukxkmxacefq.supabase.co/storage/v1/object/public/images/"
+    const urlPrefix = process.env.NEXT_PUBLIC_SUPABASE_URL + "/storage/v1/object/public/images/"
     return (urlPrefix + filename.replace(/ /g, "%20"))
   }
 
@@ -257,7 +257,7 @@ export default function CommitCard({ ...props }) {
                   <Image
                     className="object-cover"
                     unoptimized
-                    loader={() => {getPublicUrl(props.filename)}}
+                    loader={() => { getPublicUrl(props.filename) }}
                     src={getPublicUrl(props.filename)}
                     alt="Supabase picture"
                     width={300}
