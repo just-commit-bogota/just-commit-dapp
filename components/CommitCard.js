@@ -122,7 +122,7 @@ export default function CommitCard({ ...props }) {
       return;
     }
 
-    if (!proveWrite.write) { // this if statement is ALWAYS true in its first call
+    if (!proveWrite.write) { // TODO
       // delete the recent db entry
       const { error } = await supabase.storage
         .from('images')
@@ -141,7 +141,7 @@ export default function CommitCard({ ...props }) {
   }
 
   function getPublicUrl(filename) {
-    const urlPrefix = process.env.NEXT_PUBLIC_SUPABASE_URL + "/storage/v1/object/public/images/"
+    const urlPrefix = process.env.NEXT_PUBLIC_SUPABASE_URL + "/storage/v1/object/public/images/" // "https://xzbyzkbhwuggztjkrbab.supabase.co" || process.env.NEXT_PUBLIC_SUPABASE_URL
     return (urlPrefix + filename.replace(/ /g, "%20"))
   }
 
