@@ -141,7 +141,7 @@ export default function CommitCard({ ...props }) {
   }
 
   function getPublicUrl(filename) {
-    const urlPrefix = process.env.NEXT_PUBLIC_SUPABASE_URL + "/storage/v1/object/public/images/" // "https://xzbyzkbhwuggztjkrbab.supabase.co" || process.env.NEXT_PUBLIC_SUPABASE_URL
+    const urlPrefix = process.env.NEXT_PUBLIC_SUPABASE_URL + "/storage/v1/object/public/images/"
     return (urlPrefix + filename.replace(/ /g, "%20"))
   }
 
