@@ -10,7 +10,6 @@ import { useStorage } from '../hooks/useStorage.ts'
 import Image from 'next/image'
 import toast, { Toaster } from 'react-hot-toast'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
-import { Web3Storage } from 'web3.storage'
 import supabase from '../lib/db'
 
 export default function CommitCard({ ...props }) {
