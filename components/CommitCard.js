@@ -333,7 +333,9 @@ export default function CommitCard({ ...props }) {
               <div className="flex flex-col align-center justify-center">
                 <img className="h-6" src="./polygon-logo-tilted.svg" />
               </div>
-              <div className="flex flex-col font-semibold align-center justify-center text-l ml-1">{parseFloat(props.stakeAmount).toFixed(2)}</div>
+              <div className="flex flex-col font-semibold align-center justify-center text-l ml-1">
+                {parseFloat(props.stakeAmount).toFixed(2) % 1 === 0 ? parseInt(props.stakeAmount) : parseFloat(props.stakeAmount).toFixed(2)}
+              </div>
             </div>
 
             <div className="flex flex-col align-center justify-center text-lg">
