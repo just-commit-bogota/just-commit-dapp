@@ -198,7 +198,7 @@ export default function Commit() {
                 labelSecondary={
                   <a
                     data-tooltip-id="my-tooltip"
-                    data-tooltip-content="📸 → proof required"
+                    data-tooltip-content="📸 Can you prove it?"
                     data-tooltip-place="right"
 
                   >
@@ -218,18 +218,6 @@ export default function Commit() {
                 }
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
-                suffix=
-                {
-                  <div className="flex flex-col gap-2" style={{ fontSize: "x-large" }}>
-                    <div className="flex gap-2" style={{ whiteSpace: 'nowrap' }}>
-                      <Checkbox
-                        checked={true} // {betModality=="solo"}
-                        label=<p className="text-white">📸</p>
-                      value="camera"
-                      />
-                    </div>
-                  </div>
-                }
               />
               <Input
                 label="Or Else I'll Lose"
