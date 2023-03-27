@@ -68,13 +68,20 @@ export default function Commit() {
   })
 
   // functions
-  function formatUsd(number) {
-    return number.toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
+  function formatCurrency(number, currency = null) {
+    const options = {
       maximumFractionDigits: 2,
       minimumFractionDigits: 2,
-    })
+    };
+  
+    if (currency) {
+      options.style = 'currency';
+      options.currency = currency;
+    } else {
+      options.style = 'decimal';
+    }
+  
+    return number.toLocaleString('en-US', options);
   }
 
   async function getWalletMaticBalance() {
@@ -134,7 +141,7 @@ export default function Commit() {
                   name="1v1"
                   value="1v1"
                   onClick={() => {
-                    toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' });
+                    toast('⏳ Coming Soon...', { position: 'top-center', id: 'unique' });
                     setStartsAt(Date.now() + (12 * 3600 * 1000));
                     // DEBUGGING
                     //toast("commitTo includes address? " + JSON.stringify(commitTo).toUpperCase().includes(address.toUpperCase()));
@@ -148,7 +155,7 @@ export default function Commit() {
                   name="multiplayer"
                   value="multiplayer"
                   onClick={() => {
-                    toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' });
+                    toast('⏳ Coming Soon...', { position: 'top-center', id: 'unique' });
                     setStartsAt(Date.now() + (12 * 3600 * 1000));
                   }}
                 />
@@ -229,7 +236,7 @@ export default function Commit() {
                 type="number"
                 units="MATIC"
                 error={
-                  commitAmount > walletMaticBalance ? "Insufficient Funds" :
+                  commitAmount > walletMaticBalance ? "Not Enough Funds (" + formatCurrency(walletMaticBalance) + " MATIC)":
                     commitAmount > 9999 ? "Up to 9999" : null
                 }
                 onChange={(e) => (
@@ -240,7 +247,7 @@ export default function Commit() {
                 {commitAmount != '0' && (
                   <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
                     <div className="flex gap-2" style={{ color: 'grey', whiteSpace: 'nowrap' }}>
-                      {`(${formatUsd(maticPrice * commitAmount)})`}
+                      {`(${formatCurrency(maticPrice * commitAmount, "USD")})`}
                     </div>
                   </div>
                 )}
@@ -294,7 +301,7 @@ export default function Commit() {
                 size="small"
                 shadowless
                 type="submit"
-                suffix={!priceApi.isLoading && "(" + formatUsd(maticPrice * commitAmount) + ")"}
+                suffix={!priceApi.isLoading && "(" + formatCurrency(maticPrice * commitAmount, "USD") + ")"}
                 disabled={
                   commitAmount == 0 || commitAmount == "" ||
                   commitDescription.length < 2 ||
