@@ -220,7 +220,7 @@ export default function Commit() {
                 error={
                   commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) || commitDescription.length === 0
                     ? null
-                    : 'Alphanumeric only'
+                    : 'Alphanumeric Only'
                 }
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
