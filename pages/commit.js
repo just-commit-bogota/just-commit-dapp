@@ -200,7 +200,6 @@ export default function Commit() {
                     data-tooltip-id="my-tooltip"
                     data-tooltip-content="📸 Can you prove it?"
                     data-tooltip-place="right"
-
                   >
                     <Tag
                       style={{ background: '#21AD85' }}
@@ -313,7 +312,7 @@ export default function Commit() {
 
             <Toaster toastOptions={{ duration: 2000 }} />
             <Tooltip id="my-tooltip"
-              style={{ backgroundColor: "rgb(199, 247, 212, 1)", color: "#222" }}
+              style={{ backgroundColor: "#21AD85", color: "#ffffff", fontWeight: 500 }}
             />
 
             {(((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
