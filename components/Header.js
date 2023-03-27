@@ -35,11 +35,11 @@ export default function Header({ currentPage }) {
               },
               {
                 label:
-                  <Link href="http://turf.dev/plots/301"
+                  <Link href="https://discord.gg/7863Wtv4hX"
                     target="_blank" rel="noopener noreferrer">
-                    &nbsp;&nbsp;&nbsp;
-                    Headquarters ↗
-                    &nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Discord ↗
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   </Link>,
               },
               {
