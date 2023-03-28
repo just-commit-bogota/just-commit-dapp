@@ -230,7 +230,7 @@ export default function Commit() {
                 required
               />
               <div className="flex flex-row gap-2">
-                <div className="w-6/12">
+                <div className="w-8/12">
                   <Input
                     label="Or I'll Lose"
                     placeholder="5"
@@ -248,6 +248,7 @@ export default function Commit() {
                       setCommitAmount(e.target.value)
                     )}
                     required
+                    // TODO: prefix = <img className="h-6" src="./polygon-logo-tilted.svg" />
                     suffix=
                     {commitAmount != '0' && (
                       <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
@@ -258,7 +259,7 @@ export default function Commit() {
                     )}
                   />
                 </div>
-                <div className="w-6/12">
+                <div className="w-4/12">
                   <Select
                     value = {PurplePropHouseMultiSig} // default selected
                     style={{background:"rgba(246,246,248)", borderColor:"transparent", borderRadius:"14px"}}
@@ -266,11 +267,10 @@ export default function Commit() {
                     required
                     options={[ // TODO: add descriptive tooltip (Purple Prop House Multisig)
                       { value: PurplePropHouseMultiSig,
-                        label: <Typography fontVariant="label" style={{lineHeight:"1.25", fontSize:"small", fontWeight: "500", marginLeft: "-5px"}}>Purple Prop House</Typography>,
+                        label: <Typography fontVariant="label" style={{lineHeight:"1.2", fontSize:"small", fontWeight: "550", marginLeft: "-5px"}}>Purple Prop House</Typography>,
                         prefix: <div style={{ width: '16px', height: '16px', background: '#8b62d2' }} />
                       },
                     ]}
-                    
                     onChange={(e) => setCommitTo(e.target.value)}
                   />
                 </div>
@@ -289,7 +289,7 @@ export default function Commit() {
                 required
               />
               <Input
-                label="Verified By"
+                label="Proof Verified By"
                 required
                 readOnly
                 placeholder="justcommit.eth"
