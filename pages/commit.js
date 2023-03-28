@@ -27,7 +27,7 @@ export default function Commit() {
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState("")
+  const [commitTo, setCommitTo] = useState(PurplePropHouseMultiSig)
   const [commitJudge, setCommitJudge] = useState([CONTRACT_OWNER])
   const [commitAmount, setCommitAmount] = useState('0')
   const [startsAt, setStartsAt] = useState(Date.now()) // startsAt is pre-set to 12h after commiting
@@ -230,9 +230,9 @@ export default function Commit() {
                 required
               />
               <div className="flex flex-row gap-2">
-                <div className="w-8/12">
+                <div className="w-6/12">
                   <Input
-                    label="Or Else I'll Lose"
+                    label="Or I'll Lose"
                     placeholder="5"
                     disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                     min={0}
@@ -258,7 +258,7 @@ export default function Commit() {
                     )}
                   />
                 </div>
-                <div className="w-4/12">
+                <div className="w-6/12">
                   <Select
                     value = {PurplePropHouseMultiSig} // default selected
                     style={{background:"rgba(246,246,248)", borderColor:"transparent", borderRadius:"14px"}}
@@ -266,7 +266,7 @@ export default function Commit() {
                     required
                     options={[ // TODO: add descriptive tooltip (Purple Prop House Multisig)
                       { value: PurplePropHouseMultiSig,
-                        label: <Typography fontVariant="label" style={{lineHeight:"1.25"}}>Purple</Typography>,
+                        label: <Typography fontVariant="label" style={{lineHeight:"1.25", fontSize:"small", fontWeight: "500", marginLeft: "-5px"}}>Purple Prop House</Typography>,
                         prefix: <div style={{ width: '16px', height: '16px', background: '#8b62d2' }} />
                       },
                     ]}
@@ -289,7 +289,7 @@ export default function Commit() {
                 required
               />
               <Input
-                label="Attested By"
+                label="Verified By"
                 required
                 readOnly
                 placeholder="justcommit.eth"

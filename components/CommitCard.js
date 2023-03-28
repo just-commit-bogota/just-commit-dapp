@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import Countdown from 'react-countdown';
 import { useAccount, useEnsName } from 'wagmi'
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip } from 'react-tooltip';
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
 import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
@@ -166,7 +168,20 @@ export default function CommitCard({ ...props }) {
                       <Countdown date={props.endsAt} daysInHours={true} />) :
                     // waiting or verify
                     (props.status == "Waiting") ?    
-                      <>⏳ <Countdown date={props.judgeDeadline} daysInHours={true} /> </>:
+                      <>
+                        <a
+                          data-tooltip-id="my-tooltip"
+                          data-tooltip-content="If this image were judged by GPT-4, would it pass?"
+                          data-tooltip-place="top"
+                        >
+                          <Tag
+                            style={{ background: '#e6d3b7' }}
+                          >
+                            <img src="/gavel.svg" width="20px" height="20px" alt="Gavel"/>
+                          </Tag>
+                        </a>
+                         <Countdown date={props.judgeDeadline} daysInHours={true} />
+                      </>:
                       // my history or feed
                       moment(props.createdAt * 1000).fromNow()
                         
@@ -239,12 +254,12 @@ export default function CommitCard({ ...props }) {
             <br></br>
             */}
 
-            {/*
-            endsAt: {endsAt}
+            
+            {/* isCommitProved: {props.isCommitProved}
             <br></br>
             <br></br>
-            Date.now(): {Date.now()}
-            */}
+            Date.now(): {Date.now()} */}
+            
 
             {/* show the image if there's an image to show */}
             {(props.isCommitProved) &&
@@ -266,7 +281,7 @@ export default function CommitCard({ ...props }) {
 
                   {/* "to verify" buttons */}
 
-                  {/* TODO - is the props.commitTo check done right? */}
+                  {/* TODO - is the props.commitJudge check done right? */}
                   {props.commitJudge.includes(address) && props.judgeDeadline > Date.now() && !props.isCommitJudged && (
                     <div>
                       <div className="flex flex-row gap-5 p-5" style={{ justifyContent: "space-between", marginBottom: "-30px" }}>
@@ -360,6 +375,9 @@ export default function CommitCard({ ...props }) {
         </div>
 
         <Toaster toastOptions={{ duration: 2000 }} />
+        <Tooltip id="my-tooltip"
+          style={{ backgroundColor: "#d2b07e", color: "#ffffff", fontWeight: 500 }}
+        />
 
         {/*
           <br></br>
