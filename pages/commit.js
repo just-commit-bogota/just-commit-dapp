@@ -1,8 +1,10 @@
+commit.js
+
 import Head from 'next/head'
 import useFetch from '../hooks/fetch'
 import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
-import { Tag, Input, Heading, Checkbox, FieldSet, RadioButton, RadioButtonGroup, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Input, Heading, Checkbox, FieldSet, RadioButton, RadioButtonGroup, Select, Typography, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip';
@@ -32,6 +34,7 @@ export default function Commit() {
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
   const [betModality, setBetModality] = useState("solo")
+  const [selectedToLabel, setSelectedToLabel] = useState('');
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -225,33 +228,45 @@ export default function Commit() {
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
               />
-              <Input
-                label="Or Else I'll Lose"
-                placeholder="5"
-                disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
-
-                min={0}
-                step="any"
-                max={9999}
-                type="number"
-                units="MATIC"
-                error={
-                  commitAmount > walletMaticBalance ? "Not Enough Funds (" + formatCurrency(walletMaticBalance) + " MATIC)":
-                    commitAmount > 9999 ? "Up to 9999" : null
-                }
-                onChange={(e) => (
-                  setCommitAmount(e.target.value)
-                )}
-                required
-                suffix=
-                {commitAmount != '0' && (
-                  <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
-                    <div className="flex gap-2" style={{ color: 'grey', whiteSpace: 'nowrap' }}>
-                      {`(${formatCurrency(maticPrice * commitAmount, "USD")})`}
-                    </div>
-                  </div>
-                )}
-              />
+              <div className="flex flex-row gap-2">
+                <div className="w-4/5">
+                  <Input
+                    label="Or Else I'll Lose"
+                    placeholder="5"
+                    disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
+                    min={0}
+                    step="any"
+                    max={9999}
+                    type="number"
+                    units="MATIC"
+                    error={
+                      commitAmount > walletMaticBalance ? "Not Enough Funds (" + formatCurrency(walletMaticBalance) + " MATIC)":
+                        commitAmount > 9999 ? "Up to 9999" : null
+                    }
+                    onChange={(e) => (
+                      setCommitAmount(e.target.value)
+                    )}
+                    required
+                    suffix=
+                    {commitAmount != '0' && (
+                      <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
+                        <div className="flex gap-2" style={{ color: 'grey', whiteSpace: 'nowrap' }}>
+                          {`(${formatCurrency(maticPrice * commitAmount, "USD")})`}
+                        </div>
+                      </div>
+                    )}
+                  />
+                </div>
+                <div className="w-1/5">
+                  <Select
+                    label="To"
+                    required
+                    options={[
+                      { value: '1', label: 'Purple DAO', prefix: <div style={{ marginRight: '2px', width: '16px', height: '16px', background: '#8b62d2' }} /> },
+                    ]}
+                  />
+                </div>
+              </div>
               <Input
                 label="Expires In"
                 placeholder="24"
