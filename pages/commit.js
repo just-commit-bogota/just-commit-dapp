@@ -1,5 +1,3 @@
-commit.js
-
 import Head from 'next/head'
 import useFetch from '../hooks/fetch'
 import { useState, useEffect } from 'react'
