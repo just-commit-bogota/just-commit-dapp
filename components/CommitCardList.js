@@ -5,7 +5,7 @@ import { useAccount } from 'wagmi'
 import { Tag, Typography } from '@ensdomains/thorin'
 import { useStorage } from '../hooks/useStorage.ts'
 
-// TODO - is the commitTo.includes() logic done right?
+// TODO - is the commitJudge.includes() logic done right?
 
 export default function CommitCardList({ cardList }) {
   // state
@@ -23,9 +23,9 @@ export default function CommitCardList({ cardList }) {
       selectedFilter == "History" ?
         cardList.filter(c => (c.commitFrom == connectedAddress &&
           (c.status == "Failure" || c.status == "Success"))) :
-        // Verify: connectedAddress includes commitTo and Waiting
+        // Verify: connectedAddress includes commitJudge and Waiting
         selectedFilter == "Verify" ?
-          cardList.filter(c => (c.commitTo.includes(connectedAddress) && c.status == "Waiting")) :
+          cardList.filter(c => (c.commitJudge.includes(connectedAddress) && c.status == "Waiting")) :
           // Waiting: connectedAddress is commitFrom and Waiting
           selectedFilter == "Waiting" ?
             cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Waiting")) :
@@ -33,7 +33,7 @@ export default function CommitCardList({ cardList }) {
             cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Pending"))
 
   const filterCounts = [
-    { filter: "Verify", count: cardList.filter(c => (c.commitTo.includes(connectedAddress) && c.status == "Waiting")).length },
+    { filter: "Verify", count: cardList.filter(c => (c.commitJudge.includes(connectedAddress) && c.status == "Waiting")).length },
     { filter: "Waiting", count: cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Waiting")).length },
     { filter: "Active", count: cardList.filter(c => (c.commitFrom == connectedAddress && c.status == "Pending")).length }
   ]
@@ -109,7 +109,7 @@ export default function CommitCardList({ cardList }) {
 
               id={card.id}
               commitFrom={card.commitFrom}
-              commitTo={card.commitTo}
+              commitJudge={card.commitJudge}
               createdAt={card.createdAt}
               startsAt={card.startsAt}
               endsAt={card.endsAt}

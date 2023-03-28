@@ -41,6 +41,7 @@ export default function Home() {
             id: commit.id.toNumber(),
             commitFrom: commit.commitFrom,
             commitTo: commit.commitTo,
+            commitJudge: commit.commitJudge,
             createdAt: commit.createdAt.toNumber(),
             startsAt: commit.startsAt.toNumber(),
             endsAt: commit.endsAt.toNumber(),
@@ -48,8 +49,8 @@ export default function Home() {
             stakeAmount: commit.stakeAmount,
             message: commit.message,
             filename: commit.filename,
-            commitProved: commit.commitProved,
-            commitJudged: commit.commitJudged,
+            isCommitProved: commit.isCommitProved,
+            isCommitJudged: commit.isCommitJudged,
             isApproved: commit.isApproved,
             isSolo: commit.isSolo,
           });
@@ -61,6 +62,7 @@ export default function Home() {
           id,
           commitFrom,
           commitTo,
+          commitJudge,
           createdAt,
           startsAt,
           endsAt,
@@ -68,8 +70,8 @@ export default function Home() {
           stakeAmount,
           message,
           filename,
-          commitProved,
-          commitJudged,
+          isCommitProved,
+          isCommitJudged,
           isApproved,
           isSolo,
         ) => {
@@ -78,6 +80,7 @@ export default function Home() {
             id: id,
             commitFrom: commitFrom,
             commitTo: commitTo,
+            commitJudge: commitJudge,
             createdAt: createdAt,
             startsAt: startsAt,
             endsAt: endsAt,
@@ -85,8 +88,8 @@ export default function Home() {
             stakeAmount: stakeAmount,
             message: message,
             filename: filename,
-            commitProved: commitProved,
-            commitJudged: commitJudged,
+            isCommitProved: isCommitProved,
+            isCommitJudged: isCommitJudged,
             isApproved: isApproved,
             isSolo: isSolo,
           }]);
@@ -125,11 +128,11 @@ export default function Home() {
   function determineStatus(commit) {
     let status = "";
     // is valid and does not have a proof
-    if (commit.endsAt > Date.now() && !commit.commitProved) {
+    if (commit.endsAt > Date.now() && !commit.isCommitProved) {
       status = "Pending";
     }
     // has not expired, has a proof, but has not been judged
-    else if (commit.judgeDeadline > Date.now() && commit.commitProved && !commit.commitJudged) {
+    else if (commit.judgeDeadline > Date.now() && commit.isCommitProved && !commit.isCommitJudged) {
       status = "Waiting";
     }
     // is approved or the commit expired and was approved

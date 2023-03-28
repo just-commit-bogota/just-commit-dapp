@@ -178,7 +178,7 @@ export default function CommitCard({ ...props }) {
             'pictureArea': true,
             'pictureArea--waiting': props.status == "Waiting",
             'pictureArea--success': props.status == "Success",
-            'pictureArea--failure': props.status == "Failure" && !props.commitProved,
+            'pictureArea--failure': props.status == "Failure" && !props.isCommitProved,
             'pictureArea--pending': props.status == "Pending",
           })}>
             {/* CARD BODY */}
@@ -247,7 +247,7 @@ export default function CommitCard({ ...props }) {
             */}
 
             {/* show the image if there's an image to show */}
-            {(props.commitProved) &&
+            {(props.isCommitProved) &&
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
 
@@ -267,7 +267,7 @@ export default function CommitCard({ ...props }) {
                   {/* "to verify" buttons */}
 
                   {/* TODO - is the props.commitTo check done right? */}
-                  {props.commitTo.includes(address) && props.judgeDeadline > Date.now() && !props.commitJudged && (
+                  {props.commitJudge.includes(address) && props.judgeDeadline > Date.now() && !props.isCommitJudged && (
                     <div>
                       <div className="flex flex-row gap-5 p-5" style={{ justifyContent: "space-between", marginBottom: "-30px" }}>
                         {
@@ -325,7 +325,7 @@ export default function CommitCard({ ...props }) {
               </div>
               <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
                 <b>&nbsp;To </b>justcommit.eth&nbsp;
-                {/*<b>&nbsp;To </b>{props.commitTo.slice(0, 5)}...{props.commitTo.slice(-4)}&nbsp;*/}
+                {/*<b>&nbsp;To </b>{props.commitJudge.slice(0, 5)}...{props.commitJudge.slice(-4)}&nbsp;*/}
               </div>
             </div>
 

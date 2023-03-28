@@ -2,7 +2,7 @@ import Head from 'next/head'
 import useFetch from '../hooks/fetch'
 import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
-import { Tag, Input, Heading, Checkbox, FieldSet, RadioButton, RadioButtonGroup, Select, Typography, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Input, Heading, FieldSet, RadioButton, RadioButtonGroup, Select, Typography, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip';
@@ -22,9 +22,13 @@ export default function Commit() {
     }, 1000);
   }, [])
 
+  // hard-coded
+  const PurplePropHouseMultiSig = "0x3e2cd6ca1f18d27fe1bbeb986914e98d5dd08bb0"
+
   // state
   const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState([CONTRACT_OWNER])
+  const [commitTo, setCommitTo] = useState("")
+  const [commitJudge, setCommitJudge] = useState([CONTRACT_OWNER])
   const [commitAmount, setCommitAmount] = useState('0')
   const [startsAt, setStartsAt] = useState(Date.now()) // startsAt is pre-set to 12h after commiting
   const [endsAt, setEndsAt] = useState((24 * 3600 * 1000) + Date.now()) // duration is pre-set to 24h
@@ -32,7 +36,6 @@ export default function Commit() {
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
   const [betModality, setBetModality] = useState("solo")
-  const [selectedToLabel, setSelectedToLabel] = useState('');
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -44,7 +47,7 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitDescription, commitTo, startsAt, endsAt, betModality == "solo",
+    args: [commitDescription, commitTo, commitJudge, startsAt, endsAt, betModality == "solo",
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
@@ -145,7 +148,7 @@ export default function Commit() {
                     toast('⏳ Coming Soon...', { position: 'top-center', id: 'unique' });
                     setStartsAt(Date.now() + (12 * 3600 * 1000));
                     // DEBUGGING
-                    //toast("commitTo includes address? " + JSON.stringify(commitTo).toUpperCase().includes(address.toUpperCase()));
+                    //toast("commitJudge includes address? " + JSON.stringify(commitJudge).toUpperCase().includes(address.toUpperCase()));
                     //toast("address = " + address.toUpperCase())
                   }}
                 />
@@ -192,7 +195,7 @@ export default function Commit() {
                 return toast.error('Set a commitment amount')
               }
               // commiting to self?
-              if (JSON.stringify(commitTo).toUpperCase().includes(address.toUpperCase())) {
+              if (JSON.stringify(commitJudge).toUpperCase().includes(address.toUpperCase())) {
                 return toast.error('Cannot attest yourself');
               }
             }}>
@@ -227,7 +230,7 @@ export default function Commit() {
                 required
               />
               <div className="flex flex-row gap-2">
-                <div className="w-4/5">
+                <div className="w-8/12">
                   <Input
                     label="Or Else I'll Lose"
                     placeholder="5"
@@ -238,7 +241,7 @@ export default function Commit() {
                     type="number"
                     units="MATIC"
                     error={
-                      commitAmount > walletMaticBalance ? "Not Enough Funds (" + formatCurrency(walletMaticBalance) + " MATIC)":
+                      commitAmount > walletMaticBalance ? formatCurrency(walletMaticBalance) + " MATIC Available":
                         commitAmount > 9999 ? "Up to 9999" : null
                     }
                     onChange={(e) => (
@@ -255,13 +258,20 @@ export default function Commit() {
                     )}
                   />
                 </div>
-                <div className="w-1/5">
+                <div className="w-4/12">
                   <Select
+                    value = {PurplePropHouseMultiSig} // default selected
+                    style={{background:"rgba(246,246,248)", borderColor:"transparent", borderRadius:"14px"}}
                     label="To"
                     required
-                    options={[
-                      { value: '1', label: 'Purple DAO', prefix: <div style={{ marginRight: '2px', width: '16px', height: '16px', background: '#8b62d2' }} /> },
+                    options={[ // TODO: add descriptive tooltip (Purple Prop House Multisig)
+                      { value: PurplePropHouseMultiSig,
+                        label: <Typography fontVariant="label" style={{lineHeight:"1.25"}}>Purple</Typography>,
+                        prefix: <div style={{ width: '16px', height: '16px', background: '#8b62d2' }} />
+                      },
                     ]}
+                    
+                    onChange={(e) => setCommitTo(e.target.value)}
                   />
                 </div>
               </div>
@@ -283,7 +293,7 @@ export default function Commit() {
                 required
                 readOnly
                 placeholder="justcommit.eth"
-                onChange={(e) => setCommitTo(e.target.value.split(",").map((address) => address.trim()))}
+                onChange={(e) => setCommitJudge(e.target.value.split(",").map((address) => address.trim()))}
                 onClick={() => {
                   toast('⚠️ Disabled (Beta)',
                     { position: 'bottom-center', id: 'unique' }

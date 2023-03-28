@@ -1,5 +1,5 @@
 //export const CONTRACT_ADDRESS = "0xA794728b33d21A2a0153BD8d97962fFf3Aa13361" // BETA
-export const CONTRACT_ADDRESS = "0x1C833412618c40e7A16e25BA106590ef061920ad" // DEV
+export const CONTRACT_ADDRESS = "0x370534E0877C671197AC8Ab39e56f6d041bF6403" // DEV
 
 export const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
@@ -26,8 +26,14 @@ export const ABI = [
       },
       {
         "indexed": true,
-        "internalType": "address[]",
+        "internalType": "address",
         "name": "commitTo",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address[]",
+        "name": "commitJudge",
         "type": "address[]"
       },
       {
@@ -75,13 +81,13 @@ export const ABI = [
       {
         "indexed": false,
         "internalType": "bool",
-        "name": "commitProved",
+        "name": "isCommitProved",
         "type": "bool"
       },
       {
         "indexed": false,
         "internalType": "bool",
-        "name": "commitJudged",
+        "name": "isCommitJudged",
         "type": "bool"
       },
       {
@@ -177,8 +183,13 @@ export const ABI = [
         "type": "string"
       },
       {
-        "internalType": "address[]",
+        "internalType": "address",
         "name": "commitTo",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "commitJudge",
         "type": "address[]"
       },
       {
@@ -219,8 +230,13 @@ export const ABI = [
             "type": "address"
           },
           {
-            "internalType": "address[]",
+            "internalType": "address",
             "name": "commitTo",
+            "type": "address"
+          },
+          {
+            "internalType": "address[]",
+            "name": "commitJudge",
             "type": "address[]"
           },
           {
@@ -260,12 +276,12 @@ export const ABI = [
           },
           {
             "internalType": "bool",
-            "name": "commitProved",
+            "name": "isCommitProved",
             "type": "bool"
           },
           {
             "internalType": "bool",
-            "name": "commitJudged",
+            "name": "isCommitJudged",
             "type": "bool"
           },
           {
