@@ -257,19 +257,26 @@ export default function Commit() {
                     }
                     min={0}
                     step="any"
-                    max={9999}
+                    max={99}
+                    maxLength={2}
                     type="number"
                     error={
                       !address || !walletMaticBalance
                         ? null
                         : commitAmount > walletMaticBalance
                         ? formatCurrency(walletMaticBalance) + " MATIC Available"
-                        : commitAmount > 9999
-                        ? "Up to 9999"
+                        : commitAmount > 99
+                        ? "Up to 99"
                         : null
                     }
                     onChange={(e) => {
                       setCommitAmount(e.target.value);
+                    }}
+                    onKeyDown={(e) => {
+                      const value = parseInt(e.target.value + e.key);
+                      if (value > 99 || isNaN(value)) {
+                        e.preventDefault();
+                      }
                     }}
                     required
                     prefix={<img className="w-6 h-6 min-w-max object-cover" src="./polygon-logo-tilted.svg" />}
