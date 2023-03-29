@@ -240,11 +240,25 @@ export default function Commit() {
                     label="Or I'll Lose"
                     placeholder="5"
                     disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
+                    labelSecondary={
+                      <a
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={"1 MATIC 🟰 " + formatCurrency(maticPrice, "USD")}
+                        data-tooltip-place="right"
+                      >
+                        <Tag
+                          style={{ background: '#21AD85' }}
+                          tone="green"
+                          size="large"
+                        >
+                          <b style={{ color: 'white' }}>?</b>
+                        </Tag>
+                      </a>
+                    }
                     min={0}
                     step="any"
                     max={9999}
                     type="number"
-                    units="MATIC"
                     error={
                       !address || !walletMaticBalance
                         ? null
@@ -258,7 +272,7 @@ export default function Commit() {
                       setCommitAmount(e.target.value);
                     }}
                     required
-                    //prefix = <img className="h-6" src="./polygon-logo-tilted.svg" />
+                    prefix={<img className="w-6 h-6 min-w-max object-cover" src="./polygon-logo-tilted.svg" />}
                     suffix=
                     {commitAmount != '0' && (
                       <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
@@ -407,9 +421,9 @@ export default function Commit() {
             ---------
             */}
 
-            address: {address}
+            {/* address: {address}
             <br></br>
-            walletMaticBalance: {walletMaticBalance}
+            walletMaticBalance: {walletMaticBalance} */}
             
             {/* <br></br>
             <br></br>
