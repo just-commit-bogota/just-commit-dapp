@@ -196,7 +196,7 @@ export default function Commit() {
               }
               // commiting to self?
               if (JSON.stringify(commitJudge).toUpperCase().includes(address.toUpperCase())) {
-                return toast.error('Cannot attest yourself');
+                return toast.error('Cannot verify yourself');
               }
             }}>
 
@@ -241,14 +241,19 @@ export default function Commit() {
                     type="number"
                     units="MATIC"
                     error={
-                      commitAmount > walletMaticBalance ? formatCurrency(walletMaticBalance) + " MATIC Available":
-                        commitAmount > 9999 ? "Up to 9999" : null
+                      !address || !walletMaticBalance
+                        ? null
+                        : commitAmount > walletMaticBalance
+                        ? formatCurrency(walletMaticBalance) + " MATIC Available"
+                        : commitAmount > 9999
+                        ? "Up to 9999"
+                        : null
                     }
-                    onChange={(e) => (
-                      setCommitAmount(e.target.value)
-                    )}
+                    onChange={(e) => {
+                      setCommitAmount(e.target.value);
+                    }}
                     required
-                    // TODO: prefix = <img className="h-6" src="./polygon-logo-tilted.svg" />
+                    //prefix = <img className="h-6" src="./polygon-logo-tilted.svg" />
                     suffix=
                     {commitAmount != '0' && (
                       <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
@@ -397,10 +402,11 @@ export default function Commit() {
             ---------
             */}
 
-            {/*
-            betModality: {betModality}
-            
+            address: {address}
             <br></br>
+            walletMaticBalance: {walletMaticBalance}
+            
+            {/* <br></br>
             <br></br>
             maticPrice * commitAmount: {typeof(maticPrice * commitAmount)}
             <br></br>
