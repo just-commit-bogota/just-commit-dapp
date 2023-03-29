@@ -102,6 +102,11 @@ export default function Commit() {
   const priceApi = useFetch('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd')
   const maticPrice = parseFloat(priceApi.data?.["matic-network"].usd)
 
+  // effects
+  useEffect(() => {
+    getWalletMaticBalance()
+  }, [address])
+
   // rendering
   return (
     <>
