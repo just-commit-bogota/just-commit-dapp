@@ -227,15 +227,15 @@ export default function Commit() {
                   </a>
                 }
                 error={
-                  commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) || commitDescription.length === 0
+                  commitDescription.match(/^[a-zA-Z0-9\s\.,!?\(\)\<\>]*$/) || commitDescription.length === 0
                     ? null
                     : 'Alphanumeric Only'
                 }
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
               />
-              <div className="flex flex-row gap-2">
-                <div className="w-8/12">
+              <div className="flex flex-row items-baseline gap-2">
+                <div className="w-7/12 lg:w-6/12">
                   <Input
                     label="Or I'll Lose"
                     placeholder="5"
@@ -264,7 +264,7 @@ export default function Commit() {
                       !address || !walletMaticBalance
                         ? null
                         : commitAmount > walletMaticBalance
-                        ? formatCurrency(walletMaticBalance) + " MATIC Available"
+                        ? " Available → " + formatCurrency(walletMaticBalance)
                         : commitAmount > 99
                         ? "Up to 99"
                         : null
@@ -279,7 +279,7 @@ export default function Commit() {
                       }
                     }}
                     required
-                    prefix={<img className="w-6 h-6 min-w-max object-cover" src="./polygon-logo-tilted.svg" />}
+                    prefix={<img className="w-6 h-6 mr-2 lg:mr-0 min-w-max object-cover" src="./polygon-logo-tilted.svg" />}
                     suffix=
                     {commitAmount != '0' && (
                       <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
@@ -290,7 +290,7 @@ export default function Commit() {
                     )}
                   />
                 </div>
-                <div className="w-4/12">
+                <div className="w-5/12 lg:w-6/12">
                   <Select
                     value = {PurplePropHouseMultiSig} // default selected
                     style={{background:"rgba(246,246,248)", borderColor:"transparent", borderRadius:"14px"}}
@@ -298,8 +298,11 @@ export default function Commit() {
                     required
                     options={[ // TODO: add descriptive tooltip (Purple Prop House Multisig)
                       { value: PurplePropHouseMultiSig,
-                        label: <Typography fontVariant="label" style={{lineHeight:"1.2", fontSize:"small", fontWeight: "550", marginLeft: "-5px"}}>Purple Prop House</Typography>,
-                        prefix: <div style={{ width: '16px', height: '16px', background: '#8b62d2' }} />
+                        label:
+                        <Typography variant="label" className="ml-[-1px] lg:ml-2 lg:scale-110">
+                          Purple Prop House
+                        </Typography>,
+                        prefix: <div style={{ width: '20px', height: '20px', background: '#8b62d2' }} />
                       },
                     ]}
                     onChange={(e) => setCommitTo(e.target.value)}
