@@ -195,8 +195,8 @@ export default function Home() {
       >
         <Tag
           style={{
-            color: "rgba(255, 255, 255, 1)",
-            backgroundColor: "rgb(30 174 131)",
+            color: "#1DD297",
+            backgroundColor: "#1DD297",
             width: "54px",
             height: "54px",
             fontSize: "1.5rem",
