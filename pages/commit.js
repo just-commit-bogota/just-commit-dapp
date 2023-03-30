@@ -279,7 +279,7 @@ export default function Commit() {
                       }
                     }}
                     required
-                    prefix={<img className="w-6 h-6 mr-2 lg:mr-0 min-w-max object-cover" src="./polygon-logo-tilted.svg" />}
+                    prefix={<img className="w-6 h-6 -mr-1 lg:mr-0 min-w-max object-cover" src="./polygon-logo-tilted.svg" />}
                     suffix=
                     {commitAmount != '0' && (
                       <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
@@ -323,7 +323,7 @@ export default function Commit() {
                 required
               />
               <Input
-                label="Proof Verified By"
+                label="Proof Pic Verified By"
                 required
                 readOnly
                 placeholder="justcommit.eth"
