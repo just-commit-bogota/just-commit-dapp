@@ -35,20 +35,20 @@ export default function Header({ currentPage }) {
               },
               {
                 label:
+                  <Link href="https://justcommit.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78#c1d9e58a077d47e2af7583d7665168dd"
+                    target="_blank" rel="noopener noreferrer">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    FAQ ↗
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  </Link>,
+              },
+              {
+                label:
                   <Link href="https://discord.gg/7863Wtv4hX"
                     target="_blank" rel="noopener noreferrer">
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     Discord ↗
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  </Link>,
-              },
-              {
-                label:
-                  <Link href="https://justcommit.notion.site"
-                    target="_blank" rel="noopener noreferrer">
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    About ↗
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   </Link>,
               },
             ]}
