@@ -123,7 +123,7 @@ export default function Commit() {
       <Header currentPage="commit" />
 
       <div className="container container--flex h-screen">
-        <div className="mt-5 sm:mt-3" style={{ padding: "18px" }}>
+        <div className="mt-5 sm:mt-3" style={{ padding: "24px" }}>
           <FieldSet
             legend={<Heading color="textSecondary" style={{ fontWeight: "700", fontSize: "40px" }}>Bet On Yourself</Heading>}
           >

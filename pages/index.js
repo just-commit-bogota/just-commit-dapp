@@ -174,7 +174,7 @@ export default function Home() {
 
       <div className="flex h-screen">
         <div className="w-8/10 mx-auto p-0 lg:p-10 mt-20">
-          <div className="flex flex-col justify-center items-center">
+          <div className="flex flex-col mt-4 justify-center items-center">
             <CommitCardList cardList={allCommits} />
           </div>
         </div>
