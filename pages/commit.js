@@ -218,8 +218,7 @@ export default function Commit() {
                     data-tooltip-place="right"
                   >
                     <Tag
-                      style={{ background: '#21AD85' }}
-                      tone="green"
+                      style={{ background: '#1DD297' }}
                       size="large"
                     >
                       <b style={{ color: 'white' }}>?</b>
@@ -247,7 +246,7 @@ export default function Commit() {
                         data-tooltip-place="right"
                       >
                         <Tag
-                          style={{ background: '#21AD85' }}
+                          style={{ background: '#1DD297' }}
                           tone="green"
                           size="large"
                         >
@@ -350,7 +349,7 @@ export default function Commit() {
                     ((endsAt - Date.now()) / 3600 / 1000) > 24 ||
                     commitAmount > 9999 ||
                     commitAmount > walletMaticBalance ?
-                    "rgb(30 174 131 / 36%)" : "rgb(30 174 131)",
+                    "rgb(29 210 151 / 36%)" : "rgb(29 210 151)",
                 borderRadius: 12,
                 color: "white",
                 transition: "transform 0.2s ease-in-out",
@@ -376,7 +375,7 @@ export default function Commit() {
 
             <Toaster toastOptions={{ duration: 2000 }} />
             <Tooltip id="my-tooltip"
-              style={{ backgroundColor: "#21AD85", color: "#ffffff", fontWeight: 500 }}
+              style={{ backgroundColor: "#1DD297", color: "#ffffff", fontWeight: 500 }}
             />
 
             {(((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
@@ -391,10 +390,9 @@ export default function Commit() {
                   <div className="flex justify-center w-3/10">
                     <ButtonThorin
                       className="flex"
-                      style={{ padding: "20px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
+                      style={{ padding: "20px", backgroundColor: "#1DD297", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
                       outlined
                       shape="rounded"
-                      tone="green"
                       size="small"
                       variant="primary"
                       as="a"
