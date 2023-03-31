@@ -31,8 +31,8 @@ export default function Commit() {
   const [commitTo, setCommitTo] = useState(PurplePropHouseMultiSig)
   const [commitJudge, setCommitJudge] = useState([CONTRACT_OWNER])
   const [commitAmount, setCommitAmount] = useState('0')
-  const [startsAt, setStartsAt] = useState(Date.now()) // startsAt is pre-set to 12h after commiting
-  const [endsAt, setEndsAt] = useState((24 * 3600 * 1000) + Date.now()) // duration is pre-set to 24h
+  const [startsAt, setStartsAt] = useState(Date.now())
+  const [endsAt, setEndsAt] = useState((72 * 3600 * 1000) + Date.now()) // duration is pre-set to 72h
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
@@ -287,7 +287,7 @@ export default function Commit() {
               </div>
               <Input
                 label="Expires In"
-                placeholder="24"
+                placeholder="72"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 min={1}
                 max={168}
