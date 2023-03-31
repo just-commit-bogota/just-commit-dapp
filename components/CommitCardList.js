@@ -75,7 +75,8 @@ export default function CommitCardList({ cardList }) {
                 position: "relative",
                 borderColor: (f == "Active" || f == "Waiting" || f == "Verify") ?
                   "rgba(18, 74, 56, .5)" : "rgba(53, 72, 98, 1)",
-                borderWidth: "2px"
+                borderWidth: "2px",
+                cursor: "pointer"
               }}>
               <a onClick={() => onFilterClick(f)}>{f}</a>
               {/* Counter Badge */}

@@ -90,18 +90,18 @@ export default function Header({ currentPage }) {
           <div className="header w-full header--absolute bg-white" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center' }}>
             <div className="flex items-center justify-start" style={{ flexGrow: 1 }}>
               <Link href="/commit">
-                <a className={`mx-4 ${currentPage === "commit" ? "text-[#1DD297] font-semibold" : "text-black"}`}>Commit</a>
+                <a className={`mx-4 text-l font-bold ${currentPage === "commit" ? "text-[#1DD297] font-semibold" : "text-black"}`}>Commit</a>
               </Link>
               <Link href="https://justcommit.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78#c1d9e58a077d47e2af7583d7665168dd" target="_blank" rel="noopener noreferrer">
-                <a className="mx-4">FAQ ↗</a>
+                <a className="mx-4 text-l">FAQ ↗</a>
               </Link>
               <Link href="https://discord.gg/7863Wtv4hX" target="_blank" rel="noopener noreferrer">
-                <a className="mx-4">Discord ↗</a>
+                <a className="mx-4 text-l">Discord ↗</a>
               </Link>
             </div>
             <Link href="/">
               <a className="">
-                <img src="./logo-2.svg"/>
+                <img style={{width:"320px"}} src="./logo-2.svg"/>
               </a>
             </Link>
             <div className="flex items-center text-xs sm:text-base justify-end w-full" style={{ flexGrow: 1 }}>

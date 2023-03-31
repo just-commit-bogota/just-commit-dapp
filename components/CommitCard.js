@@ -1,13 +1,13 @@
 import { FileInput, Tag, Button as ButtonThorin } from '@ensdomains/thorin'
 import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
-import Countdown from 'react-countdown';
 import { useAccount, useEnsName } from 'wagmi'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip';
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
 import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
+import Countdown from '../components/Countdown.js'
 import { useStorage } from '../hooks/useStorage.ts'
 import Image from 'next/image'
 import toast, { Toaster } from 'react-hot-toast'
@@ -18,6 +18,7 @@ export default function CommitCard({ ...props }) {
 
   // variables
   const { getItem, setItem, removeItem } = useStorage()
+  const { address } = useAccount()
   const CommitStatusEmoji = {
     "Pending": "⚡", // picture not yet submitted
     "Waiting": "⏳", // picture submitted and waiting
@@ -29,9 +30,6 @@ export default function CommitCard({ ...props }) {
   const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
-
-  // variables
-  const { address } = useAccount()
 
   // function to resolve ENS name on ETH mainnet
   const { data: ensName } = useEnsName({
@@ -162,29 +160,24 @@ export default function CommitCard({ ...props }) {
               <div className="span flex text-sm text-slate-400 gap-2 opacity-80" style={{ whiteSpace: "nowrap" }}>
                 {
                   // active
-                  (props.status == "Pending") ?
-                    ((moment(props.endsAt).diff(moment(), 'days') >= 2) ?
-                      "> " + moment(props.endsAt).diff(moment(), 'days') + " days left" :
-                      <Countdown date={props.endsAt} daysInHours={true} />) :
-                    // waiting or verify
-                    (props.status == "Waiting") ?    
-                      <>
-                        <a
-                          data-tooltip-id="my-tooltip"
-                          data-tooltip-content="If this image were judged by GPT-4, would it pass?"
-                          data-tooltip-place="top"
-                        >
-                          <Tag
-                            style={{ background: '#e6d3b7' }}
-                          >
-                            <img src="/gavel.svg" width="20px" height="20px" alt="Gavel"/>
-                          </Tag>
-                        </a>
-                         <Countdown date={props.judgeDeadline} daysInHours={true} />
-                      </>:
-                      // my history or feed
-                      moment(props.createdAt * 1000).fromNow()
-                        
+                  props.status === "Pending" ? (
+                    <><Countdown status={props.status} endsAt={props.endsAt} judgeDeadline={props.judgeDeadline} /></>
+                  ) : // waiting or verify
+                  props.status === "Waiting" ? (
+                    <>
+                      <a
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content="If this image were judged by GPT-4, would it pass?"
+                        data-tooltip-place="top"
+                      >
+                        <img src="/gavel.svg" width="20px" height="20px" alt="Gavel" />
+                      </a>
+                      <Countdown status={props.status} endsAt={props.endsAt} judgeDeadline={props.judgeDeadline}/>
+                    </>
+                  ) : (
+                    // my history or feed
+                    moment(props.createdAt * 1000).fromNow()
+                  )
                 }
               </div>
             </div>

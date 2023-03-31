@@ -2,13 +2,14 @@ import Head from 'next/head'
 import useFetch from '../hooks/fetch'
 import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
-import { Tag, Input, Heading, FieldSet, RadioButton, RadioButtonGroup, Select, Typography, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Input, Heading, FieldSet, Select, Typography, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip';
 import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
 import Spinner from "../components/Spinner.js";
+import ButtonGroup from '../components/ButtonGroup';
 import { Placeholders } from "../components/Placeholders.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 
@@ -122,54 +123,16 @@ export default function Commit() {
 
       <Header currentPage="commit" />
 
-      <div className="container container--flex h-screen">
-        <div className="mt-5 sm:mt-3" style={{ padding: "24px" }}>
+      <div className="container container--flex h-screen items-stretch">
+        <div className="mt-5 sm:mt-3" style={{ padding: "10px" }}>
           <FieldSet
-            legend={<Heading color="textSecondary" style={{ fontWeight: "700", fontSize: "40px" }}>Bet On Yourself</Heading>}
+            legend={
+              <Heading color="textSecondary" style={{ fontWeight: '700', fontSize: '40px' }}>
+                Bet On Yourself
+              </Heading>
+            }
           >
-            <RadioButtonGroup
-              className="items-start place-self-center"
-              onChange={(e) => setBetModality(e.target.value)}
-            >
-              <div className="flex gap-4">
-                <RadioButton
-                  checked={true}
-                  id="solo"
-                  label="Solo"
-                  name="solo"
-                  value="solo"
-                  onClick={() => {
-                    setBetModality("solo");
-                    setStartsAt(Date.now());
-                  }}
-                />
-                <RadioButton
-                  checked={false} // {betModality == "1v1"}
-                  id="1v1"
-                  label="1v1"
-                  name="1v1"
-                  value="1v1"
-                  onClick={() => {
-                    toast('⏳ Coming Soon...', { position: 'top-center', id: 'unique' });
-                    setStartsAt(Date.now() + (12 * 3600 * 1000));
-                    // DEBUGGING
-                    //toast("commitJudge includes address? " + JSON.stringify(commitJudge).toUpperCase().includes(address.toUpperCase()));
-                    //toast("address = " + address.toUpperCase())
-                  }}
-                />
-                <RadioButton
-                  checked={false} // {betModality == "multiplayer"}
-                  id="multiplayer"
-                  label="Multiplayer"
-                  name="multiplayer"
-                  value="multiplayer"
-                  onClick={() => {
-                    toast('⏳ Coming Soon...', { position: 'top-center', id: 'unique' });
-                    setStartsAt(Date.now() + (12 * 3600 * 1000));
-                  }}
-                />
-              </div>
-            </RadioButtonGroup>
+          {/* <ButtonGroup setBetModality={setBetModality} setStartsAt={setStartsAt} /> */}
           </FieldSet>
         </div>
 
@@ -208,13 +171,13 @@ export default function Commit() {
             <div className="flex flex-col gap-3 w-full">
               <Input
                 label="I Want To"
-                maxLength={140}
+                maxLength={27}
                 placeholder=""
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 labelSecondary={
                   <a
                     data-tooltip-id="my-tooltip"
-                    data-tooltip-content="📸 Can you prove it?"
+                    data-tooltip-content="📸 Can a pic prove it?"
                     data-tooltip-place="right"
                   >
                     <Tag
@@ -304,6 +267,20 @@ export default function Commit() {
                         prefix: <div style={{ width: '20px', height: '20px', background: '#8b62d2' }} />
                       },
                     ]}
+                    labelSecondary={
+                      <a
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content="⚡ Service Fee included (20%)"
+                        data-tooltip-place="right"
+                      >
+                        <Tag
+                          style={{ background: '#1DD297' }}
+                          size="large"
+                        >
+                          <b style={{ color: 'white' }}>?</b>
+                        </Tag>
+                      </a>
+                    }
                     onChange={(e) => setCommitTo(e.target.value)}
                   />
                 </div>
@@ -313,12 +290,26 @@ export default function Commit() {
                 placeholder="24"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 min={1}
-                max={24}
+                max={168}
                 step={1}
                 type="number"
                 units={((endsAt - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
-                error={((endsAt - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
+                error={((endsAt - Date.now()) / 3600 / 1000) > 168 ? "1 week maximum" : null}
                 onChange={(e) => setEndsAt((e.target.value * 3600 * 1000) + Date.now())}
+                labelSecondary={
+                  <a
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-content="⏳ 1 week maximum"
+                    data-tooltip-place="right"
+                  >
+                    <Tag
+                      style={{ background: '#1DD297' }}
+                      size="large"
+                    >
+                      <b style={{ color: 'white' }}>?</b>
+                    </Tag>
+                  </a>
+                }
                 required
               />
               <Input
@@ -344,9 +335,9 @@ export default function Commit() {
                 backgroundColor:
                   commitAmount == 0 || commitAmount == "" ||
                     commitDescription.length < 2 ||
-                    commitDescription.length > 35 ||
+                    commitDescription.length > 27 ||
                     !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                    ((endsAt - Date.now()) / 3600 / 1000) > 24 ||
+                    ((endsAt - Date.now()) / 3600 / 1000) > 168 ||
                     commitAmount > 9999 ||
                     commitAmount > walletMaticBalance ?
                     "rgb(29 210 151 / 36%)" : "rgb(29 210 151)",
@@ -361,9 +352,9 @@ export default function Commit() {
                 disabled={
                   commitAmount == 0 || commitAmount == "" ||
                   commitDescription.length < 2 ||
-                  commitDescription.length > 35 ||
+                  commitDescription.length > 27 ||
                   !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                  ((endsAt - Date.now()) / 3600 / 1000) > 24 ||
+                  ((endsAt - Date.now()) / 3600 / 1000) > 168 ||
                   commitAmount > 9999 ||
                   commitAmount > walletMaticBalance
                 }
