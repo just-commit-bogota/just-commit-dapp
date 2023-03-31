@@ -189,7 +189,7 @@ export default function Commit() {
                 }
                 error={
                   commitDescription.match(/^[a-zA-Z0-9\s\.,!?\(\)\<\>]*$/) || commitDescription.length === 0
-                    ? null
+                    ? (commitDescription.length > 26 ? 'Say less' : null)
                     : 'Alphanumeric Only'
                 }
                 onChange={(e) => setCommitDescription(e.target.value)}
@@ -341,7 +341,7 @@ export default function Commit() {
                 backgroundColor:
                   commitAmount == 0 || commitAmount == "" ||
                     commitDescription.length < 2 ||
-                    commitDescription.length > 27 ||
+                    commitDescription.length > 26 ||
                     !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
                     ((endsAt - Date.now()) / 3600 / 1000) > 168 ||
                     commitAmount > 9999 ||
@@ -358,7 +358,7 @@ export default function Commit() {
                 disabled={
                   commitAmount == 0 || commitAmount == "" ||
                   commitDescription.length < 2 ||
-                  commitDescription.length > 27 ||
+                  commitDescription.length > 26 ||
                   !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
                   ((endsAt - Date.now()) / 3600 / 1000) > 168 ||
                   commitAmount > 9999 ||
