@@ -167,7 +167,7 @@ export default function CommitCard({ ...props }) {
                     <>
                       <a
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content="If this image were judged by GPT-4, would it pass?"
+                        data-tooltip-content="⏳ Waiting on justcommit.eth"
                         data-tooltip-place="top"
                       >
                         <img src="/gavel.svg" width="20px" height="20px" alt="Gavel" />

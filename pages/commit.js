@@ -269,7 +269,7 @@ export default function Commit() {
                     labelSecondary={
                       <a
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content="⚡ Service Fee included (20%)"
+                        data-tooltip-content="⚡ Service Fee is included (20%)"
                         data-tooltip-place="right"
                       >
                         <Tag
@@ -284,33 +284,40 @@ export default function Commit() {
                   />
                 </div>
               </div>
-              <Input
+             <Input
                 label="Expires In"
                 placeholder="72"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 min={1}
                 max={168}
                 step={1}
-                type="number"
+                type="text"
+                onKeyDown={(e) => {
+                  if (!/^\d*$/.test(e.key) && e.key !== 'Backspace') {
+                      e.preventDefault();
+                  }
+                }}
+                inputMode="numeric"
                 units={((endsAt - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
                 error={((endsAt - Date.now()) / 3600 / 1000) > 168 ? "1 week maximum" : null}
                 onChange={(e) => setEndsAt((e.target.value * 3600 * 1000) + Date.now())}
                 labelSecondary={
-                  <a
-                    data-tooltip-id="my-tooltip"
-                    data-tooltip-content="⏳ 1 week maximum"
-                    data-tooltip-place="right"
-                  >
-                    <Tag
-                      style={{ background: '#1DD297' }}
-                      size="large"
+                    <a
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content="⏳ 1 week maximum"
+                        data-tooltip-place="right"
                     >
-                      <b style={{ color: 'white' }}>?</b>
-                    </Tag>
-                  </a>
+                        <Tag
+                            style={{ background: '#1DD297' }}
+                            size="large"
+                        >
+                            <b style={{ color: 'white' }}>?</b>
+                        </Tag>
+                    </a>
                 }
                 required
-              />
+            />
+
               <Input
                 label="Proof Pic Verified By"
                 required
