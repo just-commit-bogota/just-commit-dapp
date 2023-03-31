@@ -102,7 +102,7 @@ export default function CommitCard({ ...props }) {
 
     // on data checks
     if (data) {
-      if (file.lastModified < props.createdAt * 1000) {
+      if (file.lastModified < props.createdAt) {
         toast.error("This pic is older than the commitment", { duration: 4000 })
         setUploadClicked(false);
         return
@@ -161,7 +161,7 @@ export default function CommitCard({ ...props }) {
                 {
                   // active
                   props.status === "Pending" ? (
-                    <><Countdown status={props.status} endsAt={props.endsAt} judgeDeadline={props.judgeDeadline} /></>
+                    <><Countdown status={props.status} endsAt={props.endsAt/1000} judgeDeadline={props.judgeDeadline} /></>
                   ) : // waiting or verify
                   props.status === "Waiting" ? (
                     <>
@@ -176,7 +176,7 @@ export default function CommitCard({ ...props }) {
                     </>
                   ) : (
                     // my history or feed
-                    moment(props.createdAt * 1000).fromNow()
+                    moment(props.createdAt).fromNow()
                   )
                 }
               </div>

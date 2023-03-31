@@ -113,7 +113,6 @@ export default function CommitCardList({ cardList }) {
                 commitFrom={card.commitFrom}
                 commitJudge={card.commitJudge}
                 createdAt={card.createdAt}
-                startsAt={card.startsAt}
                 endsAt={card.endsAt}
                 judgeDeadline={card.judgeDeadline}
                 stakeAmount={ethers.utils.formatEther(card.stakeAmount)}

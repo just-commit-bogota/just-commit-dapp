@@ -30,8 +30,7 @@ export default function Commit() {
   const [commitTo, setCommitTo] = useState(PurplePropHouseMultiSig)
   const [commitJudge, setCommitJudge] = useState([CONTRACT_OWNER])
   const [commitAmount, setCommitAmount] = useState('0')
-  const [startsAt, setStartsAt] = useState(Date.now())
-  const [endsAt, setEndsAt] = useState((72 * 3600 * 1000) + Date.now()) // duration is pre-set to 72h
+  const [endsAt, setEndsAt] = useState((72 * 3600 * 1000) + Date.now()) // Expires In is pre-set to 72h
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
@@ -47,7 +46,7 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitDescription, commitTo, commitJudge, startsAt, endsAt, betModality == "solo",
+    args: [commitDescription, commitTo, commitJudge, endsAt, betModality == "solo",
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
@@ -302,18 +301,18 @@ export default function Commit() {
                 error={((endsAt - Date.now()) / 3600 / 1000) > 168 ? "1 week maximum" : null}
                 onChange={(e) => setEndsAt((e.target.value * 3600 * 1000) + Date.now())}
                 labelSecondary={
-                    <a
-                        data-tooltip-id="my-tooltip"
-                        data-tooltip-content="⏳ 1 week maximum"
-                        data-tooltip-place="right"
-                    >
-                        <Tag
-                            style={{ background: '#1DD297' }}
-                            size="large"
-                        >
-                            <b style={{ color: 'white' }}>?</b>
-                        </Tag>
-                    </a>
+                  <a
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content="⏳ 1 week maximum"
+                      data-tooltip-place="right"
+                  >
+                      <Tag
+                          style={{ background: '#1DD297' }}
+                          size="large"
+                      >
+                          <b style={{ color: 'white' }}>?</b>
+                      </Tag>
+                  </a>
                 }
                 required
             />
