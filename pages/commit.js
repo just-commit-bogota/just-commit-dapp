@@ -276,11 +276,15 @@ export default function Commit() {
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 min={1}
                 max={168}
+                maxLength={3}
                 step={1}
                 type="text"
                 onKeyDown={(e) => {
-                  if (!/^\d*$/.test(e.key) && e.key !== 'Backspace') {
-                      e.preventDefault();
+                  if (
+                    (!/^\d*$/.test(e.key) && e.key !== 'Backspace') ||
+                    (e.target.value === '' && e.key === '0')
+                  ) {
+                    e.preventDefault();
                   }
                 }}
                 inputMode="numeric"

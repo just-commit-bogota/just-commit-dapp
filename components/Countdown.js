@@ -24,7 +24,19 @@ const Countdown = ({ status, endsAt, judgeDeadline }) => {
       );
       const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
-      setCountdown(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+      let countdownString = '';
+
+      if (days > 0) {
+        countdownString += `${days}d `;
+      }
+
+      if (hours > 0) {
+        countdownString += `${hours}h `;
+      }
+
+      countdownString += `${minutes}m ${seconds}s`;
+
+      setCountdown(countdownString);
     };
 
     updateCountdown();
