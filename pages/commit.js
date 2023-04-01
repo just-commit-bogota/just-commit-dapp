@@ -188,7 +188,7 @@ export default function Commit() {
                 }
                 error={
                   commitDescription.match(/^[a-zA-Z0-9\s\.,!?\(\)\<\>]*$/) || commitDescription.length === 0
-                    ? (commitDescription.length > 26 ? 'Say less' : null)
+                    ? (commitDescription.length > 26 ? 'Say less.' : null)
                     : 'Alphanumeric Only'
                 }
                 onChange={(e) => setCommitDescription(e.target.value)}
@@ -199,7 +199,14 @@ export default function Commit() {
                   <Input
                     label="Or I'll Lose"
                     placeholder="5"
+                    onKeyDown={(e) => {
+                      // Allow up to 3 digits before the decimal point, any number of digits after
+                      if (!/^\d{0,3}(\.\d*)?$/.test(e.target.value + e.key) && e.key !== 'Backspace') {
+                        e.preventDefault();
+                      }
+                    }}
                     disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
+                    /*
                     labelSecondary={
                       <a
                         data-tooltip-id="my-tooltip"
@@ -215,9 +222,9 @@ export default function Commit() {
                         </Tag>
                       </a>
                     }
+                    */
                     min={0}
                     step="any"
-                    max={99}
                     maxLength={2}
                     type="number"
                     error={
@@ -231,12 +238,6 @@ export default function Commit() {
                     }
                     onChange={(e) => {
                       setCommitAmount(e.target.value);
-                    }}
-                    onKeyDown={(e) => {
-                      const value = parseInt(e.target.value + e.key);
-                      if (value > 99 || isNaN(value)) {
-                        e.preventDefault();
-                      }
                     }}
                     required
                     prefix={<img className="w-6 h-6 -mr-1 lg:mr-0 min-w-max object-cover" src="./polygon-logo-tilted.svg" />}
@@ -265,20 +266,6 @@ export default function Commit() {
                         prefix: <div style={{ width: '20px', height: '20px', background: '#8b62d2' }} />
                       },
                     ]}
-                    labelSecondary={
-                      <a
-                        data-tooltip-id="my-tooltip"
-                        data-tooltip-content="⚡ Service Fee is included (20%)"
-                        data-tooltip-place="right"
-                      >
-                        <Tag
-                          style={{ background: '#1DD297' }}
-                          size="large"
-                        >
-                          <b style={{ color: 'white' }}>?</b>
-                        </Tag>
-                      </a>
-                    }
                     onChange={(e) => setCommitTo(e.target.value)}
                   />
                 </div>
