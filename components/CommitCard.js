@@ -1,279 +1,389 @@
-
-import Button from '@mui/material/Button'
-import { FileInput, Tag, CloseSVG, Button as ButtonThorin } from '@ensdomains/thorin'
-import React, {useState}  from 'react'
+import { FileInput, Tag, Button as ButtonThorin } from '@ensdomains/thorin'
+import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
-import abi from "../contracts/CommitManager.json";
-import Modal from 'react-modal'
-import Countdown from 'react-countdown';
-import { Web3Storage } from 'web3.storage'
-import { useAccount, useNetwork, useProvider } from 'wagmi'
-import { usePrepareContractWrite, useContractWrite } from 'wagmi'
+import { useAccount, useEnsName } from 'wagmi'
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip } from 'react-tooltip';
+import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
 import moment from 'moment/moment';
+import Spinner from "../components/Spinner.js";
+import Countdown from '../components/Countdown.js'
+import { useStorage } from '../hooks/useStorage.ts'
+import Image from 'next/image'
 import toast, { Toaster } from 'react-hot-toast'
+import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
+import supabase from '../lib/db'
 
-const contractAddress = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
-const txnHash = typeof window !== 'undefined' ? localStorage.getItem('txnHash') : null
+export default function CommitCard({ ...props }) {
 
-// dummy token
-const client = new Web3Storage({ token: "" })
-
-export default function CommitCard ({...props}) {
-
-  // state
-  const [proofIpfsHash, setProofIpfsHash] = useState(props.ipfsHash);
-  const [fileUploaded, setFileUploaded] = React.useState(false);
-  
+  // variables
+  const { getItem, setItem, removeItem } = useStorage()
+  const { address } = useAccount()
   const CommitStatusEmoji = {
-	  "Pending": "❓", // picture not yet submitted
-  	"Waiting": "⏳", // picture submitted waiting for commitTo judging
-    "Verify": "⏳", // commitTo view of a Waiting card
-  	"Failure": "❌", // time expired or picture denied
+    "Pending": "⚡", // picture not yet submitted
+    "Waiting": "⏳", // picture submitted and waiting
+    "Failure": "❌", // time expired or picture denied
     "Success": "✅", // picture accepted :) 
   }
 
-  // smart contract data 
-  const provider = useProvider()
-  const { chain, chains } = useNetwork()
-  const { address: isConnected } = useAccount()
-  const imgSrc = props.imgSrc
+  // state
+  const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
+  const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
+  const [uploadClicked, setUploadClicked] = useState(false)
 
-  // smart contract write functions
-  const { config: proveConfig } = usePrepareContractWrite({
-      addressOrName: contractAddress,
-      contractInterface: abi.abi,
-      functionName: "proveCommit",
-      args: [props.id, proofIpfsHash]
+  // function to resolve ENS name on ETH mainnet
+  const { data: ensName } = useEnsName({
+    address: props.commitFrom,
+    chainId: 1, // ETH Mainnet
+    staleTime: 0,
+    onError(err) {
+      console.log(err)
+    },
   })
-  const { data, isLoading, isSuccess, write: proveWrite } = useContractWrite(proveConfig)
-  
-  const { config: verifyConfig } = usePrepareContractWrite({
-      addressOrName: contractAddress,
-      contractInterface: abi.abi,
-      functionName: "judgeCommit",
-      args: [props.id, true]
+
+  // prepare
+  const { config: proveCommitConfig } = usePrepareContractWrite({
+    addressOrName: CONTRACT_ADDRESS,
+    contractInterface: ABI,
+    functionName: "proveCommit",
+    args: [props.id, getItem('filename', 'session')],
+    enabled: triggerProveContractFunctions,
   })
-  const { write: verifyWrite } = useContractWrite(verifyConfig)
+  const { config: judgeCommitConfig } = usePrepareContractWrite({
+    addressOrName: CONTRACT_ADDRESS,
+    contractInterface: ABI,
+    functionName: "judgeCommit",
+    args: [props.id, getItem('isApproved', 'session')],
+    enabled: triggerJudgeContractFunctions,
+  })
 
-  // functions
-  const uploadFile = () => {
-    const fileInput = document.querySelector('input[type="file"]')
-    if (fileInput.size > 0) {
-      console.log({client})
-      // getting here for sure
-      client.put(fileInput.files, {
-        name: 'fileInput',
-        maxRetries: 3,
-      }).then(cid => {
-        setProofIpfsHash(cid)
-        if (proveWrite) {
-          proveWrite()
-        }
-      })
-      console.log({proofIpfsHash}) // cid
+  // write
+  const proveWrite = useContractWrite({
+    ...proveCommitConfig,
+    onSettled() { { proveWait } },
+    onError: (err) => {
+      setUploadClicked(false)
+      const regex = /code=(.*?),/;
+      const match = regex.exec(err.message);
+      const code = match ? match[1] : null;
+      if (code === "ACTION_REJECTED") {
+        toast.error("Transaction Rejected")
+      }
     }
-  }
+  })
+  const judgeWrite = useContractWrite({
+    ...judgeCommitConfig,
+    onSettled() { { judgeWait } },
+  })
 
-  const verifyProof = () => { 
-    verifyWrite();
-  }
-
-  function openVerifyModal() {
-      console.log('openVerifyModal')
-      setVerifyIsOpen(true);
-  }
-
-  function closeVerifyModal() {
-      setVerifyIsOpen(false);
-  }
-
-  function returnError() {
-    // Wallet connection
-    if (!isConnected) {
-      return toast.error('Connect your wallet')
+  // wait
+  const { wait: proveWait, data: proveWaitData, isLoading: isProveWaitLoading } = useWaitForTransaction({
+    hash: proveWrite.data?.hash,
+    onSettled() {
+      // wait 10 seconds
+      setTimeout(() => { }, 10000);
+      location.reload()
     }
-    // On right network
-    if (!chains.some((c) => c.id === chain.id)) {
-      return toast.error('Switch to a supported network')
+  })
+  const { wait: judgeWait, data: judgeWaitData, isLoading: isJudgeWaitLoading } = useWaitForTransaction({
+    hash: judgeWrite.data?.hash,
+    onSettled() {
+      location.reload()
     }
-    return toast.error('dApp is not live yet')
+  })
+
+  // FUNCTIONS
+
+  // upload the pic
+  const uploadFile = async (file) => {
+    setUploadClicked(true)
+
+    const { data, error } = await supabase.storage.from("images").upload(file.name, file); // this works
+
+    // on data checks
+    if (data) {
+      if (file.lastModified < props.createdAt) {
+        toast.error("This pic is older than the commitment", { duration: 4000 })
+        setUploadClicked(false);
+        return
+      } else {
+        setTriggerProveContractFunctions(true)
+        removeItem('filename', "session")
+        setItem('filename', file.name, "session")
+      }
+    }
+    // on error checks
+    if (error) {
+      if (error.statusCode == "409") {
+        toast.error("This picture is a duplicate", { duration: 4000 })
+      }
+      setUploadClicked(false);
+      return;
+    }
+
+    if (!proveWrite.write) { // TODO
+      // delete the recent db entry
+      const { error } = await supabase.storage
+        .from('images')
+        .remove([file.name])
+      if (error) {
+        console.error(error)
+      }
+      // appropriate UX/UI
+      setUploadClicked(false)
+      toast("🔁 Upload again (bug)", { duration: 4000 })
+      return
+    }
+
+    proveWrite.write?.() // smart contract call
+
   }
 
-  // buttonType state
-  let buttonType = 'none';
-  if (props.status == "Pending") {
-      buttonType = "Upload"
-  } else if (props.status == "Waiting" && !props.userIsCreator) {
-      buttonType = "Verify"
-  } else if (props.status == "Failure" && props.userIsCommitee) {
-      buttonType = "Claim"
+  function getPublicUrl(filename) {
+    const urlPrefix = process.env.NEXT_PUBLIC_SUPABASE_URL + "/storage/v1/object/public/images/"
+    return (urlPrefix + filename.replace(/ /g, "%20"))
   }
 
   return (
     <>
-       <Toaster toastOptions={{duration: 2000 }}/>
-      
-      <div style={{ borderRadius: "12px"}} className = {classNames({
+      <div style={{ borderRadius: "12px" }} className={classNames({
         'styledBorder': true,
-        'styledBorder--pending': props.status == "Pending",
         'styledBorder--waiting': props.status == "Waiting",
-        'styledBorder--verify': props.status == "Verify",
         'styledBorder--success': props.status == "Success",
         'styledBorder--failure': props.status == "Failure",
+        'styledBorder--pending': props.status == "Pending",
       })}>
-
-      {/* HEADER */}
-        <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px"}}>
-          <div className="flex flex-row" style = {{justifyContent: "space-between"}}>
-            <div className="w-4/5 text-sm block">{props.message}</div>
-            <div className="flex align-left space-x-2">
-              {/* TIMESTAMP */}
-              <div className="text-sm text-slate-400 opacity-80" style= {{whiteSpace: "nowrap"}}>
-                {props.status == "Pending" && (
-                <div>Expires in <b>6 hours</b></div>
-                )}
-		{props.status == "Waiting" || props.status == "Verify" && (
-                <div>Due in <b>3 hours</b></div>
-                )}
-                {(props.status == "Success" || props.status == "Failure") && (
-                  props.id == "3" ? ("1 day ago") :
-                  props.id == "4" ? ("2 days ago") :
-                  props.id == "5" ? ("3 days ago") :
-                  props.id == "6" ? ("6 days ago") :
-                  props.id == "7" ? ("11 days ago") :
-                  props.id == "8" ? ("12 days ago") :
-                  props.id == "9" ? ("12 days ago") :
-                  props.id == "10" ? ("15 days ago") :
-                  props.id == "11" ? ("21 days ago") : null
-                )}
+        <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px" }}>
+          <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
+            <div className="text-sm block">{props.message}</div>
+            <div className="flex space-x-2" style={{ whiteSpace: "nowrap" }}>
+              <div className="span flex text-sm text-slate-400 gap-2 opacity-80" style={{ whiteSpace: "nowrap" }}>
+                {
+                  // active
+                  props.status === "Pending" ? (
+                    <><Countdown status={props.status} endsAt={props.endsAt/1000} judgeDeadline={props.judgeDeadline} /></>
+                  ) : // waiting or verify
+                  props.status === "Waiting" ? (
+                    <>
+                      <a
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content="⏳ Waiting on justcommit.eth"
+                        data-tooltip-place="top"
+                      >
+                        <img src="/gavel.svg" width="20px" height="20px" alt="Gavel" />
+                      </a>
+                      <Countdown status={props.status} endsAt={props.endsAt} judgeDeadline={props.judgeDeadline}/>
+                    </>
+                  ) : (
+                    // my history or feed
+                    moment(props.createdAt).fromNow()
+                  )
+                }
               </div>
             </div>
           </div>
-          <div className = {classNames({
+          <div className={classNames({
             'pictureArea': true,
-            'pictureArea--pending': props.status == "Pending",
             'pictureArea--waiting': props.status == "Waiting",
-            'pictureArea--verify': props.status == "Verify",
             'pictureArea--success': props.status == "Success",
-            'pictureArea--failure': props.status == "Failure",
+            'pictureArea--failure': props.status == "Failure" && !props.isCommitProved,
+            'pictureArea--pending': props.status == "Pending",
           })}>
+            {/* CARD BODY */}
 
-            
-      {/* BODY */}
-
-            {/* PENDING CARD */}
+            {/* card is active */}
             {props.status == "Pending" &&
               <>
-                <div className="flex flex-col" style={{alignItems:"center"}}>
+                <div className="flex flex-col" style={{ alignItems: "center" }}>
                   <div className="flex">
-                    <Button onClick={returnError}>
-                      <div>
-                        <Tag
-                          className="text-2xl hover:cursor-pointer"
-                          tone="green"
-                          variation="primary"
-                          size="large"
-                         >
-                          &nbsp;+ 📸&nbsp;
-                        </Tag>
-                      </div>
-                    </Button>
+                    <FileInput maxSize={20} onChange={(file) => uploadFile(file)}>
+                      {(context) =>
+                        (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ?
+                          <div className="flex flex-col" style={{ alignItems: "center" }}>
+                            <Spinner />
+                            <div className="heartbeat text-xs">(Don&#39;t Refresh)</div>
+                          </div>
+                          :
+                          (context.name && triggerProveContractFunctions) ?
+                            <div>
+                              <a
+                                className="text-4xl hover:cursor-pointer"
+                                href="#"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  location.reload();
+                                }}
+                              >
+                                &nbsp;🔁&nbsp;
+                              </a>
+                            </div>
+                            :
+                            <div>
+                              <Tag
+                                className="text-2xl hover:cursor-pointer"
+                                tone="accent"
+                                variation="primary"
+                                size="large"
+                              >
+                                &nbsp;📷&nbsp;
+                              </Tag>
+                            </div>
+                      }
+                    </FileInput>
                   </div>
                 </div>
               </>
             }
-            {/* WAITING || SUCESS || FAILURE */}
-            {((props.status == "Waiting" || props.status == "Success") || props.status == "Failure") && (
+
+            {/*
+            ---------
+            DEBUGGING
+            ---------
+            */}
+
+            {/*
+            isProveWaitLoading: {String(isProveWaitLoading)}
+            <br></br>
+            <br></br>
+            */}
+
+            
+            {/* isCommitProved: {props.isCommitProved}
+            <br></br>
+            <br></br>
+            Date.now(): {Date.now()} */}
+            
+
+            {/* show the image if there's an image to show */}
+            {(props.isCommitProved) &&
               <>
-                <div className="flex flex-col" style={{alignItems:"center"}}>
-                  <div>
-                    <br></br>
-                    {props.status != "Failure" && (
-                      <img className="w-full h-full" style={{ height: "350px", width: "400px", borderRadius:"4px"}} src= {imgSrc} />
-                    )}
-                    <br></br>
-                  </div>
-                </div>
-              </>
-            )}
-            {/* VERIFY */}
-            {props.status == "Verify" && (
-              <>
-                <div className="flex flex-col" style={{alignItems:"center"}}>
-                  <div>
-                    <br></br>
-                    <img className="w-full h-full" style={{borderRadius:"4px"}} src="./dummy-pic-9.png" />
-                    <br></br>
-                    <div className="flex justify-center align-center">
-                    <div className="flex flex-row w-1/2 gap-5" style={{justifyContent:"space-between"}}>
-                        <ButtonThorin
-                          shape="rounded"
-                          tone="red"
-                          size="small"
-                          outlined
-                          onClick={returnError}
-                        >
-                          Reject
-                        </ButtonThorin>
-                        <ButtonThorin
-                          shape="rounded"
-                          tone="green"
-                          size="small"
-                          outlined
-                          onClick={returnError}
-                        >
-                          Approve
-                        </ButtonThorin>
+                <div className="flex flex-col" style={{ alignItems: "center" }}>
+
+                  <Image
+                    className="object-cover"
+                    unoptimized
+                    loader={() => { getPublicUrl(props.filename) }}
+                    src={getPublicUrl(props.filename)}
+                    alt="Supabase picture"
+                    width={300}
+                    height={300}
+                    style={{
+                      borderRadius: "10px",
+                    }}
+                  />
+
+                  {/* "to verify" buttons */}
+
+                  {/* TODO - is the props.commitJudge check done right? */}
+                  {props.commitJudge.includes(address) && props.judgeDeadline > Date.now() && !props.isCommitJudged && (
+                    <div>
+                      <div className="flex flex-row gap-5 p-5" style={{ justifyContent: "space-between", marginBottom: "-30px" }}>
+                        {
+                          isJudgeWaitLoading ?
+                            <Spinner /> :
+                            <>
+                              <ButtonThorin
+                                tone="red"
+                                size="small"
+                                variant="secondary"
+                                outlined
+                                onClick={() => {
+                                  removeItem('isApproved', "session")
+                                  setItem('isApproved', false, "session")
+                                  setTriggerJudgeContractFunctions(true)
+                                  judgeWrite.write?.()
+                                }}
+                              >
+                                Reject
+                              </ButtonThorin>
+                              <ButtonThorin
+                                tone="green"
+                                size="small"
+                                variant="secondary"
+                                outlined
+                                onClick={() => {
+                                  removeItem('isApproved', "session")
+                                  setItem('isApproved', true, "session")
+                                  setTriggerJudgeContractFunctions(true)
+                                  judgeWrite.write?.()
+                                }}
+                              >
+                                Approve
+                              </ButtonThorin>
+                            </>
+                        }
                       </div>
                     </div>
-                    <br></br>
-                  </div>
+                  )}
                 </div>
               </>
-            )}
+            }
           </div>
 
           {/* FOOTER */}
-          <div className="flex flex-row text-xs pt-4" style={{justifyContent: "space-between"}}>
-            <div className="flex flex-col w-1/2 lg:w-1/3" style={{
+          <div className="flex flex-row text-xs pt-2" style={{ justifyContent: "space-between" }}>
+            <div className="flex flex-col w-1/2 lg:w-1/2" style={{
               justifyContent: "space-between",
-              borderLeft:"2px solid rgba(0, 0, 0, 0.18)",
-              borderRight:"2px solid rgba(0, 0, 0, 0.18)",
+              borderLeft: "2px solid rgba(0, 0, 0, 0.18)",
+              borderRight: "2px solid rgba(0, 0, 0, 0.18)",
               borderRadius: "6px",
             }}>
-              <div className="flex flex-row" style={{justifyContent: "space-between"}}>
-                <b>&nbsp;From </b>{props.commitFrom}&nbsp;
+              <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
+                <b>&nbsp;From </b>{ensName || props.commitFrom.slice(0, 5) + '…' + props.commitFrom.slice(-4)}&nbsp;
               </div>
-              <div className="flex flex-row" style={{justifyContent: "space-between"}}>
-                <b>&nbsp;To </b>{props.commitTo}&nbsp;
+              <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
+                <b>&nbsp;To </b>justcommit.eth&nbsp;
+                {/*<b>&nbsp;To </b>{props.commitJudge.slice(0, 5)}...{props.commitJudge.slice(-4)}&nbsp;*/}
               </div>
-            </div>
-            <div className="flex flex-row w-1/5 align-center justify-center"
-                 style={{border:"2px solid rgba(50, 50, 50, .5)", borderRadius: "10px"}}>
-              <div className="flex flex-row p-1">
-                <div className="flex flex-col align-center justify-center">
-                  <img className="h-4" src="./usdc-logo.png" />
-                </div>
-                <div className="flex flex-col font-semibold align-center justify-center text-xs">&nbsp;{props.stakeAmount*1e18}</div>
-              </div>
-            </div>
-            <div className="flex flex-col align-center justify-center text-lg">{CommitStatusEmoji[props.status]}</div>
-            <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600 text-xs rounded-lg bg-sky-200 hover:bg-sky-400">
-              <a onClick={returnError}>
-                &nbsp;&nbsp;Txn&nbsp;&nbsp;
-              </a>
             </div>
 
-            {/*
-            DEBUGGING
-            
-            ({props.expiryTimestamp*1000})
-            <br></br>
-            {Date.now()}
-            */}
-            
+            <div className="flex flex-row p-1">
+              <div className="flex flex-col align-center justify-center">
+                <img className="h-6" src="./polygon-logo-tilted.svg" />
+              </div>
+              <div className="flex flex-col font-semibold align-center justify-center text-l ml-1">
+                {parseFloat(props.stakeAmount).toFixed(2) % 1 === 0 ? parseInt(props.stakeAmount) : parseFloat(props.stakeAmount).toFixed(2)}
+              </div>
+            </div>
+
+            <div className="flex flex-col align-center justify-center text-lg">
+              {
+                CommitStatusEmoji[props.status]
+              }
+            </div>
+            <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600
+              text-l rounded-lg bg-sky-200 hover:bg-sky-400 hover:cursor-pointer">
+              <a onClick={() => { toast("⏳ Coming Soon...", { id: 'unique' }) }}>
+                {/*}
+              <a href={`https://${chain?.id === 5 ? 'goerli.' : ''
+                }etherscan.io/tx/${props.txnHash}`} // FIX 
+                target="_blank"
+                rel="noreferrer"
+              >
+              */}
+                &nbsp;&nbsp;&nbsp;🔎&nbsp;&nbsp;&nbsp;
+              </a>
+            </div>
           </div>
         </div>
+
+        <Toaster toastOptions={{ duration: 2000 }} />
+        <Tooltip id="my-tooltip"
+          style={{ backgroundColor: "#d2b07e", color: "#ffffff", fontWeight: 500 }}
+        />
+
+        {/*
+          <br></br>
+          {hasProved}
+          {props.endsAt}
+          <br></br>
+          {props.createdAt}
+          <br></br>
+          {Date.now()}
+          <br></br>
+          {txnHash}
+        */}
+
       </div>
     </>
   )

@@ -1,78 +1,160 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import Link from 'next/link'
+import Header from "../components/Header.js"
+import { Link } from 'react-router-dom';
+import CommitCardList from "../components/CommitCardList.js"
+import { Placeholders } from "../components/Placeholders.js"
+import { Tag } from '@ensdomains/thorin'
 import { useState, useEffect } from 'react'
-import { Route, Routes } from 'react-router-dom';
-import abi from "../contracts/CommitManager.json"
-import { ethers } from 'ethers'
-import { Tag, Input, Button as ButtonThorin } from '@ensdomains/thorin'
-import Button from '@mui/material/Button'
 import toast, { Toaster } from 'react-hot-toast'
-import { useAccount, useNetwork, useProvider } from 'wagmi'
-import { useContractWrite, usePrepareContractWrite } from 'wagmi'
-import { useWaitForTransaction, useContractRead } from 'wagmi'
-import dayjs from "dayjs";
-import Header from '../components/Header.js';
-import { Placeholders } from "../components/Placeholders.js";
-import CommitModal from "../components/CommitModal.js";
-import Spinner from "../components/Spinner.js";
+import { useAccount, useProvider, useNetwork } from 'wagmi'
+import { ethers } from 'ethers'
+import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 
 export default function Home() {
 
-  useEffect(() => {  
-    setLoadingState('loaded')
-  }, []);
-  
-  // state
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [modalOpen, setModalOpen] = useState(false)
-  const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState('0xB44691c50339de6D882E1D6DB4EbE5E3d670BAAd') // hard-coded for now (belf.eth) - does this work with justcommit.eth full address
-  const [commitAmount, setCommitAmount] = useState('0.01')
-  const [validThrough, setValidThrough] = useState((1 * 3600 * 1000) + Date.now()) // == 1 hour
-  const [loadingState, setLoadingState] = useState('loading')
-  const [transactionLoading, setTransactionLoading] = useState(false)
-  const [hasCommited, setHasCommited] = useState(false)
-  const [commitArray, setCommitArray] = useState([])
-  
-  // smart contract
-  const provider = useProvider()
+  // variables
+  const { address: connectedAddress } = useAccount()
   const { chain, chains } = useNetwork()
-  const { address: isConnected } = useAccount()
-  const contractAddress = "0x33CaC3508c9e3C50F1ae08247C79a8Ed64ad82a3"
-  
-  const { config } = usePrepareContractWrite({
-    addressOrName: contractAddress,
-    contractInterface: abi.abi,
-    functionName: "createCommit",
-    args: [commitDescription, commitTo, validThrough,
-          { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }]
-  })
-  const { data, write, isLoading: isWriteLoading } = useContractWrite({
-    ...config,
-    onSettled(data, error) {
-      {wait}
-      isWriteLoading = false // why do I have to do this? is the function running forever?
-    },
-  })
-  const {wait, isLoading: isWaitLoading } = useWaitForTransaction({                                
-    hash: data?.hash,
-    onSettled(data, error) {
-      setHasCommited(true)
-      localStorage.setItem('txnHash', data?.hash);
-      isWaitLoading = false // same questions as above.
-    },
-  })
+  const provider = useProvider()
 
-  // functions
+  // state
+  const [allCommits, setAllCommits] = useState([])
 
-  function returnError() {
-    if (isConnected && chains.some((c) => c.id === chain.id)) {
-      return toast.error('dApp is not live yet')
+  // getter for all of the contract commits (always listening)
+  const getAllCommits = async () => {
+    // console.log("getAllCommits() call")
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const commitPortal = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
+        const commits = await commitPortal.getAllCommits();
+        if (!commits) {
+          return
+        }
+        // classify each commit
+        let commitsClassified = [];
+        commits.forEach(commit => {
+          commitsClassified.push({
+            // front-end
+            status: determineStatus(commit),
+            // back-end
+            id: commit.id.toNumber(),
+            commitFrom: commit.commitFrom,
+            commitTo: commit.commitTo,
+            commitJudge: commit.commitJudge,
+            createdAt: commit.createdAt.toNumber(),
+            endsAt: commit.endsAt.toNumber(),
+            judgeDeadline: commit.judgeDeadline.toNumber(),
+            stakeAmount: commit.stakeAmount,
+            message: commit.message,
+            filename: commit.filename,
+            isCommitProved: commit.isCommitProved,
+            isCommitJudged: commit.isCommitJudged,
+            isApproved: commit.isApproved,
+            isSolo: commit.isSolo,
+          });
+        });
+        setAllCommits(commitsClassified);
+
+        // on each new commit: change the allCommits state
+        commitPortal.on("NewCommit", (
+          id,
+          commitFrom,
+          commitTo,
+          commitJudge,
+          createdAt,
+          endsAt,
+          judgeDeadline,
+          stakeAmount,
+          message,
+          filename,
+          isCommitProved,
+          isCommitJudged,
+          isApproved,
+          isSolo,
+        ) => {
+          setAllCommits(prevState => [...prevState, {
+            status: "Pending",
+            id: id,
+            commitFrom: commitFrom,
+            commitTo: commitTo,
+            commitJudge: commitJudge,
+            createdAt: createdAt,
+            endsAt: endsAt,
+            judgeDeadline: judgeDeadline,
+            stakeAmount: stakeAmount,
+            message: message,
+            filename: filename,
+            isCommitProved: isCommitProved,
+            isCommitJudged: isCommitJudged,
+            isApproved: isApproved,
+            isSolo: isSolo,
+          }]);
+        });
+
+        // sort according to their creation date
+        commitsClassified.sort((a, b) => (a.createdAt > b.createdAt) ? 1 : -1)
+        setAllCommits(commitsClassified)
+
+        console.log(commitsClassified)
+
+        // FOR LATER USE (unused events/emits):
+        // on a NewProve event
+        commitPortal.on("NewProve", (commitId, filename, provedAt) => {
+          console.log("New Prove Event:", commitId, filename, provedAt);
+        });
+
+        // on a NewJudge event
+        commitPortal.on("NewJudge", (commitId, isApproved, judgedAt) => {
+          console.log("New Judge Event:", commitId, isApproved, judgedAt);
+        });
+
+      } else {
+        toast("🚨 ETH wallet not detected.\n\n" +
+          "Solutions →\n\n" +
+          "1. Download the Metamask extension\t(Desktop)\n\n" +
+          "2. Use Metamask or the Brave broswer\t(Mobile)\n",
+          { duration: Infinity, id: 'unique', position: 'bottom-center' })
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
-  
-  // rendering
+
+  // functions
+  function determineStatus(commit) {
+    let status = "";
+    // is valid and does not have a proof
+    if (commit.endsAt > Date.now() && !commit.isCommitProved) {
+      status = "Pending";
+    }
+    // has not expired, has a proof, but has not been judged
+    else if (commit.judgeDeadline > Date.now() && commit.isCommitProved && !commit.isCommitJudged) {
+      status = "Waiting";
+    }
+    // is approved or the commit expired and was approved
+    else if (commit.isApproved || (commit.judgeDeadline < Date.now() && commit.isApproved)) {
+      status = "Success";
+    }
+    // commit has been denied or commit has expired
+    else {
+      status = "Failure";
+    }
+    return status
+  }
+
+  /// STATE EFFECTS
+
+  // first page pass
+  useEffect(() => {
+    getAllCommits()
+  }, [])
+
+  // render when there's a new commit or account connects
+  useEffect(() => {
+    <CommitCardList cardList={allCommits} />
+  }, [allCommits, connectedAddress])
+
   return (
     <>
       <Head>
@@ -85,212 +167,49 @@ export default function Home() {
         <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
       </Head>
 
-      <Header />
+      <Header currentPage="commitments" />
 
-      <div className="container container--flex">
-        <div className="heading text-3xl font-bold">
-          Make a Commitment
+      <div className="flex h-screen">
+        <div className="w-8/10 mx-auto p-0 lg:p-10 mt-20">
+          <div className="flex flex-col mt-4 justify-center items-center">
+            <CommitCardList cardList={allCommits} />
+          </div>
         </div>
-
-        {
-          loadingState === 'loading' && <Placeholders loadingStyle = "indexLoadingStyle" number = {1} />
-        }
-
-        {
-          loadingState === 'loaded' &&
-        
-          <form
-            id="form"
-            className="form"
-            
-            // write();
-            // toast.error('Coming soon! Working on it... ', { position: 'bottom-center' })}} 
-            // setModalOpen(true)
-
-            // this takes priority over Commit <Button> onClick
-            onSubmit={async (e) => {
-              e.preventDefault()
-
-              // Toast Checks
-
-              // Wallet connection
-              if (!isConnected) {
-                return toast.error('Connect your wallet')
-              }
-              // On right network
-              if (!chains.some((c) => c.id === chain.id)) {
-                return toast.error('Switch to a supported network')
-              }
-              //
-            }}>
-  
-            <div className="flex flex-col gap-3 w-full">
-              <Input
-                label="Commitment"
-                maxLength={140}
-                placeholder=""
-                disabled = {!isWriteLoading && !isWaitLoading && hasCommited}
-                labelSecondary={
-                  <Tag
-                    className="hover:cursor-pointer"
-                    tone="green"
-                    size="small"
-                    onClick={() =>
-                      {toast('📸 Can a pic or screenshot prove this?'),
-                      { position: 'top-center' }}}
-                  >
-                    i
-                  </Tag>
-                }
-                error={(commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                        commitDescription.length == 0) ? null : "Alphanumeric only"}
-                onChange={(e) => setCommitDescription(e.target.value)}
-                required
-              />
-              <Input
-                label="To"
-                maxLength={42}
-                // placeholder="your-best-friend.eth"
-                //parentStyles = {{ backgroundColor: '#f1fcf8' }}
-                onChange={(e) => setCommitTo(e.target.value)}
-                required
-                // disabled
-              />
-              <Input
-                label="Amount"
-                placeholder="5"
-                disabled = {!isWriteLoading && !isWaitLoading && hasCommited}
-                min={5}
-                max={9999}
-                step= {5} // "any"
-                type="number"
-                units="USDC"
-                error={(commitAmount) > 9999 ? "Maximum of $9999" : null}
-                //parentStyles = {{ backgroundColor: '#f1fcf8' }}
-                onChange={(e) => setCommitAmount(e.target.value)}
-                required
-              />
-              {/* TODO: abstract away the UNIX conversion*/}
-              <Input
-                label="Duration"
-                placeholder="1"
-                disabled = {!isWriteLoading && !isWaitLoading && hasCommited}
-                min={1}
-                max={24}
-                step={1}
-                type="number"
-                units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
-                error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null }
-                //parentStyles={{ backgroundColor: '#f1fcf8' }}
-                onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
-                required
-              />
-            </div>
-  
-            {/* the Commit button */}
-            {/* show it when there hasn't been a commit and the write is not loading */}
-            {(!((isWriteLoading || isWaitLoading)) && !hasCommited) && (
-              <Button style={{
-                width: '32%',
-                margin: '1rem',
-                backgroundColor:
-                  commitDescription.length < 3 ||
-                  commitDescription.length > 35 ||
-                  !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                  ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
-                  (commitAmount > 9999) ?
-                  "rgb(73 179 147 / 35%)": "rgb(73 179 147)",
-                borderRadius: 12,
-                color: "white",
-                boxShadow: "0rem 0.4rem 0.4rem 0rem lightGrey",
-              }}
-                tone="green"
-                type="submit"
-                variant="action"
-                disabled = {
-                  commitDescription.length < 3 ||
-                  commitDescription.length > 35 ||
-                  !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                  ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
-                  (commitAmount > 9999)
-                }
-                onClick= {returnError} // {write}
-              >
-                Commit
-              </Button>
-            )}
-
-            {/*
-            {(modalOpen && 
-            <CommitModal
-              commitDescription = {commitDescription}
-              commitTo = "justcommit.eth" // {commitTo}
-              amount = {commitAmount}
-              duration = {validThrough}
-              modalOpen = {modalOpen}
-              setModalOpen = {setModalOpen}
-            />
-            )}
-            */}
-            
-            <Toaster toastOptions={{duration: 2000 }}/>
-  
-            {(((isWriteLoading || isWaitLoading)) && !hasCommited) && (
-              <div className="justifyCenter">
-                <Spinner />
-              </div> 
-            )}
-
-            {hasCommited && 
-              <div className="flex flex-row mt-5 mb-2 gap-4">
-                <ButtonThorin
-                  outlined
-                  shape="rounded"
-                  tone="grey"
-                  size="small"
-                  variant="transparent"
-                  as = "a"
-                  href = {`https://${
-                    chain?.id === 5 ? 'goerli.' : ''
-                  }etherscan.io/tx/${data.hash}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Transaction
-                </ButtonThorin>
-                <div className="text-2xl font-bold">⚡</div>
-                <ButtonThorin
-                  outlined
-                  shape="rounded"
-                  tone="green"
-                  size="small"
-                  variant="secondary"
-                  as = "a"
-                  href = "./commitments"
-                >
-                  Commitment
-                </ButtonThorin>
-              </div>
-            }
-
-            {/*
-            isWriteLoading: {String(isWriteLoading)}
-            <br></br>
-            <br></br>
-            isWaitLoading: {String(isWaitLoading)}
-            <br></br>
-            <br></br>
-            hasCommited: {String(hasCommited)}
-            */}
-            
-            {/*
-            {validThrough}
-            {Date.now()}
-            */}
-            
-          </form>
-        }
       </div>
+
+      {/* the commit shortcut icon */}
+      <div
+        style={{
+          position: "fixed",
+          bottom: "25px",
+          right: "25px",
+          zIndex: "999",
+        }}
+        className="hover:cursor-pointer"
+        onClick={() => {
+          window.location.href = "./commit"
+        }}
+      >
+        <Tag
+          style={{
+            color: "#1DD297",
+            backgroundColor: "#1DD297",
+            width: "54px",
+            height: "54px",
+            fontSize: "1.5rem",
+          }}
+          className="hover:scale-110 hover:cursor-pointer"
+        >
+          <img
+            style={{ height: "2.5rem" }}
+            src="./commit-icon.svg"
+            alt="Commit Icon"
+          />
+        </Tag>
+      </div>
+
+      <Toaster />
+
     </>
-  )
+  );
 }

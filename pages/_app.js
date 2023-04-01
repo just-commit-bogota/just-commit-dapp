@@ -6,14 +6,19 @@ import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public'
 import { ThemeProvider } from 'styled-components'
 import { ThorinGlobalStyles, lightTheme as lightThemeENS } from '@ensdomains/thorin'
+import PullToRefresh from 'react-simple-pull-to-refresh';
 
 const { chains, provider } = configureChains(
-  [/*chain.mainnet,*/ chain.goerli],
+  // [chain.polygon, chain.mainnet], // for ENS reverse resolve
+
+  [chain.polygon], // APP or BETA
+  // [chain.polygonMumbai], // DEV
+
   [infuraProvider({}), publicProvider()]
 )
 
 const { connectors } = getDefaultWallets({
-  appName: "My RainbowKit App",
+  appName: "Just Commit dApp",
   chains
 })
 
@@ -25,19 +30,27 @@ const wagmiClient = createClient({
 
 const App = ({ Component, pageProps }) => {
   return (
-    <ThemeProvider theme={lightThemeENS}>
-      <ThorinGlobalStyles />
-      <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider
-          chains={chains}
-          theme={lightThemeRainbowkit({
-            accentColor: '#1DD297',
-          })}
-        >
-          <Component {...pageProps} />
-        </RainbowKitProvider>
-      </WagmiConfig>
-    </ThemeProvider>
+    <PullToRefresh onRefresh={() => {
+      try {
+        return location.reload()
+      } catch (error) {
+        return
+      }
+    }}>
+      <ThemeProvider theme={lightThemeENS}>
+        <ThorinGlobalStyles />
+        <WagmiConfig client={wagmiClient}>
+          <RainbowKitProvider
+            chains={chains}
+            theme={lightThemeRainbowkit({
+              accentColor: '#1DD297',
+            })}
+          >
+            <Component {...pageProps} />
+          </RainbowKitProvider>
+        </WagmiConfig>
+      </ThemeProvider>
+    </PullToRefresh>
   )
 }
 
