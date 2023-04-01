@@ -1,6 +1,6 @@
 import { lightTheme as theme } from '@ensdomains/thorin'
 
-export default function CommitDetails({ commitDescription, commitTo, amount, duration, ...props }) {
+export default function CommitDetails({ commitDescription, commitJudge, amount, duration, ...props }) {
   return (
     <>
       <div className="details" {...props}>
@@ -10,7 +10,7 @@ export default function CommitDetails({ commitDescription, commitTo, amount, dur
         </div>
         <div className="detail">
           <span className="key">To</span>
-          <span className="value">{commitTo}</span>
+          <span className="value">{commitJudge}</span>
         </div>
         <div className="detail">
           <span className="key">Amount</span>

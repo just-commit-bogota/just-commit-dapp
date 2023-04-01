@@ -35,20 +35,23 @@ export default function Home() {
         let commitsClassified = [];
         commits.forEach(commit => {
           commitsClassified.push({
+            // front-end
             status: determineStatus(commit),
+            // back-end
             id: commit.id.toNumber(),
             commitFrom: commit.commitFrom,
             commitTo: commit.commitTo,
+            commitJudge: commit.commitJudge,
             createdAt: commit.createdAt.toNumber(),
-            validThrough: commit.validThrough.toNumber(),
+            endsAt: commit.endsAt.toNumber(),
             judgeDeadline: commit.judgeDeadline.toNumber(),
             stakeAmount: commit.stakeAmount,
             message: commit.message,
-            ipfsHash: commit.ipfsHash,
             filename: commit.filename,
-            commitProved: commit.commitProved,
-            commitJudged: commit.commitJudged,
+            isCommitProved: commit.isCommitProved,
+            isCommitJudged: commit.isCommitJudged,
             isApproved: commit.isApproved,
+            isSolo: commit.isSolo,
           });
         });
         setAllCommits(commitsClassified);
@@ -58,32 +61,34 @@ export default function Home() {
           id,
           commitFrom,
           commitTo,
+          commitJudge,
           createdAt,
-          validThrough,
+          endsAt,
           judgeDeadline,
           stakeAmount,
           message,
-          ipfsHash,
           filename,
-          commitProved,
-          commitJudged,
+          isCommitProved,
+          isCommitJudged,
           isApproved,
+          isSolo,
         ) => {
           setAllCommits(prevState => [...prevState, {
             status: "Pending",
             id: id,
             commitFrom: commitFrom,
             commitTo: commitTo,
+            commitJudge: commitJudge,
             createdAt: createdAt,
-            validThrough: validThrough,
+            endsAt: endsAt,
             judgeDeadline: judgeDeadline,
             stakeAmount: stakeAmount,
             message: message,
-            ipfsHash: ipfsHash,
             filename: filename,
-            commitProved: commitProved,
-            commitJudged: commitJudged,
+            isCommitProved: isCommitProved,
+            isCommitJudged: isCommitJudged,
             isApproved: isApproved,
+            isSolo: isSolo,
           }]);
         });
 
@@ -95,8 +100,8 @@ export default function Home() {
 
         // FOR LATER USE (unused events/emits):
         // on a NewProve event
-        commitPortal.on("NewProve", (commitId, ipfsHash, filename, provedAt) => {
-          console.log("New Prove Event:", commitId, ipfsHash, filename, provedAt);
+        commitPortal.on("NewProve", (commitId, filename, provedAt) => {
+          console.log("New Prove Event:", commitId, filename, provedAt);
         });
 
         // on a NewJudge event
@@ -120,11 +125,11 @@ export default function Home() {
   function determineStatus(commit) {
     let status = "";
     // is valid and does not have a proof
-    if (commit.validThrough > Date.now() && !commit.commitProved) {
+    if (commit.endsAt > Date.now() && !commit.isCommitProved) {
       status = "Pending";
     }
     // has not expired, has a proof, but has not been judged
-    else if (commit.judgeDeadline > Date.now() && commit.commitProved && !commit.commitJudged) {
+    else if (commit.judgeDeadline > Date.now() && commit.isCommitProved && !commit.isCommitJudged) {
       status = "Waiting";
     }
     // is approved or the commit expired and was approved
@@ -166,7 +171,7 @@ export default function Home() {
 
       <div className="flex h-screen">
         <div className="w-8/10 mx-auto p-0 lg:p-10 mt-20">
-          <div className="flex flex-col justify-center items-center">
+          <div className="flex flex-col mt-4 justify-center items-center">
             <CommitCardList cardList={allCommits} />
           </div>
         </div>
@@ -187,8 +192,8 @@ export default function Home() {
       >
         <Tag
           style={{
-            color: "rgba(255, 255, 255, 1)",
-            backgroundColor: "rgb(30 174 131)",
+            color: "#1DD297",
+            backgroundColor: "#1DD297",
             width: "54px",
             height: "54px",
             fontSize: "1.5rem",

@@ -2,7 +2,7 @@ import Head from 'next/head'
 import useFetch from '../hooks/fetch'
 import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
-import { Tag, Input, Heading, Checkbox, FieldSet, RadioButton, RadioButtonGroup, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Input, Heading, FieldSet, Select, Typography, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip';
@@ -22,15 +22,19 @@ export default function Commit() {
     }, 1000);
   }, [])
 
+  // hard-coded
+  const PurplePropHouseMultiSig = "0x3e2cd6ca1f18d27fe1bbeb986914e98d5dd08bb0"
+
   // state
   const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState(CONTRACT_OWNER)
+  const [commitTo, setCommitTo] = useState(PurplePropHouseMultiSig)
+  const [commitJudge, setCommitJudge] = useState([CONTRACT_OWNER])
   const [commitAmount, setCommitAmount] = useState('0')
-  const [validThrough, setValidThrough] = useState((24 * 3600 * 1000) + Date.now()) // 24 hours
+  const [endsAt, setEndsAt] = useState((72 * 3600 * 1000) + Date.now()) // Expires In is pre-set to 72h
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
-  const [betModality, setBetModality] = useState('solo')
+  const [betModality, setBetModality] = useState("solo")
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -42,7 +46,7 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitDescription, commitTo, validThrough,
+    args: [commitDescription, commitTo, commitJudge, endsAt, betModality == "solo",
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
@@ -67,13 +71,20 @@ export default function Commit() {
   })
 
   // functions
-  function formatUsd(number) {
-    return number.toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
+  function formatCurrency(number, currency = null) {
+    const options = {
       maximumFractionDigits: 2,
       minimumFractionDigits: 2,
-    })
+    };
+  
+    if (currency) {
+      options.style = 'currency';
+      options.currency = currency;
+    } else {
+      options.style = 'decimal';
+    }
+  
+    return number.toLocaleString('en-US', options);
   }
 
   async function getWalletMaticBalance() {
@@ -90,6 +101,11 @@ export default function Commit() {
   const priceApi = useFetch('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd')
   const maticPrice = parseFloat(priceApi.data?.["matic-network"].usd)
 
+  // effects
+  useEffect(() => {
+    getWalletMaticBalance()
+  }, [address])
+
   // rendering
   return (
     <>
@@ -105,42 +121,16 @@ export default function Commit() {
 
       <Header currentPage="commit" />
 
-      <div className="container container--flex h-screen">
+      <div className="container container--flex h-screen items-stretch">
         <div className="mt-5 sm:mt-3" style={{ padding: "10px" }}>
           <FieldSet
-            legend={<Heading color="textSecondary" style={{fontWeight: "700", fontSize:"40px"}}>Bet On Yourself</Heading>}
+            legend={
+              <Heading color="textSecondary" style={{ fontWeight: '700', fontSize: '40px' }}>
+                Bet On Yourself
+              </Heading>
+            }
           >
-            <RadioButtonGroup
-              className="items-start place-self-center"
-              value={betModality}
-              onChange={(e) => setBetModality(e.target.value)}
-            >
-              <div className="flex gap-4">
-                <RadioButton
-                  checked={true} // betModality == "solo"}
-                  id="solo"
-                  label="Solo"
-                  name="solo"
-                  value="solo"
-                />
-                <RadioButton
-                  checked={false} // {betModality == "1v1"}
-                  id="1v1"
-                  label="1v1"
-                  name="1v1"
-                  value="1v1"
-                  onChange={() => toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' })}
-                />
-                <RadioButton
-                  checked={false} // {betModality == "multiplayer"}
-                  id="multiplayer"
-                  label="Multiplayer"
-                  name="multiplayer"
-                  value="multiplayer"
-                  onChange={() => toast('⏳ Coming Soon', { position: 'top-center', id: 'unique' })}
-                />
-              </div>
-            </RadioButtonGroup>
+          {/* <ButtonGroup setBetModality={setBetModality} setStartsAt={setStartsAt} /> */}
           </FieldSet>
         </div>
 
@@ -166,32 +156,30 @@ export default function Commit() {
               if (!chains.some((c) => c.id === chain.id)) {
                 return toast.error('Switch to a supported network')
               }
-              // commiting to self?
-              if (address.toUpperCase() == commitTo.toUpperCase()) {
-                return toast.error('Cannot commit to self')
-              }
               // is commitAmount not set?
               if (maticPrice * commitAmount == 0) {
                 return toast.error('Set a commitment amount')
+              }
+              // commiting to self?
+              if (JSON.stringify(commitJudge).toUpperCase().includes(address.toUpperCase())) {
+                return toast.error('Cannot verify yourself');
               }
             }}>
 
             <div className="flex flex-col gap-3 w-full">
               <Input
                 label="I Want To"
-                maxLength={140}
+                maxLength={27}
                 placeholder=""
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 labelSecondary={
                   <a
                     data-tooltip-id="my-tooltip"
-                    data-tooltip-content="📸 → proof required"
+                    data-tooltip-content="📸 Can a pic prove it?"
                     data-tooltip-place="right"
-                    
                   >
                     <Tag
-                      style={{ background: '#21AD85' }}
-                      tone="green"
+                      style={{ background: '#1DD297' }}
                       size="large"
                     >
                       <b style={{ color: 'white' }}>?</b>
@@ -199,72 +187,133 @@ export default function Commit() {
                   </a>
                 }
                 error={
-                  commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) || commitDescription.length === 0
-                    ? null
-                    : 'Alphanumeric only'
+                  commitDescription.match(/^[a-zA-Z0-9\s\.,!?\(\)\<\>]*$/) || commitDescription.length === 0
+                    ? (commitDescription.length > 26 ? 'Say less.' : null)
+                    : 'Alphanumeric Only'
                 }
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
-                suffix=
-                {
-                  <div className="flex flex-col gap-2" style={{ fontSize: "x-large" }}>
-                    <div className="flex gap-2" style={{ whiteSpace: 'nowrap' }}>
-                      <Checkbox
-                        checked={true} // {betModality=="solo"}
-                        label=<p className="text-white">📸</p>
-                        value="camera"
-                      />
-                    </div>
-                  </div>
-                }
               />
-              <Input
-                label="Or Else I'll Lose"
-                placeholder="5"
-                disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
-
-                min={0}
-                step="any"
-                max={9999}
-                type="number"
-                units="MATIC"
-                error={
-                  commitAmount > walletMaticBalance ? "Insufficient Funds" :
-                    commitAmount > 9999 ? "Up to 9999" : null
-                }
-                onChange={(e) => (
-                  setCommitAmount(e.target.value)
-                )}
-                required
-                suffix =
-                {commitAmount != '0' && (
-                  <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
-                    <div className="flex gap-2" style={{ color:'grey', whiteSpace: 'nowrap' }}>
-                      {`(${formatUsd(maticPrice * commitAmount)})`}
-                    </div>
-                  </div>
-                )}
-              />
-              <Input
+              <div className="flex flex-row items-baseline gap-2">
+                <div className="w-7/12 lg:w-6/12">
+                  <Input
+                    label="Or I'll Lose"
+                    placeholder="5"
+                    onKeyDown={(e) => {
+                      // Allow up to 3 digits before the decimal point, any number of digits after
+                      if (!/^\d{0,3}(\.\d*)?$/.test(e.target.value + e.key) && e.key !== 'Backspace') {
+                        e.preventDefault();
+                      }
+                    }}
+                    disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
+                    /*
+                    labelSecondary={
+                      <a
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={"1 MATIC 🟰 " + formatCurrency(maticPrice, "USD")}
+                        data-tooltip-place="right"
+                      >
+                        <Tag
+                          style={{ background: '#1DD297' }}
+                          tone="green"
+                          size="large"
+                        >
+                          <b style={{ color: 'white' }}>?</b>
+                        </Tag>
+                      </a>
+                    }
+                    */
+                    min={0}
+                    step="any"
+                    maxLength={2}
+                    type="number"
+                    error={
+                      !address || !walletMaticBalance
+                        ? null
+                        : commitAmount > walletMaticBalance
+                        ? " Available → " + formatCurrency(walletMaticBalance)
+                        : commitAmount > 99
+                        ? "Up to 99"
+                        : null
+                    }
+                    onChange={(e) => {
+                      setCommitAmount(e.target.value);
+                    }}
+                    required
+                    prefix={<img className="w-6 h-6 -mr-1 lg:mr-0 min-w-max object-cover" src="./polygon-logo-tilted.svg" />}
+                    suffix=
+                    {commitAmount != '0' && (
+                      <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
+                        <div className="flex gap-2" style={{ color: 'grey', whiteSpace: 'nowrap' }}>
+                          {`(${formatCurrency(maticPrice * commitAmount, "USD")})`}
+                        </div>
+                      </div>
+                    )}
+                  />
+                </div>
+                <div className="w-5/12 lg:w-6/12">
+                  <Select
+                    value = {PurplePropHouseMultiSig} // default selected
+                    style={{background:"rgba(246,246,248)", borderColor:"transparent", borderRadius:"14px"}}
+                    label="To"
+                    required
+                    options={[ // TODO: add descriptive tooltip (Purple Prop House Multisig)
+                      { value: PurplePropHouseMultiSig,
+                        label:
+                        <Typography variant="label" className="ml-[-1px] lg:ml-2 lg:scale-110">
+                          Purple Prop House
+                        </Typography>,
+                        prefix: <div style={{ width: '20px', height: '20px', background: '#8b62d2' }} />
+                      },
+                    ]}
+                    onChange={(e) => setCommitTo(e.target.value)}
+                  />
+                </div>
+              </div>
+             <Input
                 label="Expires In"
-                placeholder="24"
+                placeholder="72"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 min={1}
-                max={24}
+                max={168}
+                maxLength={3}
                 step={1}
-                type="number"
-                units={((validThrough - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
-                error={((validThrough - Date.now()) / 3600 / 1000) > 24 ? "24 hour maximum" : null}
-                onChange={(e) => setValidThrough((e.target.value * 3600 * 1000) + Date.now())}
+                type="text"
+                onKeyDown={(e) => {
+                  if (
+                    (!/^\d*$/.test(e.key) && e.key !== 'Backspace') ||
+                    (e.target.value === '' && e.key === '0')
+                  ) {
+                    e.preventDefault();
+                  }
+                }}
+                inputMode="numeric"
+                units={((endsAt - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
+                error={((endsAt - Date.now()) / 3600 / 1000) > 168 ? "1 week maximum" : null}
+                onChange={(e) => setEndsAt((e.target.value * 3600 * 1000) + Date.now())}
+                labelSecondary={
+                  <a
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content="⏳ 1 week maximum"
+                      data-tooltip-place="right"
+                  >
+                      <Tag
+                          style={{ background: '#1DD297' }}
+                          size="large"
+                      >
+                          <b style={{ color: 'white' }}>?</b>
+                      </Tag>
+                  </a>
+                }
                 required
-              />
+            />
+
               <Input
-                label="Attested By"
+                label="Proof Pic Verified By"
                 required
                 readOnly
                 placeholder="justcommit.eth"
-                maxLength={42}
-                onChange={(e) => setCommitTo(e.target.value)}
+                onChange={(e) => setCommitJudge(e.target.value.split(",").map((address) => address.trim()))}
                 onClick={() => {
                   toast('⚠️ Disabled (Beta)',
                     { position: 'bottom-center', id: 'unique' }
@@ -282,12 +331,12 @@ export default function Commit() {
                 backgroundColor:
                   commitAmount == 0 || commitAmount == "" ||
                     commitDescription.length < 2 ||
-                    commitDescription.length > 35 ||
+                    commitDescription.length > 26 ||
                     !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                    ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
+                    ((endsAt - Date.now()) / 3600 / 1000) > 168 ||
                     commitAmount > 9999 ||
                     commitAmount > walletMaticBalance ?
-                    "rgb(30 174 131 / 36%)" : "rgb(30 174 131)",
+                    "rgb(29 210 151 / 36%)" : "rgb(29 210 151)",
                 borderRadius: 12,
                 color: "white",
                 transition: "transform 0.2s ease-in-out",
@@ -295,13 +344,13 @@ export default function Commit() {
                 size="small"
                 shadowless
                 type="submit"
-                suffix={!priceApi.isLoading && "(" + formatUsd(maticPrice * commitAmount) + ")"}
+                suffix={!priceApi.isLoading && "(" + formatCurrency(maticPrice * commitAmount, "USD") + ")"}
                 disabled={
                   commitAmount == 0 || commitAmount == "" ||
                   commitDescription.length < 2 ||
-                  commitDescription.length > 35 ||
+                  commitDescription.length > 26 ||
                   !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
-                  ((validThrough - Date.now()) / 3600 / 1000) > 24 ||
+                  ((endsAt - Date.now()) / 3600 / 1000) > 168 ||
                   commitAmount > 9999 ||
                   commitAmount > walletMaticBalance
                 }
@@ -313,7 +362,7 @@ export default function Commit() {
 
             <Toaster toastOptions={{ duration: 2000 }} />
             <Tooltip id="my-tooltip"
-              style={{ backgroundColor: "rgb(199, 247, 212, 1)", color: "#222" }}
+              style={{ backgroundColor: "#1DD297", color: "#ffffff", fontWeight: 500 }}
             />
 
             {(((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
@@ -328,10 +377,9 @@ export default function Commit() {
                   <div className="flex justify-center w-3/10">
                     <ButtonThorin
                       className="flex"
-                      style={{ padding: "20px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
+                      style={{ padding: "20px", backgroundColor: "#1DD297", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
                       outlined
                       shape="rounded"
-                      tone="green"
                       size="small"
                       variant="primary"
                       as="a"
@@ -368,8 +416,11 @@ export default function Commit() {
             ---------
             */}
 
-            {/* betModality: {betModality}
+            {/* address: {address}
             <br></br>
+            walletMaticBalance: {walletMaticBalance} */}
+            
+            {/* <br></br>
             <br></br>
             maticPrice * commitAmount: {typeof(maticPrice * commitAmount)}
             <br></br>
@@ -377,7 +428,7 @@ export default function Commit() {
             isWaitLoading: {String(isWaitLoading)}
             <br></br>
             <br></br>
-            validThrou.: {validThrough}
+            endsAt: {endsAt}
             <br></br>
             <br></br>
             Date.now(): {Date.now()} */}

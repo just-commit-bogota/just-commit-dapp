@@ -1,33 +1,24 @@
 import { FileInput, Tag, Button as ButtonThorin } from '@ensdomains/thorin'
 import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
-import Countdown from 'react-countdown';
 import { useAccount, useEnsName } from 'wagmi'
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip } from 'react-tooltip';
 import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from 'wagmi'
 import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
+import Countdown from '../components/Countdown.js'
 import { useStorage } from '../hooks/useStorage.ts'
 import Image from 'next/image'
 import toast, { Toaster } from 'react-hot-toast'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
-import { Web3Storage } from 'web3.storage'
-//import { twilio } from 'twilio'
+import supabase from '../lib/db'
 
 export default function CommitCard({ ...props }) {
 
-  // clients
-  const client_storage = new Web3Storage({ token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDFiYWYzNkE2NGY2QjI3MDk3ZmQ4ZTkwMTA0NDAyZWNjQ2YxQThCMWEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2Njg5OTIxNzYwMzQsIm5hbWUiOiJqdXN0LWNvbW1pdC1kZXYifQ.zZBQ-nVOnOWjK0eZtCexGzpbV7BdO2v80bldS4ecE1E" })
-
-  //const client_twilio = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-
-  // tokens
-  const TWILIO_ACCOUNT_SID = process.env.NEXT_PUBLIC_TWILIO_ACCOUNT_SID
-  const TWILIO_AUTH_TOKEN = process.env.NEXT_PUBLIC_TWILIO_AUTH_TOKEN
-  const TWILIO_NUMBER = process.env.NEXT_PUBLIC_TWILIO_NUMBER
-  const DESTINATION_NUMBER = process.env.NEXT_PUBLIC_DESTINATION_NUMBER
-
   // variables
   const { getItem, setItem, removeItem } = useStorage()
+  const { address } = useAccount()
   const CommitStatusEmoji = {
     "Pending": "⚡", // picture not yet submitted
     "Waiting": "⏳", // picture submitted and waiting
@@ -39,9 +30,6 @@ export default function CommitCard({ ...props }) {
   const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
-
-  // variables
-  const { address } = useAccount()
 
   // function to resolve ENS name on ETH mainnet
   const { data: ensName } = useEnsName({
@@ -58,7 +46,7 @@ export default function CommitCard({ ...props }) {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "proveCommit",
-    args: [props.id, getItem('ipfsHash', 'session'), getItem('filename', 'session')],
+    args: [props.id, getItem('filename', 'session')],
     enabled: triggerProveContractFunctions,
   })
   const { config: judgeCommitConfig } = usePrepareContractWrite({
@@ -107,37 +95,53 @@ export default function CommitCard({ ...props }) {
   // FUNCTIONS
 
   // upload the pic
-  const uploadFile = () => {
+  const uploadFile = async (file) => {
     setUploadClicked(true)
 
-    const fileInput = document.querySelector('input[type="file"]')
+    const { data, error } = await supabase.storage.from("images").upload(file.name, file); // this works
 
-    removeItem('filename', "session")
-    setItem('filename', fileInput.files[0].name, "session")
-
-    if (fileInput.size > 0) {
-      if (fileInput.files[0].lastModified < props.createdAt * 1000) {
-        setUploadClicked(false)
+    // on data checks
+    if (data) {
+      if (file.lastModified < props.createdAt) {
         toast.error("This pic is older than the commitment", { duration: 4000 })
+        setUploadClicked(false);
         return
-      }
-
-      client_storage.put(fileInput.files, {
-        name: 'fileInput',
-        maxRetries: 3,
-      }).then(cid => {
-        removeItem('ipfsHash', "session")
-        setItem('ipfsHash', cid, "session")
+      } else {
         setTriggerProveContractFunctions(true)
-
-        if (!proveWrite.write) {
-          setUploadClicked(false)
-          toast("🔁 Upload again (bug)", { duration: 4000 })
-          return
-        }
-        proveWrite.write?.()
-      })
+        removeItem('filename', "session")
+        setItem('filename', file.name, "session")
+      }
     }
+    // on error checks
+    if (error) {
+      if (error.statusCode == "409") {
+        toast.error("This picture is a duplicate", { duration: 4000 })
+      }
+      setUploadClicked(false);
+      return;
+    }
+
+    if (!proveWrite.write) { // TODO
+      // delete the recent db entry
+      const { error } = await supabase.storage
+        .from('images')
+        .remove([file.name])
+      if (error) {
+        console.error(error)
+      }
+      // appropriate UX/UI
+      setUploadClicked(false)
+      toast("🔁 Upload again (bug)", { duration: 4000 })
+      return
+    }
+
+    proveWrite.write?.() // smart contract call
+
+  }
+
+  function getPublicUrl(filename) {
+    const urlPrefix = process.env.NEXT_PUBLIC_SUPABASE_URL + "/storage/v1/object/public/images/"
+    return (urlPrefix + filename.replace(/ /g, "%20"))
   }
 
   return (
@@ -156,15 +160,24 @@ export default function CommitCard({ ...props }) {
               <div className="span flex text-sm text-slate-400 gap-2 opacity-80" style={{ whiteSpace: "nowrap" }}>
                 {
                   // active
-                  (props.status == "Pending") ?
-                    ((moment(props.validThrough).diff(moment(), 'days') >= 2) ?
-                      "> " + moment(props.validThrough).diff(moment(), 'days') + " days left" :
-                      <Countdown date={props.validThrough} daysInHours={true} />) :
-                    // waiting or verify
-                    (props.status == "Waiting") ?
-                      moment(props.judgeDeadline).fromNow(true) + " left" :
-                      // my history or feed
-                      moment(props.createdAt * 1000).fromNow()
+                  props.status === "Pending" ? (
+                    <><Countdown status={props.status} endsAt={props.endsAt/1000} judgeDeadline={props.judgeDeadline} /></>
+                  ) : // waiting or verify
+                  props.status === "Waiting" ? (
+                    <>
+                      <a
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content="⏳ Waiting on justcommit.eth"
+                        data-tooltip-place="top"
+                      >
+                        <img src="/gavel.svg" width="20px" height="20px" alt="Gavel" />
+                      </a>
+                      <Countdown status={props.status} endsAt={props.endsAt} judgeDeadline={props.judgeDeadline}/>
+                    </>
+                  ) : (
+                    // my history or feed
+                    moment(props.createdAt).fromNow()
+                  )
                 }
               </div>
             </div>
@@ -173,7 +186,7 @@ export default function CommitCard({ ...props }) {
             'pictureArea': true,
             'pictureArea--waiting': props.status == "Waiting",
             'pictureArea--success': props.status == "Success",
-            'pictureArea--failure': props.status == "Failure" && !props.commitProved,
+            'pictureArea--failure': props.status == "Failure" && !props.isCommitProved,
             'pictureArea--pending': props.status == "Pending",
           })}>
             {/* CARD BODY */}
@@ -183,7 +196,7 @@ export default function CommitCard({ ...props }) {
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
                   <div className="flex">
-                    <FileInput maxSize={20} onChange={(file) => uploadFile()}>
+                    <FileInput maxSize={20} onChange={(file) => uploadFile(file)}>
                       {(context) =>
                         (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ?
                           <div className="flex flex-col" style={{ alignItems: "center" }}>
@@ -234,24 +247,24 @@ export default function CommitCard({ ...props }) {
             <br></br>
             */}
 
-            {/*
-            validThrough: {validThrough}
+            
+            {/* isCommitProved: {props.isCommitProved}
             <br></br>
             <br></br>
-            Date.now(): {Date.now()}
-            */}
+            Date.now(): {Date.now()} */}
+            
 
             {/* show the image if there's an image to show */}
-            {(props.commitProved) &&
+            {(props.isCommitProved) &&
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
 
                   <Image
                     className="object-cover"
                     unoptimized
-                    loader={() => `https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`}
-                    src={`https://${props.ipfsHash}.ipfs.dweb.link/${props.filename}`}
-                    alt="IPFS picture"
+                    loader={() => { getPublicUrl(props.filename) }}
+                    src={getPublicUrl(props.filename)}
+                    alt="Supabase picture"
                     width={300}
                     height={300}
                     style={{
@@ -260,7 +273,9 @@ export default function CommitCard({ ...props }) {
                   />
 
                   {/* "to verify" buttons */}
-                  {props.commitTo == address && props.judgeDeadline > Date.now() && !props.commitJudged && (
+
+                  {/* TODO - is the props.commitJudge check done right? */}
+                  {props.commitJudge.includes(address) && props.judgeDeadline > Date.now() && !props.isCommitJudged && (
                     <div>
                       <div className="flex flex-row gap-5 p-5" style={{ justifyContent: "space-between", marginBottom: "-30px" }}>
                         {
@@ -276,7 +291,6 @@ export default function CommitCard({ ...props }) {
                                   removeItem('isApproved', "session")
                                   setItem('isApproved', false, "session")
                                   setTriggerJudgeContractFunctions(true)
-                                  // console.log(judgeCommitConfig)
                                   judgeWrite.write?.()
                                 }}
                               >
@@ -319,7 +333,7 @@ export default function CommitCard({ ...props }) {
               </div>
               <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
                 <b>&nbsp;To </b>justcommit.eth&nbsp;
-                {/*<b>&nbsp;To </b>{props.commitTo.slice(0, 5)}...{props.commitTo.slice(-4)}&nbsp;*/}
+                {/*<b>&nbsp;To </b>{props.commitJudge.slice(0, 5)}...{props.commitJudge.slice(-4)}&nbsp;*/}
               </div>
             </div>
 
@@ -327,7 +341,9 @@ export default function CommitCard({ ...props }) {
               <div className="flex flex-col align-center justify-center">
                 <img className="h-6" src="./polygon-logo-tilted.svg" />
               </div>
-              <div className="flex flex-col font-semibold align-center justify-center text-l ml-1">{parseFloat(props.stakeAmount).toFixed(2)}</div>
+              <div className="flex flex-col font-semibold align-center justify-center text-l ml-1">
+                {parseFloat(props.stakeAmount).toFixed(2) % 1 === 0 ? parseInt(props.stakeAmount) : parseFloat(props.stakeAmount).toFixed(2)}
+              </div>
             </div>
 
             <div className="flex flex-col align-center justify-center text-lg">
@@ -352,11 +368,14 @@ export default function CommitCard({ ...props }) {
         </div>
 
         <Toaster toastOptions={{ duration: 2000 }} />
+        <Tooltip id="my-tooltip"
+          style={{ backgroundColor: "#d2b07e", color: "#ffffff", fontWeight: 500 }}
+        />
 
         {/*
           <br></br>
           {hasProved}
-          {props.validThrough}
+          {props.endsAt}
           <br></br>
           {props.createdAt}
           <br></br>
