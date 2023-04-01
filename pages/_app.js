@@ -7,13 +7,13 @@ import { publicProvider } from 'wagmi/providers/public'
 import { ThemeProvider } from 'styled-components'
 import { ThorinGlobalStyles, lightTheme as lightThemeENS } from '@ensdomains/thorin'
 import PullToRefresh from 'react-simple-pull-to-refresh';
-  
+
 const { chains, provider } = configureChains(
   // [chain.polygon, chain.mainnet], // for ENS reverse resolve
-  
-  //[chain.polygon], // BETA
-  [chain.polygonMumbai], // DEV
-  
+
+  [chain.polygon], // APP or BETA
+  // [chain.polygonMumbai], // DEV
+
   [infuraProvider({}), publicProvider()]
 )
 
