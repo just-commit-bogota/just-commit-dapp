@@ -50,12 +50,12 @@ export default function Header({ currentPage }) {
                     </Link>, color: currentPage == "commitments" && "green"
                 },
                 {
-                  label:
-                    <Link href="/commit">
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      Commit
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    </Link>, color: currentPage == "commit" && "green"
+                  label: <Link href="/commit" target="_blank">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    Commit
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  </Link>,
+                  color: currentPage == "commit" && "green"
                 },
                 {
                   label:
@@ -89,21 +89,23 @@ export default function Header({ currentPage }) {
         <>
           <div className="header w-full header--absolute bg-white" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center' }}>
             <div className="flex items-center justify-start" style={{ flexGrow: 1 }}>
-              <Link href="/commit">
-                <a className={`mx-4 text-l font-bold ${currentPage === "commit" ? "text-[#1DD297] font-semibold" : "text-black"}`}>Commit</a>
-              </Link>
-              <Link href="https://justcommit.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78#c1d9e58a077d47e2af7583d7665168dd" target="_blank" rel="noopener noreferrer">
-                <a className="mx-4 text-l">FAQ ↗</a>
-              </Link>
-              <Link href="https://discord.gg/7863Wtv4hX" target="_blank" rel="noopener noreferrer">
+              <a href="/commit">
+                <a className={`mx-4 text-l font-bold ${currentPage === "commit" ? "text-[#1DD297] font-semibold" : "text-black"}`}>
+                  Commit
+                </a>
+              </a>
+              <a href="https://justcommit.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78#c1d9e58a077d47e2af7583d7665168dd" target="_blank" rel="noopener noreferrer" className="mx-4 text-l">
+                FAQ ↗
+              </a>
+              <a href="https://discord.gg/7863Wtv4hX" target="_blank" rel="noopener noreferrer">
                 <a className="mx-4 text-l">Discord ↗</a>
-              </Link>
+              </a>
             </div>
-            <Link href="/">
+            <a href="/">
               <a className="">
                 <img style={{width:"320px"}} src="./logo-2.svg"/>
               </a>
-            </Link>
+            </a>
             <div className="flex items-center text-xs sm:text-base justify-end w-full" style={{ flexGrow: 1 }}>
               <ConnectButton accountStatus="address" className="hover:shadow-lg w-full"/>
             </div>
