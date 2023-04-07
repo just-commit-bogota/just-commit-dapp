@@ -103,27 +103,29 @@ export default function CommitCardList({ cardList }) {
       <div className="w-full">
         {cardListToDisplay.length > 0 ? (
           <>
-            {cardListToDisplay.map((card, index) => (
-              <CommitCard
-                key={index}
-                
-                status={card.status}
-      
-                id={card.id}
-                commitFrom={card.commitFrom}
-                commitJudge={card.commitJudge}
-                createdAt={card.createdAt}
-                endsAt={card.endsAt}
-                judgeDeadline={card.judgeDeadline}
-                stakeAmount={ethers.utils.formatEther(card.stakeAmount)}
-                message={card.message}
-                filename={card.filename}
-                isCommitProved={card.isCommitProved}
-                isCommitJudged={card.isCommitJudged}
-                isApproved={card.isApproved}
-                isSolo={card.isSolo}
-              />
-            )).reverse()}
+            {cardListToDisplay.map((card, index) =>
+              card.id !== 15 ? ( // conditional card rendering (temporarily added)
+                <CommitCard
+                  key={index}
+                  
+                  status={card.status}
+        
+                  id={card.id}
+                  commitFrom={card.commitFrom}
+                  commitJudge={card.commitJudge}
+                  createdAt={card.createdAt}
+                  endsAt={card.endsAt}
+                  judgeDeadline={card.judgeDeadline}
+                  stakeAmount={ethers.utils.formatEther(card.stakeAmount)}
+                  message={card.message}
+                  filename={card.filename}
+                  isCommitProved={card.isCommitProved}
+                  isCommitJudged={card.isCommitJudged}
+                  isApproved={card.isApproved}
+                  isSolo={card.isSolo}
+                />
+              ) : null
+            ).reverse()}
           </>
         ) : (
           <Typography weight="normal" variant="base" className="flex flex-row text-m block mt-6 text-black font-bold rounded-md p-3 lg:justify-center lg:align-center"
