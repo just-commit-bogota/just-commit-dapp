@@ -89,12 +89,16 @@ export default function Header({ currentPage }) {
         <>
           <div className="header w-full header--absolute bg-white" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center' }}>
             <div className="flex items-center justify-start gap-7" style={{ flexGrow: 1 }}>
-              <a href="/" className={`underline-on-hover text-l ${currentPage === "commitments" ? "text-[#1DD297]" : "text-black"}`}>
-                Home
-              </a>
-              <a href="/commit" className={`underline-on-hover text-l ${currentPage === "commit" ? "text-[#1DD297]" : "text-black"}`}>
-                Commit
-              </a>
+              <Link href="/">
+                <a className={`underline-on-hover text-l ${currentPage === "commitments" ? "text-[#1DD297]" : "text-black"}`}>
+                  Home
+                </a>
+              </Link>
+              <Link href="/commit">
+                <a className={`underline-on-hover text-l ${currentPage === "commit" ? "text-[#1DD297]" : "text-black"}`}>
+                  Commit
+                </a>
+              </Link>
               <a
                 href="https://justcommit.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78#c1d9e58a077d47e2af7583d7665168dd"
                 target="_blank"
