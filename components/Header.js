@@ -88,7 +88,7 @@ export default function Header({ currentPage }) {
       {isDesktop && (
         <>
           <div className="header w-full header--absolute bg-white" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center' }}>
-            <div className="flex items-center justify-start gap-6" style={{ flexGrow: 1 }}>
+            <div className="flex items-center justify-start gap-7" style={{ flexGrow: 1 }}>
               <a href="/" className={`text-l ${currentPage === "commitments" ? "text-[#1DD297]" : "text-black"}`}>
                 Home
               </a>
