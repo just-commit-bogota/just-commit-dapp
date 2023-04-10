@@ -88,29 +88,30 @@ export default function Header({ currentPage }) {
       {isDesktop && (
         <>
           <div className="header w-full header--absolute bg-white" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center' }}>
-            <div className="flex items-center justify-start" style={{ flexGrow: 1 }}>
-              <a href="/">
-                <a className={`mx-4 text-l ${currentPage === "commitments" ? "text-[#1DD297]" : "text-black"}`}>
-                  Home
-                </a>
+            <div className="flex items-center justify-start gap-6" style={{ flexGrow: 1 }}>
+              <a href="/" className={`text-l ${currentPage === "commitments" ? "text-[#1DD297]" : "text-black"}`}>
+                Home
               </a>
-              <a href="/commit">
-                <a className={`mx-4 text-l ${currentPage === "commit" ? "text-[#1DD297]" : "text-black"}`}>
-                  Commit
-                </a>
+              <a href="/commit" className={`text-l ${currentPage === "commit" ? "text-[#1DD297]" : "text-black"}`}>
+                Commit
               </a>
-              <a href="https://justcommit.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78#c1d9e58a077d47e2af7583d7665168dd" target="_blank" rel="noopener noreferrer" className="mx-4 text-l">
+              <a
+                href="https://justcommit.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78#c1d9e58a077d47e2af7583d7665168dd"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-l"
+              >
                 FAQ ↗
               </a>
-              <a href="https://discord.gg/7863Wtv4hX" target="_blank" rel="noopener noreferrer">
-                <a className="mx-4 text-l">Discord ↗</a>
+              <a href="https://discord.gg/7863Wtv4hX" target="_blank" rel="noopener noreferrer" className="text-l">
+                Discord ↗
               </a>
             </div>
-            <a href="/">
+            <Link href="/">
               <a className="">
                 <img style={{width:"320px"}} src="./logo-2.svg"/>
               </a>
-            </a>
+            </Link>
             <div className="flex items-center text-xs sm:text-base justify-end w-full" style={{ flexGrow: 1 }}>
               <ConnectButton accountStatus="address" className="hover:shadow-lg w-full"/>
             </div>

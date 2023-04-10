@@ -240,7 +240,11 @@ export default function Commit() {
                       setCommitAmount(e.target.value);
                     }}
                     required
-                    prefix={<img className="w-10 h-10 -mr-1 lg:mr-0" src="./polygon-logo-tilted.svg" />}
+                    prefix={
+                      <div className="w-6 h-6">
+                        <img className="w-full h-full -mr-1 lg:mr-0" src="./polygon-logo-tilted.svg" />
+                      </div>
+                    }
                     suffix=
                     {commitAmount != '0' && (
                       <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
