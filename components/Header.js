@@ -89,8 +89,13 @@ export default function Header({ currentPage }) {
         <>
           <div className="header w-full header--absolute bg-white" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center' }}>
             <div className="flex items-center justify-start" style={{ flexGrow: 1 }}>
+              <a href="/">
+                <a className={`mx-4 text-l ${currentPage === "commitments" ? "text-[#1DD297]" : "text-black"}`}>
+                  Home
+                </a>
+              </a>
               <a href="/commit">
-                <a className={`mx-4 text-l ${currentPage === "commit" ? "text-[#1DD297] font-semibold" : "text-black"}`}>
+                <a className={`mx-4 text-l ${currentPage === "commit" ? "text-[#1DD297]" : "text-black"}`}>
                   Commit
                 </a>
               </a>
