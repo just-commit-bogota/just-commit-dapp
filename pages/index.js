@@ -177,7 +177,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* the commit shortcut icon */}
+      {/* the commit shortcut floating icon */}
       <div
         style={{
           position: "fixed",
