@@ -1,5 +1,6 @@
 import '../styles/globals.css'
 import "@rainbow-me/rainbowkit/styles.css"
+import { Analytics } from '@vercel/analytics/react';
 import { getDefaultWallets, RainbowKitProvider, lightTheme as lightThemeRainbowkit } from '@rainbow-me/rainbowkit'
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi'
 import { infuraProvider } from 'wagmi/providers/infura'
@@ -12,7 +13,7 @@ const { chains, provider } = configureChains(
   // [chain.polygon, chain.mainnet], // for ENS reverse resolve
 
   //[chain.polygon], // APP or BETA
-   [chain.polygonMumbai], // DEV
+  [chain.polygonMumbai], // DEV
 
   [infuraProvider({}), publicProvider()]
 )
@@ -47,6 +48,7 @@ const App = ({ Component, pageProps }) => {
             })}
           >
             <Component {...pageProps} />
+            <Analytics />
           </RainbowKitProvider>
         </WagmiConfig>
       </ThemeProvider>
