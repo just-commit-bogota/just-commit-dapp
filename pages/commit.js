@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import useFetch from '../hooks/fetch'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef} from 'react'
 import { ethers } from 'ethers'
 import { Tag, Input, Heading, FieldSet, Select, Typography, RadioButton, RadioButtonGroup, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
@@ -27,7 +27,7 @@ export default function Commit() {
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState(PurplePropHouseMultiSig)
+  const [commitTo, setCommitTo] = useState("")
   const [commitJudge, setCommitJudge] = useState([CONTRACT_OWNER])
   const [commitAmount, setCommitAmount] = useState('0')
   const [endsAt, setEndsAt] = useState((72 * 3600 * 1000) + Date.now()) // Expires In is pre-set to 72h
@@ -40,6 +40,7 @@ export default function Commit() {
   const { chain, chains } = useNetwork()
   const { address } = useAccount()
   const provider = useProvider()
+  const selectRef = useRef();
 
   // smart contract functions
   const { config: createCommitConfig } = usePrepareContractWrite({
@@ -108,9 +109,13 @@ export default function Commit() {
 
   useEffect(() => {
     if (betModality == "solo") {
-      setCommitJudge(CONTRACT_OWNER);
+      // set to the current value of the <Select> component
+      if (selectRef.current) {
+        setCommitTo(selectRef.current.value);
+      }
+      setCommitJudge([CONTRACT_OWNER]);
     } else if (betModality == "1v1") {
-      setCommitJudge(commitTo);
+      setCommitJudge([commitTo]);
     }
   }, [betModality, commitTo]);
 
@@ -157,7 +162,11 @@ export default function Commit() {
                   label="1v1"
                   name="1v1"
                   value="1v1"
-                  onClick={(e) => setBetModality('1v1')}
+                  onClick={(e) => {
+                    setBetModality('1v1');
+                    setCommitTo("");
+                    setCommitJudge("");
+                  }}
                 />
               </div>
             </RadioButtonGroup>
@@ -324,7 +333,8 @@ export default function Commit() {
               <div className="w-5/12 lg:w-6/12">
                 {betModality == "solo" &&
                   (<Select
-                    value = {PurplePropHouseMultiSig} // default selected
+                    ref={selectRef}
+                    placeholder="Pick..."
                     style={{background:"rgba(246,246,248)", borderColor:"transparent", borderRadius:"14px"}}
                     label = "Recipient"
                     required
@@ -343,8 +353,9 @@ export default function Commit() {
                 {betModality == "1v1" &&
                   (<Input
                       label="Challenging"
+                      placeholder="0xb44691c50...baad"
                       required
-                      onChange={(e) => setCommitTo(e.target.value)}
+                      onChange={(e) => {setCommitTo(e.target.value);}}
                    />)
                 }
               </div>
@@ -364,6 +375,7 @@ export default function Commit() {
                     !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
                     ((endsAt - Date.now()) / 3600 / 1000) > 168 ||
                     commitAmount > 9999 ||
+                    commitTo == "" || 
                     commitAmount > walletMaticBalance ?
                     "rgb(29 210 151 / 36%)" : "rgb(29 210 151)",
                 borderRadius: 12,
@@ -381,7 +393,8 @@ export default function Commit() {
                   !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
                   ((endsAt - Date.now()) / 3600 / 1000) > 168 ||
                   commitAmount > 9999 ||
-                  commitAmount > walletMaticBalance
+                  commitAmount > walletMaticBalance ||
+                  commitTo == ""
                 }
                 onClick={commitWrite}
               >
@@ -451,6 +464,8 @@ export default function Commit() {
             <br></br>*/}
 
             commitJudge: {commitJudge}
+            <br></br>
+            commitTo: {commitTo}
             
             {/* <br></br>
             <br></br>
