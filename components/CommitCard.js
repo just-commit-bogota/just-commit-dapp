@@ -98,6 +98,10 @@ export default function CommitCard({ ...props }) {
   const uploadFile = async (file) => {
     setUploadClicked(true)
 
+    if (!supabase) {
+      return;
+    }
+
     const { data, error } = await supabase.storage.from("images").upload(file.name, file); // this works
 
     // on data checks
