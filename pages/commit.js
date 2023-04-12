@@ -2,7 +2,7 @@ import Head from 'next/head'
 import useFetch from '../hooks/fetch'
 import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
-import { Tag, Input, Heading, FieldSet, Select, Typography, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Input, Heading, FieldSet, Select, Typography, RadioButton, RadioButtonGroup, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip';
@@ -130,7 +130,29 @@ export default function Commit() {
               </Heading>
             }
           >
-          {/* <ButtonGroup setBetModality={setBetModality} setStartsAt={setStartsAt} /> */}
+            <RadioButtonGroup
+              className="items-start place-self-center -mt-2"
+              onChange={(e) => setBetModality(e.target.value)}
+            >
+              <div className="flex gap-4">
+                <RadioButton
+                  checked={betModality == "solo"}
+                  id="solo"
+                  label="Solo"
+                  name="solo"
+                  value="solo"
+                  onClick={(e) => setBetModality('solo')}
+                />
+                <RadioButton
+                  checked={betModality == "1v1"}
+                  id="1v1"
+                  label="1v1"
+                  name="1v1"
+                  value="1v1"
+                  onClick={(e) => setBetModality('1v1')}
+                />
+              </div>
+            </RadioButtonGroup>
           </FieldSet>
         </div>
 
