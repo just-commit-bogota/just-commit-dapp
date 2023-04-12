@@ -228,7 +228,7 @@ export default function Commit() {
                 error={
                   commitDescription.match(/^[a-zA-Z0-9\s\.,!?\(\)\<\>]*$/) || commitDescription.length === 0
                     ? (commitDescription.length > 26 ? 'Say less.' : null)
-                    : 'Alphanumeric Only'
+                    : 'Alphanumeric only'
                 }
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
@@ -356,6 +356,12 @@ export default function Commit() {
                       placeholder="0xb44691c50...baad"
                       required
                       onChange={(e) => {setCommitTo(e.target.value);}}
+                      error={
+                        commitTo != "" && 
+                          !/^0x[a-fA-F0-9]{40}$/.test(commitTo)
+                            ? "Invalid address"
+                            : null
+                      }
                    />)
                 }
               </div>
@@ -376,6 +382,7 @@ export default function Commit() {
                     ((endsAt - Date.now()) / 3600 / 1000) > 168 ||
                     commitAmount > 9999 ||
                     commitTo == "" || 
+                    !/^0x[a-fA-F0-9]{40}$/.test(commitTo) ||
                     commitAmount > walletMaticBalance ?
                     "rgb(29 210 151 / 36%)" : "rgb(29 210 151)",
                 borderRadius: 12,
@@ -394,7 +401,8 @@ export default function Commit() {
                   ((endsAt - Date.now()) / 3600 / 1000) > 168 ||
                   commitAmount > 9999 ||
                   commitAmount > walletMaticBalance ||
-                  commitTo == ""
+                  commitTo == "" ||
+                  !/^0x[a-fA-F0-9]{40}$/.test(commitTo)
                 }
                 onClick={commitWrite}
               >
