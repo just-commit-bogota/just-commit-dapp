@@ -200,8 +200,7 @@ export default function Commit() {
                     label="Or I'll Lose"
                     placeholder="5"
                     onKeyDown={(e) => {
-                      // Allow up to 3 digits before the decimal point, any number of digits after
-                      if (!/^\d{0,3}(\.\d*)?$/.test(e.target.value + e.key) && e.key !== 'Backspace') {
+                      if (!/^(?:(\d{1,3})|(\d{0,2}\.?\d{0,1})|(\d{1}\.\d{0,2}))$/.test(e.target.value + e.key) && e.key !== 'Backspace') {
                         e.preventDefault();
                       }
                     }}
@@ -225,7 +224,7 @@ export default function Commit() {
                     */
                     min={0}
                     step="any"
-                    maxLength={2}
+                    maxLength={3}
                     type="number"
                     error={
                       !address || !walletMaticBalance

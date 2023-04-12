@@ -104,27 +104,25 @@ export default function CommitCardList({ cardList }) {
         {cardListToDisplay.length > 0 ? (
           <>
             {cardListToDisplay.map((card, index) =>
-              card.id !== 0 ? ( // conditional temporarily added
-                <CommitCard
-                  key={index}
-                  
-                  status={card.status}
-        
-                  id={card.id}
-                  commitFrom={card.commitFrom}
-                  commitJudge={card.commitJudge}
-                  createdAt={card.createdAt}
-                  endsAt={card.endsAt}
-                  judgeDeadline={card.judgeDeadline}
-                  stakeAmount={ethers.utils.formatEther(card.stakeAmount)}
-                  message={card.message}
-                  filename={card.filename}
-                  isCommitProved={card.isCommitProved}
-                  isCommitJudged={card.isCommitJudged}
-                  isApproved={card.isApproved}
-                  isSolo={card.isSolo}
-                />
-              ) : null
+              <CommitCard
+                key={index}
+                
+                status={card.status}
+      
+                id={card.id}
+                commitFrom={card.commitFrom}
+                commitJudge={card.commitJudge}
+                createdAt={card.createdAt}
+                endsAt={card.endsAt}
+                judgeDeadline={card.judgeDeadline}
+                stakeAmount={ethers.utils.formatEther(card.stakeAmount)}
+                message={card.message}
+                filename={card.filename}
+                isCommitProved={card.isCommitProved}
+                isCommitJudged={card.isCommitJudged}
+                isApproved={card.isApproved}
+                isSolo={card.isSolo}
+              />
             ).reverse()}
           </>
         ) : (
