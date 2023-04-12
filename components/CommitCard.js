@@ -161,7 +161,7 @@ export default function CommitCard({ ...props }) {
                 {
                   // active
                   props.status === "Pending" ? (
-                    <><Countdown status={props.status} endsAt={props.endsAt/1000} judgeDeadline={props.judgeDeadline} /></>
+                    <><Countdown status={props.status} endsAt={props.endsAt} judgeDeadline={props.judgeDeadline} /></>
                   ) : // waiting or verify
                   props.status === "Waiting" ? (
                     <>
