@@ -106,6 +106,14 @@ export default function Commit() {
     getWalletMaticBalance()
   }, [address])
 
+  useEffect(() => {
+    if (betModality == "solo") {
+      setCommitJudge(CONTRACT_OWNER);
+    } else if (betModality == "1v1") {
+      setCommitJudge(commitTo);
+    }
+  }, [betModality, commitTo]);
+
   // rendering
   return (
     <>
@@ -122,7 +130,7 @@ export default function Commit() {
       <Header currentPage="commit" />
 
       <div className="container container--flex h-screen items-stretch">
-        <div className="mt-5 sm:mt-3" style={{ padding: "10px" }}>
+        <div className="mt-5" style={{ padding: "10px" }}>
           <FieldSet
             legend={
               <Heading color="textSecondary" style={{ fontWeight: '700', fontSize: '40px' }}>
@@ -190,7 +198,7 @@ export default function Commit() {
 
             <div className="flex flex-col gap-3 w-full">
               <Input
-                label="I Want To"
+                label="Commitment"
                 maxLength={27}
                 placeholder=""
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
@@ -216,87 +224,8 @@ export default function Commit() {
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
               />
-              <div className="flex flex-row items-baseline gap-2">
-                <div className="w-7/12 lg:w-6/12">
-                  <Input
-                    label="Or I'll Lose"
-                    placeholder="5"
-                    onKeyDown={(e) => {
-                      if (!/^(?:(\d{1,3})|(\d{0,2}\.?\d{0,1})|(\d{1}\.\d{0,2}))$/.test(e.target.value + e.key) && e.key !== 'Backspace') {
-                        e.preventDefault();
-                      }
-                    }}
-                    disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
-                    /*
-                    labelSecondary={
-                      <a
-                        data-tooltip-id="my-tooltip"
-                        data-tooltip-content={"1 MATIC 🟰 " + formatCurrency(maticPrice, "USD")}
-                        data-tooltip-place="right"
-                      >
-                        <Tag
-                          style={{ background: '#1DD297' }}
-                          tone="green"
-                          size="large"
-                        >
-                          <b style={{ color: 'white' }}>?</b>
-                        </Tag>
-                      </a>
-                    }
-                    */
-                    min={0}
-                    step="any"
-                    maxLength={3}
-                    type="number"
-                    error={
-                      !address || !walletMaticBalance
-                        ? null
-                        : commitAmount > walletMaticBalance
-                        ? " Available → " + formatCurrency(walletMaticBalance)
-                        : commitAmount > 99
-                        ? "Up to 99"
-                        : null
-                    }
-                    onChange={(e) => {
-                      setCommitAmount(e.target.value);
-                    }}
-                    required
-                    prefix={
-                      <div className="w-6 h-6">
-                        <img className="w-full h-full -mr-1 lg:mr-0" src="./polygon-logo-tilted.svg" />
-                      </div>
-                    }
-                    suffix=
-                    {commitAmount != '0' && (
-                      <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
-                        <div className="flex gap-2" style={{ color: 'grey', whiteSpace: 'nowrap' }}>
-                          {`(${formatCurrency(maticPrice * commitAmount, "USD")})`}
-                        </div>
-                      </div>
-                    )}
-                  />
-                </div>
-                <div className="w-5/12 lg:w-6/12">
-                  <Select
-                    value = {PurplePropHouseMultiSig} // default selected
-                    style={{background:"rgba(246,246,248)", borderColor:"transparent", borderRadius:"14px"}}
-                    label="To"
-                    required
-                    options={[ // TODO: add descriptive tooltip (Purple Prop House Multisig)
-                      { value: PurplePropHouseMultiSig,
-                        label:
-                        <Typography variant="label" className="ml-[-1px] lg:ml-2 lg:scale-110">
-                          Purple Prop House
-                        </Typography>,
-                        prefix: <div style={{ width: '20px', height: '20px', background: '#8b62d2' }} />
-                      },
-                    ]}
-                    onChange={(e) => setCommitTo(e.target.value)}
-                  />
-                </div>
-              </div>
-             <Input
-                label="Expires In"
+              <Input
+                label="Expiration Date"
                 placeholder="72"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 min={1}
@@ -332,19 +261,94 @@ export default function Commit() {
                 }
                 required
             />
-
-              <Input
-                label="Proof Pic Verified By"
-                required
-                readOnly
-                placeholder="justcommit.eth"
-                onChange={(e) => setCommitJudge(e.target.value.split(",").map((address) => address.trim()))}
-                onClick={() => {
-                  toast('⚠️ Disabled (Beta)',
-                    { position: 'bottom-center', id: 'unique' }
-                  )
-                }}
-              />
+            <div className="flex flex-row items-baseline gap-2">
+              <div className="w-7/12 lg:w-6/12">
+                <Input
+                  label="Wager"
+                  placeholder="5"
+                  onKeyDown={(e) => {
+                    if (!/^(?:(\d{1,3})|(\d{0,2}\.?\d{0,1})|(\d{1}\.\d{0,2}))$/.test(e.target.value + e.key) && e.key !== 'Backspace') {
+                      e.preventDefault();
+                    }
+                  }}
+                  disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
+                  /*
+                  labelSecondary={
+                    <a
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={"1 MATIC 🟰 " + formatCurrency(maticPrice, "USD")}
+                      data-tooltip-place="right"
+                    >
+                      <Tag
+                        style={{ background: '#1DD297' }}
+                        tone="green"
+                        size="large"
+                      >
+                        <b style={{ color: 'white' }}>?</b>
+                      </Tag>
+                    </a>
+                  }
+                  */
+                  min={0}
+                  step="any"
+                  maxLength={3}
+                  type="number"
+                  error={
+                    !address || !walletMaticBalance
+                      ? null
+                      : commitAmount > walletMaticBalance
+                      ? " Available → " + formatCurrency(walletMaticBalance)
+                      : commitAmount > 99
+                      ? "Up to 99"
+                      : null
+                  }
+                  onChange={(e) => {
+                    setCommitAmount(e.target.value);
+                  }}
+                  required
+                  prefix={
+                    <div className="w-6 h-6">
+                      <img className="w-full h-full -mr-1 lg:mr-0" src="./polygon-logo-tilted.svg" />
+                    </div>
+                  }
+                  suffix=
+                  {commitAmount != '0' && (
+                    <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
+                      <div className="flex gap-2" style={{ color: 'grey', whiteSpace: 'nowrap' }}>
+                        {`(${formatCurrency(maticPrice * commitAmount, "USD")})`}
+                      </div>
+                    </div>
+                  )}
+                />
+              </div>
+              <div className="w-5/12 lg:w-6/12">
+                {betModality == "solo" &&
+                  (<Select
+                    value = {PurplePropHouseMultiSig} // default selected
+                    style={{background:"rgba(246,246,248)", borderColor:"transparent", borderRadius:"14px"}}
+                    label = "Recipient"
+                    required
+                    options={[
+                      { value: PurplePropHouseMultiSig,
+                        label:
+                        <Typography variant="label" className="ml-[-1px] lg:ml-2 lg:scale-110">
+                          Purple Prop House
+                        </Typography>,
+                        prefix: <div style={{ width: '20px', height: '20px', background: '#8b62d2' }} />
+                      },
+                    ]}
+                    onChange={(e) => setCommitTo(e.target.value)}
+                  />)
+                }
+                {betModality == "1v1" &&
+                  (<Input
+                      label="Challenging"
+                      required
+                      onChange={(e) => setCommitTo(e.target.value)}
+                   />)
+                }
+              </div>
+            </div>
             </div>
 
             {/* Commit Button */}
@@ -445,6 +449,8 @@ export default function Commit() {
             <br></br>
             block.timestamp * 1000: {Math.floor(Date.now() / 1000) * 1000}
             <br></br>*/}
+
+            commitJudge: {commitJudge}
             
             {/* <br></br>
             <br></br>
