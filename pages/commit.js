@@ -10,6 +10,7 @@ import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContra
 import Header from '../components/Header.js';
 import Spinner from "../components/Spinner.js";
 import { Placeholders } from "../components/Placeholders.js";
+import WeekdaySelect from "../components/WeekdaySelect.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 
 export default function Commit() {
@@ -144,7 +145,7 @@ export default function Commit() {
             }
           >
             <RadioButtonGroup
-              className="items-start place-self-center -mt-2"
+              className="items-start place-self-center -mt-1 mb-3"
               onChange={(e) => setBetModality(e.target.value)}
             >
               <div className="flex gap-4">
@@ -205,7 +206,7 @@ export default function Commit() {
               }
             }}>
 
-            <div className="flex flex-col gap-3 w-full">
+            <div className="flex flex-col gap-5 w-full">
               <Input
                 label="Commitment"
                 maxLength={27}
@@ -233,43 +234,8 @@ export default function Commit() {
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
               />
-              <Input
-                label="Expires In"
-                placeholder="72"
-                disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
-                min={1}
-                max={168}
-                maxLength={4}
-                step={1}
-                type="text"
-                onKeyDown={(e) => {
-                  if (
-                    ((!/^\d*(\.)?$/.test(e.key) || (e.key === '.' && e.target.value.includes('.'))) && e.key !== 'Backspace') ||
-                    (e.target.value === '' && e.key === '0')
-                  ) {
-                    e.preventDefault();
-                  }
-                }}
-                inputMode="numeric"
-                units={((endsAt - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
-                error={((endsAt - Date.now()) / 3600 / 1000) > 168 ? "1 week maximum" : null}
-                onChange={(e) => setEndsAt((e.target.value * 3600 * 1000) + Date.now())}
-                labelSecondary={
-                  <a
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content="⏳ 1 week maximum"
-                      data-tooltip-place="right"
-                  >
-                      <Tag
-                          style={{ background: '#1DD297' }}
-                          size="large"
-                      >
-                          <b style={{ color: 'white' }}>?</b>
-                      </Tag>
-                  </a>
-                }
-                required
-            />
+              <WeekdaySelect />
+              
             <div className="flex flex-row items-baseline gap-2">
               <div className="w-7/12 lg:w-6/12">
                 <Input
@@ -330,7 +296,7 @@ export default function Commit() {
                   )}
                 />
               </div>
-              <div className="w-5/12 lg:w-6/12">
+              <div className="w-5/12 lg:w-6/12 mb-6">
                 {betModality == "solo" &&
                   (<Select
                     ref={selectRef}
@@ -344,7 +310,7 @@ export default function Commit() {
                         <Typography variant="label" className="ml-[-1px] lg:ml-2 lg:scale-110">
                           Purple Prop House
                         </Typography>,
-                        prefix: <div style={{ width: '20px', height: '20px', background: '#8b62d2' }} />
+                        prefix: <div style={{ fontSize: '0.375 rem', width: '20px', height: '20px', background: '#8b62d2' }} />
                       },
                     ]}
                     onChange={(e) => setCommitTo(e.target.value)}
