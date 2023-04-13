@@ -239,6 +239,7 @@ export default function Commit() {
             <div className="flex flex-row items-baseline gap-2">
               <div className="w-7/12 lg:w-6/12">
                 <Input
+                  style={{paddingLeft: "0.18rem", paddingRight: "0.18rem"}}
                   label="Wager"
                   placeholder="5"
                   onKeyDown={(e) => {
@@ -288,7 +289,7 @@ export default function Commit() {
                   }
                   suffix=
                   {commitAmount != '0' && (
-                    <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
+                    <div className="flex flex-col gap-2" style={{ fontSize: "small" }}>
                       <div className="flex gap-2" style={{ color: 'grey', whiteSpace: 'nowrap' }}>
                         {`(${formatCurrency(maticPrice * commitAmount, "USD")})`}
                       </div>
