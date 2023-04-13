@@ -37,7 +37,7 @@ const WeekdaySelect = () => {
     <Select
       options={options}
       required
-      label = "Expires At"
+      label = "Expires On"
       style={{background:"rgba(246,246,248)", borderColor:"transparent", borderRadius:"14px"}}
       placeholder="Select a day" // doesn't work
       rows={2} // doesn't work
