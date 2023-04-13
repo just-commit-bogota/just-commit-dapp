@@ -234,17 +234,17 @@ export default function Commit() {
                 required
               />
               <Input
-                label="Expiration Date"
+                label="Expires In"
                 placeholder="72"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 min={1}
                 max={168}
-                maxLength={3}
+                maxLength={4}
                 step={1}
                 type="text"
                 onKeyDown={(e) => {
                   if (
-                    (!/^\d*$/.test(e.key) && e.key !== 'Backspace') ||
+                    ((!/^\d*(\.)?$/.test(e.key) || (e.key === '.' && e.target.value.includes('.'))) && e.key !== 'Backspace') ||
                     (e.target.value === '' && e.key === '0')
                   ) {
                     e.preventDefault();
@@ -471,9 +471,9 @@ export default function Commit() {
             block.timestamp * 1000: {Math.floor(Date.now() / 1000) * 1000}
             <br></br>*/}
 
-            commitJudge: {commitJudge}
+            {/* commitJudge: {commitJudge}
             <br></br>
-            commitTo: {commitTo}
+            commitTo: {commitTo} */}
             
             {/* <br></br>
             <br></br>
