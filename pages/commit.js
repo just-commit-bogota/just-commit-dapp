@@ -31,7 +31,7 @@ export default function Commit() {
   const [commitTo, setCommitTo] = useState("")
   const [commitJudge, setCommitJudge] = useState([CONTRACT_OWNER])
   const [commitAmount, setCommitAmount] = useState('0')
-  const [endsAt, setEndsAt] = useState((72 * 3600 * 1000) + Date.now()) // Expires In is pre-set to 72h
+  const [endsAt, setEndsAt] = useState()
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
@@ -215,7 +215,7 @@ export default function Commit() {
                 labelSecondary={
                   <a
                     data-tooltip-id="my-tooltip"
-                    data-tooltip-content="📸 Can a pic prove it?"
+                    data-tooltip-content="📸&nbsp; Can a pic prove it?"
                     data-tooltip-place="right"
                   >
                     <Tag
@@ -234,7 +234,7 @@ export default function Commit() {
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
               />
-              <WeekdaySelect />
+              <WeekdaySelect endsAt={endsAt}/>
               
             <div className="flex flex-row items-baseline gap-2">
               <div className="w-7/12 lg:w-6/12">
@@ -440,6 +440,8 @@ export default function Commit() {
             {/* commitJudge: {commitJudge}
             <br></br>
             commitTo: {commitTo} */}
+
+            endsAt: {endsAt}
             
             {/* <br></br>
             <br></br>

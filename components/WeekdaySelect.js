@@ -1,5 +1,5 @@
-import React from 'react';
-import { Select, Typography } from '@ensdomains/thorin';
+import React, { useState } from 'react';
+import { Select, Typography, Tag } from '@ensdomains/thorin';
 
 function getNextDays(numDays) {
   const result = [];
@@ -36,10 +36,26 @@ const WeekdaySelect = () => {
   return (
     <Select
       options={options}
+      required
       label = "Expires At"
       style={{background:"rgba(246,246,248)", borderColor:"transparent", borderRadius:"14px"}}
-      placeholder="Select a day"
-      // Pass the necessary props for event handling, value, etc.
+      placeholder="Select a day" // doesn't work
+      rows={2} // doesn't work
+      onChange={(e) => setEndsAt((new Date(e.value) - Date.now()) / 3600000)} // testing
+      labelSecondary={
+        <a
+          data-tooltip-id="my-tooltip"
+          data-tooltip-content="🕰️&nbsp; Dates are in your timezone"
+          data-tooltip-place="right"
+        >
+          <Tag
+              style={{ background: '#1DD297' }}
+              size="large"
+          >
+              <b style={{ color: 'white' }}>?</b>
+          </Tag>
+        </a>
+      }
     />
   );
 };
