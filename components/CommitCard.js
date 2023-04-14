@@ -47,7 +47,6 @@ export default function CommitCard({ ...props }) {
     contractInterface: ABI,
     functionName: "proveCommit",
     args: [props.id, getItem('filename', 'session')],
-    enabled: triggerProveContractFunctions,
   })
   const { config: judgeCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
