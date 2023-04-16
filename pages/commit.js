@@ -227,14 +227,51 @@ export default function Commit() {
                   </a>
                 }
                 error={
-                  commitDescription.match(/^[a-zA-Z0-9\s\.,!?\(\)\<\>]*$/) || commitDescription.length === 0
+                  commitDescription.match(/^[a-zA-Z0-9\s\.,!?<>]*$/) || commitDescription.length === 0
                     ? (commitDescription.length > 26 ? 'Say less.' : null)
                     : 'Alphanumeric only'
                 }
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
               />
-              <WeekdaySelect endsAt={endsAt}/>
+              {/* <WeekdaySelect endsAt={endsAt}/> */}
+              <Input
+                label="Expires In"
+                placeholder="72"
+                disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
+                min={1}
+                max={168}
+                maxLength={3}
+                step={1}
+                type="text"
+                onKeyDown={(e) => {
+                  if (
+                    (!/^\d*$/.test(e.key) && e.key !== 'Backspace') ||
+                    (e.target.value === '' && e.key === '0')
+                  ) {
+                    e.preventDefault();
+                  }
+                }}
+                inputMode="numeric"
+                units={((endsAt - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
+                error={((endsAt - Date.now()) / 3600 / 1000) > 168 ? "1 week maximum" : null}
+                onChange={(e) => setEndsAt((e.target.value * 3600 * 1000) + Date.now())}
+                labelSecondary={
+                  <a
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content="⏳ 1 week maximum"
+                      data-tooltip-place="right"
+                  >
+                      <Tag
+                          style={{ background: '#1DD297' }}
+                          size="large"
+                      >
+                          <b style={{ color: 'white' }}>?</b>
+                      </Tag>
+                  </a>
+                }
+                required
+            />
               
             <div className="flex flex-row items-baseline gap-2">
               <div className="w-7/12 lg:w-6/12">
@@ -345,7 +382,7 @@ export default function Commit() {
                   commitAmount == 0 || commitAmount == "" ||
                     commitDescription.length < 2 ||
                     commitDescription.length > 26 ||
-                    !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
+                    !commitDescription.match(/^[a-zA-Z0-9\s\.,!?<>]*$/) ||
                     ((endsAt - Date.now()) / 3600 / 1000) > 168 ||
                     commitAmount > 9999 ||
                     commitTo == "" || 
@@ -364,7 +401,7 @@ export default function Commit() {
                   commitAmount == 0 || commitAmount == "" ||
                   commitDescription.length < 2 ||
                   commitDescription.length > 26 ||
-                  !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
+                  !commitDescription.match(/^[a-zA-Z0-9\s\.,!?<>]*$/) ||
                   ((endsAt - Date.now()) / 3600 / 1000) > 168 ||
                   commitAmount > 9999 ||
                   commitAmount > walletMaticBalance ||
