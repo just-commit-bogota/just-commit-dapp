@@ -187,7 +187,7 @@ export default function Commit() {
                   </a>
                 }
                 error={
-                  commitDescription.match(/^[a-zA-Z0-9\s\.,!?\(\)\<\>]*$/) || commitDescription.length === 0
+                  commitDescription.match(/^[a-zA-Z0-9\s\.,!?<>]*$/) || commitDescription.length === 0
                     ? (commitDescription.length > 26 ? 'Say less.' : null)
                     : 'Alphanumeric Only'
                 }
@@ -332,7 +332,7 @@ export default function Commit() {
                   commitAmount == 0 || commitAmount == "" ||
                     commitDescription.length < 2 ||
                     commitDescription.length > 26 ||
-                    !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
+                    !commitDescription.match(/^[a-zA-Z0-9\s\.,!?<>]*$/) ||
                     ((endsAt - Date.now()) / 3600 / 1000) > 168 ||
                     commitAmount > 9999 ||
                     commitAmount > walletMaticBalance ?
@@ -349,7 +349,7 @@ export default function Commit() {
                   commitAmount == 0 || commitAmount == "" ||
                   commitDescription.length < 2 ||
                   commitDescription.length > 26 ||
-                  !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
+                  !commitDescription.match(/^[a-zA-Z0-9\s\.,!?<>]*$/) ||
                   ((endsAt - Date.now()) / 3600 / 1000) > 168 ||
                   commitAmount > 9999 ||
                   commitAmount > walletMaticBalance
