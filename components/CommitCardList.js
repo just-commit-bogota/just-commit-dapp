@@ -103,12 +103,10 @@ export default function CommitCardList({ cardList }) {
       <div className="w-full">
         {cardListToDisplay.length > 0 ? (
           <>
-            {cardListToDisplay.map((card, index) => (
+            {cardListToDisplay.map((card) => (
               <CommitCard
-                key={index}
-                
+                key={card.id}
                 status={card.status}
-      
                 id={card.id}
                 commitFrom={card.commitFrom}
                 commitJudge={card.commitJudge}

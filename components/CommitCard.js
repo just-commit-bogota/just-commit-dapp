@@ -1,5 +1,5 @@
+import React, { useState } from 'react'
 import { FileInput, Tag, Button as ButtonThorin } from '@ensdomains/thorin'
-import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import { useAccount, useEnsName } from 'wagmi'
 import 'react-tooltip/dist/react-tooltip.css'
@@ -15,7 +15,6 @@ import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 import supabase from '../lib/db'
 
 export default function CommitCard({ ...props }) {
-
   // variables
   const { getItem, setItem, removeItem } = useStorage()
   const { address } = useAccount()
@@ -41,12 +40,14 @@ export default function CommitCard({ ...props }) {
     },
   })
 
+  const generateImageName = () => `${props.id}-image.png`;
+
   // prepare
   const { config: proveCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "proveCommit",
-    args: [props.id, getItem('filename', 'session')],
+    args: [props.id, generateImageName()],
   })
   const { config: judgeCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
@@ -97,7 +98,7 @@ export default function CommitCard({ ...props }) {
   const uploadFile = async (file) => {
     setUploadClicked(true)
 
-    const { data, error } = await supabase.storage.from("images").upload(file.name, file); // this works
+    const { data, error } = await supabase.storage.from("images").upload(generateImageName(), file); // this works
 
     // on data checks
     if (data) {
@@ -107,8 +108,6 @@ export default function CommitCard({ ...props }) {
         return
       } else {
         setTriggerProveContractFunctions(true)
-        removeItem('filename', "session")
-        setItem('filename', file.name, "session")
       }
     }
     // on error checks
