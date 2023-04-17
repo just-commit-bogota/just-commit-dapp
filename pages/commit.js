@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import useFetch from '../hooks/fetch'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef} from 'react'
 import { ethers } from 'ethers'
-import { Tag, Input, Heading, FieldSet, Select, Typography, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Input, Heading, FieldSet, Select, Typography, RadioButton, RadioButtonGroup, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip';
@@ -10,6 +10,7 @@ import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContra
 import Header from '../components/Header.js';
 import Spinner from "../components/Spinner.js";
 import { Placeholders } from "../components/Placeholders.js";
+import WeekdaySelect from "../components/WeekdaySelect.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 
 export default function Commit() {
@@ -27,10 +28,10 @@ export default function Commit() {
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState(PurplePropHouseMultiSig)
+  const [commitTo, setCommitTo] = useState("")
   const [commitJudge, setCommitJudge] = useState([CONTRACT_OWNER])
   const [commitAmount, setCommitAmount] = useState('0')
-  const [endsAt, setEndsAt] = useState((72 * 3600 * 1000) + Date.now()) // Expires In is pre-set to 72h
+  const [endsAt, setEndsAt] = useState()
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
@@ -40,6 +41,7 @@ export default function Commit() {
   const { chain, chains } = useNetwork()
   const { address } = useAccount()
   const provider = useProvider()
+  const selectRef = useRef();
 
   // smart contract functions
   const { config: createCommitConfig } = usePrepareContractWrite({
@@ -106,6 +108,18 @@ export default function Commit() {
     getWalletMaticBalance()
   }, [address])
 
+  useEffect(() => {
+    if (betModality == "solo") {
+      // set to the current value of the <Select> component
+      if (selectRef.current) {
+        setCommitTo(selectRef.current.value);
+      }
+      setCommitJudge([CONTRACT_OWNER]);
+    } else if (betModality == "1v1") {
+      setCommitJudge([commitTo]);
+    }
+  }, [betModality, commitTo]);
+
   // rendering
   return (
     <>
@@ -122,7 +136,7 @@ export default function Commit() {
       <Header currentPage="commit" />
 
       <div className="container container--flex h-screen items-stretch">
-        <div className="mt-5 sm:mt-3" style={{ padding: "10px" }}>
+        <div className="mt-5" style={{ padding: "10px" }}>
           <FieldSet
             legend={
               <Heading color="textSecondary" style={{ fontWeight: '700', fontSize: '40px' }}>
@@ -130,7 +144,33 @@ export default function Commit() {
               </Heading>
             }
           >
-          {/* <ButtonGroup setBetModality={setBetModality} setStartsAt={setStartsAt} /> */}
+            <RadioButtonGroup
+              className="items-start place-self-center -mt-1 mb-3"
+              onChange={(e) => setBetModality(e.target.value)}
+            >
+              <div className="flex gap-4">
+                <RadioButton
+                  checked={betModality == "solo"}
+                  id="solo"
+                  label="Solo"
+                  name="solo"
+                  value="solo"
+                  onClick={(e) => setBetModality('solo')}
+                />
+                <RadioButton
+                  checked={betModality == "1v1"}
+                  id="1v1"
+                  label="1v1"
+                  name="1v1"
+                  value="1v1"
+                  onClick={(e) => {
+                    setBetModality('1v1');
+                    setCommitTo("");
+                    setCommitJudge("");
+                  }}
+                />
+              </div>
+            </RadioButtonGroup>
           </FieldSet>
         </div>
 
@@ -166,16 +206,16 @@ export default function Commit() {
               }
             }}>
 
-            <div className="flex flex-col gap-3 w-full">
+            <div className="flex flex-col gap-5 w-full">
               <Input
-                label="I Want To"
+                label="Commitment"
                 maxLength={27}
                 placeholder=""
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
                 labelSecondary={
                   <a
                     data-tooltip-id="my-tooltip"
-                    data-tooltip-content="📸 Can a pic prove it?"
+                    data-tooltip-content="📸&nbsp; Can a pic prove it?"
                     data-tooltip-place="right"
                   >
                     <Tag
@@ -187,94 +227,15 @@ export default function Commit() {
                   </a>
                 }
                 error={
-                  commitDescription.match(/^[a-zA-Z0-9\s\.,!?\(\)\<\>]*$/) || commitDescription.length === 0
+                  commitDescription.match(/^[a-zA-Z0-9\s\.,!?<>]*$/) || commitDescription.length === 0
                     ? (commitDescription.length > 26 ? 'Say less.' : null)
-                    : 'Alphanumeric Only'
+                    : 'Alphanumeric only'
                 }
                 onChange={(e) => setCommitDescription(e.target.value)}
                 required
               />
-              <div className="flex flex-row items-baseline gap-2">
-                <div className="w-7/12 lg:w-6/12">
-                  <Input
-                    label="Or I'll Lose"
-                    placeholder="5"
-                    onKeyDown={(e) => {
-                      // Allow up to 3 digits before the decimal point, any number of digits after
-                      if (!/^\d{0,3}(\.\d*)?$/.test(e.target.value + e.key) && e.key !== 'Backspace') {
-                        e.preventDefault();
-                      }
-                    }}
-                    disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
-                    /*
-                    labelSecondary={
-                      <a
-                        data-tooltip-id="my-tooltip"
-                        data-tooltip-content={"1 MATIC 🟰 " + formatCurrency(maticPrice, "USD")}
-                        data-tooltip-place="right"
-                      >
-                        <Tag
-                          style={{ background: '#1DD297' }}
-                          tone="green"
-                          size="large"
-                        >
-                          <b style={{ color: 'white' }}>?</b>
-                        </Tag>
-                      </a>
-                    }
-                    */
-                    min={0}
-                    step="any"
-                    maxLength={2}
-                    type="number"
-                    error={
-                      !address || !walletMaticBalance
-                        ? null
-                        : commitAmount > walletMaticBalance
-                        ? " Available → " + formatCurrency(walletMaticBalance)
-                        : commitAmount > 99
-                        ? "Up to 99"
-                        : null
-                    }
-                    onChange={(e) => {
-                      setCommitAmount(e.target.value);
-                    }}
-                    required
-                    prefix={
-                      <div className="w-6 h-6">
-                        <img className="w-full h-full -mr-1 lg:mr-0" src="./polygon-logo-tilted.svg" />
-                      </div>
-                    }
-                    suffix=
-                    {commitAmount != '0' && (
-                      <div className="flex flex-col gap-2" style={{ fontSize: "large" }}>
-                        <div className="flex gap-2" style={{ color: 'grey', whiteSpace: 'nowrap' }}>
-                          {`(${formatCurrency(maticPrice * commitAmount, "USD")})`}
-                        </div>
-                      </div>
-                    )}
-                  />
-                </div>
-                <div className="w-5/12 lg:w-6/12">
-                  <Select
-                    value = {PurplePropHouseMultiSig} // default selected
-                    style={{background:"rgba(246,246,248)", borderColor:"transparent", borderRadius:"14px"}}
-                    label="To"
-                    required
-                    options={[ // TODO: add descriptive tooltip (Purple Prop House Multisig)
-                      { value: PurplePropHouseMultiSig,
-                        label:
-                        <Typography variant="label" className="ml-[-1px] lg:ml-2 lg:scale-110">
-                          Purple Prop House
-                        </Typography>,
-                        prefix: <div style={{ width: '20px', height: '20px', background: '#8b62d2' }} />
-                      },
-                    ]}
-                    onChange={(e) => setCommitTo(e.target.value)}
-                  />
-                </div>
-              </div>
-             <Input
+              {/* <WeekdaySelect endsAt={endsAt}/> */}
+              <Input
                 label="Expires In"
                 placeholder="72"
                 disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
@@ -311,19 +272,104 @@ export default function Commit() {
                 }
                 required
             />
-
-              <Input
-                label="Proof Pic Verified By"
-                required
-                readOnly
-                placeholder="justcommit.eth"
-                onChange={(e) => setCommitJudge(e.target.value.split(",").map((address) => address.trim()))}
-                onClick={() => {
-                  toast('⚠️ Disabled (Beta)',
-                    { position: 'bottom-center', id: 'unique' }
-                  )
-                }}
-              />
+              
+            <div className="flex flex-row items-baseline gap-2">
+              <div className="w-7/12 lg:w-6/12">
+                <Input
+                  style={{paddingLeft: "0.18rem", paddingRight: "0.18rem"}}
+                  label="Wager"
+                  placeholder="5"
+                  onKeyDown={(e) => {
+                    if (!/^(?:(\d{1,3})|(\d{0,2}\.?\d{0,1})|(\d{1}\.\d{0,2}))$/.test(e.target.value + e.key) && e.key !== 'Backspace') {
+                      e.preventDefault();
+                    }
+                  }}
+                  disabled={!isWriteLoading && !isWaitLoading && hasCommitted}
+                  /*
+                  labelSecondary={
+                    <a
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={"1 MATIC 🟰 " + formatCurrency(maticPrice, "USD")}
+                      data-tooltip-place="right"
+                    >
+                      <Tag
+                        style={{ background: '#1DD297' }}
+                        tone="green"
+                        size="large"
+                      >
+                        <b style={{ color: 'white' }}>?</b>
+                      </Tag>
+                    </a>
+                  }
+                  */
+                  min={0}
+                  step="any"
+                  maxLength={3}
+                  type="number"
+                  error={
+                    !address || !walletMaticBalance
+                      ? null
+                      : commitAmount > walletMaticBalance
+                      ? " Available → " + formatCurrency(walletMaticBalance)
+                      : commitAmount > 99
+                      ? "Up to 99"
+                      : null
+                  }
+                  onChange={(e) => {
+                    setCommitAmount(e.target.value);
+                  }}
+                  required
+                  prefix={
+                    <div className="w-6 h-6">
+                      <img className="w-full h-full -mr-1 lg:mr-0" src="./polygon-logo-tilted.svg" />
+                    </div>
+                  }
+                  suffix=
+                  {commitAmount != '0' && (
+                    <div className="flex flex-col gap-2" style={{ fontSize: "small" }}>
+                      <div className="flex gap-2" style={{ color: 'grey', whiteSpace: 'nowrap' }}>
+                        {`(${formatCurrency(maticPrice * commitAmount, "USD")})`}
+                      </div>
+                    </div>
+                  )}
+                />
+              </div>
+              <div className="w-5/12 lg:w-6/12 mb-6">
+                {betModality == "solo" &&
+                  (<Select
+                    ref={selectRef}
+                    placeholder="Pick..."
+                    style={{background:"rgba(246,246,248)", borderColor:"transparent", borderRadius:"14px"}}
+                    label = "Recipient"
+                    required
+                    options={[
+                      { value: PurplePropHouseMultiSig,
+                        label:
+                        <Typography variant="label" className="ml-[-1px] lg:ml-2 lg:scale-110">
+                          Purple Prop House
+                        </Typography>,
+                        prefix: <div style={{ fontSize: '0.375 rem', width: '20px', height: '20px', background: '#8b62d2' }} />
+                      },
+                    ]}
+                    onChange={(e) => setCommitTo(e.target.value)}
+                  />)
+                }
+                {betModality == "1v1" &&
+                  (<Input
+                      label="Challenging"
+                      placeholder="0xb44691c50...baad"
+                      required
+                      onChange={(e) => {setCommitTo(e.target.value);}}
+                      error={
+                        commitTo != "" && 
+                          !/^0x[a-fA-F0-9]{40}$/.test(commitTo)
+                            ? "Invalid address"
+                            : null
+                      }
+                   />)
+                }
+              </div>
+            </div>
             </div>
 
             {/* Commit Button */}
@@ -336,9 +382,11 @@ export default function Commit() {
                   commitAmount == 0 || commitAmount == "" ||
                     commitDescription.length < 2 ||
                     commitDescription.length > 26 ||
-                    !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
+                    !commitDescription.match(/^[a-zA-Z0-9\s\.,!?<>]*$/) ||
                     ((endsAt - Date.now()) / 3600 / 1000) > 168 ||
                     commitAmount > 9999 ||
+                    commitTo == "" || 
+                    !/^0x[a-fA-F0-9]{40}$/.test(commitTo) ||
                     commitAmount > walletMaticBalance ?
                     "rgb(29 210 151 / 36%)" : "rgb(29 210 151)",
                 borderRadius: 12,
@@ -353,10 +401,12 @@ export default function Commit() {
                   commitAmount == 0 || commitAmount == "" ||
                   commitDescription.length < 2 ||
                   commitDescription.length > 26 ||
-                  !commitDescription.match(/^[a-zA-Z0-9\s\.,!?]*$/) ||
+                  !commitDescription.match(/^[a-zA-Z0-9\s\.,!?<>]*$/) ||
                   ((endsAt - Date.now()) / 3600 / 1000) > 168 ||
                   commitAmount > 9999 ||
-                  commitAmount > walletMaticBalance
+                  commitAmount > walletMaticBalance ||
+                  commitTo == "" ||
+                  !/^0x[a-fA-F0-9]{40}$/.test(commitTo)
                 }
                 onClick={commitWrite}
               >
@@ -420,9 +470,16 @@ export default function Commit() {
             ---------
             */}
 
-            {/* address: {address}
+            {/*endsAt: {endsAt}
             <br></br>
-            walletMaticBalance: {walletMaticBalance} */}
+            block.timestamp * 1000: {Math.floor(Date.now() / 1000) * 1000}
+            <br></br>*/}
+
+            {/* commitJudge: {commitJudge}
+            <br></br>
+            commitTo: {commitTo} */}
+
+            endsAt: {endsAt}
             
             {/* <br></br>
             <br></br>

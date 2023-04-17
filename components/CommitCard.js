@@ -48,6 +48,7 @@ export default function CommitCard({ ...props }) {
     contractInterface: ABI,
     functionName: "proveCommit",
     args: [props.id, generateImageName()],
+    // enabled: triggerProveContractFunctions,
   })
   const { config: judgeCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
@@ -159,7 +160,7 @@ export default function CommitCard({ ...props }) {
                 {
                   // active
                   props.status === "Pending" ? (
-                    <><Countdown status={props.status} endsAt={props.endsAt/1000} judgeDeadline={props.judgeDeadline} /></>
+                    <><Countdown status={props.status} endsAt={props.endsAt} judgeDeadline={props.judgeDeadline} /></>
                   ) : // waiting or verify
                   props.status === "Waiting" ? (
                     <>
@@ -196,38 +197,38 @@ export default function CommitCard({ ...props }) {
                   <div className="flex">
                     <FileInput maxSize={20} onChange={(file) => uploadFile(file)}>
                       {(context) =>
-                        (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ?
+                        (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ? (
                           <div className="flex flex-col" style={{ alignItems: "center" }}>
                             <Spinner />
                             <div className="heartbeat text-xs">(Don&#39;t Refresh)</div>
                           </div>
-                          :
-                          (context.name && triggerProveContractFunctions) ?
-                            <div>
-                              <a
-                                className="text-4xl hover:cursor-pointer"
-                                href="#"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  location.reload();
-                                }}
-                              >
-                                &nbsp;🔁&nbsp;
-                              </a>
-                            </div>
-                            :
-                            <div>
-                              <Tag
-                                className="text-2xl hover:cursor-pointer"
-                                tone="accent"
-                                variation="primary"
-                                size="large"
-                              >
-                                &nbsp;📷&nbsp;
-                              </Tag>
-                            </div>
+                        ) : context.name && triggerProveContractFunctions ? (
+                          <div>
+                            <a
+                              className="text-4xl hover:cursor-pointer"
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                location.reload();
+                              }}
+                            >
+                              &nbsp;🔁&nbsp;
+                            </a>
+                          </div>
+                        ) : 
+                          <div>
+                            <Tag
+                              className="text-2xl hover:cursor-pointer"
+                              tone="accent"
+                              variation="primary"
+                              size="large"
+                            >
+                              &nbsp;📷&nbsp;
+                            </Tag>
+                          </div>
                       }
                     </FileInput>
+
                   </div>
                 </div>
               </>

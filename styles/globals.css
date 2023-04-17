@@ -74,7 +74,7 @@ a {
   border-radius: 20px 20px 20px 20px;
   align-items: center;
   margin-bottom: 150px;
-  width: 50%;
+  width: 42%;
   position: relative;
 }
 
@@ -96,7 +96,7 @@ a {
 .indexLoadingStyle {
   background-color: rgba(0, 0, 0, .1);
   height: 860px;
-  width: 50%;
+  width: 40%;
   margin-top: 10px;
   margin-bottom: 30px;
   border-radius: 20px 20px 20px 20px;
@@ -403,7 +403,7 @@ a {
     margin-top: 3rem;
   }
   .form {
-    width: 50%;
+    width: 42%;
   }
   .container--flex {
     padding: 4rem 2rem 0rem 2rem;
