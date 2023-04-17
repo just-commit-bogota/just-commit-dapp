@@ -104,7 +104,6 @@ export default function CommitCardList({ cardList }) {
         {cardListToDisplay.length > 0 ? (
           <>
             {cardListToDisplay.map((card) => (
-            {cardListToDisplay.map((card) =>
               <CommitCard
                 key={card.id}
                 status={card.status}
@@ -122,7 +121,7 @@ export default function CommitCardList({ cardList }) {
                 isApproved={card.isApproved}
                 isSolo={card.isSolo}
               />
-            ).reverse()}
+            )).reverse()}
           </>
         ) : (
           <Typography weight="normal" variant="base" className="flex flex-row text-m block mt-6 text-black font-bold rounded-md p-3 lg:justify-center lg:align-center"
