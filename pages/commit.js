@@ -31,7 +31,7 @@ export default function Commit() {
   const [commitTo, setCommitTo] = useState("")
   const [commitJudge, setCommitJudge] = useState([CONTRACT_OWNER])
   const [commitAmount, setCommitAmount] = useState('0')
-  const [endsAt, setEndsAt] = useState()
+  const [endsAt, setEndsAt] = useState((72 * 3600 * 1000) + Date.now())
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
@@ -136,7 +136,7 @@ export default function Commit() {
       <Header currentPage="commit" />
 
       <div className="container container--flex h-screen items-stretch">
-        <div className="mt-5" style={{ padding: "10px" }}>
+        <div className="mt-8" style={{ padding: "10px" }}>
           <FieldSet
             legend={
               <Heading color="textSecondary" style={{ fontWeight: '700', fontSize: '40px' }}>
@@ -144,7 +144,7 @@ export default function Commit() {
               </Heading>
             }
           >
-            <RadioButtonGroup
+            {/* <RadioButtonGroup
               className="items-start place-self-center -mt-1 mb-3"
               onChange={(e) => setBetModality(e.target.value)}
             >
@@ -170,7 +170,7 @@ export default function Commit() {
                   }}
                 />
               </div>
-            </RadioButtonGroup>
+            </RadioButtonGroup> */}
           </FieldSet>
         </div>
 
@@ -246,7 +246,7 @@ export default function Commit() {
                 type="text"
                 onKeyDown={(e) => {
                   if (
-                    (!/^\d*$/.test(e.key) && e.key !== 'Backspace') ||
+                    (!/^\d*\.?\d*$/.test(e.key) && e.key !== 'Backspace') ||
                     (e.target.value === '' && e.key === '0')
                   ) {
                     e.preventDefault();
@@ -427,7 +427,7 @@ export default function Commit() {
 
             {hasCommitted &&
               <div className="w-full relative">
-                <div className="absolute w-full p-5" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <div className="absolute w-full p-1" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                   <div className="flex justify-center w-3/10">
                     <ButtonThorin
                       className="flex"
@@ -449,7 +449,7 @@ export default function Commit() {
                 <div className="flex justify-end w-full">
                   <div className="flex" style={{ width: "52px" }}>
                     <ButtonThorin
-                      className="flex align-center mt-6 mb-5 sm:mb-0 justify-center rounded-lg hover:cursor-pointer"
+                      className="flex align-center mt-2 mb-5 sm:mb-0 justify-center rounded-lg hover:cursor-pointer"
                       style={{ background: "#bae6fd", zIndex: 2, fontSize: "1.2rem", padding: "5px" }}
                       as="a"
                       href={`https://${chain?.id === 80001 ? 'mumbai.' : ''
@@ -479,7 +479,7 @@ export default function Commit() {
             <br></br>
             commitTo: {commitTo} */}
 
-            endsAt: {endsAt}
+            {/* endsAt: {endsAt} */}
             
             {/* <br></br>
             <br></br>

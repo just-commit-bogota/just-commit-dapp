@@ -1,5 +1,5 @@
+import React, { useState } from 'react'
 import { FileInput, Tag, Button as ButtonThorin } from '@ensdomains/thorin'
-import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import { useAccount, useEnsName } from 'wagmi'
 import 'react-tooltip/dist/react-tooltip.css'
@@ -25,11 +25,13 @@ export default function CommitCard({ ...props }) {
     "Failure": "❌", // time expired or picture denied
     "Success": "✅", // picture accepted :) 
   }
+  const generateImageName = () => `${props.id}-image.png`;
 
   // state
   const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
+  const [isApproved, setIsApproved] = useState(false)
 
   // function to resolve ENS name on ETH mainnet
   const { data: ensName } = useEnsName({
@@ -46,14 +48,13 @@ export default function CommitCard({ ...props }) {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "proveCommit",
-    args: [props.id, getItem('filename', 'session')],
-    // enabled: triggerProveContractFunctions,
+    args: [props.id, generateImageName()],
   })
   const { config: judgeCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "judgeCommit",
-    args: [props.id, getItem('isApproved', 'session')],
+    args: [props.id, isApproved],
     enabled: triggerJudgeContractFunctions,
   })
 
@@ -98,7 +99,7 @@ export default function CommitCard({ ...props }) {
   const uploadFile = async (file) => {
     setUploadClicked(true)
 
-    const { data, error } = await supabase.storage.from("images").upload(file.name, file); // this works
+    const { data, error } = await supabase.storage.from("images").upload(generateImageName(), file); // this works
 
     // on data checks
     if (data) {
@@ -108,8 +109,6 @@ export default function CommitCard({ ...props }) {
         return
       } else {
         setTriggerProveContractFunctions(true)
-        removeItem('filename', "session")
-        setItem('filename', file.name, "session")
       }
     }
     // on error checks
@@ -167,7 +166,7 @@ export default function CommitCard({ ...props }) {
                     <>
                       <a
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content="⏳ Waiting on justcommit.eth"
+                        data-tooltip-content="⏳ Waiting on Just Commit"
                         data-tooltip-place="top"
                       >
                         <img src="/gavel.svg" width="20px" height="20px" alt="Gavel" />
@@ -288,8 +287,7 @@ export default function CommitCard({ ...props }) {
                                 variant="secondary"
                                 outlined
                                 onClick={() => {
-                                  removeItem('isApproved', "session")
-                                  setItem('isApproved', false, "session")
+                                  setIsApproved(false)
                                   setTriggerJudgeContractFunctions(true)
                                   judgeWrite.write?.()
                                 }}
@@ -302,8 +300,7 @@ export default function CommitCard({ ...props }) {
                                 variant="secondary"
                                 outlined
                                 onClick={() => {
-                                  removeItem('isApproved', "session")
-                                  setItem('isApproved', true, "session")
+                                  setIsApproved(true)
                                   setTriggerJudgeContractFunctions(true)
                                   judgeWrite.write?.()
                                 }}
