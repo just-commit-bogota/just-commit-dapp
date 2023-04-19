@@ -103,6 +103,10 @@ export default function CommitCard({ ...props }) {
     if (data) {
       if (file.lastModified < props.createdAt) {
         toast.error("This pic is older than the commitment", { duration: 4000 })
+        const { error } = await supabase.storage.from('images').remove(generateImageName(), file)
+        if (error) {
+          console.error(error)
+        }
         setUploadClicked(false);
         return
       } else {
@@ -119,10 +123,7 @@ export default function CommitCard({ ...props }) {
     }
 
     if (!proveWrite.write) {
-      // delete the recent db entry
-      const { error } = await supabase.storage
-        .from('images')
-        .remove([file.name])
+      const { error } = await supabase.storage.from('images').remove(generateImageName(), file)
       if (error) {
         console.error(error)
       }
