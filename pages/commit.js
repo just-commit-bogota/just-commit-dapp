@@ -2,7 +2,7 @@ import Head from 'next/head'
 import useFetch from '../hooks/fetch'
 import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
-import { Tag, Heading, FieldSet, Typography, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Heading, FieldSet, Typography, Checkbox, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip';
@@ -10,8 +10,8 @@ import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContra
 import Header from '../components/Header.js';
 import Spinner from "../components/Spinner.js";
 import { Placeholders } from "../components/Placeholders.js";
-import { CheckboxRow } from "../components/CheckboxRow.tsx";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 export default function Commit() {
 
@@ -154,10 +154,15 @@ export default function Commit() {
               }
             }}>
 
-            <div className="flex flex-col gap-5">
-              <CheckboxRow color="green" subLabel="hi" label="Watch Video" />
-              <CheckboxRow label="Complete Typeform" />
-              <CheckboxRow label="Connect Wallet" />
+            <div className="flex flex-col gap-8">
+              
+              <Checkbox label="Watch Video" />
+              <Checkbox label="Complete Typeform" />
+              
+              <Checkbox 
+                label={<ConnectButton accountStatus="none" />}
+                checked={Boolean(address)}
+              />
             </div>
 
             {/* Commit Button */}
