@@ -8,7 +8,6 @@ import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from
 import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
 import Countdown from '../components/Countdown.js'
-import { useStorage } from '../hooks/useStorage.ts'
 import Image from 'next/image'
 import toast, { Toaster } from 'react-hot-toast'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
@@ -17,7 +16,6 @@ import supabase from '../lib/db'
 export default function CommitCard({ ...props }) {
 
   // variables
-  const { getItem, setItem, removeItem } = useStorage()
   const { address } = useAccount()
   const CommitStatusEmoji = {
     "Pending": "⚡", // picture not yet submitted
@@ -99,7 +97,7 @@ export default function CommitCard({ ...props }) {
   const uploadFile = async (file) => {
     setUploadClicked(true)
 
-    const { data, error } = await supabase.storage.from("images").upload(generateImageName(), file); // this works
+    const { data, error } = await supabase.storage.from("images").upload(generateImageName(), file);
 
     // on data checks
     if (data) {
@@ -120,7 +118,7 @@ export default function CommitCard({ ...props }) {
       return;
     }
 
-    if (!proveWrite.write) { // TODO
+    if (!proveWrite.write) {
       // delete the recent db entry
       const { error } = await supabase.storage
         .from('images')
