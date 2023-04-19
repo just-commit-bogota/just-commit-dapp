@@ -12,6 +12,7 @@ import Spinner from "../components/Spinner.js";
 import { Placeholders } from "../components/Placeholders.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { PopupButton } from '@typeform/embed-react'
 
 export default function Commit() {
 
@@ -32,6 +33,7 @@ export default function Commit() {
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
+  const [typeformCompleted, setTypeformCompleted] = useState(false);
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -144,24 +146,38 @@ export default function Commit() {
             // Toast Checks
             onSubmit={async (e) => {
               e.preventDefault()
-              // is wallet connected?
-              if (!address) {
-                return toast.error('Connect your wallet')
-              }
-              // are you on the right network?
-              if (!chains.some((c) => c.id === chain.id)) {
-                return toast.error('Switch to a supported network')
-              }
             }}>
 
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-8 mb-10">
               
-              <Checkbox label="Watch Video" />
-              <Checkbox label="Complete Typeform" />
-              
+             <Checkbox  
+                label=
+                {
+                  <span className="permanent-underline" style={{ "--underline-color": "#c0ec64" }}>
+                    Watch Video
+                  </span>
+                }
+               onClick={() => toast.error('Watch the video')}
+              />
+              <Checkbox
+                label = 
+                {
+                  <PopupButton
+                    id="IfnJtCQO"
+                    onSubmit={() => {
+                      setTypeformCompleted(true);
+                    }}
+                  >
+                    <span className="permanent-underline">Complete Typeform</span>
+                  </PopupButton>
+                }
+                checked = {typeformCompleted}
+                onClick={() => toast.error('Complete the Typeform')}
+              />
               <Checkbox 
                 label={<ConnectButton accountStatus="none" />}
                 checked={Boolean(address)}
+                onClick={() => toast.error('Connect your wallet')}
               />
             </div>
 

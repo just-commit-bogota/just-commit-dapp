@@ -1,5 +1,4 @@
 import { Dropdown } from '@ensdomains/thorin'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { useState, useEffect } from "react";
 import Link from 'next/link'
 
@@ -78,24 +77,43 @@ export default function Header({ currentPage }) {
               ]}
             />
           </div>
-          <div className="flex items-center text-xs sm:text-base mr-2">
-            <ConnectButton accountStatus="address" className="hover:shadow-lg" />
-          </div>
         </div>
        </>
       )}
 
       {isDesktop && (
         <>
-          <div className="header w-full header--absolute bg-white" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center' }}>
-            <div className="flex items-center justify-start gap-7" style={{ flexGrow: 1 }}>
+          <div
+            className="header w-full header--absolute bg-white"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr auto",
+              alignItems: "center",
+            }}
+          >
+            <div
+              className="flex items-center justify-start gap-7"
+              style={{ flexGrow: 1 }}
+            >
               <Link href="/">
-                <a className={`underline-on-hover text-l ${currentPage === "commitments" ? "text-[#1DD297]" : "text-black"}`}>
+                <a
+                  className={`underline-on-hover text-l ${
+                    currentPage === "commitments"
+                      ? "text-[#1DD297]"
+                      : "text-black"
+                  }`}
+                >
                   Home
                 </a>
               </Link>
               <Link href="/commit">
-                <a className={`underline-on-hover text-l ${currentPage === "commit" ? "text-[#1DD297]" : "text-black"}`}>
+                <a
+                  className={`underline-on-hover text-l ${
+                    currentPage === "commit"
+                      ? "text-[#1DD297]"
+                      : "text-black"
+                  }`}
+                >
                   Commit
                 </a>
               </Link>
@@ -107,18 +125,20 @@ export default function Header({ currentPage }) {
               >
                 FAQ ↗
               </a>
-              <a href="https://discord.gg/7863Wtv4hX" target="_blank" rel="noopener noreferrer" className="underline-on-hover text-l">
+              <a
+                href="https://discord.gg/7863Wtv4hX"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline-on-hover text-l"
+              >
                 Discord ↗
               </a>
             </div>
             <Link href="/">
               <a className="">
-                <img style={{width:"320px"}} src="./logo-2.svg"/>
+                <img style={{ width: "320px" }} src="./logo-2.svg" />
               </a>
             </Link>
-            <div className="flex items-center text-xs sm:text-base justify-end w-full" style={{ flexGrow: 1 }}>
-              <ConnectButton accountStatus="address" className="hover:shadow-lg w-full"/>
-            </div>
           </div>
         </>
       )}

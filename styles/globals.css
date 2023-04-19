@@ -294,6 +294,22 @@ a {
   animation: fade 4s infinite;
 }
 
+.permanent-underline {
+  position: relative;
+  --underline-color: #1DD297; /* Default underline color */
+}
+
+.permanent-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -10px; /* Separation from the text */
+  left: -1%;
+  right: -1%; /* Changed value to keep the underline visible */
+  height: 4px; /* Thickness of the underline */
+  background-color: var(--underline-color); /* Use the CSS variable */
+  border-radius: 3px;
+}
+
 .underline-on-hover {
   position: relative;
   transition: all 0.15s ease-in-out;
