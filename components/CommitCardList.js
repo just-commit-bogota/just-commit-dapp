@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 import { useAccount } from 'wagmi'
 import { Tag, Typography } from '@ensdomains/thorin'
 import { useStorage } from '../hooks/useStorage.ts'
+import { CONTRACT_OWNER } from '../contracts/CommitManager.ts';
 
 // TODO - is the commitJudge.includes() logic done right?
 
@@ -68,8 +69,9 @@ export default function CommitCardList({ cardList }) {
   return (
     <>
       <div className="flex justify-center gap-2 lg:gap-16 text-small mt-4 mb-10">
-        <ul className="flex flex-row continent_nav">
-          {filters.map(f =>
+       <ul className="flex flex-row continent_nav">
+        {filters.map(f =>
+          (f !== "Verify" || (f === "Verify" && connectedAddress === CONTRACT_OWNER)) && (
             <li key={f} id={f} title={f} className="filterOption"
               style={{
                 position: "relative",
@@ -96,8 +98,9 @@ export default function CommitCardList({ cardList }) {
                 </Tag>
               }
             </li>
-          )}
-        </ul>
+          )
+        )}
+      </ul>
       </div>
 
       <div className="w-full">
