@@ -6,8 +6,6 @@ import { Tag, Typography } from '@ensdomains/thorin'
 import { useStorage } from '../hooks/useStorage.ts'
 import { CONTRACT_OWNER } from '../contracts/CommitManager.ts';
 
-// TODO - is the commitJudge.includes() logic done right?
-
 export default function CommitCardList({ cardList }) {
   // state
   const [selectedFilter, setSelectedFilter] = useState("Feed")
