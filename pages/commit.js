@@ -10,7 +10,6 @@ import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContra
 import Header from '../components/Header.js';
 import Spinner from "../components/Spinner.js";
 import { Placeholders } from "../components/Placeholders.js";
-import WeekdaySelect from "../components/WeekdaySelect.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 
 export default function Commit() {
