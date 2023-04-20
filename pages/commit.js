@@ -24,6 +24,26 @@ export default function Commit() {
     }, 1000);
   }, [])
 
+  // Loom related
+  const loomEmbedUrl = 'https://www.loom.com/embed/af64e3e04b624d2997469e148b349dad'
+  const closeModal = () => {
+    setShowLoomEmbed(false);
+  };
+  const handleWatchVideoClick = () => {
+    setShowLoomEmbed(!showLoomEmbed);
+    setVideoWatched(true);
+  };
+  const handleCheckboxClick = () => {
+    if (!videoWatched) {
+      toast.error('Watch the video');
+    }
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      closeModal();
+    }
+  };
+
   // state
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState("")
@@ -34,6 +54,8 @@ export default function Commit() {
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
   const [typeformCompleted, setTypeformCompleted] = useState(false);
+  const [showLoomEmbed, setShowLoomEmbed] = useState(false);
+  const [videoWatched, setVideoWatched] = useState(false);
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -69,11 +91,15 @@ export default function Commit() {
     },
   })
 
+  const isCommitButtonEnabled = () => {
+    return videoWatched && typeformCompleted && walletMaticBalance > 110;
+  };
+
   // functions
   function formatCurrency(number, currency = null) {
     const options = {
       maximumFractionDigits: 2,
-      minimumFractionDigits: 2,
+      minimumFractionDigits: 0,
     };
   
     if (currency) {
@@ -105,6 +131,24 @@ export default function Commit() {
     getWalletMaticBalance()
   }, [address])
 
+  useEffect(() => {
+    if (!priceApi.isLoading && priceApi.data?.["matic-network"]?.usd) {
+      const maticPrice = parseFloat(priceApi.data["matic-network"].usd);
+      if (maticPrice && !isNaN(maticPrice)) {
+        setCommitAmount((100 / maticPrice).toString());
+      } else {
+        console.error('maticPrice is not a valid number:', maticPrice);
+      }
+    }
+  }, [priceApi]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   // rendering
   return (
     <>
@@ -121,12 +165,15 @@ export default function Commit() {
       <Header currentPage="commit" />
 
       <div className="container container--flex h-screen items-stretch">
-        <div className="mt-8" style={{ padding: "10px" }}>
+        <div className="mt-12 mb-6" style={{ padding: "10px" }}>
           <FieldSet
             legend={
-              <Heading color="textSecondary" style={{ fontWeight: '700', fontSize: '40px' }}>
-                Bet On Yourself
-              </Heading>
+              <div className="text-center justify-center align-center">
+                <Heading className="mb-4" color="textSecondary" style={{ fontWeight: '700', fontSize: '40px' }}>
+                  Bet On Yourself
+                </Heading>
+                {/* <Typography className="-mb-4" variant="small"><b>A 4 week challenge that will make you feel more ALIVE</b></Typography> */}
+              </div>
             }
           >
           </FieldSet>
@@ -148,55 +195,105 @@ export default function Commit() {
               e.preventDefault()
             }}>
 
-            <div className="flex flex-col gap-8 mb-10">
-              
-             <Checkbox  
-                label=
-                {
-                  <span className="permanent-underline" style={{ "--underline-color": "#c0ec64" }}>
-                    Watch Video
+            <div className="flex flex-col w-full gap-6 mt-0" style={{direction:"rtl"}}>
+              <Checkbox
+                label={
+                  <span
+                    className="permanent-underline"
+                    onClick={handleWatchVideoClick}
+                  >
+                    Watch The Video
                   </span>
                 }
-               onClick={() => toast.error('Watch the video')}
+                checked={videoWatched}
+                onClick={handleCheckboxClick}
               />
+              {showLoomEmbed && (
+                <div
+                  style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    zIndex: 1000,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  onClick={closeModal}
+                >
+                  <div
+                    style={{
+                      width: '90%',
+                      height: '90%',
+                      backgroundColor: 'white',
+                      position: 'relative',
+                      borderRadius: '10px',
+                    }}
+                  >
+                    <iframe
+                      src={loomEmbedUrl}
+                      frameBorder="0"
+                      allowFullScreen
+                      style={{
+                        position: 'absolute',
+                        top: '0',
+                        left: '0',
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: '10px',
+                      }}
+                    ></iframe>
+                  </div>
+                </div>
+              )}
               <Checkbox
-                label = 
-                {
+                label={
                   <PopupButton
                     id="IfnJtCQO"
                     onSubmit={() => {
                       setTypeformCompleted(true);
                     }}
                   >
-                    <span className="permanent-underline">Complete Typeform</span>
+                    <button className="permanent-underline">
+                      Fill Out The Form
+                    </button>
                   </PopupButton>
                 }
-                checked = {typeformCompleted}
-                onClick={() => toast.error('Complete the Typeform')}
+                checked={typeformCompleted}
+                onClick={() => toast.error("Complete the Typeform")}
               />
-              <Checkbox 
-                label={<ConnectButton accountStatus="none" />}
+              <Checkbox
+                label={
+                  <div className="connect-button-wrapper connect-button-underline">
+                    <ConnectButton className="" showBalance={true} accountStatus="none" />
+                  </div>
+                }
                 checked={Boolean(address)}
-                onClick={() => toast.error('Connect your wallet')}
+                onClick={() => toast.error("Connect your wallet")}
               />
             </div>
 
             {/* Commit Button */}
             {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
-              <ButtonThorin style={{
-                width: '60%',
-                height: '2.8rem',
-                margin: '1rem',
-                backgroundColor: "rgb(29 210 151 / 36%)", // : "rgb(29 210 151)",
-                borderRadius: 12,
-                color: "white",
-                transition: "transform 0.2s ease-in-out",
-              }}
+              <ButtonThorin
+                style={{
+                  width: '80%',
+                  height: '2.8rem',
+                  marginTop: '3rem',
+                  marginBottom: '2rem',
+                  backgroundColor: isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
+                  borderRadius: 12,
+                  color: "white",
+                  transition: "transform 0.2s ease-in-out",
+                }}
                 size="small"
                 shadowless
                 type="submit"
-                suffix={!priceApi.isLoading && "(" + formatCurrency(maticPrice * commitAmount, "USD") + ")"}
-                // disabled={}
+                suffix= {"(" + formatCurrency(100, "USD") + ")"} // {!priceApi.isLoading && "(" + formatCurrency(maticPrice * commitAmount, "USD") + ")"}
+                disabled={!isCommitButtonEnabled()}
                 onClick={commitWrite}
               >
                 Commit
@@ -263,6 +360,8 @@ export default function Commit() {
             <br></br>
             block.timestamp * 1000: {Math.floor(Date.now() / 1000) * 1000}
             <br></br>*/}
+
+            commitAmount: {commitAmount}
 
             {/* commitJudge: {commitJudge}
             <br></br>

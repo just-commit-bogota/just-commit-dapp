@@ -74,7 +74,7 @@ a {
   border-radius: 20px 20px 20px 20px;
   align-items: center;
   margin-bottom: 150px;
-  width: 42%;
+  width: 32%;
   position: relative;
 }
 
@@ -310,6 +310,22 @@ a {
   border-radius: 3px;
 }
 
+.connect-button-underline {
+  position: relative;
+  --underline-color: #1DD297; /* Default underline color */
+}
+
+.connect-button-underline::after {
+  content: "";
+  position: absolute;
+  bottom: 2px; /* Custom separation from the text for ConnectButton */
+  left: -1%;
+  right: -1%;
+  height: 4px;
+  background-color: var(--underline-color); /* Use the CSS variable */
+  border-radius: 3px;
+}
+
 .underline-on-hover {
   position: relative;
   transition: all 0.15s ease-in-out;
@@ -319,8 +335,8 @@ a {
   content: "";
   position: absolute;
   bottom: -10px; /* Separation from the text */
-  left: -5%;
-  right: 105%;
+  left: -1%;
+  right: 101%;
   height: 4px; /* Thickness of the underline */
   background-color: #1DD297;
   border-radius: 3px;
@@ -328,7 +344,20 @@ a {
 }
 
 .underline-on-hover:hover::after {
-  right: -5%;
+  right: -1%;
+}
+
+.connect-button-wrapper button {
+  background-color: inherit !important;
+  color: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  padding: inherit !important;
+  border: none !important;
+  border-radius: inherit !important;
+  box-shadow: none !important;
+  transform: none !important; /* Remove any scaling */
+  transition: none !important; /* Remove any transitions */
 }
 
 @keyframes fade {
@@ -439,7 +468,7 @@ a {
     padding: 1rem 1rem;
   }
   .form {
-    width: 90vw;
+    width: 72vw;
     padding: 2rem 2rem 0rem 2rem;
     display: flex;
     flex-direction: column;
