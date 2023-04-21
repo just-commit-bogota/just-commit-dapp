@@ -52,7 +52,7 @@ export default function Commit() {
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
-  const [typeformCompleted, setTypeformCompleted] = useState(false);
+  const [typeformCompleted, setTypeformCompleted] = useState(true); // TODO set default to false
   const [showLoomEmbed, setShowLoomEmbed] = useState(false);
   const [videoWatched, setVideoWatched] = useState(false);
 
@@ -190,7 +190,7 @@ export default function Commit() {
                     className="permanent-underline"
                     onClick={handleWatchVideoClick}
                   >
-                    Watch The Video
+                    Watch Instructions
                   </span>
                 }
                 checked={videoWatched}
@@ -237,7 +237,7 @@ export default function Commit() {
                   </div>
                 </div>
               )}
-              <Checkbox
+              {/* <Checkbox
                 label={
                   <PopupButton
                     id="IfnJtCQO"
@@ -252,7 +252,7 @@ export default function Commit() {
                 }
                 checked={typeformCompleted}
                 onClick={() => toast.error("Complete the Typeform")}
-              />
+              /> */}
               <Checkbox
                 label={
                   <div className="connect-button-wrapper connect-button-underline">
@@ -350,11 +350,11 @@ export default function Commit() {
             block.timestamp * 1000: {Math.floor(Date.now() / 1000) * 1000}
             <br></br>*/}
 
-            commitAmount: {commitAmount}
+            {/* commitAmount: {commitAmount}
             <br></br>
             commitJudge: {commitJudge}
             <br></br>
-            commitTo: {commitTo}
+            commitTo: {commitTo} */}
             
             {/* <br></br>
             <br></br>
