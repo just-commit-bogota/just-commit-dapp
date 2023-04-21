@@ -272,7 +272,6 @@ export default function CommitCard({ ...props }) {
 
                   {/* "to verify" buttons */}
 
-                  {/* TODO - is the props.commitJudge check done right? */}
                   {props.commitJudge.includes(address) && props.judgeDeadline > Date.now() && !props.isCommitJudged && (
                     <div>
                       <div className="flex flex-row gap-5 p-5" style={{ justifyContent: "space-between", marginBottom: "-30px" }}>
@@ -317,19 +316,15 @@ export default function CommitCard({ ...props }) {
           </div>
 
           {/* FOOTER */}
-          <div className="flex flex-row text-xs pt-2" style={{ justifyContent: "space-between" }}>
-            <div className="flex flex-col w-1/2 lg:w-1/2" style={{
+          <div className="flex flex-row text-xs pt-0 mb-1" style={{ justifyContent: "space-evenly" }}>
+            <div className="flex flex-col w-1/2 lg:w-1/2 min-h-min" style={{
               justifyContent: "space-between",
               borderLeft: "2px solid rgba(0, 0, 0, 0.18)",
               borderRight: "2px solid rgba(0, 0, 0, 0.18)",
               borderRadius: "6px",
             }}>
-              <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
-                <b>&nbsp;From </b>{ensName || props.commitFrom.slice(0, 5) + '…' + props.commitFrom.slice(-4)}&nbsp;
-              </div>
-              <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
-                <b>&nbsp;To </b>justcommit.eth&nbsp;
-                {/*<b>&nbsp;To </b>{props.commitJudge.slice(0, 5)}...{props.commitJudge.slice(-4)}&nbsp;*/}
+              <div className="flex flex-row" style={{ justifyContent: "space-between", marginBottom: 0 }}>
+                <b>&nbsp;Challenger </b>{ensName || props.commitFrom.slice(0, 5) + '…' + props.commitFrom.slice(-4)}&nbsp;
               </div>
             </div>
 
@@ -342,24 +337,6 @@ export default function CommitCard({ ...props }) {
               </div>
             </div>
 
-            <div className="flex flex-col align-center justify-center text-lg">
-              {
-                CommitStatusEmoji[props.status]
-              }
-            </div>
-            <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600
-              text-l rounded-lg bg-sky-200 hover:bg-sky-400 hover:cursor-pointer">
-              <a onClick={() => { toast("⏳ Coming Soon...", { id: 'unique' }) }}>
-                {/*}
-              <a href={`https://${chain?.id === 5 ? 'goerli.' : ''
-                }etherscan.io/tx/${props.txnHash}`} // FIX 
-                target="_blank"
-                rel="noreferrer"
-              >
-              */}
-                &nbsp;&nbsp;&nbsp;🔎&nbsp;&nbsp;&nbsp;
-              </a>
-            </div>
           </div>
         </div>
 
