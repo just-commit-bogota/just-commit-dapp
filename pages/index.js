@@ -46,12 +46,11 @@ export default function Home() {
             endsAt: commit.endsAt.toNumber(),
             judgeDeadline: commit.judgeDeadline.toNumber(),
             stakeAmount: commit.stakeAmount,
-            message: commit.message,
+            phonePickups: commit.phonePickups,
             filename: commit.filename,
             isCommitProved: commit.isCommitProved,
             isCommitJudged: commit.isCommitJudged,
             isApproved: commit.isApproved,
-            isSolo: commit.isSolo,
           });
         });
         setAllCommits(commitsClassified);
@@ -66,12 +65,11 @@ export default function Home() {
           endsAt,
           judgeDeadline,
           stakeAmount,
-          message,
+          phonePickups,
           filename,
           isCommitProved,
           isCommitJudged,
           isApproved,
-          isSolo,
         ) => {
           setAllCommits(prevState => [...prevState, {
             status: "Pending",
@@ -83,12 +81,11 @@ export default function Home() {
             endsAt: endsAt,
             judgeDeadline: judgeDeadline,
             stakeAmount: stakeAmount,
-            message: message,
+            phonePickups: phonePickups,
             filename: filename,
             isCommitProved: isCommitProved,
             isCommitJudged: isCommitJudged,
             isApproved: isApproved,
-            isSolo: isSolo,
           }]);
         });
 

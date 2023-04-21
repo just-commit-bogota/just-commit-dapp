@@ -115,12 +115,11 @@ export default function CommitCardList({ cardList }) {
                 endsAt={card.endsAt}
                 judgeDeadline={card.judgeDeadline}
                 stakeAmount={ethers.utils.formatEther(card.stakeAmount)}
-                message={card.message}
+                phonePickups={card.phonePickups}
                 filename={card.filename}
                 isCommitProved={card.isCommitProved}
                 isCommitJudged={card.isCommitJudged}
                 isApproved={card.isApproved}
-                isSolo={card.isSolo}
               />
             )).reverse()}
           </>

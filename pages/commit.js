@@ -46,10 +46,9 @@ export default function Commit() {
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState("")
-  const [commitJudge, setCommitJudge] = useState([CONTRACT_OWNER])
-  const [commitAmount, setCommitAmount] = useState('0')
-  const [endsAt, setEndsAt] = useState()
+  const [commitTo, setCommitTo] = useState(CONTRACT_OWNER)
+  const [commitJudge, setCommitJudge] = useState(CONTRACT_OWNER)
+  const [commitAmount, setCommitAmount] = useState('10')
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
@@ -67,7 +66,7 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitDescription, commitTo, commitJudge, endsAt, true, // "true" is for isSolo
+    args: [commitTo, commitJudge, "100", // TODO: this should be phonePickups
       { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
@@ -92,7 +91,7 @@ export default function Commit() {
   })
 
   const isCommitButtonEnabled = () => {
-    return videoWatched && typeformCompleted && walletMaticBalance > 110;
+    return videoWatched && walletMaticBalance > 10 && true; // && typeformCompleted;
   };
 
   // functions
@@ -130,17 +129,6 @@ export default function Commit() {
   useEffect(() => {
     getWalletMaticBalance()
   }, [address])
-
-  useEffect(() => {
-    if (!priceApi.isLoading && priceApi.data?.["matic-network"]?.usd) {
-      const maticPrice = parseFloat(priceApi.data["matic-network"].usd);
-      if (maticPrice && !isNaN(maticPrice)) {
-        setCommitAmount((100 / maticPrice).toString());
-      } else {
-        console.error('maticPrice is not a valid number:', maticPrice);
-      }
-    }
-  }, [priceApi]);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
@@ -292,7 +280,8 @@ export default function Commit() {
                 size="small"
                 shadowless
                 type="submit"
-                suffix= {"(" + formatCurrency(100, "USD") + ")"} // {!priceApi.isLoading && "(" + formatCurrency(maticPrice * commitAmount, "USD") + ")"}
+                suffix={"(" + commitAmount + " MATIC)"}
+                // suffix= {"(" + formatCurrency(100, "USD") + ")"} // {!priceApi.isLoading && "(" + formatCurrency(maticPrice * commitAmount, "USD") + ")"}
                 disabled={!isCommitButtonEnabled()}
                 onClick={commitWrite}
               >
@@ -356,18 +345,16 @@ export default function Commit() {
             ---------
             */}
 
-            {/*endsAt: {endsAt}
+            {/*
             <br></br>
             block.timestamp * 1000: {Math.floor(Date.now() / 1000) * 1000}
             <br></br>*/}
 
             commitAmount: {commitAmount}
-
-            {/* commitJudge: {commitJudge}
             <br></br>
-            commitTo: {commitTo} */}
-
-            {/* endsAt: {endsAt} */}
+            commitJudge: {commitJudge}
+            <br></br>
+            commitTo: {commitTo}
             
             {/* <br></br>
             <br></br>
@@ -377,7 +364,6 @@ export default function Commit() {
             isWaitLoading: {String(isWaitLoading)}
             <br></br>
             <br></br>
-            endsAt: {endsAt}
             <br></br>
             <br></br>
             Date.now(): {Date.now()} */}
