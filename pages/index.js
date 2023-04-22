@@ -119,11 +119,6 @@ export default function Commit() {
     newVideoWatched[index] = true;
     setVideoWatched(newVideoWatched);
   };
-  const handleCheckboxClick = (index) => {
-    if (!videoWatched[index]) {
-      toast.error("Watch the video")
-    }
-  };
   const handleKeyDown = (event) => {
     if (event.key === 'Escape') {
       closeModal();
@@ -168,14 +163,35 @@ export default function Commit() {
               <div className="text-center justify-center align-center">
                 
                 <Heading className="mb-4" color="textSecondary" style={{ fontWeight: '700', fontSize: '40px' }}>
-                  Welcome.
+                  Welcome!
                 </Heading>
-                <Typography className="-mb-6" variant="label" weight="medium" style={{ lineHeight: '1.4em', fontSize: '0.6em' }}>
-                  Bet on yourself for 4 weeks →
+                <Typography className="-mb-6" variant="" weight="small" style={{ lineHeight: '1.4em', fontSize: '0.6em' }}>
+                  This is a tool that will help you
                   <br />
-                  Reduce your phone pickups by > 60% →
+                  use your phone more intentionally.
                   <br />
-                  <Typography style={{ lineHeight: '2.9em' }}>Feel more <b>ALIVE</b></Typography>
+                  <Typography
+                    className="font-normal"
+                    style={{
+                      lineHeight: '3em',
+                    }}
+                  >
+                    Get ready to feel more...{' '}
+                    <span
+                      className=""
+                      style={{
+                        background:
+                          'linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(255,154,0,1) 10%, rgba(208,222,33,1) 20%, rgba(79,220,74,1) 30%, rgba(63,218,216,1) 40%, rgba(47,201,226,1) 50%, rgba(28,127,238,1) 60%, rgba(95,21,242,1) 70%, rgba(186,12,248,1) 80%, rgba(251,7,217,1) 90%, rgba(255,0,0,1) 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        fontStyle: 'italic',
+                        fontWeight: 'bold',
+                        fontSize: '2em',
+                      }}
+                    >
+                      &nbsp;ALIVE&nbsp;
+                    </span>
+                  </Typography>
                 </Typography>
               </div>
             }
@@ -199,44 +215,48 @@ export default function Commit() {
               e.preventDefault()
             }}>
 
-            <div className="flex flex-col w-full gap-6 mt-0" style={{direction:"rtl"}}>
-
-              <Checkbox
-                label={
-                  <span
+            <div className="flex flex-col w-full gap-6 mt-0" style={{ direction: 'rtl' }}>
+              <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
+                <div style={{ fontSize: '1.5em' }}>{videoWatched[0] ? '✅' : '→'}</div>
+                <div
+                  className="permanent-underline hover:scale-105"
+                  style={{ fontSize: '1.2em' }}
+                  onClick={() => {
+                    handleWatchVideoClick(0, 'https://1.com');
+                  }}
+                >
+                  <Typography>What is Just Commit?</Typography>
+                </div>
+              </div>
+            
+              {videoWatched[0] && (
+                <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ fontSize: '1.5em' }}>{videoWatched[1] ? '✅' : '→'}</div>
+                  <div
                     className="permanent-underline hover:scale-105"
-                    onClick={() => handleWatchVideoClick(0, 'https://1.com')}
+                    style={{ fontSize: '1.2em' }}
+                    onClick={() => {
+                      handleWatchVideoClick(1, 'https://2.com');
+                    }}
                   >
-                    ?What is Just Commit
-                  </span>
-                }
-                checked={videoWatched[0]}
-                onClick={() => handleCheckboxClick(0)}
-              />
-              <Checkbox
-                label={
-                  <span
+                    <Typography>Why am I here?</Typography>
+                  </div>
+                </div>
+              )}
+              {videoWatched[1] && (
+                <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ fontSize: '1.5em' }}>{videoWatched[2] ? '✅' : '→'}</div>
+                  <div
                     className="permanent-underline hover:scale-105"
-                    onClick={() => handleWatchVideoClick(1, 'https://2.com')}
+                    style={{ fontSize: '1.2em' }}
+                    onClick={() => {
+                      handleWatchVideoClick(2, 'https://3.com');
+                    }}
                   >
-                    ?Why am I here
-                  </span>
-                }
-                checked={videoWatched[1]}
-                onClick={() => handleCheckboxClick(1)}
-              />
-              <Checkbox
-                label={
-                  <span
-                    className="permanent-underline hover:scale-105"
-                    onClick={() => handleWatchVideoClick(2, 'https://3.com')}
-                  >
-                    ?How does this work
-                  </span>
-                }
-                checked={videoWatched[2]}
-                onClick={() => handleCheckboxClick(2)}
-              />
+                    <Typography>How does this work?</Typography>
+                  </div>
+                </div>
+              )}
 
               {videoWatched[2] &&
                 <div className="mt-2 mb-2" style={{direction:"ltr"}}> 
@@ -264,7 +284,7 @@ export default function Commit() {
                               size="large"
                               className="hover:scale-110 cursor-pointer"
                           >
-                              <b style={{ color: 'white' }}>?</b>
+                              <b style={{ color: 'white' }}>↗</b>
                           </Tag>
                       </a>
                     }
@@ -394,15 +414,19 @@ export default function Commit() {
                 onClick={() => toast.error("Complete the Typeform")}
               /> */}
 
-              <Checkbox
-                label={
-                  <div className="flex justify-center" style={{direction:"ltr"}}>
-                    <ConnectButton className="" showBalance={true} accountStatus="none" />
-                  </div>
-                }
-                checked={Boolean(address)}
-                onClick={() => toast.error("Connect your wallet")}
-              />
+              {phonePickups &&
+                <div
+                  className="flex justify-center cursor-pointer"
+                  style={{ direction: 'ltr' }}
+                  onClick={() => {
+                    if (!Boolean(address)) {
+                      toast.error('Connect your wallet');
+                    }
+                  }}
+                >
+                  <ConnectButton className="" showBalance={true} accountStatus="none" />
+                </div>
+              }
                
             </div>
 

@@ -302,7 +302,7 @@ a {
 .permanent-underline::after {
   content: "";
   position: absolute;
-  bottom: -10px; /* Separation from the text */
+  bottom: -6px; /* Separation from the text */
   left: -1%;
   right: -1%; /* Changed value to keep the underline visible */
   height: 4px; /* Thickness of the underline */
