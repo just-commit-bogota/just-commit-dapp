@@ -275,31 +275,51 @@ export default function Commit() {
                       <thead>
                         <tr>
                           <th className="text-center">Week #</th>
-                          <th className="text-center">Pickups</th>
+                          <th className="text-center">Pickup Goal</th>
                           <th className="text-center">At Stake</th>
                         </tr>
                       </thead>
                       <br></br>
-                      <tbody>
-                        <tr>
+                      <tbody style={{ lineHeight: '22px'}}>
+                        <tr className="">
                           <td className="text-center">1</td>
                           <td className="text-center">{"< " + Math.floor(phonePickups * 0.9)}</td>
-                          <td className="text-center">{Math.floor(commitAmount * 0.1)}</td>
+                          <td className="flex flex-row justify-center items-center">
+                            <div className="flex flex-col">
+                                <img className="h-4" src="./polygon-logo-tilted.svg" />
+                            </div>
+                            &nbsp;{Math.floor(commitAmount * 0.1)}
+                          </td>
                         </tr>
-                        <tr>
+                        <tr className="">
                           <td className="text-center">2</td>
-                          <td className="text-center">{"< " + Math.floor(phonePickups * 0.8)}</td>
-                          <td className="text-center">{Math.floor(commitAmount * 0.2)}</td>
+                          <td className="text-center">{"< " + Math.floor(phonePickups * 0.9 * 0.8)}</td>
+                          <td className="flex flex-row justify-center items-center">
+                            <div className="flex flex-col">
+                                <img className="h-4" src="./polygon-logo-tilted.svg" />
+                            </div>
+                            &nbsp;{Math.floor(commitAmount * 0.2)}
+                          </td>
                         </tr>
                         <tr>
                           <td className="text-center">3</td>
-                          <td className="text-center">{"< " + Math.floor(phonePickups * 0.8)}</td>
-                          <td className="text-center">{Math.floor(commitAmount * 0.2)}</td>
+                          <td className="text-center">{"< " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8)}</td>
+                          <td className="flex flex-row justify-center items-center">
+                            <div className="flex flex-col">
+                                <img className="h-4" src="./polygon-logo-tilted.svg" />
+                            </div>
+                            &nbsp;{Math.floor(commitAmount * 0.2)}
+                          </td>
                         </tr>
                         <tr>
                           <td className="text-center">4</td>
-                          <td className="text-center">{"< " + Math.floor(phonePickups * 0.6)}</td>
-                          <td className="text-center">{Math.floor(commitAmount * 0.4)}</td>
+                          <td className="text-center">{"< " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8 * 0.6)}</td>
+                          <td className="flex flex-row justify-center items-center">
+                            <div className="flex flex-col">
+                                <img className="h-4" src="./polygon-logo-tilted.svg" />
+                            </div>
+                            &nbsp;{Math.floor(commitAmount * 0.4)}
+                          </td>
                         </tr>
                       </tbody>
                     </table>
