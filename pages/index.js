@@ -418,11 +418,6 @@ export default function Commit() {
                 <div
                   className="flex justify-center cursor-pointer"
                   style={{ direction: 'ltr' }}
-                  onClick={() => {
-                    if (!Boolean(address)) {
-                      toast.error('Connect your wallet');
-                    }
-                  }}
                 >
                   <ConnectButton className="" showBalance={true} accountStatus="none" />
                 </div>
@@ -431,10 +426,11 @@ export default function Commit() {
             </div>
 
             {/* Commit Button */}
-            {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
+            {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) &&
+            isCommitButtonEnabled() && (
               <ButtonThorin
                 style={{
-                  width: '80%',
+                  width: '90%',
                   height: '2.8rem',
                   marginTop: '2rem',
                   marginBottom: '0rem',
