@@ -26,16 +26,14 @@ export default function Commit() {
 
   // challenge cost
   const CHALLENGE_COST = '10'
-
+  const commitTo = CONTRACT_OWNER
+  const commitJudge = CONTRACT_OWNER
+  
   // state
-  const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState(CONTRACT_OWNER)
-  const [commitJudge, setCommitJudge] = useState(CONTRACT_OWNER)
-  const [commitAmount, setCommitAmount] = useState(CHALLENGE_COST)
+  const [commitAmount, setCommitAmount] = useState(CHALLENGE_COST) // TODO refactor this
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
-  const [typeformCompleted, setTypeformCompleted] = useState(true); // TODO set default to false
   const [showLoomEmbed, setShowLoomEmbed] = useState(false);
   const [videoWatched, setVideoWatched] = useState([false, false, false]);
   const [loomEmbedUrl, setLoomEmbedUrl] = useState(null);
@@ -75,8 +73,9 @@ export default function Commit() {
   })
 
   const isCommitButtonEnabled = () => {
-    return videoWatched.every(v => v) && walletMaticBalance > CHALLENGE_COST.toNumber();
-
+    return videoWatched.every(v => v) &&
+           Boolean(address) && 
+           walletMaticBalance > parseFloat(CHALLENGE_COST);
   };
 
   // functions
