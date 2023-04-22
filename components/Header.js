@@ -42,19 +42,19 @@ export default function Header({ currentPage }) {
               items={[
                 {
                   label:
-                    <Link href="/">
+                    <Link href="/home">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       Home
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    </Link>, color: currentPage == "commitments" && "green"
+                    </Link>, color: currentPage == "home" && "green"
                 },
                 {
-                  label: <Link href="/commit" target="_blank">
+                  label: <Link href="/" target="_blank">
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     Commit
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   </Link>,
-                  color: currentPage == "commit" && "green"
+                  color: currentPage == "index" && "green"
                 },
                 {
                   label:
@@ -95,10 +95,10 @@ export default function Header({ currentPage }) {
               className="flex items-center justify-start gap-7"
               style={{ flexGrow: 1 }}
             >
-              <Link href="/">
+              <Link href="/home">
                 <a
                   className={`underline-on-hover text-l ${
-                    currentPage === "commitments"
+                    currentPage === "home"
                       ? "text-[#1DD297]"
                       : "text-black"
                   }`}
@@ -106,10 +106,10 @@ export default function Header({ currentPage }) {
                   Home
                 </a>
               </Link>
-              <Link href="/commit">
+              <Link href="/">
                 <a
                   className={`underline-on-hover text-l ${
-                    currentPage === "commit"
+                    currentPage === "index"
                       ? "text-[#1DD297]"
                       : "text-black"
                   }`}
@@ -134,7 +134,7 @@ export default function Header({ currentPage }) {
                 Discord ↗
               </a>
             </div>
-            <Link href="/">
+            <Link href="/home">
               <a className="">
                 <img style={{ width: "320px" }} src="./logo-2.svg" />
               </a>

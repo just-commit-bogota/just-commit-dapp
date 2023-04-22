@@ -1,157 +1,150 @@
 import Head from 'next/head'
-import Header from "../components/Header.js"
-import { Link } from 'react-router-dom';
-import CommitCardList from "../components/CommitCardList.js"
-import { Placeholders } from "../components/Placeholders.js"
-import { Tag } from '@ensdomains/thorin'
+import useFetch from '../hooks/fetch'
 import { useState, useEffect } from 'react'
-import toast, { Toaster } from 'react-hot-toast'
-import { useAccount, useProvider, useNetwork } from 'wagmi'
 import { ethers } from 'ethers'
-import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
+import { Tag, Heading, FieldSet, Typography, Checkbox, Button as ButtonThorin } from '@ensdomains/thorin'
+import toast, { Toaster } from 'react-hot-toast'
+import 'react-tooltip/dist/react-tooltip.css'
+import { Tooltip } from 'react-tooltip';
+import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
+import Header from '../components/Header.js';
+import Spinner from "../components/Spinner.js";
+import { Placeholders } from "../components/Placeholders.js";
+import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
+import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { PopupButton } from '@typeform/embed-react'
 
-export default function Home() {
+export default function Commit() {
 
-  // variables
-  const { address: connectedAddress } = useAccount()
-  const { chain, chains } = useNetwork()
-  const provider = useProvider()
-
-  // state
-  const [allCommits, setAllCommits] = useState([])
-
-  // getter for all of the contract commits (always listening)
-  const getAllCommits = async () => {
-    // console.log("getAllCommits() call")
-    try {
-      const { ethereum } = window;
-      if (ethereum) {
-        const commitPortal = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
-        const commits = await commitPortal.getAllCommits();
-        if (!commits) {
-          return
-        }
-        // classify each commit
-        let commitsClassified = [];
-        commits.forEach(commit => {
-          commitsClassified.push({
-            // front-end
-            status: determineStatus(commit),
-            // back-end
-            id: commit.id.toNumber(),
-            commitFrom: commit.commitFrom,
-            commitTo: commit.commitTo,
-            commitJudge: commit.commitJudge,
-            createdAt: commit.createdAt.toNumber(),
-            endsAt: commit.endsAt.toNumber(),
-            judgeDeadline: commit.judgeDeadline.toNumber(),
-            stakeAmount: commit.stakeAmount,
-            phonePickups: commit.phonePickups,
-            filename: commit.filename,
-            isCommitProved: commit.isCommitProved,
-            isCommitJudged: commit.isCommitJudged,
-            isApproved: commit.isApproved,
-          });
-        });
-        setAllCommits(commitsClassified);
-
-        // on each new commit: change the allCommits state
-        commitPortal.on("NewCommit", (
-          id,
-          commitFrom,
-          commitTo,
-          commitJudge,
-          createdAt,
-          endsAt,
-          judgeDeadline,
-          stakeAmount,
-          phonePickups,
-          filename,
-          isCommitProved,
-          isCommitJudged,
-          isApproved,
-        ) => {
-          setAllCommits(prevState => [...prevState, {
-            status: "Pending",
-            id: id,
-            commitFrom: commitFrom,
-            commitTo: commitTo,
-            commitJudge: commitJudge,
-            createdAt: createdAt,
-            endsAt: endsAt,
-            judgeDeadline: judgeDeadline,
-            stakeAmount: stakeAmount,
-            phonePickups: phonePickups,
-            filename: filename,
-            isCommitProved: isCommitProved,
-            isCommitJudged: isCommitJudged,
-            isApproved: isApproved,
-          }]);
-        });
-
-        // sort according to their creation date
-        commitsClassified.sort((a, b) => (a.createdAt > b.createdAt) ? 1 : -1)
-        setAllCommits(commitsClassified)
-
-        console.log(commitsClassified)
-
-        // FOR LATER USE (unused events/emits):
-        // on a NewProve event
-        commitPortal.on("NewProve", (commitId, filename, provedAt) => {
-          console.log("New Prove Event:", commitId, filename, provedAt);
-        });
-
-        // on a NewJudge event
-        commitPortal.on("NewJudge", (commitId, isApproved, judgedAt) => {
-          console.log("New Judge Event:", commitId, isApproved, judgedAt);
-        });
-
-      } else {
-        toast("🚨 ETH wallet not detected.\n\n" +
-          "Solutions →\n\n" +
-          "1. Download the Metamask extension\t(Desktop)\n\n" +
-          "2. Use Metamask or the Brave broswer\t(Mobile)\n",
-          { duration: Infinity, id: 'unique', position: 'bottom-center' })
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  // functions
-  function determineStatus(commit) {
-    let status = "";
-    // is valid and does not have a proof
-    if (commit.endsAt > Date.now() && !commit.isCommitProved) {
-      status = "Pending";
-    }
-    // has not expired, has a proof, but has not been judged
-    else if (commit.judgeDeadline > Date.now() && commit.isCommitProved && !commit.isCommitJudged) {
-      status = "Waiting";
-    }
-    // is approved or the commit expired and was approved
-    else if (commit.isApproved || (commit.judgeDeadline < Date.now() && commit.isApproved)) {
-      status = "Success";
-    }
-    // commit has been denied or commit has expired
-    else {
-      status = "Failure";
-    }
-    return status
-  }
-
-  /// STATE EFFECTS
-
-  // first page pass
+  // first pass
   useEffect(() => {
-    getAllCommits()
+    getWalletMaticBalance()
+    setTimeout(() => {
+      setLoadingState("loaded");
+    }, 1000);
   }, [])
 
-  // render when there's a new commit or account connects
-  useEffect(() => {
-    <CommitCardList cardList={allCommits} />
-  }, [allCommits, connectedAddress])
+  // challenge cost
+  const CHALLENGE_COST = '10'
+  const commitTo = CONTRACT_OWNER
+  const commitJudge = CONTRACT_OWNER
+  
+  // state
+  const [commitAmount, setCommitAmount] = useState(CHALLENGE_COST) // TODO refactor this
+  const [loadingState, setLoadingState] = useState('loading')
+  const [hasCommitted, setHasCommited] = useState(false)
+  const [walletMaticBalance, setWalletMaticBalance] = useState(null)
+  const [showLoomEmbed, setShowLoomEmbed] = useState(false);
+  const [videoWatched, setVideoWatched] = useState([false, false, false]);
+  const [loomEmbedUrl, setLoomEmbedUrl] = useState(null);
 
+  // smart contract data
+  const { chain, chains } = useNetwork()
+  const { address } = useAccount()
+  const provider = useProvider()
+
+  // smart contract functions
+  const { config: createCommitConfig } = usePrepareContractWrite({
+    addressOrName: CONTRACT_ADDRESS,
+    contractInterface: ABI,
+    functionName: "createCommit",
+    args: [commitTo, commitJudge, "100", // TODO: this should be phonePickups
+      { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
+  })
+  const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
+    ...createCommitConfig,
+    onSettled() {
+      { wait }
+    },
+    onError: (err) => {
+      const regex = /code=(.*?),/;
+      const match = regex.exec(err.message);
+      const code = match ? match[1] : null;
+      if (code === "ACTION_REJECTED") {
+        toast.error("Transaction Rejected")
+      }
+    }
+  })
+  const { wait, isLoading: isWaitLoading } = useWaitForTransaction({
+    hash: commitWriteData?.hash,
+    onSettled() {
+      setHasCommited(true)
+    },
+  })
+
+  const isCommitButtonEnabled = () => {
+    return videoWatched.every(v => v) &&
+           Boolean(address) && 
+           walletMaticBalance > parseFloat(CHALLENGE_COST);
+  };
+
+  // functions
+  function formatCurrency(number, currency = null) {
+    const options = {
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 0,
+    };
+  
+    if (currency) {
+      options.style = 'currency';
+      options.currency = currency;
+    } else {
+      options.style = 'decimal';
+    }
+  
+    return number.toLocaleString('en-US', options);
+  }
+
+  async function getWalletMaticBalance() {
+    try {
+      const balanceMatic = await provider.getBalance(address)
+      setWalletMaticBalance(parseFloat((Number(ethers.utils.formatEther(balanceMatic)))))
+    } catch (err) {
+      console.error("Error getting wallet balance:", err);
+      return null;
+    }
+  }
+
+  // commit logic related
+  const closeModal = () => {
+    setShowLoomEmbed(false);
+  };
+  const handleWatchVideoClick = (index, videoLink) => {
+    setShowLoomEmbed(!showLoomEmbed);
+    setLoomEmbedUrl(videoLink);
+  
+    const newVideoWatched = [...videoWatched];
+    newVideoWatched[index] = true;
+    setVideoWatched(newVideoWatched);
+  };
+  const handleCheckboxClick = (index) => {
+    if (!videoWatched[index]) {
+      toast.error("Watch the video")
+    }
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      closeModal();
+    }
+  };
+
+  // polygon stats
+  const priceApi = useFetch('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd')
+  const maticPrice = parseFloat(priceApi.data?.["matic-network"].usd)
+
+  // effects
+  useEffect(() => {
+    getWalletMaticBalance()
+  }, [address])
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  // rendering
   return (
     <>
       <Head>
@@ -161,52 +154,264 @@ export default function Home() {
         <meta property="og:title" content="Just Commit" />
         <meta name="description" content="Just Commit" />
         <meta property="og:description" content="Just Commit" />
-        <link rel="icon" type="image/png" sizes="16x16" href="./favicon.ico" />
+        <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
       </Head>
 
-      <Header currentPage="commitments" />
+      <Header currentPage="index" />
 
-      <div className="flex h-screen">
-        <div className="w-8/10 mx-auto p-0 lg:p-10 mt-20">
-          <div className="flex flex-col mt-4 justify-center items-center">
-            <CommitCardList cardList={allCommits} />
-          </div>
+      <div className="container container--flex h-screen items-stretch">
+        <div className="mt-6 mb-0" style={{ padding: "10px" }}>
+          <FieldSet
+            legend={
+              <div className="text-center justify-center align-center">
+                <Heading className="mb-4" color="textSecondary" style={{ fontWeight: '700', fontSize: '40px' }}>
+                  Welcome.
+                </Heading>
+                <Typography className="-mb-6" variant="label" weight="medium" style={{ lineHeight: '1.4em', fontSize: '0.6em' }}>
+                  Bet on yourself for 4 weeks →
+                  <br />
+                  Reduce your phone pickups by ~70% →
+                  <br />
+                  <Typography style={{ lineHeight: '2.9em' }}>Feel more <b>ALIVE</b></Typography>
+                </Typography>
+              </div>
+            }
+          >
+          </FieldSet>
         </div>
+
+        {
+          loadingState === 'loading' && <Placeholders loadingStyle="indexLoadingStyle" number={1} />
+        }
+
+        {
+          loadingState === 'loaded' &&
+
+          <form
+            id="form"
+            className="form"
+
+            // Toast Checks
+            onSubmit={async (e) => {
+              e.preventDefault()
+            }}>
+
+            <div className="flex flex-col w-full gap-6 mt-0" style={{direction:"rtl"}}>
+
+              <Checkbox
+                label={
+                  <span
+                    className="permanent-underline hover:scale-105"
+                    onClick={() => handleWatchVideoClick(0, 'https://1.com')}
+                  >
+                    ?What is Just Commit
+                  </span>
+                }
+                checked={videoWatched[0]}
+                onClick={() => handleCheckboxClick(0)}
+              />
+              <Checkbox
+                label={
+                  <span
+                    className="permanent-underline hover:scale-105"
+                    onClick={() => handleWatchVideoClick(1, 'https://2.com')}
+                  >
+                    ?Why am I here
+                  </span>
+                }
+                checked={videoWatched[1]}
+                onClick={() => handleCheckboxClick(1)}
+              />
+              <Checkbox
+                label={
+                  <span
+                    className="permanent-underline hover:scale-105"
+                    onClick={() => handleWatchVideoClick(2, 'https://3.com')}
+                  >
+                    ?How does this work
+                  </span>
+                }
+                checked={videoWatched[2]}
+                onClick={() => handleCheckboxClick(2)}
+              />
+              
+              {showLoomEmbed && (
+                <div
+                  style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    zIndex: 1000,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  onClick={closeModal}
+                >
+                  <div
+                    style={{
+                      width: '90%',
+                      height: '90%',
+                      backgroundColor: 'white',
+                      position: 'relative',
+                      borderRadius: '10px',
+                    }}
+                  >
+                    <iframe
+                      src={loomEmbedUrl}
+                      frameBorder="0"
+                      allowFullScreen
+                      style={{
+                        position: 'absolute',
+                        top: '0',
+                        left: '0',
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: '10px',
+                      }}
+                    ></iframe>
+                  </div>
+                </div>
+              )}
+              {/* <Checkbox
+                label={
+                  <PopupButton
+                    id="IfnJtCQO"
+                    onSubmit={() => {
+                      setTypeformCompleted(true);
+                    }}
+                  >
+                    <button className="permanent-underline">
+                      Fill Out The Form
+                    </button>
+                  </PopupButton>
+                }
+                checked={typeformCompleted}
+                onClick={() => toast.error("Complete the Typeform")}
+              /> */}
+
+              <Checkbox
+                label={
+                  <div className="flex justify-center" style={{direction:"ltr"}}>
+                    <ConnectButton className="" showBalance={true} accountStatus="none" />
+                  </div>
+                }
+                checked={Boolean(address)}
+                onClick={() => toast.error("Connect your wallet")}
+              />
+               
+            </div>
+
+            {/* Commit Button */}
+            {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
+              <ButtonThorin
+                style={{
+                  width: '80%',
+                  height: '2.8rem',
+                  marginTop: '2rem',
+                  marginBottom: '0rem',
+                  backgroundColor: isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
+                  borderRadius: 12,
+                  color: "white",
+                  transition: "transform 0.2s ease-in-out",
+                }}
+                size="small"
+                shadowless
+                type="submit"
+                suffix={"(" + commitAmount + " MATIC)"}
+                // suffix= {"(" + formatCurrency(100, "USD") + ")"} // {!priceApi.isLoading && "(" + formatCurrency(maticPrice * commitAmount, "USD") + ")"}
+                disabled={!isCommitButtonEnabled()}
+                onClick={commitWrite}
+              >
+                Commit
+              </ButtonThorin>
+            )}
+
+            <Toaster toastOptions={{ duration: 2000 }} />
+            <Tooltip id="my-tooltip"
+              style={{ backgroundColor: "#1DD297", color: "#ffffff", fontWeight: 500 }}
+            />
+
+            {(((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
+              <div className="justifyCenter">
+                <Spinner />
+              </div>
+            )}
+
+            {hasCommitted &&
+              <div className="w-full relative">
+                <div className="absolute w-full p-1" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                  <div className="flex justify-center w-3/10">
+                    <ButtonThorin
+                      className="flex"
+                      style={{ padding: "20px", backgroundColor: "#1DD297", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
+                      outlined
+                      shape="rounded"
+                      size="small"
+                      variant="primary"
+                      as="a"
+                      href="./"
+                      onClick={() => {
+                        localStorage.setItem("selectedFilter", "Active");
+                      }}
+                    >
+                      Commitment
+                    </ButtonThorin>
+                  </div>
+                </div>
+                <div className="flex justify-end w-full">
+                  <div className="flex" style={{ width: "52px" }}>
+                    <ButtonThorin
+                      className="flex align-center mt-2 mb-5 sm:mb-0 justify-center rounded-lg hover:cursor-pointer"
+                      style={{ background: "#bae6fd", zIndex: 2, fontSize: "1.2rem", padding: "5px" }}
+                      as="a"
+                      href={`https://${chain?.id === 80001 ? 'mumbai.' : ''
+                        }polygonscan.com/tx/${commitWriteData.hash}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      🔎
+                    </ButtonThorin>
+                  </div>
+                </div>
+              </div>
+            }
+
+            {/*
+            ---------
+            DEBUGGING
+            ---------
+            */}
+
+            {/*
+            <br></br>
+            block.timestamp * 1000: {Math.floor(Date.now() / 1000) * 1000}
+            <br></br>*/}
+
+            {/* commitAmount: {commitAmount}
+            <br></br>
+            commitJudge: {commitJudge}
+            <br></br>
+            commitTo: {commitTo} */}
+            
+            {/* <br></br>
+            <br></br>
+            maticPrice * commitAmount: {typeof(maticPrice * commitAmount)}
+            <br></br>
+            <br></br>
+            isWaitLoading: {String(isWaitLoading)}
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            Date.now(): {Date.now()} */}
+
+          </form>
+        }
       </div>
-
-      {/* the commit shortcut floating icon */}
-      <div
-        style={{
-          position: "fixed",
-          bottom: "25px",
-          right: "25px",
-          zIndex: "999",
-        }}
-        className="hover:cursor-pointer"
-        onClick={() => {
-          window.location.href = "./commit"
-        }}
-      >
-        <Tag
-          style={{
-            color: "#1DD297",
-            backgroundColor: "#1DD297",
-            width: "54px",
-            height: "54px",
-            fontSize: "1.5rem",
-          }}
-          className="hover:scale-110 hover:cursor-pointer"
-        >
-          <img
-            style={{ height: "2.5rem" }}
-            src="./commit-icon.svg"
-            alt="Commit Icon"
-          />
-        </Tag>
-      </div>
-
-      <Toaster />
-
     </>
-  );
+  )
 }
