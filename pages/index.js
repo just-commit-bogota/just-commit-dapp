@@ -74,9 +74,11 @@ export default function Commit() {
   })
 
   const isCommitButtonEnabled = () => {
-    return videoWatched.every(v => v) &&
-           Boolean(address) && 
-           walletMaticBalance > parseFloat(CHALLENGE_COST);
+    return
+      videoWatched.every(v => v) &&
+      Boolean(address) && 
+      walletMaticBalance > parseFloat(CHALLENGE_COST) &&
+      phonePickups > 0
   };
 
   // functions
@@ -155,7 +157,7 @@ export default function Commit() {
         <meta property="og:title" content="Just Commit" />
         <meta name="description" content="Just Commit" />
         <meta property="og:description" content="Just Commit" />
-        <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
+        <link rel="icon" type="image/png" sizes="16x16" href="./favicon.ico" />
       </Head>
 
       <Header currentPage="index" />
@@ -172,7 +174,7 @@ export default function Commit() {
                 <Typography className="-mb-6" variant="label" weight="medium" style={{ lineHeight: '1.4em', fontSize: '0.6em' }}>
                   Bet on yourself for 4 weeks →
                   <br />
-                  Reduce your phone pickups by ~70% →
+                  Reduce your phone pickups by > 60% →
                   <br />
                   <Typography style={{ lineHeight: '2.9em' }}>Feel more <b>ALIVE</b></Typography>
                 </Typography>
@@ -256,7 +258,7 @@ export default function Commit() {
                       <a
                           data-tooltip-id="my-tooltip"
                           data-tooltip-place="right"
-                          onClick={() => window.open('https://imgur.com/', '_blank')}
+                          onClick={() => window.open('https://imgur.com/a/uVbIcAt', '_blank')}
                       >
                           <Tag
                               style={{ background: '#1DD297' }}
@@ -283,42 +285,50 @@ export default function Commit() {
                       <tbody style={{ lineHeight: '22px'}}>
                         <tr className="">
                           <td className="text-center">1</td>
-                          <td className="text-center">{"< " + Math.floor(phonePickups * 0.9)}</td>
+                          <td className="text-center">
+                              {phonePickups === null ? "?" : "< " + Math.floor(phonePickups * 0.9)}
+                          </td>
                           <td className="flex flex-row justify-center items-center">
-                            <div className="flex flex-col">
-                                <img className="h-4" src="./polygon-logo-tilted.svg" />
-                            </div>
-                            &nbsp;{Math.floor(commitAmount * 0.1)}
+                              <div className="flex flex-col">
+                                  <img className="h-4" src="./polygon-logo-tilted.svg" />
+                              </div>
+                              &nbsp;{Math.floor(commitAmount * 0.1)}
                           </td>
                         </tr>
                         <tr className="">
                           <td className="text-center">2</td>
-                          <td className="text-center">{"< " + Math.floor(phonePickups * 0.9 * 0.8)}</td>
+                          <td className="text-center">
+                              {phonePickups === null ? "?" : "< " + Math.floor(phonePickups * 0.9 * 0.8)}
+                          </td>
                           <td className="flex flex-row justify-center items-center">
-                            <div className="flex flex-col">
-                                <img className="h-4" src="./polygon-logo-tilted.svg" />
-                            </div>
-                            &nbsp;{Math.floor(commitAmount * 0.2)}
+                              <div className="flex flex-col">
+                                  <img className="h-4" src="./polygon-logo-tilted.svg" />
+                              </div>
+                              &nbsp;{Math.floor(commitAmount * 0.2)}
                           </td>
                         </tr>
                         <tr>
                           <td className="text-center">3</td>
-                          <td className="text-center">{"< " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8)}</td>
+                          <td className="text-center">
+                              {phonePickups === null ? "?" : "< " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8)}
+                          </td>
                           <td className="flex flex-row justify-center items-center">
-                            <div className="flex flex-col">
-                                <img className="h-4" src="./polygon-logo-tilted.svg" />
-                            </div>
-                            &nbsp;{Math.floor(commitAmount * 0.2)}
+                              <div className="flex flex-col">
+                                  <img className="h-4" src="./polygon-logo-tilted.svg" />
+                              </div>
+                              &nbsp;{Math.floor(commitAmount * 0.2)}
                           </td>
                         </tr>
                         <tr>
                           <td className="text-center">4</td>
-                          <td className="text-center">{"< " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8 * 0.6)}</td>
+                          <td className="text-center">
+                              {phonePickups === null ? "?" : "< " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8 * 0.6)}
+                          </td>
                           <td className="flex flex-row justify-center items-center">
-                            <div className="flex flex-col">
-                                <img className="h-4" src="./polygon-logo-tilted.svg" />
-                            </div>
-                            &nbsp;{Math.floor(commitAmount * 0.4)}
+                              <div className="flex flex-col">
+                                  <img className="h-4" src="./polygon-logo-tilted.svg" />
+                              </div>
+                              &nbsp;{Math.floor(commitAmount * 0.4)}
                           </td>
                         </tr>
                       </tbody>
