@@ -347,19 +347,6 @@ a {
   right: -1%;
 }
 
-.connect-button-wrapper button {
-  background-color: inherit !important;
-  color: inherit !important;
-  font-size: inherit !important;
-  font-weight: inherit !important;
-  padding: inherit !important;
-  border: none !important;
-  border-radius: inherit !important;
-  box-shadow: none !important;
-  transform: none !important; /* Remove any scaling */
-  transition: none !important; /* Remove any transitions */
-}
-
 @keyframes fade {
   0%,100% { opacity: 0 }
   50% { opacity: 1 }

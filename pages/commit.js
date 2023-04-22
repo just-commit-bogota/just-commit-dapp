@@ -24,37 +24,21 @@ export default function Commit() {
     }, 1000);
   }, [])
 
-  // Loom related
-  const loomEmbedUrl = 'https://www.loom.com/embed/af64e3e04b624d2997469e148b349dad'
-  const closeModal = () => {
-    setShowLoomEmbed(false);
-  };
-  const handleWatchVideoClick = () => {
-    setShowLoomEmbed(!showLoomEmbed);
-    setVideoWatched(true);
-  };
-  const handleCheckboxClick = () => {
-    if (!videoWatched) {
-      toast.error('Watch the video');
-    }
-  };
-  const handleKeyDown = (event) => {
-    if (event.key === 'Escape') {
-      closeModal();
-    }
-  };
+  // challenge cost
+  const CHALLENGE_COST = '10'
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
   const [commitTo, setCommitTo] = useState(CONTRACT_OWNER)
   const [commitJudge, setCommitJudge] = useState(CONTRACT_OWNER)
-  const [commitAmount, setCommitAmount] = useState('10')
+  const [commitAmount, setCommitAmount] = useState(CHALLENGE_COST)
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
   const [typeformCompleted, setTypeformCompleted] = useState(true); // TODO set default to false
   const [showLoomEmbed, setShowLoomEmbed] = useState(false);
-  const [videoWatched, setVideoWatched] = useState(false);
+  const [videoWatched, setVideoWatched] = useState([false, false, false]);
+  const [loomEmbedUrl, setLoomEmbedUrl] = useState(null);
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -91,7 +75,8 @@ export default function Commit() {
   })
 
   const isCommitButtonEnabled = () => {
-    return videoWatched && walletMaticBalance > 10 && true; // && typeformCompleted;
+    return videoWatched.every(v => v) && walletMaticBalance > CHALLENGE_COST.toNumber();
+
   };
 
   // functions
@@ -120,6 +105,29 @@ export default function Commit() {
       return null;
     }
   }
+
+  // commit logic related
+  const closeModal = () => {
+    setShowLoomEmbed(false);
+  };
+  const handleWatchVideoClick = (index, videoLink) => {
+    setShowLoomEmbed(!showLoomEmbed);
+    setLoomEmbedUrl(videoLink);
+  
+    const newVideoWatched = [...videoWatched];
+    newVideoWatched[index] = true;
+    setVideoWatched(newVideoWatched);
+  };
+  const handleCheckboxClick = (index) => {
+    if (!videoWatched[index]) {
+      toast.error("Watch the video")
+    }
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      closeModal();
+    }
+  };
 
   // polygon stats
   const priceApi = useFetch('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd')
@@ -184,18 +192,44 @@ export default function Commit() {
             }}>
 
             <div className="flex flex-col w-full gap-6 mt-0" style={{direction:"rtl"}}>
+
               <Checkbox
                 label={
                   <span
-                    className="permanent-underline"
-                    onClick={handleWatchVideoClick}
+                    className="permanent-underline hover:scale-105"
+                    onClick={() => handleWatchVideoClick(0, 'https://1.com')}
                   >
-                    Watch Instructions
+                    ?What is Just Commit
                   </span>
                 }
-                checked={videoWatched}
-                onClick={handleCheckboxClick}
+                checked={videoWatched[0]}
+                onClick={() => handleCheckboxClick(0)}
               />
+              <Checkbox
+                label={
+                  <span
+                    className="permanent-underline hover:scale-105"
+                    onClick={() => handleWatchVideoClick(1, 'https://2.com')}
+                  >
+                    ?Why am I here
+                  </span>
+                }
+                checked={videoWatched[1]}
+                onClick={() => handleCheckboxClick(1)}
+              />
+              <Checkbox
+                label={
+                  <span
+                    className="permanent-underline hover:scale-105"
+                    onClick={() => handleWatchVideoClick(2, 'https://3.com')}
+                  >
+                    ?How does this work
+                  </span>
+                }
+                checked={videoWatched[2]}
+                onClick={() => handleCheckboxClick(2)}
+              />
+              
               {showLoomEmbed && (
                 <div
                   style={{
@@ -253,15 +287,17 @@ export default function Commit() {
                 checked={typeformCompleted}
                 onClick={() => toast.error("Complete the Typeform")}
               /> */}
+
               <Checkbox
                 label={
-                  <div className="connect-button-wrapper connect-button-underline">
+                  <div className="flex justify-center" style={{direction:"ltr"}}>
                     <ConnectButton className="" showBalance={true} accountStatus="none" />
                   </div>
                 }
                 checked={Boolean(address)}
                 onClick={() => toast.error("Connect your wallet")}
               />
+               
             </div>
 
             {/* Commit Button */}
@@ -270,8 +306,8 @@ export default function Commit() {
                 style={{
                   width: '80%',
                   height: '2.8rem',
-                  marginTop: '3rem',
-                  marginBottom: '2rem',
+                  marginTop: '2rem',
+                  marginBottom: '0rem',
                   backgroundColor: isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
                   borderRadius: 12,
                   color: "white",
