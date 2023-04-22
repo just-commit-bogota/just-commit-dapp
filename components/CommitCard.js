@@ -326,7 +326,11 @@ export default function CommitCard({ ...props }) {
               borderRadius: "6px",
             }}>
               <div className="flex flex-row" style={{ justifyContent: "space-between", marginBottom: 0 }}>
-                <b>&nbsp;Challenger </b>{ensName || props.commitFrom.slice(0, 5) + '…' + props.commitFrom.slice(-4)}&nbsp;
+                <b>&nbsp;Challenger </b>
+                {props.commitFrom === address
+                  ? "Me"
+                  : ensName || commitFrom.slice(0, 5) + '…' + commitFrom.slice(-4)}
+                &nbsp;
               </div>
             </div>
 

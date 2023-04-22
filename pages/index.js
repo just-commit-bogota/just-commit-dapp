@@ -469,7 +469,7 @@ export default function Commit() {
             {hasCommitted &&
               <div className="w-full relative">
                 <div className="absolute w-full p-1" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                  <div className="flex justify-center w-3/10">
+                  <div className="flex justify-center w-3/10 mt-4">
                     <ButtonThorin
                       className="flex"
                       style={{ padding: "20px", backgroundColor: "#1DD297", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
@@ -490,7 +490,7 @@ export default function Commit() {
                 <div className="flex justify-end w-full">
                   <div className="flex" style={{ width: "52px" }}>
                     <ButtonThorin
-                      className="flex align-center mt-2 mb-5 sm:mb-0 justify-center rounded-lg hover:cursor-pointer"
+                      className="flex align-center mt-6 mb-5 sm:mb-0 justify-center rounded-lg hover:cursor-pointer"
                       style={{ background: "#bae6fd", zIndex: 2, fontSize: "1.2rem", padding: "5px" }}
                       as="a"
                       href={`https://${chain?.id === 80001 ? 'mumbai.' : ''
