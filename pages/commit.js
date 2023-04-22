@@ -160,14 +160,20 @@ export default function Commit() {
       <Header currentPage="commit" />
 
       <div className="container container--flex h-screen items-stretch">
-        <div className="mt-12 mb-6" style={{ padding: "10px" }}>
+        <div className="mt-6 mb-0" style={{ padding: "10px" }}>
           <FieldSet
             legend={
               <div className="text-center justify-center align-center">
                 <Heading className="mb-4" color="textSecondary" style={{ fontWeight: '700', fontSize: '40px' }}>
-                  Bet On Yourself
+                  Welcome.
                 </Heading>
-                {/* <Typography className="-mb-4" variant="small"><b>A 4 week challenge that will make you feel more ALIVE</b></Typography> */}
+                <Typography className="-mb-6" variant="label" weight="medium" style={{ lineHeight: '1.4em', fontSize: '0.6em' }}>
+                  Bet on yourself for 4 weeks →
+                  <br />
+                  Reduce your phone pickups →
+                  <br />
+                  <Typography style={{ lineHeight: '2.9em' }}>Feel more ALIVE.</Typography>
+                </Typography>
               </div>
             }
           >
