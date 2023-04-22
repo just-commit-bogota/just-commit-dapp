@@ -153,7 +153,9 @@ export default function CommitCard({ ...props }) {
       })}>
         <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px" }}>
           <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
-            <div className="text-sm block">{`<${props.phonePickups} daily avg pickups this week`}</div>
+            <div className="text-sm block">
+              {`<${props.phonePickups} daily avg pickups this week`}
+            </div>
             <div className="flex space-x-2" style={{ whiteSpace: "nowrap" }}>
               <div className="span flex text-sm text-slate-400 gap-2 opacity-80" style={{ whiteSpace: "nowrap" }}>
                 {

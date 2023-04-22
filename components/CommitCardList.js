@@ -115,7 +115,6 @@ export default function CommitCardList({ cardList }) {
                 endsAt={card.endsAt}
                 judgeDeadline={card.judgeDeadline}
                 stakeAmount={ethers.utils.formatEther(card.stakeAmount)}
-                phonePickups={card.phonePickups}
                 filename={card.filename}
                 isCommitProved={card.isCommitProved}
                 isCommitJudged={card.isCommitJudged}

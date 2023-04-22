@@ -46,7 +46,6 @@ export default function Home() {
             endsAt: commit.endsAt.toNumber(),
             judgeDeadline: commit.judgeDeadline.toNumber(),
             stakeAmount: commit.stakeAmount,
-            phonePickups: commit.phonePickups,
             filename: commit.filename,
             isCommitProved: commit.isCommitProved,
             isCommitJudged: commit.isCommitJudged,
@@ -65,7 +64,6 @@ export default function Home() {
           endsAt,
           judgeDeadline,
           stakeAmount,
-          phonePickups,
           filename,
           isCommitProved,
           isCommitJudged,
@@ -81,7 +79,6 @@ export default function Home() {
             endsAt: endsAt,
             judgeDeadline: judgeDeadline,
             stakeAmount: stakeAmount,
-            phonePickups: phonePickups,
             filename: filename,
             isCommitProved: isCommitProved,
             isCommitJudged: isCommitJudged,
@@ -184,7 +181,7 @@ export default function Home() {
         }}
         className="hover:cursor-pointer"
         onClick={() => {
-          window.location.href = "./commit"
+          window.location.href = "/"
         }}
       >
         <Tag

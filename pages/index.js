@@ -49,8 +49,7 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitTo, commitJudge, "100", // TODO: this should be phonePickups
-      { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
+    args: [commitTo, commitJudge, { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
@@ -74,12 +73,12 @@ export default function Commit() {
   })
 
   const isCommitButtonEnabled = () => {
-    return
-      videoWatched.every(v => v) &&
-      Boolean(address) && 
-      walletMaticBalance > parseFloat(CHALLENGE_COST) &&
-      phonePickups > 0
+    return videoWatched.every(v => v) &&
+           Boolean(address) && 
+           walletMaticBalance > parseFloat(CHALLENGE_COST) &&
+           phonePickups > 0;
   };
+  
 
   // functions
   function formatCurrency(number, currency = null) {
@@ -455,7 +454,7 @@ export default function Commit() {
                       size="small"
                       variant="primary"
                       as="a"
-                      href="./"
+                      href="./home"
                       onClick={() => {
                         localStorage.setItem("selectedFilter", "Active");
                       }}
