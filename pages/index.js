@@ -2,7 +2,7 @@ import Head from 'next/head'
 import useFetch from '../hooks/fetch'
 import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
-import { Tag, Heading, FieldSet, Typography, Checkbox, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Heading, FieldSet, Typography, Checkbox, Input, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip';
@@ -37,6 +37,7 @@ export default function Commit() {
   const [showLoomEmbed, setShowLoomEmbed] = useState(false);
   const [videoWatched, setVideoWatched] = useState([false, false, false]);
   const [loomEmbedUrl, setLoomEmbedUrl] = useState(null);
+  const [phonePickups, setPhonePickups] = useState(null);
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -164,6 +165,7 @@ export default function Commit() {
           <FieldSet
             legend={
               <div className="text-center justify-center align-center">
+                
                 <Heading className="mb-4" color="textSecondary" style={{ fontWeight: '700', fontSize: '40px' }}>
                   Welcome.
                 </Heading>
@@ -234,6 +236,76 @@ export default function Commit() {
                 checked={videoWatched[2]}
                 onClick={() => handleCheckboxClick(2)}
               />
+
+              {videoWatched[2] &&
+                <div className="mt-2 mb-2" style={{direction:"ltr"}}> 
+                  <Input
+                    label="Avg Phone Pickups Last Week"
+                    placeholder="100"
+                    min={1}
+                    maxLength={3}
+                    step={1}
+                    inputMode="numeric"
+                    onKeyDown={(e) => {
+                      if (!/^\d*$/.test(e.key) && e.key !== 'Backspace') {
+                        e.preventDefault();
+                      }
+                    }}
+                    onChange={(e) => setPhonePickups((e.target.value))}
+                    labelSecondary={
+                      <a
+                          data-tooltip-id="my-tooltip"
+                          data-tooltip-place="right"
+                          onClick={() => window.open('https://imgur.com/', '_blank')}
+                      >
+                          <Tag
+                              style={{ background: '#1DD297' }}
+                              size="large"
+                              className="hover:scale-110 cursor-pointer"
+                          >
+                              <b style={{ color: 'white' }}>?</b>
+                          </Tag>
+                      </a>
+                    }
+                    required
+                  />
+                  <br></br>
+                  <div className="flex flex-col">
+                    <table className="">
+                      <thead>
+                        <tr>
+                          <th className="text-center">Week #</th>
+                          <th className="text-center">Pickups</th>
+                          <th className="text-center">At Stake</th>
+                        </tr>
+                      </thead>
+                      <br></br>
+                      <tbody>
+                        <tr>
+                          <td className="text-center">1</td>
+                          <td className="text-center">{"< " + Math.floor(phonePickups * 0.9)}</td>
+                          <td className="text-center">{Math.floor(commitAmount * 0.1)}</td>
+                        </tr>
+                        <tr>
+                          <td className="text-center">2</td>
+                          <td className="text-center">{"< " + Math.floor(phonePickups * 0.8)}</td>
+                          <td className="text-center">{Math.floor(commitAmount * 0.2)}</td>
+                        </tr>
+                        <tr>
+                          <td className="text-center">3</td>
+                          <td className="text-center">{"< " + Math.floor(phonePickups * 0.8)}</td>
+                          <td className="text-center">{Math.floor(commitAmount * 0.2)}</td>
+                        </tr>
+                        <tr>
+                          <td className="text-center">4</td>
+                          <td className="text-center">{"< " + Math.floor(phonePickups * 0.6)}</td>
+                          <td className="text-center">{Math.floor(commitAmount * 0.4)}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>         
+                </div>
+              }
               
               {showLoomEmbed && (
                 <div
