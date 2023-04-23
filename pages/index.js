@@ -116,6 +116,7 @@ export default function Commit() {
     'https://www.youtube.com/embed/Tx9zMFodNtA',
     'https://www.youtube.com/embed/vqhDkP-Je3E',
     'https://www.youtube.com/embed/e7VveWeRwUU',
+    'https://www.youtube.com/embed/SW6L_lTrIFg',
   ];
   const handleWatchVideoClick = (index) => {
     const videoLink = videoLinks[index];
@@ -174,9 +175,9 @@ export default function Commit() {
                   Welcome!
                 </Heading>
                 <Typography className="-mb-6" variant="" weight="small" style={{ lineHeight: '1.4em', fontSize: '0.6em' }}>
-                  This is a tool that will help you
+                  Just Commit is a 1-month challenge that will
                   <br />
-                  use your phone more intentionally.
+                  help you use your phone more intentionally.
                   <br />
                   <Typography
                     className="font-normal"
@@ -283,19 +284,22 @@ export default function Commit() {
                     onChange={(e) => setPhonePickups((e.target.value))}
                     labelSecondary={
                       <a
-                          data-tooltip-id="my-tooltip"
-                          data-tooltip-place="right"
-                          onClick={() => window.open('https://imgur.com/a/uVbIcAt', '_blank')}
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-place="right"
+                        onClick={() => {
+                          handleWatchVideoClick(3)
+                        }}
                       >
-                          <Tag
-                              style={{ background: '#1DD297' }}
-                              size="large"
-                              className="hover:scale-110 cursor-pointer"
-                          >
-                              <b style={{ color: 'white' }}>↗</b>
-                          </Tag>
+                        <Tag
+                          style={{ background: '#1DD297' }}
+                          size="large"
+                          className="hover:scale-110 cursor-pointer"
+                        >
+                          <b style={{ color: 'white' }}>↗</b>
+                        </Tag>
                       </a>
                     }
+
                     required
                   />
                   <br></br>
@@ -314,7 +318,7 @@ export default function Commit() {
                           <td className="text-center">1</td>
                           <td className="text-center">
                             {phonePickups === null 
-                              ? <span>? <span className="text-xxs"><b>(↓10%)</b></span></span>
+                              ? <span>? <span className="text-xs"><b>(↓10%)</b></span></span>
                               : <><span>{"< " + Math.floor(phonePickups * 0.9)}</span> <span className="text-xs"><b>(↓10%)</b></span></>
                             }                            
                           </td>
