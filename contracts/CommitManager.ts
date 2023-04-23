@@ -1,11 +1,11 @@
 //export const CONTRACT_ADDRESS = "0x6c8D0186Ad5E23a1f1deDBED84038d65e0784AE0" // APP
 //export const CONTRACT_ADDRESS = "0x896A90d26A1aB04dE23f4F96250aa30e319680a8" // BETA
-export const CONTRACT_ADDRESS = "0x1fC823a29317018cA28C23790A7666A387Bf4933" // DEV
+export const CONTRACT_ADDRESS = "0x16d5a475b15Cc79F402347481a5B6D1b3E7fbb20" // DEV
 
 export const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
 export const ABI =
-  [
+[
 	{
 		"inputs": [],
 		"stateMutability": "nonpayable",

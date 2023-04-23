@@ -27,6 +27,9 @@ export default function Commit() {
 
   // challenge cost
   const CHALLENGE_COST = '10'
+  const justCommitServices = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.09) : (CHALLENGE_COST * 0.09).toFixed(1);
+  const gasCosts = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.01) : (CHALLENGE_COST * 0.01).toFixed(1);
+  
   const commitTo = CONTRACT_OWNER
   const commitJudge = CONTRACT_OWNER
   
@@ -441,6 +444,23 @@ export default function Commit() {
                     {formatCurrency(!priceApi.isLoading && formatCurrency(maticPrice, "USD"))})
                   </div>
                </div>
+                <br />
+                <br />
+                <br />
+                <div className="flex items-center justify-center -mt-4">
+                  <a
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-place="right"
+                    data-tooltip-content="9% → JC Services Rendered || 1% → You Get Back (Covers Gas Fees)"
+                  >
+                    <Tag
+                      style={{ background: '#1DD297' }}
+                      size="large"
+                    >
+                      <b style={{ color: 'white' }}>➕</b>
+                    </Tag>
+                  </a>
+                </div>
                 <br />
                 <br />
                 <div
