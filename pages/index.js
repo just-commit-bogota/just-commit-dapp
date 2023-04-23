@@ -174,11 +174,12 @@ export default function Commit() {
                 <Heading className="mb-4" color="textSecondary" style={{ fontWeight: '700', fontSize: '40px' }}>
                   Welcome!
                 </Heading>
-                <Typography className="-mb-6" variant="" weight="small" style={{ lineHeight: '1.4em', fontSize: '0.6em' }}>
-                  Just Commit is a 1-month challenge that will
+                <Typography className="-mb-6" variant="" weight="small" style={{ lineHeight: '1.4em', fontSize: '0.55em' }}>
+                  Just Commit is a 1-month challenge designed to
                   <br />
-                  help you use your phone more intentionally.
+                  help you remove all of the unintentional                 
                   <br />
+                  phone pickups from your day.
                   <Typography
                     className="font-normal"
                     style={{
@@ -401,11 +402,26 @@ export default function Commit() {
               /> */}
 
               {phonePickups &&
-                <div
-                  className="flex justify-center cursor-pointer"
-                  style={{ direction: 'ltr' }}
-                >
-                  <ConnectButton className="" showBalance={true} accountStatus="none" />
+                <div>
+                  <div
+                    className="flex justify-center cursor-pointer"
+                    style={{ direction: 'ltr' }}
+                  >
+                    <ConnectButton className="" showBalance={true} accountStatus="none" />
+                  </div>
+                  <br />
+                  <br />
+                 <div
+                   className="flex justify-center"
+                   style={{ direction: 'ltr' }}
+                 >
+                  <div
+                    className="flex justify-center"
+                    style={{ direction: 'ltr', color: '#3B3B3B', fontSize: '16px', fontWeight: 'bold' }}>
+                    {"1 MATIC = "}
+                    {formatCurrency(!priceApi.isLoading && formatCurrency(maticPrice, "USD"))}
+                  </div>
+                 </div>
                 </div>
               }
                
