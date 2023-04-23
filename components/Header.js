@@ -31,7 +31,7 @@ export default function Header({ currentPage }) {
     <>
       {!isDesktop && (
        <>
-        <div className="header w-full inline-grid header--absolute bg-white gap-1" style={{ justifyContent: "space-between" }}>
+        <div className="header w-full inline-grid header--absolute bg-white gap-1" style={{ justifyContent: "center" }}>
           <div className="flex items-center ml-2">
             <Dropdown
               style={{ padding: "0px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
@@ -56,15 +56,15 @@ export default function Header({ currentPage }) {
                   </Link>,
                   color: currentPage == "index" && "green"
                 },
-                {
-                  label:
-                    <a href="https://justcommit.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78#c1d9e58a077d47e2af7583d7665168dd"
-                      target="_blank" rel="noopener noreferrer">
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      FAQ ↗
-                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    </a>,
-                },
+                // {
+                //   label:
+                //     <a href="https://justcommit.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78#c1d9e58a077d47e2af7583d7665168dd"
+                //       target="_blank" rel="noopener noreferrer">
+                //       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                //       FAQ ↗
+                //       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                //     </a>,
+                // },
                 {
                   label:
                     <a href="https://discord.gg/7863Wtv4hX"
@@ -117,14 +117,14 @@ export default function Header({ currentPage }) {
                   Commit
                 </a>
               </Link>
-              <a
+              {/* <a
                 href="https://justcommit.notion.site/Just-Commit-9213dcd452184278a4f628b0e3f48e78#c1d9e58a077d47e2af7583d7665168dd"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline-on-hover text-l"
               >
                 FAQ ↗
-              </a>
+              </a> */}
               <a
                 href="https://discord.gg/7863Wtv4hX"
                 target="_blank"
