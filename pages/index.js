@@ -309,58 +309,70 @@ export default function Commit() {
                         </tr>
                       </thead>
                       <br></br>
-                      <tbody style={{ lineHeight: '22px'}}>
-                        <tr className="">
+                      <tbody style={{ lineHeight: '25px'}}>
+                        <tr>
                           <td className="text-center">1</td>
                           <td className="text-center">
-                              {phonePickups === null ? "?" : "< " + Math.floor(phonePickups * 0.9)}
+                            {phonePickups === null 
+                              ? <span>? <span className="text-xxs"><b>(↓10%)</b></span></span>
+                              : <><span>{"< " + Math.floor(phonePickups * 0.9)}</span> <span className="text-xs"><b>(↓10%)</b></span></>
+                            }                            
                           </td>
                           <td className="flex flex-row justify-center items-center">
-                              <div className="flex flex-col">
-                                  <img className="h-4" src="./polygon-logo-tilted.svg" />
-                              </div>
-                              &nbsp;{Math.floor(commitAmount * 0.1)}
+                            <div className="flex flex-col">
+                              <img className="h-4" src="./polygon-logo-tilted.svg" />
+                            </div>
+                            &nbsp;{Math.floor(commitAmount * 0.1)}
                           </td>
                         </tr>
-                        <tr className="">
+                        <tr>
                           <td className="text-center">2</td>
                           <td className="text-center">
-                              {phonePickups === null ? "?" : "< " + Math.floor(phonePickups * 0.9 * 0.8)}
+                            {phonePickups === null 
+                              ? <span>? <span className="text-xs justify-end"><b>(↓20%)</b></span></span>
+                              : <><span>{"< " + Math.floor(phonePickups * 0.9 * 0.8)}</span> <span className="text-xs"><b>(↓20%)</b></span></>
+                            }                            
                           </td>
                           <td className="flex flex-row justify-center items-center">
-                              <div className="flex flex-col">
-                                  <img className="h-4" src="./polygon-logo-tilted.svg" />
-                              </div>
-                              &nbsp;{Math.floor(commitAmount * 0.2)}
+                            <div className="flex flex-col">
+                              <img className="h-4" src="./polygon-logo-tilted.svg" />
+                            </div>
+                            &nbsp;{Math.floor(commitAmount * 0.2)}
                           </td>
                         </tr>
                         <tr>
                           <td className="text-center">3</td>
                           <td className="text-center">
-                              {phonePickups === null ? "?" : "< " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8)}
+                            {phonePickups === null 
+                              ? <span>? <span className="text-xs justify-end"><b>(↓20%)</b></span></span>
+                              : <><span>{"< " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8)}</span> <span className="text-xs"><b>(↓20%)</b></span></>
+                            }                            
                           </td>
                           <td className="flex flex-row justify-center items-center">
-                              <div className="flex flex-col">
-                                  <img className="h-4" src="./polygon-logo-tilted.svg" />
-                              </div>
-                              &nbsp;{Math.floor(commitAmount * 0.2)}
+                            <div className="flex flex-col">
+                              <img className="h-4" src="./polygon-logo-tilted.svg" />
+                            </div>
+                            &nbsp;{Math.floor(commitAmount * 0.2)}
                           </td>
                         </tr>
                         <tr>
                           <td className="text-center">4</td>
                           <td className="text-center">
-                              {phonePickups === null ? "?" : "< " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8 * 0.6)}
+                            {phonePickups === null 
+                              ? <span>? <span className="text-xs justify-end"><b>(↓40%)</b></span></span>
+                              : <><span>{"< " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8 * 0.6)}</span> <span className="text-xs"><b>(↓40%)</b></span></>
+                            }                            
                           </td>
                           <td className="flex flex-row justify-center items-center">
-                              <div className="flex flex-col">
-                                  <img className="h-4" src="./polygon-logo-tilted.svg" />
-                              </div>
-                              &nbsp;{Math.floor(commitAmount * 0.4)}
+                            <div className="flex flex-col">
+                              <img className="h-4" src="./polygon-logo-tilted.svg" />
+                            </div>
+                            &nbsp;{Math.floor(commitAmount * 0.4)}
                           </td>
                         </tr>
                       </tbody>
                     </table>
-                  </div>         
+                  </div>
                 </div>
               }
               
