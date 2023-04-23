@@ -95,6 +95,7 @@ export default function CommitCard({ ...props }) {
 
     // on data checks
     if (data) {
+      // if the pic is old
       if (file.lastModified < props.createdAt) {
         toast.error("This pic is older than the commitment", { duration: 4000 })
         const { error } = await supabase.storage.from('images').remove(generateImageName(), file)
@@ -103,7 +104,18 @@ export default function CommitCard({ ...props }) {
         }
         setUploadClicked(false);
         return
-      } else {
+      }
+      // if there's > 1 day left in the commitment
+      if ((props.endsAt - Date.now()) > (24 * 60 * 60 * 1000)) {
+        toast.error("Wait until countdown is < 1 day", { duration: 4000 })
+        const { error } = await supabase.storage.from('images').remove(generateImageName(), file)
+        if (error) {
+          console.error(error)
+        }
+        setUploadClicked(false);
+        return
+      }
+      else {
         setTriggerProveContractFunctions(true)
       }
     }
