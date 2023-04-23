@@ -428,7 +428,7 @@ export default function Commit() {
                 size="small"
                 shadowless
                 type="submit"
-                suffix={"(" + commitAmount + " MATIC)"}
+                suffix={"(" + commitAmount + " MATIC) "}
                 // suffix= {"(" + formatCurrency(100, "USD") + ")"} // {!priceApi.isLoading && "(" + formatCurrency(maticPrice * commitAmount, "USD") + ")"}
                 disabled={!isCommitButtonEnabled()}
                 onClick={commitWrite}

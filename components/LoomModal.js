@@ -25,8 +25,8 @@ const LoomModal = ({ closeModal, videoEmbedUrl }) => {
     >
       <div
         style={{
-          width: '90%',
-          height: '90%',
+          width: '80%',
+          height: '80%',
           backgroundColor: 'white',
           position: 'relative',
           borderRadius: '10px',
