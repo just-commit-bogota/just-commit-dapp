@@ -10,6 +10,7 @@ import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContra
 import Header from '../components/Header.js';
 import Spinner from "../components/Spinner.js";
 import { Placeholders } from "../components/Placeholders.js";
+import LoomModal from "../components/LoomModal.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { PopupButton } from '@typeform/embed-react'
@@ -34,9 +35,9 @@ export default function Commit() {
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
-  const [showLoomEmbed, setShowLoomEmbed] = useState(false);
+  const [showVideoEmbed, setShowVideoEmbed] = useState(false);
   const [videoWatched, setVideoWatched] = useState([false, false, false]);
-  const [loomEmbedUrl, setLoomEmbedUrl] = useState(null);
+  const [videoEmbedUrl, setVideoEmbedUrl] = useState(null);
   const [phonePickups, setPhonePickups] = useState(null);
 
   // smart contract data
@@ -109,11 +110,18 @@ export default function Commit() {
 
   // commit logic related
   const closeModal = () => {
-    setShowLoomEmbed(false);
+    setShowVideoEmbed(false);
   };
-  const handleWatchVideoClick = (index, videoLink) => {
-    setShowLoomEmbed(!showLoomEmbed);
-    setLoomEmbedUrl(videoLink);
+  const videoLinks = [
+    'https://www.youtube.com/embed/Tx9zMFodNtA',
+    'https://www.youtube.com/embed/vqhDkP-Je3E',
+    'https://www.youtube.com/embed/e7VveWeRwUU',
+  ];
+  const handleWatchVideoClick = (index) => {
+    const videoLink = videoLinks[index];
+  
+    setShowVideoEmbed(!showVideoEmbed);
+    setVideoEmbedUrl(videoLink);
   
     const newVideoWatched = [...videoWatched];
     newVideoWatched[index] = true;
@@ -222,7 +230,7 @@ export default function Commit() {
                   className="permanent-underline hover:scale-105"
                   style={{ fontSize: '1.2em' }}
                   onClick={() => {
-                    handleWatchVideoClick(0, 'https://1.com');
+                    handleWatchVideoClick(0);
                   }}
                 >
                   <Typography>What is Just Commit?</Typography>
@@ -236,7 +244,7 @@ export default function Commit() {
                     className="permanent-underline hover:scale-105"
                     style={{ fontSize: '1.2em' }}
                     onClick={() => {
-                      handleWatchVideoClick(1, 'https://2.com');
+                      handleWatchVideoClick(1);
                     }}
                   >
                     <Typography>Why am I here?</Typography>
@@ -250,7 +258,7 @@ export default function Commit() {
                     className="permanent-underline hover:scale-105"
                     style={{ fontSize: '1.2em' }}
                     onClick={() => {
-                      handleWatchVideoClick(2, 'https://3.com');
+                      handleWatchVideoClick(2);
                     }}
                   >
                     <Typography>How does this work?</Typography>
@@ -356,46 +364,8 @@ export default function Commit() {
                 </div>
               }
               
-              {showLoomEmbed && (
-                <div
-                  style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                    zIndex: 1000,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                  onClick={closeModal}
-                >
-                  <div
-                    style={{
-                      width: '90%',
-                      height: '90%',
-                      backgroundColor: 'white',
-                      position: 'relative',
-                      borderRadius: '10px',
-                    }}
-                  >
-                    <iframe
-                      src={loomEmbedUrl}
-                      frameBorder="0"
-                      allowFullScreen
-                      style={{
-                        position: 'absolute',
-                        top: '0',
-                        left: '0',
-                        width: '100%',
-                        height: '100%',
-                        borderRadius: '10px',
-                      }}
-                    ></iframe>
-                  </div>
-                </div>
+              {showVideoEmbed && (
+               <LoomModal closeModal={closeModal} videoEmbedUrl={videoEmbedUrl} />
               )}
               {/* <Checkbox
                 label={
