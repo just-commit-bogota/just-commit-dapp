@@ -447,17 +447,29 @@ export default function Commit() {
                 <br />
                 <br />
                 <br />
-                <div className="flex items-center justify-center -mt-4">
+                <div className="flex items-center gap-3 justify-center -mt-4 mb-5" style={{direction:"ltr"}}>
                   <a
                     data-tooltip-id="my-tooltip"
-                    data-tooltip-place="right"
-                    data-tooltip-content="9% → JC Services Rendered || 1% → You Get Back (Covers Gas Fees)"
+                    data-tooltip-place="bottom"
+                    data-tooltip-content={`JC Services Rendered → ${justCommitServices} MATIC`}
                   >
                     <Tag
                       style={{ background: '#1DD297' }}
                       size="large"
                     >
-                      <b style={{ color: 'white' }}>➕</b>
+                      <b style={{ color: 'white' }}>⚡</b>
+                    </Tag>
+                  </a>
+                  <a
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-place="bottom"
+                    data-tooltip-content={`Sent Back To You (Gas Fees) → ${gasCosts} MATIC`}
+                  >
+                    <Tag
+                      style={{ background: '#1DD297' }}
+                      size="large"
+                    >
+                      <b style={{ color: 'white' }}>⛽</b>
                     </Tag>
                   </a>
                 </div>
