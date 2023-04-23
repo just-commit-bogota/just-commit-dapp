@@ -39,6 +39,7 @@ export default function Commit() {
   const [videoWatched, setVideoWatched] = useState([false, false, false]);
   const [videoEmbedUrl, setVideoEmbedUrl] = useState(null);
   const [phonePickups, setPhonePickups] = useState(null);
+  const [showText, setShowText] = useState(false);
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -174,39 +175,63 @@ export default function Commit() {
                 <Heading className="mb-4" color="textSecondary" style={{ fontWeight: '700', fontSize: '40px' }}>
                   Welcome!
                 </Heading>
-                <Typography className="-mb-6" variant="" weight="small" style={{ lineHeight: '1.4em', fontSize: '0.55em' }}>
-                  Just Commit is a 1-month challenge designed to
-                  <br />
-                  help you remove all of the unintentional                 
-                  <br />
-                  phone pickups from your day.
-                  <Typography
-                    className="font-normal"
-                    style={{
-                      lineHeight: '3em',
-                    }}
-                  >
-                    Get ready to feel more...{' '}
-                    <span
-                      className=""
-                      style={{
-                        background:
-                          'linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(255,154,0,1) 10%, rgba(208,222,33,1) 20%, rgba(79,220,74,1) 30%, rgba(63,218,216,1) 40%, rgba(47,201,226,1) 50%, rgba(28,127,238,1) 60%, rgba(95,21,242,1) 70%, rgba(186,12,248,1) 80%, rgba(251,7,217,1) 90%, rgba(255,0,0,1) 100%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        fontStyle: 'italic',
-                        fontWeight: 'bold',
-                        fontSize: '2em',
+                {!showText && (
+                  <div className="flex justify-center mt-12">
+                    <a
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-place="right"
+                      onClick={() => {
+                        setShowText(true);
                       }}
                     >
-                      &nbsp;ALIVE&nbsp;
-                    </span>
+                      <Tag
+                        style={{ background: '#1DD297' }}
+                        size="large"
+                        className="hover:scale-125 cursor-pointer"
+                      >
+                        <b style={{ color: 'white' }}>?</b>
+                      </Tag>
+                    </a>
+                  </div>
+                )}
+                {showText && (
+                  <Typography className="-mb-6" variant="" weight="small" style={{ lineHeight: '1.4em', fontSize: '0.55em' }}>
+                    <br />
+                    Just Commit is a 1-month challenge designed to
+                    <br />
+                    help you remove all of the unintentional                 
+                    <br />
+                    phone pickups from your day.
                   </Typography>
+               )}
+                <br />
+                <br />
+                <Typography
+                  className="font-normal -mt-6"
+                  style={{
+                    lineHeight: '1em',
+                    fontSize: '0.6em',
+                  }}
+                >
+                  Get ready to feel more...{' '}
+                  <span
+                    className=""
+                    style={{
+                      background:
+                        'linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(255,154,0,1) 10%, rgba(208,222,33,1) 20%, rgba(79,220,74,1) 30%, rgba(63,218,216,1) 40%, rgba(47,201,226,1) 50%, rgba(28,127,238,1) 60%, rgba(95,21,242,1) 70%, rgba(186,12,248,1) 80%, rgba(251,7,217,1) 90%, rgba(255,0,0,1) 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      fontStyle: 'italic',
+                      fontWeight: 'bold',
+                      fontSize: '2em',
+                    }}
+                  >
+                    &nbsp;ALIVE&nbsp;
+                  </span>
                 </Typography>
               </div>
             }
-          >
-          </FieldSet>
+          />
         </div>
 
         {
@@ -235,7 +260,7 @@ export default function Commit() {
                     handleWatchVideoClick(0);
                   }}
                 >
-                  <Typography>What is Just Commit?</Typography>
+                  <Typography style={{ cursor: 'pointer' }}>What is Just Commit?</Typography>
                 </div>
               </div>
             
@@ -249,7 +274,7 @@ export default function Commit() {
                       handleWatchVideoClick(1);
                     }}
                   >
-                    <Typography>Why am I here?</Typography>
+                    <Typography style={{ cursor: 'pointer' }}>Why am I here?</Typography>
                   </div>
                 </div>
               )}
@@ -263,7 +288,7 @@ export default function Commit() {
                       handleWatchVideoClick(2);
                     }}
                   >
-                    <Typography>How does this work?</Typography>
+                    <Typography style={{ cursor: 'pointer' }}>How does this work?</Typography>
                   </div>
                 </div>
               )}
@@ -412,8 +437,8 @@ export default function Commit() {
                   <div
                     className="flex justify-center"
                     style={{ direction: 'ltr', color: '#3B3B3B', fontSize: '16px', fontWeight: 'bold' }}>
-                    {"1 MATIC = "}
-                    {formatCurrency(!priceApi.isLoading && formatCurrency(maticPrice, "USD"))}
+                    {"(1 MATIC = "}
+                    {formatCurrency(!priceApi.isLoading && formatCurrency(maticPrice, "USD"))})
                   </div>
                </div>
                 <br />

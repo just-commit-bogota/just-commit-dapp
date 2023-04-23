@@ -148,7 +148,7 @@ export default function CommitCard({ ...props }) {
         <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px" }}>
           <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
             <div className="text-sm block">
-              {`<${props.phonePickups} daily avg pickups this week`}
+              {`< {phonePickups} daily avg pickups this week`}
             </div>
             <div className="flex space-x-2" style={{ whiteSpace: "nowrap" }}>
               <div className="span flex text-sm text-slate-400 gap-2 opacity-80" style={{ whiteSpace: "nowrap" }}>
@@ -312,15 +312,15 @@ export default function CommitCard({ ...props }) {
           </div>
 
           {/* FOOTER */}
-          <div className="flex flex-row text-xs pt-0 mb-1" style={{ justifyContent: "space-evenly" }}>
-            <div className="flex flex-col w-1/2 lg:w-1/2 min-h-min" style={{
+          <div className="flex flex-row text-xs" style={{ alignItems: "center", justifyContent: "space-evenly" }}>
+            <div className="flex flex-col w-1/2 min-h-min" style={{
               justifyContent: "space-between",
               borderLeft: "2px solid rgba(0, 0, 0, 0.18)",
               borderRight: "2px solid rgba(0, 0, 0, 0.18)",
               borderRadius: "6px",
             }}>
               <div className="flex flex-row" style={{ justifyContent: "space-between", marginBottom: 0 }}>
-                <b>&nbsp;Challenger </b>
+                <b>&nbsp;Challenger →</b>
                 {props.commitFrom === address
                   ? "Me"
                   : ensName || commitFrom.slice(0, 5) + '…' + commitFrom.slice(-4)}

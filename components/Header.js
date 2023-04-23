@@ -67,6 +67,15 @@ export default function Header({ currentPage }) {
                 // },
                 {
                   label:
+                    <a href="https://twitter.com/justcommit_"
+                      target="_blank" rel="noopener noreferrer">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      Twitter ↗
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </a>,
+                },
+                {
+                  label:
                     <a href="https://discord.gg/7863Wtv4hX"
                       target="_blank" rel="noopener noreferrer">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -125,6 +134,14 @@ export default function Header({ currentPage }) {
               >
                 FAQ ↗
               </a> */}
+              <a
+                href="https://twitter.com/justcommit_"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline-on-hover text-l"
+              >
+                Twitter ↗
+              </a>
               <a
                 href="https://discord.gg/7863Wtv4hX"
                 target="_blank"

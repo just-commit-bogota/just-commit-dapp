@@ -105,7 +105,7 @@ export default function CommitCardList({ cardList }) {
         {cardListToDisplay.length > 0 ? (
           <>
             {cardListToDisplay.map((card) => (
-              <CommitCard
+              <CommitCard       
                 key={card.id}
                 status={card.status}
                 id={card.id}
