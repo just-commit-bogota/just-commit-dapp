@@ -17,12 +17,6 @@ export default function CommitCard({ ...props }) {
 
   // variables
   const { address } = useAccount()
-  const CommitStatusEmoji = {
-    "Pending": "⚡", // picture not yet submitted
-    "Waiting": "⏳", // picture submitted and waiting
-    "Failure": "❌", // time expired or picture denied
-    "Success": "✅", // picture accepted :) 
-  }
   const generateImageName = () => `${props.id}-image.png`;
 
   // state
