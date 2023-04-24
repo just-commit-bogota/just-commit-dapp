@@ -175,7 +175,7 @@ export default function Commit() {
             legend={
               <div className="text-center justify-center align-center">
                 
-                <Heading className="mb-4" color="textSecondary" style={{ fontWeight: '700', fontSize: '40px' }}>
+                <Heading className="mb-4" color="textSecondary" style={{ fontWeight: '700', fontSize: '50px' }}>
                   Welcome!
                 </Heading>
                 {!showText && (
@@ -198,7 +198,7 @@ export default function Commit() {
                   </div>
                 )}
                 {showText && (
-                  <Typography className="-mb-6" variant="" weight="small" style={{ lineHeight: '1.4em', fontSize: '0.55em' }}>
+                  <Typography className="-mb-6" variant="" weight="small" style={{ lineHeight: '1.4em', fontSize: '0.6em' }}>
                     <br />
                     Just Commit is a 1-month challenge designed to
                     <br />
@@ -255,17 +255,17 @@ export default function Commit() {
 
             <div className="flex flex-col w-full gap-6 mt-0" style={{ direction: 'rtl' }}>
               <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
-                <div style={{ fontSize: '1.5em' }}>{videoWatched[0] ? '✅' : '→'}</div>
-                <div
-                  className="permanent-underline hover:scale-105"
-                  style={{ fontSize: '1.2em' }}
-                  onClick={() => {
-                    handleWatchVideoClick(0);
-                  }}
-                >
-                  <Typography style={{ cursor: 'pointer' }}>What is Just Commit?</Typography>
+                  <div style={{ fontSize: '1.5em' }}>{videoWatched[0] ? '✅' : '→'}</div>
+                  <div
+                    className="permanent-underline hover:scale-105"
+                    style={{ fontSize: '1.2em' }}
+                    onClick={() => {
+                      handleWatchVideoClick(0);
+                    }}
+                  >
+                    <Typography style={{ cursor: 'pointer' }}>Why am I here?</Typography>
+                  </div>
                 </div>
-              </div>
             
               {videoWatched[0] && (
                 <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
@@ -277,9 +277,10 @@ export default function Commit() {
                       handleWatchVideoClick(1);
                     }}
                   >
-                    <Typography style={{ cursor: 'pointer' }}>Why am I here?</Typography>
+                    <Typography style={{ cursor: 'pointer' }}>What is Just Commit?</Typography>
                   </div>
                 </div>
+                
               )}
               {videoWatched[1] && (
                 <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
@@ -433,54 +434,54 @@ export default function Commit() {
 
               {phonePickups &&
                 <div>
+                  <br />
+                  <div className="flex items-center gap-3 justify-center -mt-4 mb-5" style={{direction:"ltr"}}>
+                    <a
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-place="bottom"
+                      data-tooltip-content={`JC Services Rendered → ${justCommitServices} MATIC`}
+                    >
+                      <Tag
+                        style={{ background: '#1DD297' }}
+                        size="large"
+                      >
+                        <b style={{ color: 'white' }}>⚡</b>
+                      </Tag>
+                    </a>
+                    <a
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-place="bottom"
+                      data-tooltip-content={`Sent Back To You (Gas Fees) → ${gasCosts} MATIC`}
+                    >
+                      <Tag
+                        style={{ background: '#1DD297' }}
+                        size="large"
+                      >
+                        <b style={{ color: 'white' }}>⛽</b>
+                      </Tag>
+                    </a>
+                  </div>
+                  <br />
+                  <br />
                   <div
                    className="flex justify-center"
                    style={{ direction: 'ltr' }}
-                 >
+                  >
+                    <div
+                      className="flex justify-center"
+                      style={{ direction: 'ltr', color: '#3B3B3B', fontSize: '16px', fontWeight: 'bold' }}>
+                      {"(1 MATIC = "}
+                      {formatCurrency(!priceApi.isLoading && formatCurrency(maticPrice, "USD"))})
+                    </div>
+                 </div>
+                  <br />
+                  <br />
                   <div
-                    className="flex justify-center"
-                    style={{ direction: 'ltr', color: '#3B3B3B', fontSize: '16px', fontWeight: 'bold' }}>
-                    {"(1 MATIC = "}
-                    {formatCurrency(!priceApi.isLoading && formatCurrency(maticPrice, "USD"))})
+                    className="flex justify-center cursor-pointer"
+                    style={{ direction: 'ltr' }}
+                  >
+                    <ConnectButton className="" showBalance={true} accountStatus="none" />
                   </div>
-               </div>
-                <br />
-                <br />
-                <br />
-                <div className="flex items-center gap-3 justify-center -mt-4 mb-5" style={{direction:"ltr"}}>
-                  <a
-                    data-tooltip-id="my-tooltip"
-                    data-tooltip-place="bottom"
-                    data-tooltip-content={`JC Services Rendered → ${justCommitServices} MATIC`}
-                  >
-                    <Tag
-                      style={{ background: '#1DD297' }}
-                      size="large"
-                    >
-                      <b style={{ color: 'white' }}>⚡</b>
-                    </Tag>
-                  </a>
-                  <a
-                    data-tooltip-id="my-tooltip"
-                    data-tooltip-place="bottom"
-                    data-tooltip-content={`Sent Back To You (Gas Fees) → ${gasCosts} MATIC`}
-                  >
-                    <Tag
-                      style={{ background: '#1DD297' }}
-                      size="large"
-                    >
-                      <b style={{ color: 'white' }}>⛽</b>
-                    </Tag>
-                  </a>
-                </div>
-                <br />
-                <br />
-                <div
-                  className="flex justify-center cursor-pointer"
-                  style={{ direction: 'ltr' }}
-                >
-                  <ConnectButton className="" showBalance={true} accountStatus="none" />
-                </div>
                 </div>
               }
                
