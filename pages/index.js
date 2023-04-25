@@ -30,10 +30,10 @@ export default function Commit() {
   const CHALLENGE_COST = '10'
   const justCommitServices = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.09) : (CHALLENGE_COST * 0.09).toFixed(1);
   const gasCosts = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.01) : (CHALLENGE_COST * 0.01).toFixed(1);
-  
+
   const commitTo = CONTRACT_OWNER
   const commitJudge = CONTRACT_OWNER
-  
+
   // state
   const [commitAmount, setCommitAmount] = useState(CHALLENGE_COST) // TODO refactor this
   const [loadingState, setLoadingState] = useState('loading')
@@ -61,7 +61,7 @@ export default function Commit() {
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
     onSettled() {
-      { wait }
+      wait();
     },
     onError: (err) => {
       const regex = /code=(.*?),/;
@@ -74,18 +74,19 @@ export default function Commit() {
   })
   const { wait, isLoading: isWaitLoading } = useWaitForTransaction({
     hash: commitWriteData?.hash,
-    onSettled() {
+    asynconSettled() {
       setHasCommited(true)
+      await handleSaveCommitment(userEmail);
     },
   })
 
   const isCommitButtonEnabled = () => {
     return videoWatched.every(v => v) &&
-           Boolean(address) && 
-           walletMaticBalance > parseFloat(CHALLENGE_COST) &&
-           phonePickups > 0;
+      Boolean(address) &&
+      walletMaticBalance > parseFloat(CHALLENGE_COST) &&
+      phonePickups > 0;
   };
-  
+
 
   // functions
   function formatCurrency(number, currency = null) {
@@ -93,14 +94,14 @@ export default function Commit() {
       maximumFractionDigits: 2,
       minimumFractionDigits: 0,
     };
-  
+
     if (currency) {
       options.style = 'currency';
       options.currency = currency;
     } else {
       options.style = 'decimal';
     }
-  
+
     return number.toLocaleString('en-US', options);
   }
 
@@ -114,6 +115,26 @@ export default function Commit() {
     }
   }
 
+  const handleSaveCommitment = async (userEmail) => {
+    try {
+      const response = await fetch('/api/save_commitment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: userEmail, address: address }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to store commitment in Supabase');
+      } else {
+        console.log('Commitment saved successfully');
+      }
+    } catch (error) {
+      console.error('Failed to store commitment in Supabase');
+    }
+  };
+
   // commit logic related
   const closeModal = () => {
     setShowVideoEmbed(false);
@@ -126,10 +147,10 @@ export default function Commit() {
   ];
   const handleWatchVideoClick = (index) => {
     const videoLink = videoLinks[index];
-  
+
     setShowVideoEmbed(!showVideoEmbed);
     setVideoEmbedUrl(videoLink);
-  
+
     const newVideoWatched = [...videoWatched];
     newVideoWatched[index] = true;
     setVideoWatched(newVideoWatched);
@@ -176,7 +197,7 @@ export default function Commit() {
           <FieldSet
             legend={
               <div className="text-center justify-center align-center">
-                
+
                 <Heading className="mb-4" color="textSecondary" style={{ fontWeight: '700', fontSize: '50px' }}>
                   Welcome!
                 </Heading>
@@ -204,11 +225,11 @@ export default function Commit() {
                     <br />
                     Just Commit is a 1-month challenge designed to
                     <br />
-                    help you remove all of the unintentional                 
+                    help you remove all of the unintentional
                     <br />
                     phone pickups from your day.
                   </Typography>
-               )}
+                )}
                 <br />
                 <br />
                 <Typography
@@ -257,18 +278,18 @@ export default function Commit() {
 
             <div className="flex flex-col w-full gap-6 mt-0" style={{ direction: 'rtl' }}>
               <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
-                  <div style={{ fontSize: '1.5em' }}>{videoWatched[0] ? '✅' : '→'}</div>
-                  <div
-                    className="permanent-underline hover:scale-105"
-                    style={{ fontSize: '1.2em' }}
-                    onClick={() => {
-                      handleWatchVideoClick(0);
-                    }}
-                  >
-                    <Typography style={{ cursor: 'pointer' }}>Why am I here?</Typography>
-                  </div>
+                <div style={{ fontSize: '1.5em' }}>{videoWatched[0] ? '✅' : '→'}</div>
+                <div
+                  className="permanent-underline hover:scale-105"
+                  style={{ fontSize: '1.2em' }}
+                  onClick={() => {
+                    handleWatchVideoClick(0);
+                  }}
+                >
+                  <Typography style={{ cursor: 'pointer' }}>Why am I here?</Typography>
                 </div>
-            
+              </div>
+
               {videoWatched[0] && (
                 <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
                   <div style={{ fontSize: '1.5em' }}>{videoWatched[1] ? '✅' : '→'}</div>
@@ -282,7 +303,7 @@ export default function Commit() {
                     <Typography style={{ cursor: 'pointer' }}>What is Just Commit?</Typography>
                   </div>
                 </div>
-                
+
               )}
               {videoWatched[1] && (
                 <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
@@ -300,7 +321,7 @@ export default function Commit() {
               )}
 
               {videoWatched[2] &&
-                <div className="mt-2 mb-2 text-sm" style={{direction:"ltr"}}> 
+                <div className="mt-2 mb-2 text-sm" style={{ direction: "ltr" }}>
                   <Input
                     label="Avg # of Phone Pickups Last Week"
                     placeholder="100"
@@ -346,14 +367,14 @@ export default function Commit() {
                           </tr>
                         </thead>
                         <br></br>
-                        <tbody style={{ lineHeight: '25px'}}>
+                        <tbody style={{ lineHeight: '25px' }}>
                           <tr>
                             <td className="text-center">1</td>
                             <td className="text-center">
-                              {phonePickups === null 
+                              {phonePickups === null
                                 ? <span>? <span className="text-xs"><b>(↓10%)</b></span></span>
                                 : <><span>{"< " + Math.floor(phonePickups * 0.9)}</span> <span className="text-xs"><b>(↓10%)</b></span></>
-                              }                            
+                              }
                             </td>
                             <td className="flex flex-row justify-center items-center">
                               <div className="flex flex-col">
@@ -365,10 +386,10 @@ export default function Commit() {
                           <tr>
                             <td className="text-center">2</td>
                             <td className="text-center">
-                              {phonePickups === null 
+                              {phonePickups === null
                                 ? <span>? <span className="text-xs justify-end"><b>(↓20%)</b></span></span>
                                 : <><span>{"< " + Math.floor(phonePickups * 0.9 * 0.8)}</span> <span className="text-xs"><b>(↓20%)</b></span></>
-                              }                            
+                              }
                             </td>
                             <td className="flex flex-row justify-center items-center">
                               <div className="flex flex-col">
@@ -380,10 +401,10 @@ export default function Commit() {
                           <tr>
                             <td className="text-center">3</td>
                             <td className="text-center">
-                              {phonePickups === null 
+                              {phonePickups === null
                                 ? <span>? <span className="text-xs justify-end"><b>(↓20%)</b></span></span>
                                 : <><span>{"< " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8)}</span> <span className="text-xs"><b>(↓20%)</b></span></>
-                              }                            
+                              }
                             </td>
                             <td className="flex flex-row justify-center items-center">
                               <div className="flex flex-col">
@@ -395,10 +416,10 @@ export default function Commit() {
                           <tr>
                             <td className="text-center">4</td>
                             <td className="text-center">
-                              {phonePickups === null 
+                              {phonePickups === null
                                 ? <span>? <span className="text-xs justify-end"><b>(↓40%)</b></span></span>
                                 : <><span>{"< " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8 * 0.6)}</span> <span className="text-xs"><b>(↓40%)</b></span></>
-                              }                            
+                              }
                             </td>
                             <td className="flex flex-row justify-center items-center">
                               <div className="flex flex-col">
@@ -413,9 +434,9 @@ export default function Commit() {
                   }
                 </div>
               }
-              
+
               {showVideoEmbed && (
-               <LoomModal closeModal={closeModal} videoEmbedUrl={videoEmbedUrl} />
+                <LoomModal closeModal={closeModal} videoEmbedUrl={videoEmbedUrl} />
               )}
               {/* <Checkbox
                 label={
@@ -438,7 +459,7 @@ export default function Commit() {
                 <div>
                   <br />
                   <br />
-                  <div className="flex items-center gap-3 justify-center -mt-4 mb-5" style={{direction:"ltr"}}>
+                  <div className="flex items-center gap-3 justify-center -mt-4 mb-5" style={{ direction: "ltr" }}>
                     <a
                       data-tooltip-id="my-tooltip"
                       data-tooltip-place="top"
@@ -465,8 +486,8 @@ export default function Commit() {
                     </a>
                   </div>
                   <div
-                   className="flex justify-center"
-                   style={{ direction: 'ltr' }}
+                    className="flex justify-center"
+                    style={{ direction: 'ltr' }}
                   >
                     <div
                       className="flex justify-center"
@@ -474,7 +495,7 @@ export default function Commit() {
                       {"(1 MATIC = "}
                       {formatCurrency(!priceApi.isLoading && formatCurrency(maticPrice, "USD"))})
                     </div>
-                 </div>
+                  </div>
                   <br />
                   <div
                     className="flex justify-center cursor-pointer"
@@ -510,7 +531,7 @@ export default function Commit() {
                 />
               </div>
             )}
-            {!((isWriteLoading || isWaitLoading) && !hasCommitted) && (
+            {isCommitButtonEnabled() && (!((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
               <ButtonThorin
                 style={{
                   width: "90%",
@@ -600,7 +621,7 @@ export default function Commit() {
             commitJudge: {commitJudge}
             <br></br>
             commitTo: {commitTo} */}
-            
+
             {/* <br></br>
             <br></br>
             maticPrice * commitAmount: {typeof(maticPrice * commitAmount)}

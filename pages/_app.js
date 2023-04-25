@@ -52,6 +52,7 @@ const App = ({ Component, pageProps }) => {
           >
             <GlobalServices>
               <Component {...pageProps} />
+              <Analytics />
             </GlobalServices>
           </RainbowKitProvider>
         </WagmiConfig>
