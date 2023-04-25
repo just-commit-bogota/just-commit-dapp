@@ -44,7 +44,7 @@ export default function Commit() {
   const [videoEmbedUrl, setVideoEmbedUrl] = useState(null);
   const [phonePickups, setPhonePickups] = useState(null);
   const [showText, setShowText] = useState(false);
-  const [userEmail, setUserEmail] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -489,59 +489,49 @@ export default function Commit() {
             </div>
 
             {/* Commit Button */}
-            {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) &&
-            isCommitButtonEnabled() && (
-              <>
-                <div
-                  className="flex justify-center text-sm"
-                  style={{ direction: 'ltr' }}
-                >
-                  <Input
-                    label="Your Email (Optional)"
-                    placeholder="daniel@belfort.com"
-                    {/* error={
-                      userEmail.match(/^[a-zA-Z0-9\s\.,!?<>]*$/) ? : 'Alphanumeric Only'
-                    } */}
-                    onChange={(e) => setUserEmail(e.target.value)}
-                    labelSecondary={
-                      <a
-                        data-tooltip-id="my-tooltip"
-                        data-tooltip-content="🔔 For a weekly submission reminder"
-                        data-tooltip-place="top"
-                      >
-                        <Tag
-                          className=""
-                          style={{ background: '#1DD297' }}
-                          size="large"
-                        >
-                          <b style={{ color: 'white' }}>?</b>
-                        </Tag>
-                      </a>
-                    }
-                  />
-                </div>
-                <ButtonThorin
-                  style={{
-                    width: '90%',
-                    height: '2.8rem',
-                    marginTop: '2rem',
-                    marginBottom: '0rem',
-                    backgroundColor: isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
-                    borderRadius: 12,
-                    color: "white",
-                    transition: "transform 0.2s ease-in-out",
-                  }}
-                  size="small"
-                  shadowless
-                  type="submit"
-                  suffix={"(" + commitAmount + " MATIC) "}
-                  // suffix= {"(" + formatCurrency(100, "USD") + ")"} // {!priceApi.isLoading && "(" + formatCurrency(maticPrice * commitAmount, "USD") + ")"}
-                  disabled={!isCommitButtonEnabled()}
-                  onClick={commitWrite}
-                >
-                  Commit
-                </ButtonThorin>
-              </>
+            {isCommitButtonEnabled() && (
+              <div className="flex justify-center text-sm" style={{ direction: "ltr" }}>
+                <Input
+                  label="Your Email (Optional)"
+                  placeholder="daniel@belfort.com"
+                  // error={ userEmail && !userEmail.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/) ? ' ' : '' }
+                  onChange={(e) => setUserEmail(e.target.value)}
+                  labelSecondary={
+                    <a
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content="🔔 For a weekly submission reminder"
+                      data-tooltip-place="top"
+                    >
+                      <Tag className="" style={{ background: "#1DD297" }} size="large">
+                        <b style={{ color: "white" }}>?</b>
+                      </Tag>
+                    </a>
+                  }
+                />
+              </div>
+            )}
+            {!((isWriteLoading || isWaitLoading) && !hasCommitted) && (
+              <ButtonThorin
+                style={{
+                  width: "90%",
+                  height: "2.8rem",
+                  marginTop: "2rem",
+                  marginBottom: "0rem",
+                  backgroundColor: isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
+                  borderRadius: 12,
+                  color: "white",
+                  transition: "transform 0.2s ease-in-out",
+                }}
+                size="small"
+                shadowless
+                type="submit"
+                suffix={"(" + commitAmount + " MATIC) "}
+                // suffix= {"(" + formatCurrency(100, "USD") + ")"} // {!priceApi.isLoading && "(" + formatCurrency(maticPrice * commitAmount, "USD") + ")"}
+                disabled={!isCommitButtonEnabled()}
+                onClick={commitWrite}
+              >
+                Commit
+              </ButtonThorin>
             )}
 
             <Toaster toastOptions={{ duration: 2000 }} />
