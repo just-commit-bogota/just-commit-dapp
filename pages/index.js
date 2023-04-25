@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react'
 import Head from 'next/head'
 import useFetch from '../hooks/fetch'
 import { ethers } from 'ethers'
-import { Tag, Heading, FieldSet, Typography, Checkbox, Input, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Heading, FieldSet, Typography, Input, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip';
@@ -44,6 +44,7 @@ export default function Commit() {
   const [videoEmbedUrl, setVideoEmbedUrl] = useState(null);
   const [phonePickups, setPhonePickups] = useState(null);
   const [showText, setShowText] = useState(false);
+  const [userEmail, setUserEmail] = useState(false);
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -299,9 +300,9 @@ export default function Commit() {
               )}
 
               {videoWatched[2] &&
-                <div className="mt-2 mb-2" style={{direction:"ltr"}}> 
+                <div className="mt-2 mb-2 text-sm" style={{direction:"ltr"}}> 
                   <Input
-                    label="Avg Phone Pickups Last Week"
+                    label="Avg # of Phone Pickups Last Week"
                     placeholder="100"
                     min={1}
                     maxLength={3}
@@ -436,10 +437,11 @@ export default function Commit() {
               {phonePickups &&
                 <div>
                   <br />
+                  <br />
                   <div className="flex items-center gap-3 justify-center -mt-4 mb-5" style={{direction:"ltr"}}>
                     <a
                       data-tooltip-id="my-tooltip"
-                      data-tooltip-place="bottom"
+                      data-tooltip-place="top"
                       data-tooltip-content={`JC Services Rendered → ${justCommitServices} MATIC`}
                     >
                       <Tag
@@ -451,7 +453,7 @@ export default function Commit() {
                     </a>
                     <a
                       data-tooltip-id="my-tooltip"
-                      data-tooltip-place="bottom"
+                      data-tooltip-place="top"
                       data-tooltip-content={`Sent Back To You (Gas Fees) → ${gasCosts} MATIC`}
                     >
                       <Tag
@@ -462,8 +464,6 @@ export default function Commit() {
                       </Tag>
                     </a>
                   </div>
-                  <br />
-                  <br />
                   <div
                    className="flex justify-center"
                    style={{ direction: 'ltr' }}
@@ -476,42 +476,72 @@ export default function Commit() {
                     </div>
                  </div>
                   <br />
-                  <br />
                   <div
                     className="flex justify-center cursor-pointer"
                     style={{ direction: 'ltr' }}
                   >
                     <ConnectButton className="" showBalance={true} accountStatus="none" />
                   </div>
+                  <br />
+                  <br />
                 </div>
               }
-               
             </div>
 
             {/* Commit Button */}
             {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) &&
             isCommitButtonEnabled() && (
-              <ButtonThorin
-                style={{
-                  width: '90%',
-                  height: '2.8rem',
-                  marginTop: '2rem',
-                  marginBottom: '0rem',
-                  backgroundColor: isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
-                  borderRadius: 12,
-                  color: "white",
-                  transition: "transform 0.2s ease-in-out",
-                }}
-                size="small"
-                shadowless
-                type="submit"
-                suffix={"(" + commitAmount + " MATIC) "}
-                // suffix= {"(" + formatCurrency(100, "USD") + ")"} // {!priceApi.isLoading && "(" + formatCurrency(maticPrice * commitAmount, "USD") + ")"}
-                disabled={!isCommitButtonEnabled()}
-                onClick={commitWrite}
-              >
-                Commit
-              </ButtonThorin>
+              <>
+                <div
+                  className="flex justify-center text-sm"
+                  style={{ direction: 'ltr' }}
+                >
+                  <Input
+                    label="Your Email (Optional)"
+                    placeholder="daniel@belfort.com"
+                    {/* error={
+                      userEmail.match(/^[a-zA-Z0-9\s\.,!?<>]*$/) ? : 'Alphanumeric Only'
+                    } */}
+                    onChange={(e) => setUserEmail(e.target.value)}
+                    labelSecondary={
+                      <a
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content="🔔 For a weekly submission reminder"
+                        data-tooltip-place="top"
+                      >
+                        <Tag
+                          className=""
+                          style={{ background: '#1DD297' }}
+                          size="large"
+                        >
+                          <b style={{ color: 'white' }}>?</b>
+                        </Tag>
+                      </a>
+                    }
+                  />
+                </div>
+                <ButtonThorin
+                  style={{
+                    width: '90%',
+                    height: '2.8rem',
+                    marginTop: '2rem',
+                    marginBottom: '0rem',
+                    backgroundColor: isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
+                    borderRadius: 12,
+                    color: "white",
+                    transition: "transform 0.2s ease-in-out",
+                  }}
+                  size="small"
+                  shadowless
+                  type="submit"
+                  suffix={"(" + commitAmount + " MATIC) "}
+                  // suffix= {"(" + formatCurrency(100, "USD") + ")"} // {!priceApi.isLoading && "(" + formatCurrency(maticPrice * commitAmount, "USD") + ")"}
+                  disabled={!isCommitButtonEnabled()}
+                  onClick={commitWrite}
+                >
+                  Commit
+                </ButtonThorin>
+              </>
             )}
 
             <Toaster toastOptions={{ duration: 2000 }} />
