@@ -1,14 +1,13 @@
+import { useState, useEffect, useContext } from 'react'
 import Head from 'next/head'
 import Header from "../components/Header.js"
-import { Link } from 'react-router-dom';
 import CommitCardList from "../components/CommitCardList.js"
-import { Placeholders } from "../components/Placeholders.js"
 import { Tag } from '@ensdomains/thorin'
-import { useState, useEffect } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useProvider, useNetwork } from 'wagmi'
 import { ethers } from 'ethers'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
+import PhonePickupsContext from '../services/PhonePickupsContext.js'
 
 export default function Home() {
 
@@ -16,7 +15,7 @@ export default function Home() {
   const { address: connectedAddress } = useAccount()
   const { chain, chains } = useNetwork()
   const provider = useProvider()
-
+  const { phonePickups, setPhonePickups } = useContext(PhonePickupsContext);
   // state
   const [allCommits, setAllCommits] = useState([])
 

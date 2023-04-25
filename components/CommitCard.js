@@ -1,5 +1,5 @@
+import React, { useState, useContext } from 'react'
 import { FileInput, Tag, Button as ButtonThorin } from '@ensdomains/thorin'
-import React, { useState, useEffect } from 'react'
 import classNames from 'classnames'
 import { useAccount, useEnsName } from 'wagmi'
 import 'react-tooltip/dist/react-tooltip.css'
@@ -13,10 +13,12 @@ import Image from 'next/image'
 import toast, { Toaster } from 'react-hot-toast'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 import supabase from '../lib/db'
+import PhonePickupsContext from '../services/PhonePickupsContext.js'
 
 export default function CommitCard({ ...props }) {
 
   // variables
+  const { phonePickups, setPhonePickups } = useContext(PhonePickupsContext);
   const { getItem, setItem, removeItem } = useStorage()
   const { address } = useAccount()
   const CommitStatusEmoji = {
