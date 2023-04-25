@@ -13,7 +13,7 @@ import { Placeholders } from "../components/Placeholders.js";
 import LoomModal from "../components/LoomModal.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { PopupButton } from '@typeform/embed-react'
+// import { PopupButton } from '@typeform/embed-react'
 
 export default function Commit() {
 

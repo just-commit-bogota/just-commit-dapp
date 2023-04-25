@@ -105,16 +105,16 @@ export default function CommitCard({ ...props }) {
         setUploadClicked(false);
         return
       }
-      // if there's > 1 day left in the commitment
-      if ((props.endsAt - Date.now()) > (24 * 60 * 60 * 1000)) {
-        toast.error("Wait until countdown is < 1 day", { duration: 4000 })
-        const { error } = await supabase.storage.from('images').remove(generateImageName(), file)
-        if (error) {
-          console.error(error)
-        }
-        setUploadClicked(false);
-        return
-      }
+      // // if there's > 1 day left in the commitment
+      // if ((props.endsAt - Date.now()) > (24 * 60 * 60 * 1000)) {
+      //   toast.error("Wait until countdown is < 1 day", { duration: 4000 })
+      //   const { error } = await supabase.storage.from('images').remove(generateImageName(), file)
+      //   if (error) {
+      //     console.error(error)
+      //   }
+      //   setUploadClicked(false);
+      //   return
+      // }
       else {
         setTriggerProveContractFunctions(true)
       }
@@ -280,7 +280,7 @@ export default function CommitCard({ ...props }) {
 
                   {/* "to verify" buttons */}
 
-                  {props.commitJudge.includes(address) && props.judgeDeadline > Date.now() && !props.isCommitJudged && (
+                  {props.commitJudge == address && props.judgeDeadline > Date.now() && !props.isCommitJudged && (
                     <div>
                       <div className="flex flex-row gap-5 p-5" style={{ justifyContent: "space-between", marginBottom: "-30px" }}>
                         {
@@ -335,7 +335,7 @@ export default function CommitCard({ ...props }) {
                 <b>&nbsp;Challenger →</b>
                 {props.commitFrom === address
                   ? "Me"
-                  : ensName || commitFrom.slice(0, 5) + '…' + commitFrom.slice(-4)}
+                  : ensName || props.commitFrom.slice(0, 5) + '…' + props.commitFrom.slice(-4)}
                 &nbsp;
               </div>
             </div>

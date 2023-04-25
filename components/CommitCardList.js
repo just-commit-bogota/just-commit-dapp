@@ -69,7 +69,7 @@ export default function CommitCardList({ cardList }) {
       <div className="flex justify-center gap-2 lg:gap-16 text-small mt-4 mb-10">
        <ul className="flex flex-row continent_nav">
         {filters.map(f =>
-          (f !== "Verify" || (f === "Verify" && connectedAddress?.toUpperCase() === CONTRACT_OWNER.toUpperCase())) && (
+          // HYDRATION ERROR (f !== "Verify" || (f === "Verify" && connectedAddress?.toUpperCase() === CONTRACT_OWNER.toUpperCase())) && (
             <li key={f} id={f} title={f} className="filterOption"
               style={{
                 position: "relative",
@@ -96,7 +96,7 @@ export default function CommitCardList({ cardList }) {
                 </Tag>
               }
             </li>
-          )
+          // HYDRATION ERROR )
         )}
       </ul>
       </div>
