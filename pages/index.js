@@ -44,7 +44,7 @@ export default function Commit() {
   const [videoEmbedUrl, setVideoEmbedUrl] = useState(null);
   const [phonePickups, setPhonePickups] = useState(null);
   const [showText, setShowText] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
+  const [userEmail, setUserEmail] = useState("null@null.com");
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -61,7 +61,7 @@ export default function Commit() {
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
     onSettled() {
-      wait();
+      { wait }
     },
     onError: (err) => {
       const regex = /code=(.*?),/;
@@ -74,12 +74,12 @@ export default function Commit() {
   })
   const { wait, isLoading: isWaitLoading } = useWaitForTransaction({
     hash: commitWriteData?.hash,
-    asynconSettled() {
+    async onSettled() {
       setHasCommited(true)
       await handleSaveCommitment(userEmail);
     },
   })
-
+  
   const isCommitButtonEnabled = () => {
     return videoWatched.every(v => v) &&
       Boolean(address) &&
@@ -89,6 +89,26 @@ export default function Commit() {
 
 
   // functions
+  const handleSaveCommitment = async (email) => {
+    try {
+      const response = await fetch('/api/save_commitment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email, address: address }),
+      });
+  
+      if (!response.ok) {
+        console.error('Failed to store commitment in Supabase');
+      } else {
+        console.log('Commitment saved successfully');
+      }
+    } catch (error) {
+      console.error('Failed to store commitment in Supabase');
+    }
+  };
+  
   function formatCurrency(number, currency = null) {
     const options = {
       maximumFractionDigits: 2,
@@ -114,26 +134,6 @@ export default function Commit() {
       return null;
     }
   }
-
-  const handleSaveCommitment = async (userEmail) => {
-    try {
-      const response = await fetch('/api/save_commitment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: userEmail, address: address }),
-      });
-
-      if (!response.ok) {
-        console.error('Failed to store commitment in Supabase');
-      } else {
-        console.log('Commitment saved successfully');
-      }
-    } catch (error) {
-      console.error('Failed to store commitment in Supabase');
-    }
-  };
 
   // commit logic related
   const closeModal = () => {
@@ -510,49 +510,51 @@ export default function Commit() {
             </div>
 
             {/* Commit Button */}
-            {isCommitButtonEnabled() && (
-              <div className="flex justify-center text-sm" style={{ direction: "ltr" }}>
-                <Input
-                  label="Your Email (Optional)"
-                  placeholder="daniel@belfort.com"
-                  // error={ userEmail && !userEmail.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/) ? ' ' : '' }
-                  onChange={(e) => setUserEmail(e.target.value)}
-                  labelSecondary={
-                    <a
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content="🔔 For a weekly submission reminder"
-                      data-tooltip-place="top"
-                    >
-                      <Tag className="" style={{ background: "#1DD297" }} size="large">
-                        <b style={{ color: "white" }}>?</b>
-                      </Tag>
-                    </a>
-                  }
-                />
-              </div>
-            )}
-            {isCommitButtonEnabled() && (!((isWriteLoading || isWaitLoading)) && !hasCommitted) && (
-              <ButtonThorin
-                style={{
-                  width: "90%",
-                  height: "2.8rem",
-                  marginTop: "2rem",
-                  marginBottom: "0rem",
-                  backgroundColor: isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
-                  borderRadius: 12,
-                  color: "white",
-                  transition: "transform 0.2s ease-in-out",
-                }}
-                size="small"
-                shadowless
-                type="submit"
-                suffix={"(" + commitAmount + " MATIC) "}
-                // suffix= {"(" + formatCurrency(100, "USD") + ")"} // {!priceApi.isLoading && "(" + formatCurrency(maticPrice * commitAmount, "USD") + ")"}
-                disabled={!isCommitButtonEnabled()}
-                onClick={commitWrite}
-              >
-                Commit
-              </ButtonThorin>
+           {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) &&
+            isCommitButtonEnabled() && (
+              <>
+                <div className="flex justify-center text-sm" style={{ direction: "ltr" }}>
+                  <Input
+                    label="Your Email (Optional)"
+                    placeholder="daniel@belfort.com"
+                    // error={ userEmail && !userEmail.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/) ? ' ' : '' }
+                    onChange={(e) => setUserEmail(e.target.value)}
+                    labelSecondary={
+                      <a
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content="🔔 To get weekly submission reminders"
+                        data-tooltip-place="top"
+                      >
+                        <Tag className="" style={{ background: "#1DD297" }} size="large">
+                          <b style={{ color: "white" }}>?</b>
+                        </Tag>
+                      </a>
+                    }
+                  />
+                </div>
+              
+                <ButtonThorin
+                  style={{
+                    width: "90%",
+                    height: "2.8rem",
+                    marginTop: "2rem",
+                    marginBottom: "0rem",
+                    backgroundColor: isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
+                    borderRadius: 12,
+                    color: "white",
+                    transition: "transform 0.2s ease-in-out",
+                  }}
+                  size="small"
+                  shadowless
+                  type="submit"
+                  suffix={"(" + commitAmount + " MATIC) "}
+                  // suffix= {"(" + formatCurrency(100, "USD") + ")"} // {!priceApi.isLoading && "(" + formatCurrency(maticPrice * commitAmount, "USD") + ")"}
+                  disabled={!isCommitButtonEnabled()}
+                  onClick={commitWrite}
+                >
+                  Commit
+                </ButtonThorin>
+              </>
             )}
 
             <Toaster toastOptions={{ duration: 2000 }} />
@@ -615,6 +617,8 @@ export default function Commit() {
             <br></br>
             block.timestamp * 1000: {Math.floor(Date.now() / 1000) * 1000}
             <br></br>*/}
+
+            userEmail: {userEmail}
 
             {/* commitAmount: {commitAmount}
             <br></br>
