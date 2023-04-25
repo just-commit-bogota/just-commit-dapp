@@ -1,6 +1,6 @@
+import { useState, useEffect, useContext } from 'react'
 import Head from 'next/head'
 import useFetch from '../hooks/fetch'
-import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 import { Tag, Heading, FieldSet, Typography, Checkbox, Input, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
@@ -13,6 +13,7 @@ import { Placeholders } from "../components/Placeholders.js";
 import LoomModal from "../components/LoomModal.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 import { ConnectButton } from '@rainbow-me/rainbowkit'
+import PhonePickupsContext from '../services/PhonePickupsContext.js'
 // import { PopupButton } from '@typeform/embed-react'
 
 export default function Commit() {
