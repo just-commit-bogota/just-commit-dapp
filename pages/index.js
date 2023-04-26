@@ -514,7 +514,7 @@ export default function Commit() {
                 <div
                   className="flex justify-center"
                   style={{ direction: 'ltr', color: '#D0312D', fontSize: '16px', fontWeight: 'bold' }}>
-                     {CHALLENGE_COST} MATIC to Commit
+                   {'>'}  {CHALLENGE_COST} MATIC to Commit
                 </div>
                 <br />
                 <br />
