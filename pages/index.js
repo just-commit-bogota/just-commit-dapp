@@ -141,7 +141,7 @@ export default function Commit() {
   const videoLinks = [
     'https://www.youtube.com/embed/L6b4sJRDy3w',
     'https://www.youtube.com/embed/qeHRI4J5Ub8',
-    'https://www.youtube.com/embed/',
+    'https://www.youtube.com/embed/gIO6UMtTn4g',
     'https://www.youtube.com/embed/GVWcFyZGuzU',
   ];
   const handleWatchVideoClick = (index) => {
