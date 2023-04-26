@@ -26,7 +26,7 @@ export default function Commit() {
   }, [])
 
   // challenge cost
-  const CHALLENGE_COST = '10'
+  const CHALLENGE_COST = '100'
   const justCommitServices = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.09) : (CHALLENGE_COST * 0.09).toFixed(1);
   const gasCosts = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.01) : (CHALLENGE_COST * 0.01).toFixed(1);
 
