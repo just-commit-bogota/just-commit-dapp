@@ -208,7 +208,22 @@ export default function CommitCard({ ...props }) {
                       const shouldLock = (props.endsAt - Date.now()) > (24 * 60 * 60 * 1000);
                 
                       if (shouldLock) {
-                        return <span className="text-2xl">&nbsp;🔒&nbsp;</span>;
+                        return (
+                          <>
+                            <a
+                              data-tooltip-id="my-tooltip"
+                              data-tooltip-place="top"
+                              data-tooltip-content="Unlocks 1d before submission"
+                            >
+                             <Tag
+                                style={{ background: '#ffffff' }}
+                                size="large"
+                              >
+                                <span className="text-2xl z-[9999]">&nbsp;🔒&nbsp;</span>
+                              </Tag>
+                            </a>
+                          </>
+                        );
                       } else {
                         return (
                           <FileInput maxSize={20} onChange={(file) => uploadFile(file)}>
