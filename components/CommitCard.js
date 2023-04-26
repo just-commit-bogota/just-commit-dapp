@@ -203,7 +203,7 @@ export default function CommitCard({ ...props }) {
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
                   <div className="flex">
                     {(() => {
-                      const shouldLock = (props.endsAt - Date.now()) > (9999 * 60 * 60 * 1000); // change to 168 for testing
+                      const shouldLock = (props.endsAt - Date.now()) > (24 * 60 * 60 * 1000); // change to 168 for testing
                 
                       if (shouldLock) {
                         return (
