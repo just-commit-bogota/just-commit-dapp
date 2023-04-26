@@ -12,6 +12,7 @@ const Countdown = ({ status, endsAt, judgeDeadline }) => {
 
       if (timeRemaining < 0) {
         setCountdown('Time is up!');
+        window.location.reload();
         return;
       }
 
