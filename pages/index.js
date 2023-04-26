@@ -13,7 +13,6 @@ import { Placeholders } from "../components/Placeholders.js";
 import LoomModal from "../components/LoomModal.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-import PhonePickupsContext from '../services/PhonePickupsContext.js'
 // import { PopupButton } from '@typeform/embed-react'
 
 export default function Commit() {
@@ -44,7 +43,7 @@ export default function Commit() {
   const [videoEmbedUrl, setVideoEmbedUrl] = useState(null);
   const [showText, setShowText] = useState(false);
   const [userEmail, setUserEmail] = useState("null@null.com");
-  const [phonePickups, setPhonePickups] = useState("");
+  const [phonePickups, setPhonePickups] = useState(null);
 
   // smart contract data
   const { chain } = useNetwork()

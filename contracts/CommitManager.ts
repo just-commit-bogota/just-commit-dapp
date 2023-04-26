@@ -1,11 +1,52 @@
 //export const CONTRACT_ADDRESS = "0x6c8D0186Ad5E23a1f1deDBED84038d65e0784AE0" // APP
 //export const CONTRACT_ADDRESS = "0x896A90d26A1aB04dE23f4F96250aa30e319680a8" // BETA
-export const CONTRACT_ADDRESS = "0x16d5a475b15Cc79F402347481a5B6D1b3E7fbb20" // DEV
+export const CONTRACT_ADDRESS = "0xED51a75f990b219Fd59aBd1264AC5184A6815E1F" // DEV
 
 export const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
 export const ABI =
 [
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "commitTo",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "commitJudge",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "phonePickups",
+				"type": "uint256"
+			}
+		],
+		"name": "createCommit",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "commitId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "_isApproved",
+				"type": "bool"
+			}
+		],
+		"name": "judgeCommit",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
 	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
@@ -54,6 +95,12 @@ export const ABI =
 				"indexed": false,
 				"internalType": "uint256",
 				"name": "judgeDeadline",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "phonePickups",
 				"type": "uint256"
 			},
 			{
@@ -162,19 +209,39 @@ export const ABI =
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "commitTo",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "commitId",
+				"type": "uint256"
 			},
 			{
+				"internalType": "string",
+				"name": "_filename",
+				"type": "string"
+			}
+		],
+		"name": "proveCommit",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
-				"name": "commitJudge",
+				"name": "newOwner",
 				"type": "address"
 			}
 		],
-		"name": "createCommit",
+		"name": "transferOwnership",
 		"outputs": [],
-		"stateMutability": "payable",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -216,6 +283,11 @@ export const ABI =
 					{
 						"internalType": "uint256",
 						"name": "judgeDeadline",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "phonePickups",
 						"type": "uint256"
 					},
 					{
@@ -266,24 +338,6 @@ export const ABI =
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "commitId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bool",
-				"name": "_isApproved",
-				"type": "bool"
-			}
-		],
-		"name": "judgeCommit",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "owner",
 		"outputs": [
@@ -295,43 +349,5 @@ export const ABI =
 		],
 		"stateMutability": "view",
 		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "commitId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_filename",
-				"type": "string"
-			}
-		],
-		"name": "proveCommit",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
 	}
-]as const
+] as const

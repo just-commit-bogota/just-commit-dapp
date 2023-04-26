@@ -39,6 +39,7 @@ export default function Home() {
             commitFrom: commit.commitFrom,
             commitTo: commit.commitTo,
             commitJudge: commit.commitJudge,
+            phonePickups: commit.phonePickups,
             createdAt: commit.createdAt.toNumber(),
             endsAt: commit.endsAt.toNumber(),
             judgeDeadline: commit.judgeDeadline.toNumber(),
