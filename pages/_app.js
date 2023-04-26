@@ -1,5 +1,6 @@
 import "../styles/globals.css";
 import "@rainbow-me/rainbowkit/styles.css";
+import { Analytics } from "@vercel/analytics/react";
 import {
   getDefaultWallets,
   RainbowKitProvider,
@@ -58,6 +59,7 @@ const App = ({ Component, pageProps }) => {
           >
             <GlobalServices>
               <Component {...pageProps} />
+              <Analytics />
             </GlobalServices>
           </RainbowKitProvider>
         </WagmiConfig>
