@@ -455,7 +455,7 @@ export default function Commit() {
                 onClick={() => toast.error("Complete the Typeform")}
               /> */}
 
-              {phonePickups &&
+              {phonePickups && videoWatched[1] && videoWatched[2] &&
                 <div>
                   <br />
                   <br />

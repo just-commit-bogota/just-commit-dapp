@@ -96,7 +96,6 @@ export default function CommitCardList({ cardList }) {
                 </Tag>
               }
             </li>
-          // HYDRATION ERROR )
         )}
       </ul>
       </div>
