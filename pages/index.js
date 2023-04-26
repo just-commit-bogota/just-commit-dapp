@@ -44,6 +44,7 @@ export default function Commit() {
   const [videoEmbedUrl, setVideoEmbedUrl] = useState(null);
   const [showText, setShowText] = useState(false);
   const [userEmail, setUserEmail] = useState("null@null.com");
+  const { phonePickups, setPhonePickups } = useContext(PhonePickupsContext);
 
   // smart contract data
   const { chain } = useNetwork()
@@ -509,8 +510,22 @@ export default function Commit() {
               }
             </div>
 
-            {/* Commit Button */}
+            {phonePickups &&
+            (!(walletMaticBalance > parseFloat(CHALLENGE_COST))) && 
+              <>
+                <div
+                  className="flex justify-center"
+                  style={{ direction: 'ltr', color: '#D0312D', fontSize: '16px', fontWeight: 'bold' }}>
+                    > {CHALLENGE_COST} MATIC to Commit
+                </div>
+                <br />
+                <br />
+              </>
+            }
+
+           {/* Commit Button */}
            {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) &&
+            (walletMaticBalance > parseFloat(CHALLENGE_COST)) &&
             isCommitButtonEnabled() && (
               <>
                 <div className="flex justify-center text-sm hover:cursor-pointer" style={{ direction: "ltr" }}>
