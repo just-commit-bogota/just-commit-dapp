@@ -350,4 +350,4 @@ export const ABI =[
 		"type": "function"
 	}
 
-]as const
+] as const
