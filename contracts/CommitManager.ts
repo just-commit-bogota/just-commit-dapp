@@ -1,10 +1,10 @@
-export const CONTRACT_ADDRESS = "0x40b128974c80D46f5878bB0B21A62Eb1294942C6" // APP
+//export const CONTRACT_ADDRESS = "0x41d6dd7f19E33a375Dd6752faF67E6865963F608" // APP
 //export const CONTRACT_ADDRESS = "0x896A90d26A1aB04dE23f4F96250aa30e319680a8" // BETA
-//export const CONTRACT_ADDRESS = "0x6a420F6d09B3fdA9EFa056Db7ce741c2A5B66224" // DEV
+export const CONTRACT_ADDRESS = "0xE094557Fd0a226c189A6E2Be0AE046d4899cF3E2" // DEV
 
 export const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
-export const ABI = [
+export const ABI =[
 	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
@@ -33,9 +33,9 @@ export const ABI = [
 			},
 			{
 				"indexed": true,
-				"internalType": "address[]",
+				"internalType": "address",
 				"name": "commitJudge",
-				"type": "address[]"
+				"type": "address"
 			},
 			{
 				"indexed": false,
@@ -58,14 +58,14 @@ export const ABI = [
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "stakeAmount",
+				"name": "phonePickups",
 				"type": "uint256"
 			},
 			{
 				"indexed": false,
-				"internalType": "string",
-				"name": "message",
-				"type": "string"
+				"internalType": "uint256",
+				"name": "stakeAmount",
+				"type": "uint256"
 			},
 			{
 				"indexed": false,
@@ -89,12 +89,6 @@ export const ABI = [
 				"indexed": false,
 				"internalType": "bool",
 				"name": "isApproved",
-				"type": "bool"
-			},
-			{
-				"indexed": false,
-				"internalType": "bool",
-				"name": "isSolo",
 				"type": "bool"
 			}
 		],
@@ -173,29 +167,19 @@ export const ABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "string",
-				"name": "_message",
-				"type": "string"
-			},
-			{
 				"internalType": "address",
 				"name": "commitTo",
 				"type": "address"
 			},
 			{
-				"internalType": "address[]",
+				"internalType": "address",
 				"name": "commitJudge",
-				"type": "address[]"
+				"type": "address"
 			},
 			{
 				"internalType": "uint256",
-				"name": "endsAt",
+				"name": "phonePickups",
 				"type": "uint256"
-			},
-			{
-				"internalType": "bool",
-				"name": "isSolo",
-				"type": "bool"
 			}
 		],
 		"name": "createCommit",
@@ -225,9 +209,9 @@ export const ABI = [
 						"type": "address"
 					},
 					{
-						"internalType": "address[]",
+						"internalType": "address",
 						"name": "commitJudge",
-						"type": "address[]"
+						"type": "address"
 					},
 					{
 						"internalType": "uint256",
@@ -246,13 +230,13 @@ export const ABI = [
 					},
 					{
 						"internalType": "uint256",
-						"name": "stakeAmount",
+						"name": "phonePickups",
 						"type": "uint256"
 					},
 					{
-						"internalType": "string",
-						"name": "message",
-						"type": "string"
+						"internalType": "uint256",
+						"name": "stakeAmount",
+						"type": "uint256"
 					},
 					{
 						"internalType": "string",
@@ -272,11 +256,6 @@ export const ABI = [
 					{
 						"internalType": "bool",
 						"name": "isApproved",
-						"type": "bool"
-					},
-					{
-						"internalType": "bool",
-						"name": "isSolo",
 						"type": "bool"
 					}
 				],
@@ -370,4 +349,4 @@ export const ABI = [
 		"stateMutability": "nonpayable",
 		"type": "function"
 	}
-] as const
+]as const
