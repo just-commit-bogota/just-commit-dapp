@@ -11,7 +11,7 @@ import PullToRefresh from 'react-simple-pull-to-refresh';
 import { GlobalServices } from "../services/globalService";
 
 const { chains, provider } = configureChains(
-  // [chain.polygon, chain.mainnet], // for ENS reverse resolve
+  // [chain.polygon, chain.mainnet], // to ENS reverse resolve
 
   //[chain.polygon], // APP or BETA
   [chain.polygonMumbai], // DEV
