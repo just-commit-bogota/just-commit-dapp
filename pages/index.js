@@ -509,7 +509,19 @@ export default function Commit() {
               }
             </div>
 
-            {/* Commit Button */}
+            {(walletMaticBalance > parseFloat(CHALLENGE_COST)) && 
+              <>
+                <div
+                  className="flex justify-center"
+                  style={{ direction: 'ltr', color: '#D0312D', fontSize: '16px', fontWeight: 'bold' }}>
+                    > {CHALLENGE_COST} MATIC to Commit
+                </div>
+                <br />
+                <br />
+              </>
+            }
+
+           {/* Commit Button */}
            {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) &&
             isCommitButtonEnabled() && (
               <>
