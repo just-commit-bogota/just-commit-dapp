@@ -459,11 +459,11 @@ export default function Commit() {
                 <div>
                   <br />
                   <br />
-                  <div className="flex items-center gap-3 justify-center -mt-4 mb-5" style={{ direction: "ltr" }}>
+                  <div className="flex items-center gap-3 justify-center -mt-4 mb-5 hover:cursor-pointer" style={{ direction: "ltr" }}>
                     <a
                       data-tooltip-id="my-tooltip"
                       data-tooltip-place="top"
-                      data-tooltip-content={`JC Services Rendered → ${justCommitServices} MATIC`}
+                      data-tooltip-content={`+ JC Services Rendered: ${justCommitServices} MATIC`}
                     >
                       <Tag
                         style={{ background: '#1DD297' }}
@@ -475,7 +475,7 @@ export default function Commit() {
                     <a
                       data-tooltip-id="my-tooltip"
                       data-tooltip-place="top"
-                      data-tooltip-content={`Sent Back To You (Gas Fees) → ${gasCosts} MATIC`}
+                      data-tooltip-content={`+ Gas Fees (Sent Back To You): ${gasCosts} MATIC`}
                     >
                       <Tag
                         style={{ background: '#1DD297' }}
@@ -513,7 +513,7 @@ export default function Commit() {
            {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) &&
             isCommitButtonEnabled() && (
               <>
-                <div className="flex justify-center text-sm" style={{ direction: "ltr" }}>
+                <div className="flex justify-center text-sm hover:cursor-pointer" style={{ direction: "ltr" }}>
                   <Input
                     label="Your Email (Optional)"
                     placeholder="daniel@belfort.com"
@@ -585,7 +585,7 @@ export default function Commit() {
                         localStorage.setItem("selectedFilter", "Active");
                       }}
                     >
-                      Commitment
+                      View Commitment
                     </ButtonThorin>
                   </div>
                 </div>
@@ -618,7 +618,7 @@ export default function Commit() {
             block.timestamp * 1000: {Math.floor(Date.now() / 1000) * 1000}
             <br></br>*/}
 
-            userEmail: {userEmail}
+            {/* userEmail: {userEmail} */}
 
             {/* commitAmount: {commitAmount}
             <br></br>
