@@ -45,12 +45,10 @@ export default function Commit() {
   const [showText, setShowText] = useState(false);
   const [userEmail, setUserEmail] = useState("null@null.com");
   const { phonePickups, setPhonePickups } = useContext(PhonePickupsContext);
-
   // smart contract data
   const { chain } = useNetwork()
   const { address } = useAccount()
   const provider = useProvider()
-  const { phonePickups, setPhonePickups } = useContext(PhonePickupsContext);
 
   // smart contract functions
   const { config: createCommitConfig } = usePrepareContractWrite({
@@ -516,7 +514,7 @@ export default function Commit() {
                 <div
                   className="flex justify-center"
                   style={{ direction: 'ltr', color: '#D0312D', fontSize: '16px', fontWeight: 'bold' }}>
-                    > {CHALLENGE_COST} MATIC to Commit
+                   {'>'}  {CHALLENGE_COST} MATIC to Commit
                 </div>
                 <br />
                 <br />
