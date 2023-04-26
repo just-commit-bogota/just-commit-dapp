@@ -204,40 +204,65 @@ export default function CommitCard({ ...props }) {
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
                   <div className="flex">
-                    <FileInput maxSize={20} onChange={(file) => uploadFile(file)}>
-                      {(context) =>
-                        (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ? (
-                          <div className="flex flex-col" style={{ alignItems: "center" }}>
-                            <Spinner />
-                            <div className="heartbeat text-xs">(Don&#39;t Refresh)</div>
-                          </div>
-                        ) : context.name && triggerProveContractFunctions ? (
-                          <div>
+                    {(() => {
+                      const shouldLock = (props.endsAt - Date.now()) > (24 * 60 * 60 * 1000);
+                
+                      if (shouldLock) {
+                        return (
+                          <>
                             <a
-                              className="text-4xl hover:cursor-pointer"
-                              href="#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                location.reload();
-                              }}
+                              data-tooltip-id="my-tooltip"
+                              data-tooltip-place="top"
+                              data-tooltip-content="Unlocks 1d before submission"
                             >
-                              &nbsp;🔁&nbsp;
+                             <Tag
+                                style={{ background: '#ffffff' }}
+                                size="large"
+                              >
+                                <span className="text-2xl z-[9999]">&nbsp;🔒&nbsp;</span>
+                              </Tag>
                             </a>
-                          </div>
-                        ) : 
-                          <div>
-                            <Tag
-                              className="text-2xl hover:cursor-pointer"
-                              tone="accent"
-                              variation="primary"
-                              size="large"
-                            >
-                              &nbsp;📷&nbsp;
-                            </Tag>
-                          </div>
+                          </>
+                        );
+                      } else {
+                        return (
+                          <FileInput maxSize={20} onChange={(file) => uploadFile(file)}>
+                            {(context) =>
+                              (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ? (
+                                <div className="flex flex-col" style={{ alignItems: "center" }}>
+                                  <Spinner />
+                                  <div className="heartbeat text-xs">(Don&#39;t Refresh)</div>
+                                </div>
+                              ) : context.name && triggerProveContractFunctions ? (
+                                <div>
+                                  <a
+                                    className="text-4xl hover:cursor-pointer"
+                                    href="#"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      location.reload();
+                                    }}
+                                  >
+                                    &nbsp;🔁&nbsp;
+                                  </a>
+                                </div>
+                              ) : (
+                                <div>
+                                  <Tag
+                                    className="text-2xl hover:cursor-pointer"
+                                    tone="accent"
+                                    variation="primary"
+                                    size="large"
+                                  >
+                                    &nbsp;📷&nbsp;
+                                  </Tag>
+                                </div>
+                              )
+                            }
+                          </FileInput>
+                        );
                       }
-                    </FileInput>
-
+                    })()}
                   </div>
                 </div>
               </>

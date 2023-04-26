@@ -1,6 +1,8 @@
 import { Dropdown } from '@ensdomains/thorin'
 import { useState, useEffect } from "react";
 import Link from 'next/link'
+import { CONTRACT_ADDRESS } from '../contracts/CommitManager.ts';
+import { useNetwork } from 'wagmi'
 
 const useWindowWidth = () => {
   const [isDesktop, setIsDesktop] = useState(false);
@@ -24,8 +26,21 @@ const useWindowWidth = () => {
 };
 
 export default function Header({ currentPage }) {
+  const { chain } = useNetwork();
   const isDesktop = useWindowWidth();
   var dropdownLabel = <img src="./logo.svg" />
+
+  const getLabelWithLink = (chain) => {
+    return (
+      <a
+        href={`https://${chain?.id === 80001 ? 'mumbai.' : ''}polygonscan.com/address/${CONTRACT_ADDRESS}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+       <span style={{ fontSize: '1.5em', marginLeft: '60px', marginRight: '60px' }}>📜</span>
+      </a>
+    );
+  };
 
   return (
     <>
@@ -83,6 +98,9 @@ export default function Header({ currentPage }) {
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </a>,
                 },
+                {
+                  label: getLabelWithLink(chain),
+                }          
               ]}
             />
           </div>
@@ -150,6 +168,10 @@ export default function Header({ currentPage }) {
               >
                 Discord ↗
               </a>
+              <a href={`https://${chain?.id === 80001 ? 'mumbai.' : ''}polygonscan.com/address/${CONTRACT_ADDRESS}`}
+                target="_blank" rel="noopener noreferrer">
+                <span style={{ fontSize: '1.5em' }}>📜</span>
+              </a> 
             </div>
             <Link href="/home">
               <a className="">
