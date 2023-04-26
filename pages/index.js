@@ -140,10 +140,10 @@ export default function Commit() {
     setShowVideoEmbed(false);
   };
   const videoLinks = [
-    'https://www.youtube.com/embed/Tx9zMFodNtA',
-    'https://www.youtube.com/embed/vqhDkP-Je3E',
-    'https://www.youtube.com/embed/e7VveWeRwUU',
-    'https://www.youtube.com/embed/SW6L_lTrIFg',
+    'https://www.youtube.com/embed/L6b4sJRDy3w',
+    'https://www.youtube.com/embed/qeHRI4J5Ub8',
+    'https://www.youtube.com/embed/',
+    'https://www.youtube.com/embed/GVWcFyZGuzU',
   ];
   const handleWatchVideoClick = (index) => {
     const videoLink = videoLinks[index];
