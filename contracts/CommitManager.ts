@@ -349,4 +349,5 @@ export const ABI =[
 		"stateMutability": "nonpayable",
 		"type": "function"
 	}
+
 ]as const
