@@ -45,8 +45,8 @@ export default function CommitCardList({ cardList }) {
       const element = document.getElementById(savedFilter);
       element.classList.add("active");
     } else {
-      setSelectedFilter("Feed");
-      const element = document.getElementById("Feed");
+      setSelectedFilter("Active");
+      const element = document.getElementById("Active");
       element.classList.add("active");
     }
   }, [])
@@ -68,36 +68,53 @@ export default function CommitCardList({ cardList }) {
     <>
       <div className="flex justify-center gap-2 lg:gap-16 text-small mt-4 mb-10">
        <ul className="flex flex-row continent_nav">
-        {filters.map(f =>
-          // HYDRATION ERROR (f !== "Verify" || (f === "Verify" && connectedAddress?.toUpperCase() === CONTRACT_OWNER.toUpperCase())) && (
-            <li key={f} id={f} title={f} className="filterOption"
-              style={{
-                position: "relative",
-                borderColor: (f == "Active" || f == "Waiting" || f == "Verify") ?
-                  "rgba(18, 74, 56, .5)" : "rgba(36, 41, 46, 0.8)",
-                borderWidth: "2px",
-                cursor: "pointer"
-              }}>
-              <a onClick={() => onFilterClick(f)}>{f}</a>
-              {/* Counter Badge */}
-              {["Active", "Waiting", "Verify"].includes(f) && filterCounts.find(filterCount => filterCount.filter === f)?.count > 0 &&
-                <Tag
-                  className="hover:cursor-pointer"
-                  size="small"
+          {
+            filters
+              .filter((f) => f !== "My History" && f !== "Feed")
+              .map((f) => (
+                <li
+                  key={f}
+                  id={f}
+                  title={f}
+                  className="filterOption"
                   style={{
-                    position: "absolute",
-                    top: "-10px",
-                    right: "-8px",
-                    color: "rgba(255, 255, 255, 1)",
-                    backgroundColor: f == "Waiting" ? "rgba(255, 201, 67, 1)" : "rgba(255, 90, 90, 1)"
+                    position: "relative",
+                    borderColor:
+                      f == "Active" || f == "Waiting" || f == "Verify"
+                        ? "rgba(18, 74, 56, .5)"
+                        : "rgba(36, 41, 46, 0.8)",
+                    borderWidth: "2px",
+                    cursor: "pointer",
                   }}
                 >
-                  {filterCounts.find(filterCount => filterCount.filter === f).count}
-                </Tag>
-              }
-            </li>
-        )}
-      </ul>
+                  <a onClick={() => onFilterClick(f)}>{f}</a>
+                  {["Active", "Waiting", "Verify"].includes(f) &&
+                    filterCounts.find((filterCount) => filterCount.filter === f)
+                      ?.count > 0 && (
+                      <Tag
+                        className="hover:cursor-pointer"
+                        size="small"
+                        style={{
+                          position: "absolute",
+                          top: "-10px",
+                          right: "-8px",
+                          color: "rgba(255, 255, 255, 1)",
+                          backgroundColor:
+                            f == "Waiting"
+                              ? "rgba(255, 201, 67, 1)"
+                              : "rgba(255, 90, 90, 1)",
+                        }}
+                      >
+                        {
+                          filterCounts.find((filterCount) => filterCount.filter === f)
+                            .count
+                        }
+                      </Tag>
+                    )}
+                </li>
+              )) // Remove the extra semicolon here
+          }
+        </ul>
       </div>
 
       <div className="w-full">

@@ -12,12 +12,11 @@ import Image from 'next/image'
 import toast, { Toaster } from 'react-hot-toast'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 import supabase from '../lib/db'
-import PhonePickupsContext from '../services/PhonePickupsContext.js'
 
 export default function CommitCard({ ...props }) {
 
   // variables
-  const { phonePickups } = useContext(PhonePickupsContext);
+  const { phonePickups, setPhonePickups } = useContext(PhonePickupsContext);
   const { address } = useAccount()
   const generateImageName = () => `${props.id}-image.png`;
 
@@ -162,7 +161,7 @@ export default function CommitCard({ ...props }) {
         <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px" }}>
           <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
             <div className="text-sm block">
-              {`<${phonePickups} daily avg pickups this week`}
+              {`< ${phonePickups} daily avg pickups this week`}
             </div>
             <div className="flex space-x-2" style={{ whiteSpace: "nowrap" }}>
               <div className="span flex text-sm text-slate-400 gap-2 opacity-80" style={{ whiteSpace: "nowrap" }}>

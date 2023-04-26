@@ -8,7 +8,6 @@ import { publicProvider } from 'wagmi/providers/public'
 import { ThemeProvider } from 'styled-components'
 import { ThorinGlobalStyles, lightTheme as lightThemeENS } from '@ensdomains/thorin'
 import PullToRefresh from 'react-simple-pull-to-refresh';
-import { GlobalServices } from "../services/globalService";
 
 const { chains, provider } = configureChains(
   // [chain.polygon, chain.mainnet], // to ENS reverse resolve
@@ -50,10 +49,8 @@ const App = ({ Component, pageProps }) => {
               accentColor: "#1DD297",
             })}
           >
-            <GlobalServices>
-              <Component {...pageProps} />
-              <Analytics />
-            </GlobalServices>
+            <Component {...pageProps} />
+            <Analytics />
           </RainbowKitProvider>
         </WagmiConfig>
       </ThemeProvider>
