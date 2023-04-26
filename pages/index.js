@@ -372,7 +372,7 @@ export default function Commit() {
                             <td className="text-center">
                               {phonePickups === null
                                 ? <span>? <span className="text-xs"><b>(↓10%)</b></span></span>
-                                : <><span>{"< " + Math.floor(phonePickups * 0.9)}</span> <span className="text-xs"><b>(↓10%)</b></span></>
+                                : <><span>{"&lt; " + Math.floor(phonePickups * 0.9)}</span> <span className="text-xs"><b>(↓10%)</b></span></>
                               }
                             </td>
                             <td className="flex flex-row justify-center items-center">
@@ -387,7 +387,7 @@ export default function Commit() {
                             <td className="text-center">
                               {phonePickups === null
                                 ? <span>? <span className="text-xs justify-end"><b>(↓20%)</b></span></span>
-                                : <><span>{"< " + Math.floor(phonePickups * 0.9 * 0.8)}</span> <span className="text-xs"><b>(↓20%)</b></span></>
+                                : <><span>{"&lt; " + Math.floor(phonePickups * 0.9 * 0.8)}</span> <span className="text-xs"><b>(↓20%)</b></span></>
                               }
                             </td>
                             <td className="flex flex-row justify-center items-center">
@@ -402,7 +402,7 @@ export default function Commit() {
                             <td className="text-center">
                               {phonePickups === null
                                 ? <span>? <span className="text-xs justify-end"><b>(↓20%)</b></span></span>
-                                : <><span>{"< " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8)}</span> <span className="text-xs"><b>(↓20%)</b></span></>
+                                : <><span>{"&lt; " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8)}</span> <span className="text-xs"><b>(↓20%)</b></span></>
                               }
                             </td>
                             <td className="flex flex-row justify-center items-center">
@@ -417,7 +417,7 @@ export default function Commit() {
                             <td className="text-center">
                               {phonePickups === null
                                 ? <span>? <span className="text-xs justify-end"><b>(↓40%)</b></span></span>
-                                : <><span>{"< " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8 * 0.6)}</span> <span className="text-xs"><b>(↓40%)</b></span></>
+                                : <><span>{"&lt; " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8 * 0.6)}</span> <span className="text-xs"><b>(↓40%)</b></span></>
                               }
                             </td>
                             <td className="flex flex-row justify-center items-center">
