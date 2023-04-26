@@ -4,8 +4,7 @@ import { ethers } from 'ethers'
 import { useAccount } from 'wagmi'
 import { Tag, Typography } from '@ensdomains/thorin'
 import { useStorage } from '../hooks/useStorage.ts'
-
-// TODO - is the commitJudge.includes() logic done right?
+import { CONTRACT_OWNER } from '../contracts/CommitManager.ts';
 
 export default function CommitCardList({ cardList }) {
   // state
@@ -14,13 +13,13 @@ export default function CommitCardList({ cardList }) {
 
   // variables
   const { getItem, setItem, removeItem } = useStorage()
-  const filters = ["Feed", "History", "Active", "Waiting", "Verify"]
+  const filters = ["Active", "Waiting", "Verify", "My History", "Feed"]
   const cardListToDisplay =
     // Feed: Failure or Success
     selectedFilter == "Feed" ?
       cardList.filter(c => (c.status == "Failure" || c.status == "Success")) :
-      // History: connectedAddress is commitFrom and Failure or Success
-      selectedFilter == "History" ?
+      // My History: connectedAddress is commitFrom and Failure or Success
+      selectedFilter == "My History" ?
         cardList.filter(c => (c.commitFrom == connectedAddress &&
           (c.status == "Failure" || c.status == "Success"))) :
         // Verify: connectedAddress includes commitJudge and Waiting
@@ -68,13 +67,14 @@ export default function CommitCardList({ cardList }) {
   return (
     <>
       <div className="flex justify-center gap-2 lg:gap-16 text-small mt-4 mb-10">
-        <ul className="flex flex-row continent_nav">
-          {filters.map(f =>
+       <ul className="flex flex-row continent_nav">
+        {filters.map(f =>
+          // HYDRATION ERROR (f !== "Verify" || (f === "Verify" && connectedAddress?.toUpperCase() === CONTRACT_OWNER.toUpperCase())) && (
             <li key={f} id={f} title={f} className="filterOption"
               style={{
                 position: "relative",
                 borderColor: (f == "Active" || f == "Waiting" || f == "Verify") ?
-                  "rgba(18, 74, 56, .5)" : "rgba(53, 72, 98, 1)",
+                  "rgba(18, 74, 56, .5)" : "rgba(36, 41, 46, 0.8)",
                 borderWidth: "2px",
                 cursor: "pointer"
               }}>
@@ -96,32 +96,29 @@ export default function CommitCardList({ cardList }) {
                 </Tag>
               }
             </li>
-          )}
-        </ul>
+        )}
+      </ul>
       </div>
 
       <div className="w-full">
         {cardListToDisplay.length > 0 ? (
           <>
-            {cardListToDisplay.map((card, index) => (
-              <CommitCard
-                key={index}
-                
+            {cardListToDisplay.map((card) => (
+              <CommitCard       
+                key={card.id}
                 status={card.status}
-      
                 id={card.id}
                 commitFrom={card.commitFrom}
                 commitJudge={card.commitJudge}
                 createdAt={card.createdAt}
                 endsAt={card.endsAt}
                 judgeDeadline={card.judgeDeadline}
+                phonePickups={card.phonePickups}
                 stakeAmount={ethers.utils.formatEther(card.stakeAmount)}
-                message={card.message}
                 filename={card.filename}
                 isCommitProved={card.isCommitProved}
                 isCommitJudged={card.isCommitJudged}
                 isApproved={card.isApproved}
-                isSolo={card.isSolo}
               />
             )).reverse()}
           </>
