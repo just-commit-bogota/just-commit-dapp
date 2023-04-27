@@ -75,7 +75,7 @@ export default function Commit() {
     hash: commitWriteData?.hash,
     async onSettled() {
       setHasCommited(true)
-      await handleSaveCommitment(userEmail, chainId);
+      await handleSaveCommitment(userEmail, chain);
     },
   })
   
@@ -88,8 +88,8 @@ export default function Commit() {
 
 
   // functions
-  const handleSaveCommitment = async (email, chainId) => {
-    if (chainId !== 137) {
+  const handleSaveCommitment = async (email, chain) => {
+    if (chain?.id !== 137) {
       console.log("Not Polygon mainnet, skipping Supabase write.");
       return;
     }
