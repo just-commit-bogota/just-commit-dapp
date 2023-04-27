@@ -123,6 +123,7 @@ export default function Home() {
       }
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
