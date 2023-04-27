@@ -13,7 +13,6 @@ import { Placeholders } from "../components/Placeholders.js";
 import LoomModal from "../components/LoomModal.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-import PhonePickupsContext from '../services/PhonePickupsContext.js'
 // import { PopupButton } from '@typeform/embed-react'
 
 export default function Commit() {
@@ -27,7 +26,7 @@ export default function Commit() {
   }, [])
 
   // challenge cost
-  const CHALLENGE_COST = '10'
+  const CHALLENGE_COST = '100'
   const justCommitServices = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.09) : (CHALLENGE_COST * 0.09).toFixed(1);
   const gasCosts = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.01) : (CHALLENGE_COST * 0.01).toFixed(1);
 
@@ -44,7 +43,7 @@ export default function Commit() {
   const [videoEmbedUrl, setVideoEmbedUrl] = useState(null);
   const [showText, setShowText] = useState(false);
   const [userEmail, setUserEmail] = useState("null@null.com");
-  const { phonePickups, setPhonePickups } = useContext(PhonePickupsContext);
+  const [phonePickups, setPhonePickups] = useState(null);
 
   // smart contract data
   const { chain } = useNetwork()
@@ -56,7 +55,7 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitTo, commitJudge, { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
+    args: [commitTo, commitJudge, phonePickups, { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
@@ -140,10 +139,10 @@ export default function Commit() {
     setShowVideoEmbed(false);
   };
   const videoLinks = [
-    'https://www.youtube.com/embed/Tx9zMFodNtA',
-    'https://www.youtube.com/embed/vqhDkP-Je3E',
-    'https://www.youtube.com/embed/e7VveWeRwUU',
-    'https://www.youtube.com/embed/SW6L_lTrIFg',
+    'https://www.youtube.com/embed/L6b4sJRDy3w',
+    'https://www.youtube.com/embed/qeHRI4J5Ub8',
+    'https://www.youtube.com/embed/gIO6UMtTn4g',
+    'https://www.youtube.com/embed/GVWcFyZGuzU',
   ];
   const handleWatchVideoClick = (index) => {
     const videoLink = videoLinks[index];
@@ -373,7 +372,7 @@ export default function Commit() {
                             <td className="text-center">
                               {phonePickups === null
                                 ? <span>? <span className="text-xs"><b>(↓10%)</b></span></span>
-                                : <><span>{"< " + Math.floor(phonePickups * 0.9)}</span> <span className="text-xs"><b>(↓10%)</b></span></>
+                                : <><span>&lt; {Math.floor(phonePickups * 0.9)}</span> <span className="text-xs"><b>(↓10%)</b></span></>
                               }
                             </td>
                             <td className="flex flex-row justify-center items-center">
@@ -388,7 +387,7 @@ export default function Commit() {
                             <td className="text-center">
                               {phonePickups === null
                                 ? <span>? <span className="text-xs justify-end"><b>(↓20%)</b></span></span>
-                                : <><span>{"< " + Math.floor(phonePickups * 0.9 * 0.8)}</span> <span className="text-xs"><b>(↓20%)</b></span></>
+                                : <><span>&lt; {Math.floor(phonePickups * 0.9 * 0.8)}</span> <span className="text-xs"><b>(↓20%)</b></span></>
                               }
                             </td>
                             <td className="flex flex-row justify-center items-center">
@@ -403,7 +402,7 @@ export default function Commit() {
                             <td className="text-center">
                               {phonePickups === null
                                 ? <span>? <span className="text-xs justify-end"><b>(↓20%)</b></span></span>
-                                : <><span>{"< " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8)}</span> <span className="text-xs"><b>(↓20%)</b></span></>
+                                : <><span>&lt; {Math.floor(phonePickups * 0.9 * 0.8 * 0.8)}</span> <span className="text-xs"><b>(↓20%)</b></span></>
                               }
                             </td>
                             <td className="flex flex-row justify-center items-center">
@@ -418,7 +417,7 @@ export default function Commit() {
                             <td className="text-center">
                               {phonePickups === null
                                 ? <span>? <span className="text-xs justify-end"><b>(↓40%)</b></span></span>
-                                : <><span>{"< " + Math.floor(phonePickups * 0.9 * 0.8 * 0.8 * 0.6)}</span> <span className="text-xs"><b>(↓40%)</b></span></>
+                                : <><span>&lt;  {Math.floor(phonePickups * 0.9 * 0.8 * 0.8 * 0.6)}</span> <span className="text-xs"><b>(↓40%)</b></span></>
                               }
                             </td>
                             <td className="flex flex-row justify-center items-center">
@@ -455,7 +454,7 @@ export default function Commit() {
                 onClick={() => toast.error("Complete the Typeform")}
               /> */}
 
-              {phonePickups &&
+              {phonePickups && videoWatched[1] && videoWatched[2] &&
                 <div>
                   <br />
                   <br />
@@ -515,7 +514,7 @@ export default function Commit() {
                 <div
                   className="flex justify-center"
                   style={{ direction: 'ltr', color: '#D0312D', fontSize: '16px', fontWeight: 'bold' }}>
-                    > {CHALLENGE_COST} MATIC to Commit
+                    &gt; {CHALLENGE_COST} MATIC to Commit
                 </div>
                 <br />
                 <br />

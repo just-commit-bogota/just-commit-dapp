@@ -12,12 +12,10 @@ import Image from 'next/image'
 import toast, { Toaster } from 'react-hot-toast'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 import supabase from '../lib/db'
-import PhonePickupsContext from '../services/PhonePickupsContext.js'
 
 export default function CommitCard({ ...props }) {
 
   // variables
-  const { phonePickups } = useContext(PhonePickupsContext);
   const { address } = useAccount()
   const generateImageName = () => `${props.id}-image.png`;
 
@@ -162,7 +160,7 @@ export default function CommitCard({ ...props }) {
         <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px" }}>
           <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
             <div className="text-sm block">
-              {`< ${phonePickups} daily avg pickups this week`}
+              <span>&lt;</span> {`${parseInt(props.phonePickups)} daily avg pickups this week`}
             </div>
             <div className="flex space-x-2" style={{ whiteSpace: "nowrap" }}>
               <div className="span flex text-sm text-slate-400 gap-2 opacity-80" style={{ whiteSpace: "nowrap" }}>
@@ -205,7 +203,7 @@ export default function CommitCard({ ...props }) {
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
                   <div className="flex">
                     {(() => {
-                      const shouldLock = (props.endsAt - Date.now()) > (24 * 60 * 60 * 1000);
+                      const shouldLock = (props.endsAt - Date.now()) > (24 * 60 * 60 * 1000); // change for testing
                 
                       if (shouldLock) {
                         return (
@@ -219,7 +217,7 @@ export default function CommitCard({ ...props }) {
                                 style={{ background: '#ffffff' }}
                                 size="large"
                               >
-                                <span className="text-2xl z-[9999]">&nbsp;🔒&nbsp;</span>
+                                <span className="text-2xl">&nbsp;🔒&nbsp;</span>
                               </Tag>
                             </a>
                           </>

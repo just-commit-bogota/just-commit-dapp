@@ -96,7 +96,6 @@ export default function CommitCardList({ cardList }) {
                 </Tag>
               }
             </li>
-          // HYDRATION ERROR )
         )}
       </ul>
       </div>
@@ -114,6 +113,7 @@ export default function CommitCardList({ cardList }) {
                 createdAt={card.createdAt}
                 endsAt={card.endsAt}
                 judgeDeadline={card.judgeDeadline}
+                phonePickups={card.phonePickups}
                 stakeAmount={ethers.utils.formatEther(card.stakeAmount)}
                 filename={card.filename}
                 isCommitProved={card.isCommitProved}
