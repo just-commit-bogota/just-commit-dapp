@@ -1,21 +1,22 @@
-import Head from 'next/head'
-import Header from "../components/Header.js"
-import CommitCardList from "../components/CommitCardList.js"
-import { Tag } from '@ensdomains/thorin'
-import { useState, useEffect } from 'react'
-import toast, { Toaster } from 'react-hot-toast'
-import { useAccount, useProvider, useNetwork } from 'wagmi'
-import { ethers } from 'ethers'
-import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
+import Head from "next/head";
+import Header from "../components/Header.js";
+import CommitCardList from "../components/CommitCardList.js";
+import { Tag } from "@ensdomains/thorin";
+import { useState, useEffect } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import { useAccount, useProvider } from "wagmi";
+import { ethers } from "ethers";
+import { CONTRACT_ADDRESS, ABI } from "../contracts/CommitManager.ts";
+import Skeleton from "react-loading-skeleton";
 
 export default function Home() {
-
   // variables
-  const { address: connectedAddress } = useAccount()
-  const provider = useProvider()
+  const { address: connectedAddress } = useAccount();
+  const provider = useProvider();
 
   // state
-  const [allCommits, setAllCommits] = useState([])
+  const [allCommits, setAllCommits] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // getter for all of the contract commits (always listening)
   const getAllCommits = async () => {
@@ -23,14 +24,18 @@ export default function Home() {
     try {
       const { ethereum } = window;
       if (ethereum) {
-        const commitPortal = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
+        const commitPortal = new ethers.Contract(
+          CONTRACT_ADDRESS,
+          ABI,
+          provider
+        );
         const commits = await commitPortal.getAllCommits();
         if (!commits) {
-          return
+          return;
         }
         // classify each commit
         let commitsClassified = [];
-        commits.forEach(commit => {
+        commits.forEach((commit) => {
           commitsClassified.push({
             // front-end
             status: determineStatus(commit),
@@ -51,46 +56,51 @@ export default function Home() {
           });
         });
         setAllCommits(commitsClassified);
-
         // on each new commit: change the allCommits state
-        commitPortal.on("NewCommit", (
-          id,
-          commitFrom,
-          commitTo,
-          commitJudge,
-          createdAt,
-          endsAt,
-          judgeDeadline,
-          phonePickups,
-          stakeAmount,
-          filename,
-          isCommitProved,
-          isCommitJudged,
-          isApproved,
-        ) => {
-          setAllCommits(prevState => [...prevState, {
-            status: "Pending",
-            id: id,
-            commitFrom: commitFrom,
-            commitTo: commitTo,
-            commitJudge: commitJudge,
-            createdAt: createdAt,
-            endsAt: endsAt,
-            judgeDeadline: judgeDeadline,
-            phonePickups: phonePickups,
-            stakeAmount: stakeAmount,
-            filename: filename,
-            isCommitProved: isCommitProved,
-            isCommitJudged: isCommitJudged,
-            isApproved: isApproved,
-          }]);
-        });
+        commitPortal.on(
+          "NewCommit",
+          (
+            id,
+            commitFrom,
+            commitTo,
+            commitJudge,
+            createdAt,
+            endsAt,
+            judgeDeadline,
+            phonePickups,
+            stakeAmount,
+            filename,
+            isCommitProved,
+            isCommitJudged,
+            isApproved
+          ) => {
+            setAllCommits((prevState) => [
+              ...prevState,
+              {
+                status: "Pending",
+                id: id,
+                commitFrom: commitFrom,
+                commitTo: commitTo,
+                commitJudge: commitJudge,
+                createdAt: createdAt,
+                endsAt: endsAt,
+                judgeDeadline: judgeDeadline,
+                phonePickups: phonePickups,
+                stakeAmount: stakeAmount,
+                filename: filename,
+                isCommitProved: isCommitProved,
+                isCommitJudged: isCommitJudged,
+                isApproved: isApproved,
+              },
+            ]);
+          }
+        );
 
         // sort according to their creation date
-        commitsClassified.sort((a, b) => (a.createdAt > b.createdAt) ? 1 : -1)
-        setAllCommits(commitsClassified)
+        commitsClassified.sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1));
+        setAllCommits(commitsClassified);
 
-        console.log(commitsClassified)
+        console.log(commitsClassified);
 
         // FOR LATER USE (unused events/emits):
         // on a NewProve event
@@ -102,18 +112,20 @@ export default function Home() {
         commitPortal.on("NewJudge", (commitId, isApproved, judgedAt) => {
           console.log("New Judge Event:", commitId, isApproved, judgedAt);
         });
-
       } else {
-        toast("🚨 ETH wallet not detected.\n\n" +
-          "Solutions →\n\n" +
-          "1. Download the Metamask extension\t(Desktop)\n\n" +
-          "2. Use Metamask or the Brave broswer\t(Mobile)\n",
-          { duration: Infinity, id: 'unique', position: 'bottom-center' })
+        toast(
+          "🚨 ETH wallet not detected.\n\n" +
+            "Solutions →\n\n" +
+            "1. Download the Metamask extension\t(Desktop)\n\n" +
+            "2. Use Metamask or the Brave browser\t(Mobile)\n",
+          { duration: Infinity, id: "unique", position: "bottom-center" }
+        );
       }
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   // functions
   function determineStatus(commit) {
@@ -123,34 +135,41 @@ export default function Home() {
       status = "Pending";
     }
     // has not expired, has a proof, but has not been judged
-    else if (commit.judgeDeadline > Date.now() && commit.isCommitProved && !commit.isCommitJudged) {
+    else if (
+      commit.judgeDeadline > Date.now() &&
+      commit.isCommitProved &&
+      !commit.isCommitJudged
+    ) {
       status = "Waiting";
     }
     // is approved or the commit expired and was approved
-    else if (commit.isApproved || (commit.judgeDeadline < Date.now() && commit.isApproved)) {
+    else if (
+      commit.isApproved ||
+      (commit.judgeDeadline < Date.now() && commit.isApproved)
+    ) {
       status = "Success";
     }
     // commit has been denied or commit has expired
     else {
       status = "Failure";
     }
-    return status
+    return status;
   }
 
   /// STATE EFFECTS
 
   // first page pass
   useEffect(() => {
-    getAllCommits()
-  }, [])
+    getAllCommits();
+  }, []);
 
   // render when there's a new commit or account connects
   useEffect(() => {
-    <CommitCardList cardList={allCommits} />
-  }, [allCommits, connectedAddress])
+    <CommitCardList cardList={allCommits} />;
+  }, [allCommits, connectedAddress]);
 
   return (
-    <>
+    <div>
       <Head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width" />
@@ -160,13 +179,38 @@ export default function Home() {
         <meta property="og:description" content="Just Commit" />
         <link rel="icon" type="image/png" sizes="16x16" href="./favicon.ico" />
       </Head>
-
       <Header currentPage="home" />
-
       <div className="flex h-screen">
         <div className="w-8/10 mx-auto p-0 lg:p-10 mt-20">
           <div className="flex flex-col mt-4 justify-center items-center">
-            <CommitCardList cardList={allCommits} />
+            {loading ? (
+              <div>
+                <div
+                  style={{
+                    marginTop: "20px",
+                    display: "flex",
+                    justifyContent: "center",
+                    columnGap: "25px",
+                  }}
+                >
+                  <Skeleton height={30} width={50} />
+                  <Skeleton height={30} width={50} />
+                  <Skeleton height={30} width={50} />
+                  <Skeleton height={30} width={50} />
+                  <Skeleton height={30} width={50} />
+                </div>
+                <div
+                  style={{
+                    marginTop: "40px",
+                    columnGap: "25px",
+                  }}
+                >
+                  <Skeleton height={410} width={350} />
+                </div>
+              </div>
+            ) : (
+              <CommitCardList cardList={allCommits} />
+            )}
           </div>
         </div>
       </div>
@@ -181,7 +225,7 @@ export default function Home() {
         }}
         className="hover:cursor-pointer"
         onClick={() => {
-          window.location.href = "/"
+          window.location.href = "/";
         }}
       >
         <Tag
@@ -203,7 +247,6 @@ export default function Home() {
       </div>
 
       <Toaster />
-
-    </>
+    </div>
   );
 }
