@@ -7,6 +7,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useProvider, useNetwork } from 'wagmi'
 import { ethers } from 'ethers'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
+import Skeleton from "react-loading-skeleton";
 
 export default function Home() {
 
@@ -16,6 +17,7 @@ export default function Home() {
 
   // state
   const [allCommits, setAllCommits] = useState([])
+  const [loading, setLoading] = useState(true);
 
   // getter for all of the contract commits (always listening)
   const getAllCommits = async () => {
@@ -110,7 +112,9 @@ export default function Home() {
           "2. Use Metamask or the Brave broswer\t(Mobile)\n",
           { duration: Infinity, id: 'unique', position: 'bottom-center' })
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   }
@@ -150,7 +154,7 @@ export default function Home() {
   }, [allCommits, connectedAddress])
 
   return (
-    <>
+    <div>
       <Head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width" />
@@ -166,7 +170,34 @@ export default function Home() {
       <div className="flex h-screen">
         <div className="w-8/10 mx-auto p-0 lg:p-10 mt-20">
           <div className="flex flex-col mt-4 justify-center items-center">
-            <CommitCardList cardList={allCommits} />
+            {loading ? (
+              <div>
+                <div
+                  style={{
+                    marginTop: "20px",
+                    display: "flex",
+                    justifyContent: "center",
+                    columnGap: "25px",
+                  }}
+                >
+                  <Skeleton height={30} width={50} borderRadius={8}/>
+                  <Skeleton height={30} width={50} borderRadius={8}/>
+                  <Skeleton height={30} width={50} borderRadius={8}/>
+                  <Skeleton height={30} width={50} borderRadius={8}/>
+                  <Skeleton height={30} width={50} borderRadius={8}/>
+                </div>
+                <div
+                  style={{
+                    marginTop: "40px",
+                    columnGap: "25px",
+                  }}
+                >
+                  <Skeleton height={410} width={350} borderRadius={10}/>
+                </div>
+              </div>
+            ) : (
+              <CommitCardList cardList={allCommits} />
+            )}
           </div>
         </div>
       </div>
@@ -204,6 +235,6 @@ export default function Home() {
 
       <Toaster />
 
-    </>
+    </div>
   );
 }
