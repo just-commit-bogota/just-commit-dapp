@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import useFetch from '../hooks/fetch'
 import { ethers } from 'ethers'
@@ -13,7 +13,8 @@ import { Placeholders } from "../components/Placeholders.js";
 import LoomModal from "../components/LoomModal.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-// import { PopupButton } from '@typeform/embed-react'
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 export default function Commit() {
 
@@ -257,11 +258,8 @@ export default function Commit() {
               </div>
             }
           />
+          {loadingState === 'loading' && <Skeleton height={100} borderRadius={20} />}
         </div>
-
-        {
-          loadingState === 'loading' && <Placeholders loadingStyle="indexLoadingStyle" number={1} />
-        }
 
         {
           loadingState === 'loaded' &&
