@@ -87,8 +87,10 @@ export default function CommitCardList({ cardList }) {
                     "rgba(18, 74, 56, .5)" : "rgba(36, 41, 46, 0.8)",
                   borderWidth: "2px",
                   cursor: "pointer"
-                }}>
-                <a onClick={() => onFilterClick(f)}>{f}</a>
+                }}
+                onClick={() => onFilterClick(f)}
+                >
+                <a >{f}</a>
                 {/* Counter Badge */}
                 {["Active", "Waiting", "Verify"].includes(f) && filterCounts.find(filterCount => filterCount.filter === f)?.count > 0 &&
                   <Tag
