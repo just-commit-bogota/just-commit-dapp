@@ -1,11 +1,12 @@
+import { useState, useEffect } from 'react'
 import Head from 'next/head'
+import Link from 'next/link.js'
+import { ethers } from 'ethers'
 import Header from "../components/Header.js"
 import CommitCardList from "../components/CommitCardList.js"
 import { Tag } from '@ensdomains/thorin'
-import { useState, useEffect } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useProvider, useNetwork } from 'wagmi'
-import { ethers } from 'ethers'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 import Skeleton from "react-loading-skeleton";
 
@@ -180,11 +181,11 @@ export default function Home() {
                     columnGap: "25px",
                   }}
                 >
-                  <Skeleton height={30} width={50} borderRadius={8}/>
-                  <Skeleton height={30} width={50} borderRadius={8}/>
-                  <Skeleton height={30} width={50} borderRadius={8}/>
-                  <Skeleton height={30} width={50} borderRadius={8}/>
-                  <Skeleton height={30} width={50} borderRadius={8}/>
+                  <Skeleton height={30} width={50} borderRadius={8} />
+                  <Skeleton height={30} width={50} borderRadius={8} />
+                  <Skeleton height={30} width={50} borderRadius={8} />
+                  <Skeleton height={30} width={50} borderRadius={8} />
+                  <Skeleton height={30} width={50} borderRadius={8} />
                 </div>
                 <div
                   style={{
@@ -192,7 +193,7 @@ export default function Home() {
                     columnGap: "25px",
                   }}
                 >
-                  <Skeleton height={410} width={350} borderRadius={10}/>
+                  <Skeleton height={410} width={350} borderRadius={10} />
                 </div>
               </div>
             ) : (
@@ -203,20 +204,14 @@ export default function Home() {
       </div>
 
       {/* the commit shortcut floating icon */}
-      <div
-        style={{
-          position: "fixed",
-          bottom: "25px",
-          right: "25px",
-          zIndex: "999",
-        }}
-        className="hover:cursor-pointer"
-        onClick={() => {
-          window.location.href = "/"
-        }}
+      <Link
+        href="/"
       >
         <Tag
           style={{
+            position: "fixed",
+            bottom: 25,
+            right:25,
             color: "#1DD297",
             backgroundColor: "#1DD297",
             width: "54px",
@@ -231,10 +226,9 @@ export default function Home() {
             alt="Commit Icon"
           />
         </Tag>
-      </div>
+      </Link>
 
       <Toaster />
-
     </div>
   );
 }
