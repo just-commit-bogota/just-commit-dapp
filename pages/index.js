@@ -90,17 +90,20 @@ export default function Commit() {
 
   // functions
   const handleSaveCommitment = async (email, chain) => {
-    if (chain?.id !== 137) {
-      console.log("Not Polygon mainnet, skipping Supabase write.");
+    if (chain?.id !== 137 && chain?.id !== 80001) {
+      console.log('Not on Polygon, skipping Supabase write.');
       return;
     }
+  
+    const environment = chain?.id === 137 ? 'prod' : 'dev';
+  
     try {
       const response = await fetch('/api/save_commitment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: email, address: address }),
+        body: JSON.stringify({ email: email, address: address, environment: environment }),
       });
   
       if (!response.ok) {
@@ -112,7 +115,7 @@ export default function Commit() {
       console.error('Failed to store commitment in Supabase');
     }
   };
-  
+
   function formatCurrency(number, currency = null) {
     const options = {
       maximumFractionDigits: 2,
