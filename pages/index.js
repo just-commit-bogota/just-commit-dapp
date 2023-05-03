@@ -9,7 +9,6 @@ import { Tooltip } from 'react-tooltip';
 import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
 import Spinner from "../components/Spinner.js";
-import { Placeholders } from "../components/Placeholders.js";
 import LoomModal from "../components/LoomModal.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 import { ConnectButton } from '@rainbow-me/rainbowkit'
@@ -232,9 +231,9 @@ export default function Commit() {
                     <br />
                     Just Commit is a 1-month challenge designed to
                     <br />
-                    help you remove all of the unintentional
+                    help you remove all of the surplus screen-time
                     <br />
-                    phone pickups from your day.
+                    from the leisure app you most use.
                   </Typography>
                 )}
                 <br />
@@ -327,7 +326,7 @@ export default function Commit() {
               {videoWatched[2] &&
                 <div className="mt-2 mb-2 text-sm" style={{ direction: "ltr" }}>
                   <Input
-                    label="Avg # of Phone Pickups Last Week"
+                    label="In-App Minutes Last Week"
                     placeholder="100"
                     min={1}
                     maxLength={3}
@@ -366,7 +365,7 @@ export default function Commit() {
                         <thead>
                           <tr>
                             <th className="text-center">Week #</th>
-                            <th className="text-center">Pickup Goal</th>
+                            <th className="text-center">Minutes Goal</th>
                             <th className="text-center">At Stake</th>
                           </tr>
                         </thead>
@@ -376,60 +375,60 @@ export default function Commit() {
                             <td className="text-center">1</td>
                             <td className="text-center">
                               {phonePickups === null
-                                ? <span>? <span className="text-xs"><b>(↓10%)</b></span></span>
-                                : <><span>&lt; {Math.floor(phonePickups * 0.9)}</span> <span className="text-xs"><b>(↓10%)</b></span></>
+                                ? <span>? <span className="text-xs"><b>(↓25%)</b></span></span>
+                                : <><span>&lt; {Math.floor(phonePickups * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
                               }
                             </td>
                             <td className="flex flex-row justify-center items-center">
                               <div className="flex flex-col">
                                 <img className="h-4" src="./polygon-logo-tilted.svg" />
                               </div>
-                              &nbsp;{Math.floor(commitAmount * 0.1)}
+                              &nbsp;{Math.floor(commitAmount * 0.25)}
                             </td>
                           </tr>
                           <tr>
                             <td className="text-center">2</td>
                             <td className="text-center">
                               {phonePickups === null
-                                ? <span>? <span className="text-xs justify-end"><b>(↓20%)</b></span></span>
-                                : <><span>&lt; {Math.floor(phonePickups * 0.9 * 0.8)}</span> <span className="text-xs"><b>(↓20%)</b></span></>
+                                ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
+                                : <><span>&lt; {Math.floor(phonePickups * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
                               }
                             </td>
                             <td className="flex flex-row justify-center items-center">
                               <div className="flex flex-col">
                                 <img className="h-4" src="./polygon-logo-tilted.svg" />
                               </div>
-                              &nbsp;{Math.floor(commitAmount * 0.2)}
+                              &nbsp;{Math.floor(commitAmount * 0.25)}
                             </td>
                           </tr>
                           <tr>
                             <td className="text-center">3</td>
                             <td className="text-center">
                               {phonePickups === null
-                                ? <span>? <span className="text-xs justify-end"><b>(↓20%)</b></span></span>
-                                : <><span>&lt; {Math.floor(phonePickups * 0.9 * 0.8 * 0.8)}</span> <span className="text-xs"><b>(↓20%)</b></span></>
+                                ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
+                                : <><span>&lt; {Math.floor(phonePickups * 0.75 * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
                               }
                             </td>
                             <td className="flex flex-row justify-center items-center">
                               <div className="flex flex-col">
                                 <img className="h-4" src="./polygon-logo-tilted.svg" />
                               </div>
-                              &nbsp;{Math.floor(commitAmount * 0.2)}
+                              &nbsp;{Math.floor(commitAmount * 0.25)}
                             </td>
                           </tr>
                           <tr>
                             <td className="text-center">4</td>
                             <td className="text-center">
                               {phonePickups === null
-                                ? <span>? <span className="text-xs justify-end"><b>(↓40%)</b></span></span>
-                                : <><span>&lt;  {Math.floor(phonePickups * 0.9 * 0.8 * 0.8 * 0.6)}</span> <span className="text-xs"><b>(↓40%)</b></span></>
+                                ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
+                                : <><span>&lt;  {Math.floor(phonePickups * 0.75 * 0.75 * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
                               }
                             </td>
                             <td className="flex flex-row justify-center items-center">
                               <div className="flex flex-col">
                                 <img className="h-4" src="./polygon-logo-tilted.svg" />
                               </div>
-                              &nbsp;{Math.floor(commitAmount * 0.4)}
+                              &nbsp;{Math.floor(commitAmount * 0.25)}
                             </td>
                           </tr>
                         </tbody>
@@ -461,7 +460,7 @@ export default function Commit() {
 
               {phonePickups && videoWatched[1] && videoWatched[2] &&
                 <div>
-                  <br />
+                  {/* <br />
                   <br />
                   <div className="flex items-center gap-3 justify-center -mt-4 mb-5 hover:cursor-pointer" style={{ direction: "ltr" }}>
                     <a
@@ -488,7 +487,7 @@ export default function Commit() {
                         <b style={{ color: 'white' }}>⛽</b>
                       </Tag>
                     </a>
-                  </div>
+                  </div> */}
                   <div
                     className="flex justify-center"
                     style={{ direction: 'ltr' }}
@@ -519,7 +518,7 @@ export default function Commit() {
                 <div
                   className="flex justify-center"
                   style={{ direction: 'ltr', color: '#D0312D', fontSize: '16px', fontWeight: 'bold' }}>
-                    &gt; {CHALLENGE_COST} MATIC to Commit
+                    &gt; {CHALLENGE_COST} MATIC (+ gas) to Commit
                 </div>
                 <br />
                 <br />
