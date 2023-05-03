@@ -1,10 +1,11 @@
 import Head from 'next/head'
 import Header from "../components/Header.js"
 import CommitCardList from "../components/CommitCardList.js"
+import Link from 'next/link.js'
 import { Tag } from '@ensdomains/thorin'
 import { useState, useEffect } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
-import { useAccount, useProvider, useNetwork } from 'wagmi'
+import { useAccount, useProvider } from 'wagmi'
 import { ethers } from 'ethers'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 import Skeleton from "react-loading-skeleton";
@@ -203,20 +204,14 @@ export default function Home() {
         </div>
 
       {/* the commit shortcut floating icon */}
-      <div
-        style={{
-          position: "fixed",
-          bottom: "25px",
-          right: "25px",
-          zIndex: "999",
-        }}
-        className="hover:cursor-pointer"
-        onClick={() => {
-          window.location.href = "/"
-        }}
+      <Link
+        href="/"
       >
         <Tag
           style={{
+            position: "fixed",
+            bottom: 25,
+            right: 25,
             color: "#1DD297",
             backgroundColor: "#1DD297",
             width: "54px",
@@ -231,7 +226,7 @@ export default function Home() {
             alt="Commit Icon"
           />
         </Tag>
-      </div>
+      </Link>
 
       <Toaster />
 
