@@ -13,6 +13,8 @@ import LoomModal from "../components/LoomModal.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import Skeleton from 'react-loading-skeleton';
+import { sendAnEmail } from "../utils/emailService";
+
 import 'react-loading-skeleton/dist/skeleton.css';
 
 export default function Commit() {
@@ -76,6 +78,7 @@ export default function Commit() {
     async onSettled() {
       setHasCommited(true)
       await handleSaveCommitment(userEmail, chain);
+      sendAnEmail(userEmail);
     },
   })
   
