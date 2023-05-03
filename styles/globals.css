@@ -85,6 +85,16 @@ a {
   position: relative;
 }
 
+.tagsContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag {
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
 .col {
   display: flex;
   flex-direction: col;
