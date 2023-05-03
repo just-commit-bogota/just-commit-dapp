@@ -44,8 +44,12 @@ a {
   padding: 7rem 2rem 2rem 2rem;
   align-items: center;
   min-height: 0vh;
-  background: linear-gradient(180deg, #F1F7F5 0%, rgba(241, 247, 245, 0) 100%);
-  border-radius: 0px 0px 300px 300px;
+  max-width: inherit;
+  background: linear-gradient(180deg, #1DD297 0%, rgba(241, 247, 245, 0) 100%);
+}
+
+.cardContainer{
+  background: linear-gradient(180deg, #1DD297 0%, rgba(241, 247, 245, 0) 100%);
 }
 
 .heading {
@@ -74,7 +78,7 @@ a {
   border-radius: 20px 20px 20px 20px;
   align-items: center;
   margin-bottom: 150px;
-  width: 32%;
+  width: 22%;
   position: relative;
 }
 

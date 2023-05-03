@@ -166,41 +166,41 @@ export default function Home() {
       </Head>
 
       <Header currentPage="home" />
-
-      <div className="flex h-screen">
-        <div className="w-8/10 mx-auto p-0 lg:p-10 mt-20">
-          <div className="flex flex-col mt-4 justify-center items-center">
-            {loading ? (
-              <div>
-                <div
-                  style={{
-                    marginTop: "20px",
-                    display: "flex",
-                    justifyContent: "center",
-                    columnGap: "25px",
-                  }}
-                >
-                  <Skeleton height={30} width={50} borderRadius={8}/>
-                  <Skeleton height={30} width={50} borderRadius={8}/>
-                  <Skeleton height={30} width={50} borderRadius={8}/>
-                  <Skeleton height={30} width={50} borderRadius={8}/>
-                  <Skeleton height={30} width={50} borderRadius={8}/>
+      <div className="cardContainer">
+        <div className="flex h-screen">
+          <div className="w-8/10 mx-auto p-0 lg:p-10 mt-20">
+            <div className="flex flex-col mt-4 justify-center items-center">
+              {loading ? (
+                <div>
+                  <div
+                    style={{
+                      marginTop: "20px",
+                      display: "flex",
+                      justifyContent: "center",
+                      columnGap: "25px",
+                    }}
+                  >
+                    <Skeleton height={30} width={50} borderRadius={8}/>
+                    <Skeleton height={30} width={50} borderRadius={8}/>
+                    <Skeleton height={30} width={50} borderRadius={8}/>
+                    <Skeleton height={30} width={50} borderRadius={8}/>
+                    <Skeleton height={30} width={50} borderRadius={8}/>
+                  </div>
+                  <div
+                    style={{
+                      marginTop: "40px",
+                      columnGap: "25px",
+                    }}
+                  >
+                    <Skeleton height={410} width={350} borderRadius={10}/>
+                  </div>
                 </div>
-                <div
-                  style={{
-                    marginTop: "40px",
-                    columnGap: "25px",
-                  }}
-                >
-                  <Skeleton height={410} width={350} borderRadius={10}/>
-                </div>
-              </div>
-            ) : (
-              <CommitCardList cardList={allCommits} />
-            )}
+              ) : (
+                <CommitCardList cardList={allCommits} />
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
       {/* the commit shortcut floating icon */}
       <div
@@ -235,6 +235,7 @@ export default function Home() {
 
       <Toaster />
 
+      </div>
     </div>
   );
 }
