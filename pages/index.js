@@ -197,7 +197,7 @@ export default function Commit() {
       </Head>
 
       <Header currentPage="index" />
-
+      
       <div className="container container--flex h-screen items-stretch">
         <div className="mt-6 mb-0" style={{ padding: "10px" }}>
           <FieldSet
