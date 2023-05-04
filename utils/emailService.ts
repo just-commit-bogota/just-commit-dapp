@@ -8,7 +8,6 @@ export const sendAnEmail = (email: string): void => {
 
   const { emailJsServiceId, emailJsTemplateId, emailJsPublicKey } = env;
 
-  
   if (emailJsServiceId && emailJsTemplateId) {
     emailjs.send(
       emailJsServiceId,
