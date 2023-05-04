@@ -561,14 +561,14 @@ export default function Commit() {
               <>
                 <div className="flex justify-center text-sm hover:cursor-pointer" style={{ direction: "ltr" }}>
                   <Input
-                    label="Your Email (Optional)"
+                    label="Your Email (For Weekly Reminders)"
                     placeholder="daniel@belfort.com"
                     // error={ userEmail && !userEmail.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/) ? ' ' : '' }
                     onChange={(e) => setUserEmail(e.target.value)}
                     labelSecondary={
                       <a
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content="🔔 To get weekly submission reminders"
+                        data-tooltip-content="It's optional"
                         data-tooltip-place="top"
                       >
                         <Tag className="" style={{ background: "#1DD297" }} size="large">
