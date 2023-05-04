@@ -322,6 +322,7 @@ export default function CommitCard({ ...props }) {
                                 size="small"
                                 variant="secondary"
                                 outlined
+                                disabled={approveClick}
                                 onClick={() => {
                                   setIsApproved(false)
                                   setTriggerJudgeContractFunctions(true)
