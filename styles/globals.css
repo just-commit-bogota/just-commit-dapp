@@ -45,11 +45,14 @@ a {
   align-items: center;
   min-height: 0vh;
   max-width: inherit;
-  background: linear-gradient(180deg, #1DD297 0%, rgba(241, 247, 245, 0) 100%);
+  background-image: 
+    linear-gradient(120deg, rgba(255, 255, 255, 1) 0%, rgba(29, 210, 151, 0.5) 50%, rgba(255, 255, 255, 1) 100%);
 }
 
 .cardContainer {
-  background: linear-gradient(180deg, #1DD297 0%, rgba(241, 247, 245, 0) 100%);
+  background-image: 
+    radial-gradient(circle at center, rgba(29, 210, 151, 1) 0%, rgba(255, 255, 255, 1) 75%),
+    linear-gradient(120deg, rgba(255, 255, 255, 1) 0%, rgba(29, 210, 151, 0.5) 50%, rgba(255, 255, 255, 1) 100%);
 }
 
 .heading {
@@ -80,6 +83,16 @@ a {
   margin-bottom: 150px;
   width: 22%;
   position: relative;
+}
+
+.tagsContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag {
+  margin-right: 8px;
+  margin-bottom: 8px;
 }
 
 .col {

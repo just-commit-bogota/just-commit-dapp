@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import useFetch from '../hooks/fetch'
 import { ethers } from 'ethers'
-import { Tag, Heading, FieldSet, Typography, Input, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Heading, FieldSet, Card, Typography, Input, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip';
 import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
 import Spinner from "../components/Spinner.js";
+import SocialTags from "../components/SocialTags.js";
 import LoomModal from "../components/LoomModal.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 import { ConnectButton } from '@rainbow-me/rainbowkit'
@@ -26,12 +27,13 @@ export default function Commit() {
   }, [])
 
   // challenge cost
-  const CHALLENGE_COST = '100'
-  const justCommitServices = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.09) : (CHALLENGE_COST * 0.09).toFixed(1);
-  const gasCosts = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.01) : (CHALLENGE_COST * 0.01).toFixed(1);
+  const CHALLENGE_COST = '10'
+  //const justCommitServices = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.09) : (CHALLENGE_COST * 0.09).toFixed(1);
+  //const gasCosts = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.01) : (CHALLENGE_COST * 0.01).toFixed(1);
 
   const commitTo = CONTRACT_OWNER
   const commitJudge = CONTRACT_OWNER
+  const socialTagNames = ["insta", "tiktok", "twitter", "youtube", "snap"];
 
   // state
   const [commitAmount, setCommitAmount] = useState(CHALLENGE_COST) // TODO refactor this
@@ -44,6 +46,7 @@ export default function Commit() {
   const [showText, setShowText] = useState(false);
   const [userEmail, setUserEmail] = useState("null@null.com");
   const [phonePickups, setPhonePickups] = useState(null);
+  const [selectedTag, setSelectedTag] = useState(null);
 
   // smart contract data
   const { chain } = useNetwork()
@@ -140,6 +143,11 @@ export default function Commit() {
       return null;
     }
   }
+  
+  function capitalizeFirstLetter(string) {
+    if (!string) return "";
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
   // commit logic related
   const closeModal = () => {
@@ -198,7 +206,7 @@ export default function Commit() {
 
       <Header currentPage="index" />
 
-      <div className="container container--flex h-screen items-stretch">
+      <div className="container container--flex items-stretch">
         <div className="mt-6 mb-0" style={{ padding: "10px" }}>
           <FieldSet
             legend={
@@ -231,7 +239,7 @@ export default function Commit() {
                     <br />
                     Just Commit is a 1-month challenge designed to
                     <br />
-                    help you remove all of the surplus screen-time
+                    help you remove 70% of the screen-time
                     <br />
                     from the leisure app you most use.
                   </Typography>
@@ -269,6 +277,7 @@ export default function Commit() {
 
         {
           loadingState === 'loaded' &&
+
 
           <form
             id="form"
@@ -323,10 +332,32 @@ export default function Commit() {
                 </div>
               )}
 
-              {videoWatched[2] &&
-                <div className="mt-2 mb-2 text-sm" style={{ direction: "ltr" }}>
+              {videoWatched[2] && (
+                <>
+                  <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
+                    <div style={{ fontSize: '1.5em' }}>{selectedTag !== null ? '✅' : '⬇️'}</div>
+                    <div
+                      style={{ fontSize: '1.2em' }}
+                      onClick={() => {}}
+                    >
+                      <Typography>Select Addictive App</Typography>
+                    </div>
+                  </div>
+                  <div className="flex justify-center" style={{ direction: 'ltr'}}>
+                    <SocialTags
+                      selectedTag={selectedTag}
+                      setSelectedTag={setSelectedTag}
+                      socialTagNames={socialTagNames}
+                    />
+                  </div>
+                </>
+              )}
+            
+              {selectedTag !== null && (
+                <div className="mt-2 mb-2 text-xs" style={{ direction: 'ltr' }}>
                   <Input
-                    label="In-App Minutes Last Week"
+                    className="custom-input"
+                    label={`Average Daily Minutes Spent on ${capitalizeFirstLetter(socialTagNames[selectedTag])} Last Week`}
                     placeholder="100"
                     min={1}
                     maxLength={3}
@@ -355,86 +386,84 @@ export default function Commit() {
                         </Tag>
                       </a>
                     }
-
-                    required
                   />
-                  <br></br>
-                  {phonePickups &&
-                    <div className="flex flex-col">
-                      <table className="">
-                        <thead>
-                          <tr>
-                            <th className="text-center">Week #</th>
-                            <th className="text-center">Minutes Goal</th>
-                            <th className="text-center">At Stake</th>
-                          </tr>
-                        </thead>
-                        <br></br>
-                        <tbody style={{ lineHeight: '25px' }}>
-                          <tr>
-                            <td className="text-center">1</td>
-                            <td className="text-center">
-                              {phonePickups === null
-                                ? <span>? <span className="text-xs"><b>(↓25%)</b></span></span>
-                                : <><span>&lt; {Math.floor(phonePickups * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
-                              }
-                            </td>
-                            <td className="flex flex-row justify-center items-center">
-                              <div className="flex flex-col">
-                                <img className="h-4" src="./polygon-logo-tilted.svg" />
-                              </div>
-                              &nbsp;{Math.floor(commitAmount * 0.25)}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="text-center">2</td>
-                            <td className="text-center">
-                              {phonePickups === null
-                                ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
-                                : <><span>&lt; {Math.floor(phonePickups * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
-                              }
-                            </td>
-                            <td className="flex flex-row justify-center items-center">
-                              <div className="flex flex-col">
-                                <img className="h-4" src="./polygon-logo-tilted.svg" />
-                              </div>
-                              &nbsp;{Math.floor(commitAmount * 0.25)}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="text-center">3</td>
-                            <td className="text-center">
-                              {phonePickups === null
-                                ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
-                                : <><span>&lt; {Math.floor(phonePickups * 0.75 * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
-                              }
-                            </td>
-                            <td className="flex flex-row justify-center items-center">
-                              <div className="flex flex-col">
-                                <img className="h-4" src="./polygon-logo-tilted.svg" />
-                              </div>
-                              &nbsp;{Math.floor(commitAmount * 0.25)}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="text-center">4</td>
-                            <td className="text-center">
-                              {phonePickups === null
-                                ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
-                                : <><span>&lt;  {Math.floor(phonePickups * 0.75 * 0.75 * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
-                              }
-                            </td>
-                            <td className="flex flex-row justify-center items-center">
-                              <div className="flex flex-col">
-                                <img className="h-4" src="./polygon-logo-tilted.svg" />
-                              </div>
-                              &nbsp;{Math.floor(commitAmount * 0.25)}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  }
+                </div>
+              )}
+
+              {phonePickups &&
+                <div className="flex flex-col" style={{ direction: 'ltr' }}>
+                  <table className="">
+                    <thead>
+                      <tr>
+                        <th className="text-center">Week #</th>
+                        <th className="text-center">Minutes Goal</th>
+                        <th className="text-center">At Stake</th>
+                      </tr>
+                    </thead>
+                    <br></br>
+                    <tbody style={{ lineHeight: '25px' }}>
+                      <tr>
+                        <td className="text-center">1</td>
+                        <td className="text-center">
+                          {phonePickups === null
+                            ? <span>? <span className="text-xs"><b>(↓25%)</b></span></span>
+                            : <><span>&lt; {Math.floor(phonePickups * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
+                          }
+                        </td>
+                        <td className="flex flex-row justify-center items-center">
+                          <div className="flex flex-col">
+                            <img className="h-4" src="./polygon-logo-tilted.svg" />
+                          </div>
+                          &nbsp;{Math.floor(commitAmount * 0.25)}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="text-center">2</td>
+                        <td className="text-center">
+                          {phonePickups === null
+                            ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
+                            : <><span>&lt; {Math.floor(phonePickups * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
+                          }
+                        </td>
+                        <td className="flex flex-row justify-center items-center">
+                          <div className="flex flex-col">
+                            <img className="h-4" src="./polygon-logo-tilted.svg" />
+                          </div>
+                          &nbsp;{Math.floor(commitAmount * 0.25)}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="text-center">3</td>
+                        <td className="text-center">
+                          {phonePickups === null
+                            ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
+                            : <><span>&lt; {Math.floor(phonePickups * 0.75 * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
+                          }
+                        </td>
+                        <td className="flex flex-row justify-center items-center">
+                          <div className="flex flex-col">
+                            <img className="h-4" src="./polygon-logo-tilted.svg" />
+                          </div>
+                          &nbsp;{Math.floor(commitAmount * 0.25)}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="text-center">4</td>
+                        <td className="text-center">
+                          {phonePickups === null
+                            ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
+                            : <><span>&lt;  {Math.floor(phonePickups * 0.75 * 0.75 * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
+                          }
+                        </td>
+                        <td className="flex flex-row justify-center items-center">
+                          <div className="flex flex-col">
+                            <img className="h-4" src="./polygon-logo-tilted.svg" />
+                          </div>
+                          &nbsp;{Math.floor(commitAmount * 0.25)}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               }
 
@@ -532,14 +561,14 @@ export default function Commit() {
               <>
                 <div className="flex justify-center text-sm hover:cursor-pointer" style={{ direction: "ltr" }}>
                   <Input
-                    label="Your Email (Optional)"
+                    label="Your Email (For Weekly Reminders)"
                     placeholder="daniel@belfort.com"
                     // error={ userEmail && !userEmail.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/) ? ' ' : '' }
                     onChange={(e) => setUserEmail(e.target.value)}
                     labelSecondary={
                       <a
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content="🔔 To get weekly submission reminders"
+                        data-tooltip-content="It's optional"
                         data-tooltip-place="top"
                       >
                         <Tag className="" style={{ background: "#1DD297" }} size="large">
