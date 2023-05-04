@@ -68,13 +68,13 @@ export default function CommitCardList({ cardList }) {
   return (
     <>
       <PullToRefresh
-      onRefresh={() => {
-        try {
-          return location.reload();
-        } catch (error) {
-          return;
-        }
-      }}
+        onRefresh={() => {
+          try {
+            return location.reload();
+          } catch (error) {
+            return;
+          }
+        }}
       >
         <div className="flex justify-center gap-2 lg:gap-16 text-small mt-4 mb-10">
          <ul className="flex flex-row continent_nav">
@@ -87,25 +87,27 @@ export default function CommitCardList({ cardList }) {
                     "rgba(18, 74, 56, .5)" : "rgba(36, 41, 46, 0.8)",
                   borderWidth: "2px",
                   cursor: "pointer"
-                }}>
-                <a onClick={() => onFilterClick(f)}>{f}</a>
-                {/* Counter Badge */}
-                {["Active", "Waiting", "Verify"].includes(f) && filterCounts.find(filterCount => filterCount.filter === f)?.count > 0 &&
-                  <Tag
-                    className="hover:cursor-pointer"
-                    size="small"
-                    style={{
-                      position: "absolute",
-                      top: "-10px",
-                      right: "-8px",
-                      color: "rgba(255, 255, 255, 1)",
-                      backgroundColor: f == "Waiting" ? "rgba(255, 201, 67, 1)" : "rgba(255, 90, 90, 1)"
-                    }}
-                  >
-                    {filterCounts.find(filterCount => filterCount.filter === f).count}
-                  </Tag>
-                }
-              </li>
+                }}
+                onClick={() => onFilterClick(f)}
+              >
+              <a >{f}</a>
+              {/* Counter Badge */}
+              {["Active", "Waiting", "Verify"].includes(f) && filterCounts.find(filterCount => filterCount.filter === f)?.count > 0 &&
+                <Tag
+                  className="hover:cursor-pointer"
+                  size="small"
+                  style={{
+                    position: "absolute",
+                    top: "-10px",
+                    right: "-8px",
+                    color: "rgba(255, 255, 255, 1)",
+                    backgroundColor: f == "Waiting" ? "rgba(255, 201, 67, 1)" : "rgba(255, 90, 90, 1)"
+                  }}
+                >
+                  {filterCounts.find(filterCount => filterCount.filter === f).count}
+                </Tag>
+              }
+            </li>
           )}
         </ul>
         </div>
