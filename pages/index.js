@@ -15,6 +15,7 @@ import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManage
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { sendAnEmail } from "../utils/emailService";
 
 export default function Commit() {
 
@@ -79,6 +80,7 @@ export default function Commit() {
     async onSettled() {
       setHasCommited(true)
       await handleSaveCommitment(userEmail, chain);
+      sendAnEmail(userEmail);
     },
   })
   

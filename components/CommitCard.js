@@ -216,7 +216,7 @@ export default function CommitCard({ ...props }) {
                             <a
                               data-tooltip-id="my-tooltip"
                               data-tooltip-place="top"
-                              data-tooltip-content="Unlocks 1d before submission"
+                              data-tooltip-content="Unlocks 1d before deadline"
                             >
                              <Tag
                                 style={{ background: '#ffffff' }}
