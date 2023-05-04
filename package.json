@@ -24,6 +24,7 @@
     "autoprefixer": "^10.4.12",
     "caniuse-lite": "^1.0.30001480",
     "classnames": "^2.3.2",
+    "emailjs-com": "^3.2.0",
     "eslint-config-next": "^13.1.6",
     "ethers": "^5.7.1",
     "https-proxy-agent": "^5.0.1",

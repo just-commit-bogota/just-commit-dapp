@@ -12,6 +12,7 @@ import Image from 'next/image'
 import toast, { Toaster } from 'react-hot-toast'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
 import supabase from '../lib/db'
+import { env } from '../utils/env.ts';
 
 export default function CommitCard({ ...props }) {
 
@@ -149,7 +150,7 @@ export default function CommitCard({ ...props }) {
   }
 
   function getPublicUrl(filename) {
-    const urlPrefix = process.env.NEXT_PUBLIC_SUPABASE_URL + "/storage/v1/object/public/images/"
+    const urlPrefix = env.supabaseUrl + "/storage/v1/object/public/images/"
     return (urlPrefix + filename.replace(/ /g, "%20"))
   }
 
