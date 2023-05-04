@@ -206,13 +206,13 @@ export default function Commit() {
 
       <Header currentPage="index" />
       
-      <div className="container container--flex h-screen items-stretch">
+      <div className="container container--flex items-stretch">
         <div className="mt-6 mb-0" style={{ padding: "10px" }}>
           <FieldSet
             legend={
               <div className="text-center justify-center align-center">
 
-                <Heading className="mb-4" color="textSecondary" style={{ fontWeight: '700', fontSize: '50px' }}>
+                <Heading className="mb-4 mt-4" color="textSecondary" style={{ fontWeight: '700', fontSize: '50px' }}>
                   Welcome!
                 </Heading>
                 {!showText && (

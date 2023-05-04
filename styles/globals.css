@@ -41,7 +41,7 @@ a {
 .container--flex {
   display: flex;
   flex-direction: column;
-  padding: 7rem 2rem 2rem 2rem;
+  padding: 7rem 2rem 6rem 2rem;
   align-items: center;
   min-height: 0vh;
   max-width: inherit;
@@ -455,7 +455,7 @@ a {
     width: 42%;
   }
   .container--flex {
-    padding: 4rem 2rem 0rem 2rem;
+    padding: 4rem 2rem 10rem 2rem;
   }
 }
 
