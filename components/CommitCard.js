@@ -24,7 +24,6 @@ export default function CommitCard({ ...props }) {
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
   const [isApproved, setIsApproved] = useState(false)
-  const [approveClick, setApproveClick] = useState(false)
 
   // function to resolve ENS name on ETH mainnet
   const { data: ensName } = useEnsName({
@@ -85,10 +84,6 @@ export default function CommitCard({ ...props }) {
       location.reload()
     }
   })
-
-  useEffect(() => {
-    setApproveClick(judgeWrite?.isLoading ?? false);
-  }, [judgeWrite]);
 
   // FUNCTIONS
 
@@ -208,7 +203,7 @@ export default function CommitCard({ ...props }) {
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
                   <div className="flex">
                     {(() => {
-                      const shouldLock = (props.endsAt - Date.now()) > (24 * 60 * 60 * 1000); // change for testing
+                      const shouldLock = (props.endsAt - Date.now()) > (9999 * 60 * 60 * 1000); // change "24" to "9999" for testing
                 
                       if (shouldLock) {
                         return (
@@ -322,7 +317,6 @@ export default function CommitCard({ ...props }) {
                                 size="small"
                                 variant="secondary"
                                 outlined
-                                disabled={approveClick}
                                 onClick={() => {
                                   setIsApproved(false)
                                   setTriggerJudgeContractFunctions(true)
@@ -336,7 +330,6 @@ export default function CommitCard({ ...props }) {
                                 size="small"
                                 variant="secondary"
                                 outlined
-                                disabled={approveClick}
                                 onClick={() => {
                                   setIsApproved(true)
                                   setTriggerJudgeContractFunctions(true)
