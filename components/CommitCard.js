@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FileInput, Tag, Button as ButtonThorin } from '@ensdomains/thorin'
 import classNames from 'classnames'
 import { useAccount, useEnsName } from 'wagmi'
@@ -25,6 +25,7 @@ export default function CommitCard({ ...props }) {
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
   const [isApproved, setIsApproved] = useState(false)
+  const [approveClick, setApproveClick] = useState(false)
 
   // function to resolve ENS name on ETH mainnet
   const { data: ensName } = useEnsName({
@@ -85,6 +86,10 @@ export default function CommitCard({ ...props }) {
       location.reload()
     }
   })
+
+  useEffect(() => {
+    setApproveClick(judgeWrite?.isLoading ?? false);
+  }, [judgeWrite]);
 
   // FUNCTIONS
 
@@ -318,6 +323,7 @@ export default function CommitCard({ ...props }) {
                                 size="small"
                                 variant="secondary"
                                 outlined
+                                disabled={approveClick}
                                 onClick={() => {
                                   setIsApproved(false)
                                   setTriggerJudgeContractFunctions(true)
@@ -331,6 +337,7 @@ export default function CommitCard({ ...props }) {
                                 size="small"
                                 variant="secondary"
                                 outlined
+                                disabled={approveClick}
                                 onClick={() => {
                                   setIsApproved(true)
                                   setTriggerJudgeContractFunctions(true)
