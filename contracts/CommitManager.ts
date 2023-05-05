@@ -1,51 +1,10 @@
 //export const CONTRACT_ADDRESS = "0x23B5388693d2e76C8E4468E6C6d94A32b04A6744" // APP
 //export const CONTRACT_ADDRESS = "" // BETA
-export const CONTRACT_ADDRESS = "0x28c017ff0eDD25894963F11e1145b7C9Ed4772a8" // DEV
+export const CONTRACT_ADDRESS = "0xE6cbC43a2B0D72C13cB03FD0880076f5285f6045" // DEV
 
 export const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
 export const ABI = [
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "commitTo",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "commitJudge",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "phonePickups",
-				"type": "uint256"
-			}
-		],
-		"name": "createCommit",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "commitId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "bool",
-				"name": "_isApproved",
-				"type": "bool"
-			}
-		],
-		"name": "judgeCommit",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
 	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
@@ -99,7 +58,7 @@ export const ABI = [
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "phonePickups",
+				"name": "screenTime",
 				"type": "uint256"
 			},
 			{
@@ -208,39 +167,24 @@ export const ABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "commitId",
-				"type": "uint256"
+				"internalType": "address",
+				"name": "commitTo",
+				"type": "address"
 			},
 			{
-				"internalType": "string",
-				"name": "_filename",
-				"type": "string"
-			}
-		],
-		"name": "proveCommit",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "address",
-				"name": "newOwner",
+				"name": "commitJudge",
 				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "screenTime",
+				"type": "uint256"
 			}
 		],
-		"name": "transferOwnership",
+		"name": "createCommit",
 		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -286,7 +230,7 @@ export const ABI = [
 					},
 					{
 						"internalType": "uint256",
-						"name": "phonePickups",
+						"name": "screenTime",
 						"type": "uint256"
 					},
 					{
@@ -324,6 +268,25 @@ export const ABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			}
+		],
+		"name": "getDifferenceToNextMonday",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "pure",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "getTotalCommits",
 		"outputs": [
@@ -337,6 +300,24 @@ export const ABI = [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "commitId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "_isApproved",
+				"type": "bool"
+			}
+		],
+		"name": "judgeCommit",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "owner",
 		"outputs": [
@@ -347,6 +328,44 @@ export const ABI = [
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "commitId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_filename",
+				"type": "string"
+			}
+		],
+		"name": "proveCommit",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ] as const

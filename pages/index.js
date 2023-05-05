@@ -46,7 +46,7 @@ export default function Commit() {
   const [videoEmbedUrl, setVideoEmbedUrl] = useState(null);
   const [showText, setShowText] = useState(false);
   const [userEmail, setUserEmail] = useState("null@null.com");
-  const [phonePickups, setPhonePickups] = useState(null);
+  const [screenTime, setScreenTime] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
 
   // smart contract data
@@ -59,7 +59,7 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitTo, commitJudge, phonePickups, { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
+    args: [commitTo, commitJudge, screenTime, { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
@@ -80,7 +80,10 @@ export default function Commit() {
     async onSettled() {
       setHasCommited(true)
       await handleSaveCommitment(userEmail, chain);
-      sendAnEmail(userEmail);
+      // send an email only on Polygon Mainnet
+      if (chain?.id == 137) {
+        sendAnEmail(userEmail);
+      }
     },
   })
   
@@ -88,7 +91,7 @@ export default function Commit() {
     return videoWatched.every(v => v) &&
       Boolean(address) &&
       walletMaticBalance > parseFloat(CHALLENGE_COST) &&
-      phonePickups > 0;
+      screenTime > 0;
   };
 
 
@@ -367,7 +370,7 @@ export default function Commit() {
                         e.preventDefault();
                       }
                     }}
-                    onChange={(e) => setPhonePickups((e.target.value))}
+                    onChange={(e) => setScreenTime((e.target.value))}
                     labelSecondary={
                       <a
                         data-tooltip-id="my-tooltip"
@@ -389,7 +392,7 @@ export default function Commit() {
                 </div>
               )}
 
-              {phonePickups &&
+              {screenTime &&
                 <div className="flex flex-col" style={{ direction: 'ltr' }}>
                   <table className="">
                     <thead>
@@ -404,9 +407,9 @@ export default function Commit() {
                       <tr>
                         <td className="text-center">1</td>
                         <td className="text-center">
-                          {phonePickups === null
+                          {screenTime === null
                             ? <span>? <span className="text-xs"><b>(↓25%)</b></span></span>
-                            : <><span>&lt; {Math.floor(phonePickups * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
+                            : <><span>&lt; {Math.floor(screenTime * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
                           }
                         </td>
                         <td className="flex flex-row justify-center items-center">
@@ -419,9 +422,9 @@ export default function Commit() {
                       <tr>
                         <td className="text-center">2</td>
                         <td className="text-center">
-                          {phonePickups === null
+                          {screenTime === null
                             ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
-                            : <><span>&lt; {Math.floor(phonePickups * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
+                            : <><span>&lt; {Math.floor(screenTime * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
                           }
                         </td>
                         <td className="flex flex-row justify-center items-center">
@@ -434,9 +437,9 @@ export default function Commit() {
                       <tr>
                         <td className="text-center">3</td>
                         <td className="text-center">
-                          {phonePickups === null
+                          {screenTime === null
                             ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
-                            : <><span>&lt; {Math.floor(phonePickups * 0.75 * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
+                            : <><span>&lt; {Math.floor(screenTime * 0.75 * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
                           }
                         </td>
                         <td className="flex flex-row justify-center items-center">
@@ -449,9 +452,9 @@ export default function Commit() {
                       <tr>
                         <td className="text-center">4</td>
                         <td className="text-center">
-                          {phonePickups === null
+                          {screenTime === null
                             ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
-                            : <><span>&lt;  {Math.floor(phonePickups * 0.75 * 0.75 * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
+                            : <><span>&lt;  {Math.floor(screenTime * 0.75 * 0.75 * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
                           }
                         </td>
                         <td className="flex flex-row justify-center items-center">
@@ -486,7 +489,7 @@ export default function Commit() {
                 onClick={() => toast.error("Complete the Typeform")}
               /> */}
 
-              {phonePickups && videoWatched[1] && videoWatched[2] &&
+              {screenTime && videoWatched[1] && videoWatched[2] &&
                 <div>
                   {/* <br />
                   <br />
@@ -540,7 +543,7 @@ export default function Commit() {
               }
             </div>
 
-            {phonePickups &&
+            {screenTime &&
             (!(walletMaticBalance > parseFloat(CHALLENGE_COST))) && 
               <>
                 <div
