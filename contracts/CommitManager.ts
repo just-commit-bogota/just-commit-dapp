@@ -1,6 +1,6 @@
-export const CONTRACT_ADDRESS = "0xdF8f89106a37756B0324Ad981cf19c14914b1709" // APP
+export const CONTRACT_ADDRESS = "0x3159598A4F5E5c5FbA61f16881Edbb5D5bF933d0" // APP
 //export const CONTRACT_ADDRESS = "" // BETA
-//export const CONTRACT_ADDRESS = "0x641B59a3b62Ad10510815d11e939DdCe49b43D18" // DEV.
+//export const CONTRACT_ADDRESS = "" // DEV
 
 export const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
@@ -364,6 +364,13 @@ export const ABI = [
 			}
 		],
 		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "withdraw",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
