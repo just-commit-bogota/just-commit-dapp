@@ -159,10 +159,10 @@ export default function Commit() {
     setShowVideoEmbed(false);
   };
   const videoLinks = [
-    'https://www.youtube.com/embed/L6b4sJRDy3w',
-    'https://www.youtube.com/embed/qeHRI4J5Ub8',
-    'https://www.youtube.com/embed/gIO6UMtTn4g',
-    'https://www.youtube.com/embed/GVWcFyZGuzU',
+    'https://www.youtube.com/embed/_XTX4aZFEZQ',
+    'https://www.youtube.com/embed/F4qlKB6_tRk',
+    'https://www.youtube.com/embed/',
+    'https://www.youtube.com/embed/Tujo3tx0QTE',
   ];
   const handleWatchVideoClick = (index) => {
     const videoLink = videoLinks[index];
@@ -215,16 +215,15 @@ export default function Commit() {
         <div className="mt-4 mb-0" style={{ padding: "10px" }}>
           <FieldSet
             legend={
-              <div className="text-center justify-center align-center">
- 
-                <Typography className="" variant="" weight="small" style={{ lineHeight: '1.5em', fontSize: '0.65em' }}>
-                  <br />
-                  Just Commit is a 1-month challenge designed to
-                  <br />
-                  help you remove the surplus screen-time
-                  <br />
-                  from the leisure app you most use.
-                </Typography>
+              <div className="flex flex-col text-center justify-center align-center">
+
+                <Card className="flex flex-col self-center justify-center bg-white shadow-lg rounded-lg p-6 md:w-3/6" style={{ alignItens: ''}}>
+                  <Typography className="font-semibold md:font-normal text-xs md:text-lg" style={{ lineHeight: '1.5em', fontWeight: '' }}>
+                    Just Commit is a 1-month challenge designed to
+                    help you remove the surplus screen-time
+                    from the leisure app you most use.
+                  </Typography>
+                </Card>
 
                 {!showText && (
                   <div className="flex justify-center">
@@ -359,7 +358,7 @@ export default function Commit() {
                 <div className="mt-2 mb-2 text-xs" style={{ direction: 'ltr' }}>
                   <Input
                     className="custom-input"
-                    label={`Average Daily Minutes Spent on ${capitalizeFirstLetter(socialTagNames[selectedTag])} Last Week`}
+                    label={`Daily Average Minutes Spent on ${capitalizeFirstLetter(socialTagNames[selectedTag])} Last Week`}
                     placeholder="100"
                     min={1}
                     maxLength={3}
