@@ -1,6 +1,6 @@
 //export const CONTRACT_ADDRESS = "0x23B5388693d2e76C8E4468E6C6d94A32b04A6744" // APP
 //export const CONTRACT_ADDRESS = "" // BETA
-export const CONTRACT_ADDRESS = "0xa4cae24A854a62eD1bB6f882c9Eb9E2580CF5d36" // DEV
+export const CONTRACT_ADDRESS = "0xE6cbC43a2B0D72C13cB03FD0880076f5285f6045" // DEV
 
 export const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
@@ -58,7 +58,7 @@ export const ABI = [
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "phonePickups",
+				"name": "screenTime",
 				"type": "uint256"
 			},
 			{
@@ -178,7 +178,7 @@ export const ABI = [
 			},
 			{
 				"internalType": "uint256",
-				"name": "phonePickups",
+				"name": "screenTime",
 				"type": "uint256"
 			}
 		],
@@ -230,7 +230,7 @@ export const ABI = [
 					},
 					{
 						"internalType": "uint256",
-						"name": "phonePickups",
+						"name": "screenTime",
 						"type": "uint256"
 					},
 					{
@@ -265,6 +265,25 @@ export const ABI = [
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			}
+		],
+		"name": "getDifferenceToNextMonday",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "pure",
 		"type": "function"
 	},
 	{
