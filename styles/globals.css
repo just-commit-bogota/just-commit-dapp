@@ -41,11 +41,16 @@ a {
 .container--flex {
   display: flex;
   flex-direction: column;
-  padding: 7rem 2rem 2rem 2rem;
+  padding: 7rem 2rem 6rem 2rem;
   align-items: center;
-  min-height: 0vh;
-  background: linear-gradient(180deg, #F1F7F5 0%, rgba(241, 247, 245, 0) 100%);
-  border-radius: 0px 0px 300px 300px;
+  min-height: 100vh !important;
+  max-width: inherit;
+  background-color: #F3F3F3;
+}
+
+.cardContainer {
+  background-color: #F3F3F3;
+  min-height: 100vh;
 }
 
 .heading {
@@ -76,6 +81,16 @@ a {
   margin-bottom: 150px;
   width: 32%;
   position: relative;
+}
+
+.tagsContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag {
+  margin-right: 8px;
+  margin-bottom: 8px;
 }
 
 .col {
@@ -438,7 +453,7 @@ a {
     width: 42%;
   }
   .container--flex {
-    padding: 4rem 2rem 0rem 2rem;
+    padding: 4rem 2rem 10rem 2rem;
   }
 }
 

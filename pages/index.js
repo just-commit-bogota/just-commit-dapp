@@ -1,19 +1,21 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import useFetch from '../hooks/fetch'
 import { ethers } from 'ethers'
-import { Tag, Heading, FieldSet, Typography, Input, Button as ButtonThorin } from '@ensdomains/thorin'
+import { Tag, Heading, FieldSet, Card, Typography, Input, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import 'react-tooltip/dist/react-tooltip.css'
 import { Tooltip } from 'react-tooltip';
 import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
 import Spinner from "../components/Spinner.js";
-import { Placeholders } from "../components/Placeholders.js";
+import SocialTags from "../components/SocialTags.js";
 import LoomModal from "../components/LoomModal.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-// import { PopupButton } from '@typeform/embed-react'
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import { sendAnEmail } from "../utils/emailService";
 
 export default function Commit() {
 
@@ -27,11 +29,12 @@ export default function Commit() {
 
   // challenge cost
   const CHALLENGE_COST = '100'
-  const justCommitServices = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.09) : (CHALLENGE_COST * 0.09).toFixed(1);
-  const gasCosts = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.01) : (CHALLENGE_COST * 0.01).toFixed(1);
+  //const justCommitServices = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.09) : (CHALLENGE_COST * 0.09).toFixed(1);
+  //const gasCosts = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.01) : (CHALLENGE_COST * 0.01).toFixed(1);
 
   const commitTo = CONTRACT_OWNER
   const commitJudge = CONTRACT_OWNER
+  const socialTagNames = ["insta", "tiktok", "twitter", "youtube", "snap"];
 
   // state
   const [commitAmount, setCommitAmount] = useState(CHALLENGE_COST) // TODO refactor this
@@ -43,7 +46,8 @@ export default function Commit() {
   const [videoEmbedUrl, setVideoEmbedUrl] = useState(null);
   const [showText, setShowText] = useState(false);
   const [userEmail, setUserEmail] = useState("null@null.com");
-  const [phonePickups, setPhonePickups] = useState(null);
+  const [screenTime, setScreenTime] = useState(null);
+  const [selectedTag, setSelectedTag] = useState(null);
 
   // smart contract data
   const { chain } = useNetwork()
@@ -55,7 +59,7 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitTo, commitJudge, phonePickups, { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
+    args: [commitTo, commitJudge, screenTime, { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
@@ -76,6 +80,10 @@ export default function Commit() {
     async onSettled() {
       setHasCommited(true)
       await handleSaveCommitment(userEmail, chain);
+      // send an email only on Polygon Mainnet
+      if (chain?.id == 137) {
+        sendAnEmail(userEmail);
+      }
     },
   })
   
@@ -83,24 +91,26 @@ export default function Commit() {
     return videoWatched.every(v => v) &&
       Boolean(address) &&
       walletMaticBalance > parseFloat(CHALLENGE_COST) &&
-      phonePickups > 0;
+      screenTime > 0;
   };
 
 
   // functions
   const handleSaveCommitment = async (email, chain) => {
-    if (chain?.id !== 137) {
-      console.log("Not Polygon mainnet, skipping Supabase write.");
+    if (chain?.id !== 137 && chain?.id !== 80001) {
+      console.log('Not on Polygon, skipping Supabase write.');
       return;
     }
-    
+  
+    const environment = chain?.id === 137 ? 'prod' : 'dev';
+  
     try {
       const response = await fetch('/api/save_commitment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: email, address: address }),
+        body: JSON.stringify({ email: email, address: address, environment: environment }),
       });
   
       if (!response.ok) {
@@ -112,7 +122,7 @@ export default function Commit() {
       console.error('Failed to store commitment in Supabase');
     }
   };
-  
+
   function formatCurrency(number, currency = null) {
     const options = {
       maximumFractionDigits: 2,
@@ -138,16 +148,21 @@ export default function Commit() {
       return null;
     }
   }
+  
+  function capitalizeFirstLetter(string) {
+    if (!string) return "";
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
   // commit logic related
   const closeModal = () => {
     setShowVideoEmbed(false);
   };
   const videoLinks = [
-    'https://www.youtube.com/embed/L6b4sJRDy3w',
-    'https://www.youtube.com/embed/qeHRI4J5Ub8',
-    'https://www.youtube.com/embed/gIO6UMtTn4g',
-    'https://www.youtube.com/embed/GVWcFyZGuzU',
+    'https://www.youtube.com/embed/_XTX4aZFEZQ',
+    'https://www.youtube.com/embed/F4qlKB6_tRk',
+    'https://www.youtube.com/embed/74bsRJkmYeo',
+    'https://www.youtube.com/embed/Tujo3tx0QTE',
   ];
   const handleWatchVideoClick = (index) => {
     const videoLink = videoLinks[index];
@@ -195,18 +210,23 @@ export default function Commit() {
       </Head>
 
       <Header currentPage="index" />
-
-      <div className="container container--flex h-screen items-stretch">
-        <div className="mt-6 mb-0" style={{ padding: "10px" }}>
+      
+      <div className="container container--flex items-stretch">
+        <div className="mt-4 mb-0" style={{ padding: "10px" }}>
           <FieldSet
             legend={
-              <div className="text-center justify-center align-center">
+              <div className="flex flex-col text-center justify-center align-center">
 
-                <Heading className="mb-4" color="textSecondary" style={{ fontWeight: '700', fontSize: '50px' }}>
-                  Welcome!
-                </Heading>
+                <Card className="flex flex-col self-center justify-center bg-white shadow-lg rounded-lg p-6 md:w-3/6" style={{ alignItens: ''}}>
+                  <Typography className="font-semibold md:font-normal text-xs md:text-lg" style={{ lineHeight: '1.5em', fontWeight: '' }}>
+                    Just Commit is a 1-month challenge designed to
+                    help you remove the surplus screen-time
+                    from the leisure app you most use.
+                  </Typography>
+                </Card>
+
                 {!showText && (
-                  <div className="flex justify-center mt-12">
+                  <div className="flex justify-center">
                     <a
                       data-tooltip-id="my-tooltip"
                       data-tooltip-place="right"
@@ -217,59 +237,48 @@ export default function Commit() {
                       <Tag
                         style={{ background: '#1DD297' }}
                         size="large"
-                        className="hover:scale-125 cursor-pointer"
+                        className="hover:scale-125 cursor-pointer mt-6"
                       >
                         <b style={{ color: 'white' }}>?</b>
                       </Tag>
                     </a>
                   </div>
                 )}
+                
                 {showText && (
-                  <Typography className="-mb-6" variant="" weight="small" style={{ lineHeight: '1.4em', fontSize: '0.6em' }}>
-                    <br />
-                    Just Commit is a 1-month challenge designed to
-                    <br />
-                    help you remove all of the unintentional
-                    <br />
-                    phone pickups from your day.
-                  </Typography>
-                )}
-                <br />
-                <br />
-                <Typography
-                  className="font-normal -mt-6"
-                  style={{
-                    lineHeight: '1em',
-                    fontSize: '0.6em',
-                  }}
-                >
-                  Get ready to feel more...{' '}
-                  <span
-                    className=""
+                  <Typography
+                    className="font-normal mt-6"
                     style={{
-                      background:
-                        'linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(255,154,0,1) 10%, rgba(208,222,33,1) 20%, rgba(79,220,74,1) 30%, rgba(63,218,216,1) 40%, rgba(47,201,226,1) 50%, rgba(28,127,238,1) 60%, rgba(95,21,242,1) 70%, rgba(186,12,248,1) 80%, rgba(251,7,217,1) 90%, rgba(255,0,0,1) 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      fontStyle: 'italic',
-                      fontWeight: 'bold',
-                      fontSize: '2em',
+                      lineHeight: '1em',
+                      fontSize: '0.6em',
                     }}
                   >
-                    &nbsp;ALIVE&nbsp;
-                  </span>
-                </Typography>
+                    Get ready to feel more...{' '}
+                    <span
+                      className=""
+                      style={{
+                        background:
+                          'linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(255,154,0,1) 10%, rgba(208,222,33,1) 20%, rgba(79,220,74,1) 30%, rgba(63,218,216,1) 40%, rgba(47,201,226,1) 50%, rgba(28,127,238,1) 60%, rgba(95,21,242,1) 70%, rgba(186,12,248,1) 80%, rgba(251,7,217,1) 90%, rgba(255,0,0,1) 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        fontStyle: 'italic',
+                        fontWeight: 'bold',
+                        fontSize: '2em',
+                      }}
+                    >
+                      &nbsp;ALIVE&nbsp;
+                    </span>
+                  </Typography>
+                )}
               </div>
             }
           />
+          {loadingState === 'loading' && <Skeleton height={100} borderRadius={20} />}
         </div>
 
         {
-          loadingState === 'loading' && <Placeholders loadingStyle="indexLoadingStyle" number={1} />
-        }
-
-        {
           loadingState === 'loaded' &&
+
 
           <form
             id="form"
@@ -324,10 +333,32 @@ export default function Commit() {
                 </div>
               )}
 
-              {videoWatched[2] &&
-                <div className="mt-2 mb-2 text-sm" style={{ direction: "ltr" }}>
+              {videoWatched[2] && (
+                <>
+                  <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
+                    <div style={{ fontSize: '1.5em' }}>{selectedTag !== null ? '✅' : '⬇️'}</div>
+                    <div
+                      style={{ fontSize: '1.2em' }}
+                      onClick={() => {}}
+                    >
+                      <Typography>Select Leisure App</Typography>
+                    </div>
+                  </div>
+                  <div className="flex justify-center" style={{ direction: 'ltr'}}>
+                    <SocialTags
+                      selectedTag={selectedTag}
+                      setSelectedTag={setSelectedTag}
+                      socialTagNames={socialTagNames}
+                    />
+                  </div>
+                </>
+              )}
+            
+              {selectedTag !== null && (
+                <div className="mt-2 mb-2 text-xs" style={{ direction: 'ltr' }}>
                   <Input
-                    label="Avg # of Phone Pickups Last Week"
+                    className="custom-input"
+                    label={`Daily Average Minutes Spent on ${capitalizeFirstLetter(socialTagNames[selectedTag])} Last Week`}
                     placeholder="100"
                     min={1}
                     maxLength={3}
@@ -338,7 +369,7 @@ export default function Commit() {
                         e.preventDefault();
                       }
                     }}
-                    onChange={(e) => setPhonePickups((e.target.value))}
+                    onChange={(e) => setScreenTime((e.target.value))}
                     labelSecondary={
                       <a
                         data-tooltip-id="my-tooltip"
@@ -356,86 +387,84 @@ export default function Commit() {
                         </Tag>
                       </a>
                     }
-
-                    required
                   />
-                  <br></br>
-                  {phonePickups &&
-                    <div className="flex flex-col">
-                      <table className="">
-                        <thead>
-                          <tr>
-                            <th className="text-center">Week #</th>
-                            <th className="text-center">Pickup Goal</th>
-                            <th className="text-center">At Stake</th>
-                          </tr>
-                        </thead>
-                        <br></br>
-                        <tbody style={{ lineHeight: '25px' }}>
-                          <tr>
-                            <td className="text-center">1</td>
-                            <td className="text-center">
-                              {phonePickups === null
-                                ? <span>? <span className="text-xs"><b>(↓10%)</b></span></span>
-                                : <><span>&lt; {Math.floor(phonePickups * 0.9)}</span> <span className="text-xs"><b>(↓10%)</b></span></>
-                              }
-                            </td>
-                            <td className="flex flex-row justify-center items-center">
-                              <div className="flex flex-col">
-                                <img className="h-4" src="./polygon-logo-tilted.svg" />
-                              </div>
-                              &nbsp;{Math.floor(commitAmount * 0.1)}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="text-center">2</td>
-                            <td className="text-center">
-                              {phonePickups === null
-                                ? <span>? <span className="text-xs justify-end"><b>(↓20%)</b></span></span>
-                                : <><span>&lt; {Math.floor(phonePickups * 0.9 * 0.8)}</span> <span className="text-xs"><b>(↓20%)</b></span></>
-                              }
-                            </td>
-                            <td className="flex flex-row justify-center items-center">
-                              <div className="flex flex-col">
-                                <img className="h-4" src="./polygon-logo-tilted.svg" />
-                              </div>
-                              &nbsp;{Math.floor(commitAmount * 0.2)}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="text-center">3</td>
-                            <td className="text-center">
-                              {phonePickups === null
-                                ? <span>? <span className="text-xs justify-end"><b>(↓20%)</b></span></span>
-                                : <><span>&lt; {Math.floor(phonePickups * 0.9 * 0.8 * 0.8)}</span> <span className="text-xs"><b>(↓20%)</b></span></>
-                              }
-                            </td>
-                            <td className="flex flex-row justify-center items-center">
-                              <div className="flex flex-col">
-                                <img className="h-4" src="./polygon-logo-tilted.svg" />
-                              </div>
-                              &nbsp;{Math.floor(commitAmount * 0.2)}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="text-center">4</td>
-                            <td className="text-center">
-                              {phonePickups === null
-                                ? <span>? <span className="text-xs justify-end"><b>(↓40%)</b></span></span>
-                                : <><span>&lt;  {Math.floor(phonePickups * 0.9 * 0.8 * 0.8 * 0.6)}</span> <span className="text-xs"><b>(↓40%)</b></span></>
-                              }
-                            </td>
-                            <td className="flex flex-row justify-center items-center">
-                              <div className="flex flex-col">
-                                <img className="h-4" src="./polygon-logo-tilted.svg" />
-                              </div>
-                              &nbsp;{Math.floor(commitAmount * 0.4)}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  }
+                </div>
+              )}
+
+              {screenTime &&
+                <div className="flex flex-col" style={{ direction: 'ltr' }}>
+                  <table className="">
+                    <thead>
+                      <tr>
+                        <th className="text-center">Week #</th>
+                        <th className="text-center">Minutes Goal</th>
+                        <th className="text-center">At Stake</th>
+                      </tr>
+                    </thead>
+                    <br></br>
+                    <tbody style={{ lineHeight: '25px' }}>
+                      <tr>
+                        <td className="text-center">1</td>
+                        <td className="text-center">
+                          {screenTime === null
+                            ? <span>? <span className="text-xs"><b>(↓25%)</b></span></span>
+                            : <><span>&lt; {Math.floor(screenTime * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
+                          }
+                        </td>
+                        <td className="flex flex-row justify-center items-center">
+                          <div className="flex flex-col">
+                            <img className="h-4" src="./polygon-logo-tilted.svg" />
+                          </div>
+                          &nbsp;{Math.floor(commitAmount * 0.25)}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="text-center">2</td>
+                        <td className="text-center">
+                          {screenTime === null
+                            ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
+                            : <><span>&lt; {Math.floor(screenTime * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
+                          }
+                        </td>
+                        <td className="flex flex-row justify-center items-center">
+                          <div className="flex flex-col">
+                            <img className="h-4" src="./polygon-logo-tilted.svg" />
+                          </div>
+                          &nbsp;{Math.floor(commitAmount * 0.25)}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="text-center">3</td>
+                        <td className="text-center">
+                          {screenTime === null
+                            ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
+                            : <><span>&lt; {Math.floor(screenTime * 0.75 * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
+                          }
+                        </td>
+                        <td className="flex flex-row justify-center items-center">
+                          <div className="flex flex-col">
+                            <img className="h-4" src="./polygon-logo-tilted.svg" />
+                          </div>
+                          &nbsp;{Math.floor(commitAmount * 0.25)}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="text-center">4</td>
+                        <td className="text-center">
+                          {screenTime === null
+                            ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
+                            : <><span>&lt;  {Math.floor(screenTime * 0.75 * 0.75 * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
+                          }
+                        </td>
+                        <td className="flex flex-row justify-center items-center">
+                          <div className="flex flex-col">
+                            <img className="h-4" src="./polygon-logo-tilted.svg" />
+                          </div>
+                          &nbsp;{Math.floor(commitAmount * 0.25)}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               }
 
@@ -459,9 +488,9 @@ export default function Commit() {
                 onClick={() => toast.error("Complete the Typeform")}
               /> */}
 
-              {phonePickups && videoWatched[1] && videoWatched[2] &&
+              {screenTime && videoWatched[1] && videoWatched[2] &&
                 <div>
-                  <br />
+                  {/* <br />
                   <br />
                   <div className="flex items-center gap-3 justify-center -mt-4 mb-5 hover:cursor-pointer" style={{ direction: "ltr" }}>
                     <a
@@ -488,7 +517,7 @@ export default function Commit() {
                         <b style={{ color: 'white' }}>⛽</b>
                       </Tag>
                     </a>
-                  </div>
+                  </div> */}
                   <div
                     className="flex justify-center"
                     style={{ direction: 'ltr' }}
@@ -513,13 +542,13 @@ export default function Commit() {
               }
             </div>
 
-            {phonePickups &&
+            {screenTime &&
             (!(walletMaticBalance > parseFloat(CHALLENGE_COST))) && 
               <>
                 <div
                   className="flex justify-center"
                   style={{ direction: 'ltr', color: '#D0312D', fontSize: '16px', fontWeight: 'bold' }}>
-                    &gt; {CHALLENGE_COST} MATIC to Commit
+                    &gt; {CHALLENGE_COST} MATIC (+ gas) to Commit
                 </div>
                 <br />
                 <br />
@@ -533,14 +562,14 @@ export default function Commit() {
               <>
                 <div className="flex justify-center text-sm hover:cursor-pointer" style={{ direction: "ltr" }}>
                   <Input
-                    label="Your Email (Optional)"
+                    label="Your Email (For Weekly Reminders)"
                     placeholder="daniel@belfort.com"
                     // error={ userEmail && !userEmail.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/) ? ' ' : '' }
                     onChange={(e) => setUserEmail(e.target.value)}
                     labelSecondary={
                       <a
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content="🔔 To get weekly submission reminders"
+                        data-tooltip-content="Optional."
                         data-tooltip-place="top"
                       >
                         <Tag className="" style={{ background: "#1DD297" }} size="large">

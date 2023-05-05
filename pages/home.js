@@ -1,12 +1,14 @@
 import Head from 'next/head'
 import Header from "../components/Header.js"
 import CommitCardList from "../components/CommitCardList.js"
+import Link from 'next/link.js'
 import { Tag } from '@ensdomains/thorin'
 import { useState, useEffect } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
-import { useAccount, useProvider, useNetwork } from 'wagmi'
+import { useAccount, useProvider } from 'wagmi'
 import { ethers } from 'ethers'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
+import Skeleton from "react-loading-skeleton";
 
 export default function Home() {
 
@@ -16,6 +18,7 @@ export default function Home() {
 
   // state
   const [allCommits, setAllCommits] = useState([])
+  const [loading, setLoading] = useState(true);
 
   // getter for all of the contract commits (always listening)
   const getAllCommits = async () => {
@@ -42,7 +45,7 @@ export default function Home() {
             createdAt: commit.createdAt.toNumber(),
             endsAt: commit.endsAt.toNumber(),
             judgeDeadline: commit.judgeDeadline.toNumber(),
-            phonePickups: commit.phonePickups.toNumber(),
+            screenTime: commit.screenTime.toNumber(),
             stakeAmount: commit.stakeAmount,
             filename: commit.filename,
             isCommitProved: commit.isCommitProved,
@@ -61,7 +64,7 @@ export default function Home() {
           createdAt,
           endsAt,
           judgeDeadline,
-          phonePickups,
+          screenTime,
           stakeAmount,
           filename,
           isCommitProved,
@@ -77,7 +80,7 @@ export default function Home() {
             createdAt: createdAt,
             endsAt: endsAt,
             judgeDeadline: judgeDeadline,
-            phonePickups: phonePickups,
+            screenTime: screenTime,
             stakeAmount: stakeAmount,
             filename: filename,
             isCommitProved: isCommitProved,
@@ -110,7 +113,9 @@ export default function Home() {
           "2. Use Metamask or the Brave broswer\t(Mobile)\n",
           { duration: Infinity, id: 'unique', position: 'bottom-center' })
       }
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   }
@@ -150,7 +155,7 @@ export default function Home() {
   }, [allCommits, connectedAddress])
 
   return (
-    <>
+    <div>
       <Head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width" />
@@ -163,29 +168,51 @@ export default function Home() {
 
       <Header currentPage="home" />
 
-      <div className="flex h-screen">
-        <div className="w-8/10 mx-auto p-0 lg:p-10 mt-20">
-          <div className="flex flex-col mt-4 justify-center items-center">
-            <CommitCardList cardList={allCommits} />
+      <div className="cardContainer">
+        <div className="flex">
+          <div className="w-8/10 mx-auto p-0 lg:p-10 mt-20">
+            <div className="flex flex-col mt-4 justify-center items-center">
+              {loading ? (
+                <div>
+                  <div
+                    style={{
+                      marginTop: "20px",
+                      display: "flex",
+                      justifyContent: "center",
+                      columnGap: "25px",
+                    }}
+                  >
+                    <Skeleton height={30} width={50} borderRadius={8}/>
+                    <Skeleton height={30} width={50} borderRadius={8}/>
+                    <Skeleton height={30} width={50} borderRadius={8}/>
+                    <Skeleton height={30} width={50} borderRadius={8}/>
+                    <Skeleton height={30} width={50} borderRadius={8}/>
+                  </div>
+                  <div
+                    style={{
+                      marginTop: "40px",
+                      columnGap: "25px",
+                    }}
+                  >
+                    <Skeleton height={410} width={350} borderRadius={10}/>
+                  </div>
+                </div>
+              ) : (
+                <CommitCardList cardList={allCommits} />
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
       {/* the commit shortcut floating icon */}
-      <div
-        style={{
-          position: "fixed",
-          bottom: "25px",
-          right: "25px",
-          zIndex: "999",
-        }}
-        className="hover:cursor-pointer"
-        onClick={() => {
-          window.location.href = "/"
-        }}
+      <Link
+        href="/"
       >
         <Tag
           style={{
+            position: "fixed",
+            bottom: 25,
+            right: 25,
             color: "#1DD297",
             backgroundColor: "#1DD297",
             width: "54px",
@@ -200,10 +227,11 @@ export default function Home() {
             alt="Commit Icon"
           />
         </Tag>
-      </div>
+      </Link>
 
       <Toaster />
+      </div>
 
-    </>
+    </div>
   );
 }

@@ -1,15 +1,19 @@
-// pages/api/save_commitment.js
-import supabase from '../../lib/db'
+import supabase from '../../lib/db';
 
 export default async function handler(req, res) {
-  const { email, address } = req.body;
+  const { email, address, environment } = req.body;
 
-  if (email && email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/) && address) {
+  if (
+    email &&
+    email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/) &&
+    address &&
+    (environment === 'prod' || environment === 'dev')
+  ) {
     try {
       const { error } = await supabase
         .from('commitments')
-        .insert([{ email, address, timestamp: new Date().toISOString() }]);
-      
+        .insert([{ email, address, environment, timestamp: new Date().toISOString() }]);
+
       if (error) {
         throw error;
       }

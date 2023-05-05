@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FileInput, Tag, Button as ButtonThorin } from '@ensdomains/thorin'
 import classNames from 'classnames'
 import { useAccount, useEnsName } from 'wagmi'
@@ -160,7 +160,7 @@ export default function CommitCard({ ...props }) {
         <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px" }}>
           <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
             <div className="text-sm block">
-              <span>&lt;</span> {`${parseInt(props.phonePickups)} daily avg pickups this week`}
+              <span>&lt;</span> {`${parseInt(props.screenTime)} daily avg minutes this week`}
             </div>
             <div className="flex space-x-2" style={{ whiteSpace: "nowrap" }}>
               <div className="span flex text-sm text-slate-400 gap-2 opacity-80" style={{ whiteSpace: "nowrap" }}>
@@ -203,7 +203,7 @@ export default function CommitCard({ ...props }) {
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
                   <div className="flex">
                     {(() => {
-                      const shouldLock = (props.endsAt - Date.now()) > (24 * 60 * 60 * 1000); // change for testing
+                      const shouldLock = (props.endsAt - Date.now()) > (24 * 60 * 60 * 1000); // change "24" to "9999" for testing
                 
                       if (shouldLock) {
                         return (
@@ -211,7 +211,7 @@ export default function CommitCard({ ...props }) {
                             <a
                               data-tooltip-id="my-tooltip"
                               data-tooltip-place="top"
-                              data-tooltip-content="Unlocks 1d before submission"
+                              data-tooltip-content="Unlocks 1d before deadline"
                             >
                              <Tag
                                 style={{ background: '#ffffff' }}
