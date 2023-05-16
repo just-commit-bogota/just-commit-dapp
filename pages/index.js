@@ -322,10 +322,10 @@ export default function Commit() {
               )}
             
               {selectedTag !== null && (
-                <div className="flex flex-row mb-2 text-xs" style={{ direction: 'ltr' }}>
-                  <div className="flex items-center">
+                <div className="flex flex-row mb-2 text-xs md:text-sm" style={{ direction: 'ltr' }}>
+                  <div className="flex items-center w-3/5">
                     <Typography className="font-semibold">
-                      {`Number of times you picked up ${capitalizeFirstLetter(socialTagNames[selectedTag])} on a daily average last week`}
+                      {`Number of times you picked up ${capitalizeFirstLetter(socialTagNames[selectedTag])} on a daily average last week?`}
                     </Typography>
                     <a
                       data-tooltip-id="my-tooltip"
@@ -343,28 +343,66 @@ export default function Commit() {
                       </Tag>
                     </a>
                   </div>
-                  <Input
-                    className="custom-input w-max"
-                    placeholder="100"
-                    min={1}
-                    maxLength={3}
-                    step={1}
-                    inputMode="numeric"
-                    onKeyDown={(e) => {
-                      if (!/^\d*$/.test(e.key) && e.key !== 'Backspace') {
-                        e.preventDefault();
-                      }
-                    }}
-                    onChange={(e) => setScreenTime((e.target.value))}
-                  />
+                  <div className="w-2/5">
+                    <Input
+                      className="custom-input w-full"
+                      placeholder="100"
+                      min={1}
+                      maxLength={3}
+                      step={1}
+                      inputMode="numeric"
+                      onKeyDown={(e) => {
+                        if (!/^\d*$/.test(e.key) && e.key !== 'Backspace') {
+                          e.preventDefault();
+                        }
+                      }}
+                      onChange={(e) => setScreenTime((e.target.value))}
+                    />
+                  </div>
                 </div>
               )}
 
               {screenTime &&
-                <div className="flex flex-col" style={{ direction: 'ltr' }}>
+                <div className="flex flex-row mb-2 -mt-2 text-xs md:text-sm" style={{ direction: 'ltr' }}>
+                  <div className="flex items-center w-3/5">
+                    <Typography className="font-semibold">
+                      {`What is your daily average pickup goal for ${capitalizeFirstLetter(socialTagNames[selectedTag])}?`}
+                    </Typography>
+                    <a
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-place="right"
+                      onClick={() => {
+                        handleWatchVideoClick(1)
+                      }}
+                    >
+                      <Tag
+                        style={{ background: '#1DD297' }}
+                        size="large"
+                        className="hover:scale-110 cursor-pointer ml-4 mr-4"
+                      >
+                        <b style={{ color: 'white' }}>?</b>
+                      </Tag>
+                    </a>
+                  </div>
+                  <div className="w-2/5">
+                    <Input
+                      className="custom-input w-full"
+                      placeholder="100"
+                      min={1}
+                      maxLength={3}
+                      step={1}
+                      inputMode="numeric"
+                      onKeyDown={(e) => {
+                        if (!/^\d*$/.test(e.key) && e.key !== 'Backspace') {
+                          e.preventDefault();
+                        }
+                      }}
+                      onChange={(e) => setScreenTime((e.target.value))}
+                    />
+                  </div>
                 </div>
               }
-
+              
               {showVideoEmbed && (
                 <LoomModal closeModal={closeModal} videoEmbedUrl={videoEmbedUrl} />
               )}
