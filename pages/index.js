@@ -161,8 +161,6 @@ export default function Commit() {
   const videoLinks = [
     'https://www.youtube.com/embed/_XTX4aZFEZQ',
     'https://www.youtube.com/embed/F4qlKB6_tRk',
-    'https://www.youtube.com/embed/74bsRJkmYeo',
-    'https://www.youtube.com/embed/Tujo3tx0QTE',
   ];
   const handleWatchVideoClick = (index) => {
     const videoLink = videoLinks[index];
@@ -220,8 +218,8 @@ export default function Commit() {
                 <Card className="flex flex-col self-center justify-center bg-white shadow-lg rounded-lg p-6 md:w-3/6" style={{ alignItens: ''}}>
                   <Typography className="font-semibold md:font-normal text-xs md:text-lg" style={{ lineHeight: '1.5em', fontWeight: '' }}>
                     Just Commit is a 1-month challenge designed to
-                    help you remove the surplus screen-time
-                    from the leisure app you most use.
+                    help you soothe the addiction you have
+                    with that app on your phone.
                   </Typography>
                 </Card>
 
@@ -299,41 +297,11 @@ export default function Commit() {
                     handleWatchVideoClick(0);
                   }}
                 >
-                  <Typography style={{ cursor: 'pointer' }}>Why am I here?</Typography>
+                  <Typography style={{ cursor: 'pointer' }}>How does this work?</Typography>
                 </div>
               </div>
 
               {videoWatched[0] && (
-                <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
-                  <div style={{ fontSize: '1.5em' }}>{videoWatched[1] ? '✅' : '→'}</div>
-                  <div
-                    className="permanent-underline hover:scale-105"
-                    style={{ fontSize: '1.2em' }}
-                    onClick={() => {
-                      handleWatchVideoClick(1);
-                    }}
-                  >
-                    <Typography style={{ cursor: 'pointer' }}>What is Just Commit?</Typography>
-                  </div>
-                </div>
-
-              )}
-              {videoWatched[1] && (
-                <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
-                  <div style={{ fontSize: '1.5em' }}>{videoWatched[2] ? '✅' : '→'}</div>
-                  <div
-                    className="permanent-underline hover:scale-105"
-                    style={{ fontSize: '1.2em' }}
-                    onClick={() => {
-                      handleWatchVideoClick(2);
-                    }}
-                  >
-                    <Typography style={{ cursor: 'pointer' }}>How does this work?</Typography>
-                  </div>
-                </div>
-              )}
-
-              {videoWatched[2] && (
                 <>
                   <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
                     <div style={{ fontSize: '1.5em' }}>{selectedTag !== null ? '✅' : '⬇️'}</div>
@@ -375,7 +343,7 @@ export default function Commit() {
                         data-tooltip-id="my-tooltip"
                         data-tooltip-place="right"
                         onClick={() => {
-                          handleWatchVideoClick(3)
+                          handleWatchVideoClick(1)
                         }}
                       >
                         <Tag
@@ -488,7 +456,7 @@ export default function Commit() {
                 onClick={() => toast.error("Complete the Typeform")}
               /> */}
 
-              {screenTime && videoWatched[1] && videoWatched[2] &&
+              {screenTime &&
                 <div>
                   {/* <br />
                   <br />
