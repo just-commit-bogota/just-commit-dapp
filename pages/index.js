@@ -277,7 +277,6 @@ export default function Commit() {
         {
           loadingState === 'loaded' &&
 
-
           <form
             id="form"
             className="form"
@@ -363,78 +362,6 @@ export default function Commit() {
 
               {screenTime &&
                 <div className="flex flex-col" style={{ direction: 'ltr' }}>
-                  <table className="">
-                    <thead>
-                      <tr>
-                        <th className="text-center">Week #</th>
-                        <th className="text-center">Minutes Goal</th>
-                        <th className="text-center">At Stake</th>
-                      </tr>
-                    </thead>
-                    <br></br>
-                    <tbody style={{ lineHeight: '25px' }}>
-                      <tr>
-                        <td className="text-center">1</td>
-                        <td className="text-center">
-                          {screenTime === null
-                            ? <span>? <span className="text-xs"><b>(↓25%)</b></span></span>
-                            : <><span>&lt; {Math.floor(screenTime * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
-                          }
-                        </td>
-                        <td className="flex flex-row justify-center items-center">
-                          <div className="flex flex-col">
-                            <img className="h-4" src="./polygon-logo-tilted.svg" />
-                          </div>
-                          &nbsp;{Math.floor(commitAmount * 0.25)}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="text-center">2</td>
-                        <td className="text-center">
-                          {screenTime === null
-                            ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
-                            : <><span>&lt; {Math.floor(screenTime * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
-                          }
-                        </td>
-                        <td className="flex flex-row justify-center items-center">
-                          <div className="flex flex-col">
-                            <img className="h-4" src="./polygon-logo-tilted.svg" />
-                          </div>
-                          &nbsp;{Math.floor(commitAmount * 0.25)}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="text-center">3</td>
-                        <td className="text-center">
-                          {screenTime === null
-                            ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
-                            : <><span>&lt; {Math.floor(screenTime * 0.75 * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
-                          }
-                        </td>
-                        <td className="flex flex-row justify-center items-center">
-                          <div className="flex flex-col">
-                            <img className="h-4" src="./polygon-logo-tilted.svg" />
-                          </div>
-                          &nbsp;{Math.floor(commitAmount * 0.25)}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="text-center">4</td>
-                        <td className="text-center">
-                          {screenTime === null
-                            ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
-                            : <><span>&lt;  {Math.floor(screenTime * 0.75 * 0.75 * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
-                          }
-                        </td>
-                        <td className="flex flex-row justify-center items-center">
-                          <div className="flex flex-col">
-                            <img className="h-4" src="./polygon-logo-tilted.svg" />
-                          </div>
-                          &nbsp;{Math.floor(commitAmount * 0.25)}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
                 </div>
               }
 
