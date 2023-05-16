@@ -27,14 +27,12 @@ export default function Commit() {
     }, 1000);
   }, [])
 
-  // challenge cost
+  // variables
   const CHALLENGE_COST = '100'
-  //const justCommitServices = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.09) : (CHALLENGE_COST * 0.09).toFixed(1);
-  //const gasCosts = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.01) : (CHALLENGE_COST * 0.01).toFixed(1);
-
   const commitTo = CONTRACT_OWNER
   const commitJudge = CONTRACT_OWNER
   const socialTagNames = ["insta", "tiktok", "twitter", "youtube", "snap"];
+  const challengeCostOptions = ["$10", "$100", "$1000"];
 
   // state
   const [commitAmount, setCommitAmount] = useState(CHALLENGE_COST) // TODO refactor this
@@ -47,7 +45,9 @@ export default function Commit() {
   const [showText, setShowText] = useState(false);
   const [userEmail, setUserEmail] = useState("null@null.com");
   const [screenTime, setScreenTime] = useState(null);
+  const [pickupGoal, setPickupGoal] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
+  const [selectedChallengeCost, setSelectedChallengeCost] = useState(null);
 
   // smart contract data
   const { chain } = useNetwork()
@@ -219,7 +219,7 @@ export default function Commit() {
                   <Typography className="font-semibold md:font-normal text-xs md:text-lg" style={{ lineHeight: '1.5em', fontWeight: '' }}>
                     Just Commit is a 1-month challenge designed to
                     help you soothe the addiction you have
-                    with that app on your phone.
+                    with that leisure app on your phone.
                   </Typography>
                 </Card>
 
@@ -366,7 +366,7 @@ export default function Commit() {
                 <div className="flex flex-row mb-2 -mt-2 text-xs md:text-sm" style={{ direction: 'ltr' }}>
                   <div className="flex items-center w-3/5">
                     <Typography className="font-semibold">
-                      {`What is your daily average pickup goal for ${capitalizeFirstLetter(socialTagNames[selectedTag])}?`}
+                      {`What is your daily average pickup goal for ${capitalizeFirstLetter(socialTagNames[selectedTag])} during the challenge?`}
                     </Typography>
                     <a
                       data-tooltip-id="my-tooltip"
@@ -397,11 +397,32 @@ export default function Commit() {
                           e.preventDefault();
                         }
                       }}
-                      onChange={(e) => setScreenTime((e.target.value))}
+                      onChange={(e) => setPickupGoal((e.target.value))}
                     />
                   </div>
                 </div>
               }
+
+              {pickupGoal && (
+                <>
+                  <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
+                    <div style={{ fontSize: '1.5em' }}>{selectedTag !== null ? '✅' : '⬇️'}</div>
+                    <div
+                      style={{ fontSize: '1.2em' }}
+                      onClick={() => {}}
+                    >
+                      <Typography>Stake Amount</Typography>
+                    </div>
+                  </div>
+                  <div className="flex justify-center mt-2" style={{ direction: 'ltr'}}>
+                    <SocialTags
+                      selectedTag={selectedTag}
+                      setSelectedTag={setSelectedTag}
+                      socialTagNames={socialTagNames}
+                    />
+                  </div>
+                </>
+              )}
               
               {showVideoEmbed && (
                 <LoomModal closeModal={closeModal} videoEmbedUrl={videoEmbedUrl} />
@@ -425,34 +446,6 @@ export default function Commit() {
 
               {screenTime &&
                 <div>
-                  {/* <br />
-                  <br />
-                  <div className="flex items-center gap-3 justify-center -mt-4 mb-5 hover:cursor-pointer" style={{ direction: "ltr" }}>
-                    <a
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-place="top"
-                      data-tooltip-content={`+ JC Services Rendered: ${justCommitServices} MATIC`}
-                    >
-                      <Tag
-                        style={{ background: '#1DD297' }}
-                        size="large"
-                      >
-                        <b style={{ color: 'white' }}>⚡</b>
-                      </Tag>
-                    </a>
-                    <a
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-place="top"
-                      data-tooltip-content={`+ Gas Fees (Sent Back To You): ${gasCosts} MATIC`}
-                    >
-                      <Tag
-                        style={{ background: '#1DD297' }}
-                        size="large"
-                      >
-                        <b style={{ color: 'white' }}>⛽</b>
-                      </Tag>
-                    </a>
-                  </div> */}
                   <div
                     className="flex justify-center"
                     style={{ direction: 'ltr' }}
