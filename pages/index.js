@@ -312,7 +312,7 @@ export default function Commit() {
                       <Typography>Select Leisure App</Typography>
                     </div>
                   </div>
-                  <div className="flex justify-center" style={{ direction: 'ltr'}}>
+                  <div className="flex justify-center mt-2" style={{ direction: 'ltr'}}>
                     <SocialTags
                       selectedTag={selectedTag}
                       setSelectedTag={setSelectedTag}
@@ -323,10 +323,29 @@ export default function Commit() {
               )}
             
               {selectedTag !== null && (
-                <div className="mt-2 mb-2 text-xs" style={{ direction: 'ltr' }}>
+                <div className="flex flex-row mb-2 text-xs" style={{ direction: 'ltr' }}>
+                  <div className="flex items-center">
+                    <Typography className="font-semibold">
+                      {`Number of times you picked up ${capitalizeFirstLetter(socialTagNames[selectedTag])} on a daily average last week`}
+                    </Typography>
+                    <a
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-place="right"
+                      onClick={() => {
+                        handleWatchVideoClick(1)
+                      }}
+                    >
+                      <Tag
+                        style={{ background: '#1DD297' }}
+                        size="large"
+                        className="hover:scale-110 cursor-pointer ml-4 mr-4"
+                      >
+                        <b style={{ color: 'white' }}>?</b>
+                      </Tag>
+                    </a>
+                  </div>
                   <Input
-                    className="custom-input"
-                    label={`Daily Average Minutes Spent on ${capitalizeFirstLetter(socialTagNames[selectedTag])} Last Week`}
+                    className="custom-input w-max"
                     placeholder="100"
                     min={1}
                     maxLength={3}
@@ -338,23 +357,6 @@ export default function Commit() {
                       }
                     }}
                     onChange={(e) => setScreenTime((e.target.value))}
-                    labelSecondary={
-                      <a
-                        data-tooltip-id="my-tooltip"
-                        data-tooltip-place="right"
-                        onClick={() => {
-                          handleWatchVideoClick(1)
-                        }}
-                      >
-                        <Tag
-                          style={{ background: '#1DD297' }}
-                          size="large"
-                          className="hover:scale-110 cursor-pointer"
-                        >
-                          <b style={{ color: 'white' }}>↗</b>
-                        </Tag>
-                      </a>
-                    }
                   />
                 </div>
               )}
