@@ -1,4 +1,5 @@
 import { Dropdown } from '@ensdomains/thorin'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { useState, useEffect } from "react";
 import Link from 'next/link'
 import { CONTRACT_ADDRESS } from '../contracts/CommitManager.ts';
@@ -46,7 +47,7 @@ export default function Header({ currentPage }) {
     <>
       {!isDesktop && (
        <>
-        <div className="header w-full inline-grid header--absolute bg-white gap-1" style={{ justifyContent: "center" }}>
+        <div className="header w-full inline-grid header--absolute bg-white gap-1" style={{ justifyContent: "space-around" }}>
           <div className="flex items-center ml-2">
             <Dropdown
               style={{ padding: "0px", boxShadow: "0px 2px 2px 1px rgb(0 0 0 / 80%)", borderRadius: "10px" }}
@@ -104,6 +105,9 @@ export default function Header({ currentPage }) {
               ]}
             />
           </div>
+          <div className="flex items-center text-xs sm:text-base mr-2">
+            <ConnectButton accountStatus="address" className="hover:shadow-lg" />
+          </div>
         </div>
        </>
       )}
@@ -114,7 +118,7 @@ export default function Header({ currentPage }) {
             className="header w-full header--absolute bg-white"
             style={{
               display: "grid",
-              gridTemplateColumns: "1fr auto",
+              gridTemplateColumns: "1fr auto 1fr",
               alignItems: "center",
             }}
           >
@@ -168,16 +172,19 @@ export default function Header({ currentPage }) {
               >
                 Discord ↗
               </a>
-              <a href={`https://${chain?.id === 80001 ? 'mumbai.' : ''}polygonscan.com/address/${CONTRACT_ADDRESS}`}
-                target="_blank" rel="noopener noreferrer">
-                <span style={{ fontSize: '1.5em' }}>📜</span>
-              </a> 
             </div>
             <Link href="/home">
               <a className="">
                 <img style={{ width: "320px" }} src="./logo-2.svg" />
               </a>
             </Link>
+            <div className="flex items-center text-xs sm:text-base justify-end mr-2 gap-6">
+              <ConnectButton accountStatus="address" className="hover:shadow-lg" />
+              <a href={`https://${chain?.id === 80001 ? 'mumbai.' : ''}polygonscan.com/address/${CONTRACT_ADDRESS}`}
+                target="_blank" rel="noopener noreferrer">
+                <span style={{ fontSize: '1.5em' }}>📜</span>
+              </a> 
+            </div>
           </div>
         </>
       )}

@@ -530,13 +530,6 @@ export default function Commit() {
                     </div>
                   </div>
                   <br />
-                  <div
-                    className="flex justify-center cursor-pointer"
-                    style={{ direction: 'ltr' }}
-                  >
-                    <ConnectButton className="" showBalance={true} accountStatus="none" />
-                  </div>
-                  <br />
                   <br />
                 </div>
               }
