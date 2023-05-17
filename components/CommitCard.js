@@ -87,6 +87,16 @@ export default function CommitCard({ ...props }) {
     }
   })
 
+  const closeModal = () => {
+    setShowVideoModal(false);
+  };
+  
+  const handleKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      closeModal();
+    }
+  };
+  
   // FUNCTIONS
 
   // upload the pic
@@ -149,6 +159,13 @@ export default function CommitCard({ ...props }) {
     const urlPrefix = process.env.NEXT_PUBLIC_SUPABASE_URL + "/storage/v1/object/public/images/"
     return (urlPrefix + filename.replace(/ /g, "%20"))
   }
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
     <>
@@ -260,12 +277,7 @@ export default function CommitCard({ ...props }) {
                           </a>
                         </div>
                       );
-                    })()}
-                    {showVideoModal &&
-                      <VideoModal
-                        closeModal={() => setShowVideoModal(false)}
-                        videoEmbedUrl={'https://www.youtube.com/embed/5sVuX8LljIg'}
-                        />}
+                    })()}        
                   </div>
                 </div>
               </>
@@ -400,6 +412,12 @@ export default function CommitCard({ ...props }) {
         */}
 
       </div>
+      {showVideoModal &&
+        <VideoModal
+          closeModal={() => setShowVideoModal(false)}
+          videoEmbedUrl={'https://www.youtube.com/embed/5sVuX8LljIg'}
+        />
+      }  
     </>
   )
 }

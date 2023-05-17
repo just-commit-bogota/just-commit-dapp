@@ -30,7 +30,7 @@ export default function Commit() {
   const commitTo = CONTRACT_OWNER
   const commitJudge = CONTRACT_OWNER
   const socialTagNames = ["insta", "tiktok", "twitter", "youtube", "snap"];
-  const betAmountOptions = ["10", "100", "1000"];
+  const betAmountOptions = ["0", "10", "100"];
 
   // state
   const [loadingState, setLoadingState] = useState('loading')

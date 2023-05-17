@@ -25,11 +25,10 @@ const VideoModal = ({ closeModal, videoEmbedUrl }) => {
     >
       <div
         style={{
-          position: 'fixed',
+          position: 'relative',
           width: '80%',
           height: '80%',
           backgroundColor: 'white',
-          position: 'relative',
           borderRadius: '10px',
         }}
         onClick={(e) => e.stopPropagation()}
