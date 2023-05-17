@@ -12,7 +12,6 @@ import Spinner from "../components/Spinner.js";
 import SocialTags from "../components/SocialTags.js";
 import LoomModal from "../components/LoomModal.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
-import { ConnectButton } from '@rainbow-me/rainbowkit'
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { sendAnEmail } from "../utils/emailService";
@@ -32,7 +31,7 @@ export default function Commit() {
   const commitTo = CONTRACT_OWNER
   const commitJudge = CONTRACT_OWNER
   const socialTagNames = ["insta", "tiktok", "twitter", "youtube", "snap"];
-  const challengeCostOptions = ["$10", "$100", "$1000"];
+  const betAmountOptions = ["$10", "$100", "$1000"];
 
   // state
   const [commitAmount, setCommitAmount] = useState(CHALLENGE_COST) // TODO refactor this
@@ -47,7 +46,7 @@ export default function Commit() {
   const [screenTime, setScreenTime] = useState(null);
   const [pickupGoal, setPickupGoal] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
-  const [selectedChallengeCost, setSelectedChallengeCost] = useState(null);
+  const [selectedBetAmount, setSelectedBetAmount] = useState(null);
 
   // smart contract data
   const { chain } = useNetwork()
@@ -93,7 +92,6 @@ export default function Commit() {
       walletMaticBalance > parseFloat(CHALLENGE_COST) &&
       screenTime > 0;
   };
-
 
   // functions
   const handleSaveCommitment = async (email, chain) => {
@@ -160,6 +158,7 @@ export default function Commit() {
   };
   const videoLinks = [
     'https://www.youtube.com/embed/_XTX4aZFEZQ',
+    'https://www.youtube.com/embed/F4qlKB6_tRk',
     'https://www.youtube.com/embed/F4qlKB6_tRk',
   ];
   const handleWatchVideoClick = (index) => {
@@ -316,6 +315,7 @@ export default function Commit() {
                       selectedTag={selectedTag}
                       setSelectedTag={setSelectedTag}
                       socialTagNames={socialTagNames}
+                      isStyled={false}
                     />
                   </div>
                 </>
@@ -406,19 +406,21 @@ export default function Commit() {
               {pickupGoal && (
                 <>
                   <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
-                    <div style={{ fontSize: '1.5em' }}>{selectedTag !== null ? '✅' : '⬇️'}</div>
+                    <div style={{ fontSize: '1.5em' }}>{selectedBetAmount !== null ? '✅' : '⬇️'}</div>
                     <div
                       style={{ fontSize: '1.2em' }}
                       onClick={() => {}}
                     >
-                      <Typography>Stake Amount</Typography>
+                      <Typography>Choose Bet Amount</Typography>
                     </div>
                   </div>
                   <div className="flex justify-center mt-2" style={{ direction: 'ltr'}}>
-                    <SocialTags
-                      selectedTag={selectedTag}
-                      setSelectedTag={setSelectedTag}
-                      socialTagNames={socialTagNames}
+                    <SocialTags className=""
+                      // hacky solution. not proud, but it works.
+                      selectedTag={selectedBetAmount}
+                      setSelectedTag={setSelectedBetAmount}
+                      socialTagNames={betAmountOptions}
+                      isStyled={true}
                     />
                   </div>
                 </>
