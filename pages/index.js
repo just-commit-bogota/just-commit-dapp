@@ -216,9 +216,8 @@ export default function Commit() {
 
                 <Card className="flex flex-col self-center justify-center bg-white shadow-lg rounded-lg p-6 md:w-3/6" style={{ alignItens: ''}}>
                   <Typography className="font-semibold md:font-normal text-xs md:text-lg" style={{ lineHeight: '1.5em', fontWeight: '' }}>
-                    Just Commit is a 1-month challenge designed to
-                    help you soothe the addiction you have
-                    with that leisure app on your phone.
+                    Just Commit is a 1-month challenge that's designed to
+                    help you use that leisure app on your phone less often.
                   </Typography>
                 </Card>
 
@@ -250,7 +249,7 @@ export default function Commit() {
                       fontSize: '0.6em',
                     }}
                   >
-                    Get ready to feel more...{' '}
+                    Start to feel more...{' '}
                     <span
                       className=""
                       style={{
