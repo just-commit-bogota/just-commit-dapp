@@ -10,6 +10,7 @@ import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContra
 import Header from '../components/Header.js';
 import Spinner from "../components/Spinner.js";
 import SocialTags from "../components/SocialTags.js";
+import VideoModal from "../components/VideoModal.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -297,6 +298,10 @@ export default function Commit() {
               }
 
             }}>
+
+            {showVideoEmbed && (
+              <VideoModal closeModal={closeModal} videoEmbedUrl={videoEmbedUrl} />
+            )}
 
             <div className="flex flex-col w-full gap-6 mt-0" style={{ direction: 'rtl' }}>
               <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
