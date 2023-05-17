@@ -160,14 +160,16 @@ export default function CommitCard({ ...props }) {
         <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px" }}>
           <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
             <div className="text-sm block">
-              <span>&lt;</span> {`${parseInt(props.appPickups)} daily avg minutes this week`}
+              <span>&lt;</span> {`${parseInt(props.pickupGoal)} ${props.appName} pickups/day on avg in a week`}
             </div>
             <div className="flex space-x-2" style={{ whiteSpace: "nowrap" }}>
               <div className="span flex text-sm text-slate-400 gap-2 opacity-80" style={{ whiteSpace: "nowrap" }}>
                 {
                   // active
                   props.status === "Pending" ? (
-                    <><Countdown status={props.status} endsAt={props.endsAt} judgeDeadline={props.judgeDeadline} /></>
+                    <div className="text-xs self-center">
+                      <Countdown status={props.status} endsAt={props.endsAt} judgeDeadline={props.judgeDeadline} />
+                    </div>
                   ) : // waiting or verify
                   props.status === "Waiting" ? (
                     <>
@@ -203,63 +205,42 @@ export default function CommitCard({ ...props }) {
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
                   <div className="flex">
                     {(() => {
-                      const shouldLock = (props.endsAt - Date.now()) > (24 * 60 * 60 * 1000); // change "24" to "9999" for testing
-                
-                      if (shouldLock) {
-                        return (
-                          <>
-                            <a
-                              data-tooltip-id="my-tooltip"
-                              data-tooltip-place="top"
-                              data-tooltip-content="Unlocks 1d before deadline"
-                            >
-                             <Tag
-                                style={{ background: '#ffffff' }}
-                                size="large"
-                              >
-                                <span className="text-2xl">&nbsp;🔒&nbsp;</span>
-                              </Tag>
-                            </a>
-                          </>
-                        );
-                      } else {
-                        return (
-                          <FileInput maxSize={20} onChange={(file) => uploadFile(file)}>
-                            {(context) =>
-                              (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ? (
-                                <div className="flex flex-col" style={{ alignItems: "center" }}>
-                                  <Spinner />
-                                  <div className="heartbeat text-xs">(Don&#39;t Refresh)</div>
-                                </div>
-                              ) : context.name && triggerProveContractFunctions ? (
-                                <div>
-                                  <a
-                                    className="text-4xl hover:cursor-pointer"
-                                    href="#"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      location.reload();
-                                    }}
-                                  >
-                                    &nbsp;🔁&nbsp;
-                                  </a>
-                                </div>
-                              ) : (
-                                <div>
-                                  <Tag
-                                    className="text-2xl hover:cursor-pointer"
-                                    tone="accent"
-                                    variation="primary"
-                                    size="large"
-                                  >
-                                    &nbsp;📷&nbsp;
-                                  </Tag>
-                                </div>
-                              )
-                            }
-                          </FileInput>
-                        );
-                      }
+                      return (
+                        <FileInput maxSize={20} onChange={(file) => uploadFile(file)}>
+                          {(context) =>
+                            (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ? (
+                              <div className="flex flex-col" style={{ alignItems: "center" }}>
+                                <Spinner />
+                                <div className="heartbeat text-xs">(Don&#39;t Refresh)</div>
+                              </div>
+                            ) : context.name && triggerProveContractFunctions ? (
+                              <div>
+                                <a
+                                  className="text-4xl hover:cursor-pointer"
+                                  href="#"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    location.reload();
+                                  }}
+                                >
+                                  &nbsp;🔁&nbsp;
+                                </a>
+                              </div>
+                            ) : (
+                              <div>
+                                <Tag
+                                  className="text-2xl hover:cursor-pointer"
+                                  tone="accent"
+                                  variation="primary"
+                                  size="large"
+                                >
+                                  &nbsp;📷&nbsp;
+                                </Tag>
+                              </div>
+                            )
+                          }
+                        </FileInput>
+                      );
                     })()}
                   </div>
                 </div>
@@ -367,7 +348,7 @@ export default function CommitCard({ ...props }) {
 
             <div className="flex flex-row p-1">
               <div className="flex flex-col align-center justify-center">
-                <img className="h-6" src="./ethereum-logo.png" />
+                <img className="h-4" src="./ethereum-logo.png" />
               </div>
               <div className="flex flex-col font-semibold align-center justify-center text-l ml-1">
                 {parseFloat(props.stakeAmount).toFixed(2) % 1 === 0 ? parseInt(props.stakeAmount) : parseFloat(props.stakeAmount).toFixed(2)}
