@@ -3,6 +3,11 @@ import { Tag } from '@ensdomains/thorin';
 
 const SocialTags = ({ selectedTag, setSelectedTag, socialTagNames, isStyled }) => {
 
+  function addDollarSign(string) {
+    if (!string) return "";
+    return "$" + string;
+  }
+
   const handleClick = (index) => {
     setSelectedTag(index);
   };
@@ -20,7 +25,7 @@ const SocialTags = ({ selectedTag, setSelectedTag, socialTagNames, isStyled }) =
             ...(isStyled ? { fontSize: '1.25rem', padding: '6px' } : {}),
           }}
         >
-          {tagText}
+          {isStyled ? addDollarSign(tagText) : tagText}
         </Tag>
       ))}
     </div>

@@ -10,7 +10,6 @@ import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContra
 import Header from '../components/Header.js';
 import Spinner from "../components/Spinner.js";
 import SocialTags from "../components/SocialTags.js";
-import LoomModal from "../components/LoomModal.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -27,14 +26,12 @@ export default function Commit() {
   }, [])
 
   // variables
-  const CHALLENGE_COST = '100'
   const commitTo = CONTRACT_OWNER
   const commitJudge = CONTRACT_OWNER
   const socialTagNames = ["insta", "tiktok", "twitter", "youtube", "snap"];
-  const betAmountOptions = ["$10", "$100", "$1000"];
+  const betAmountOptions = ["10", "100", "1000"];
 
   // state
-  const [commitAmount, setCommitAmount] = useState(CHALLENGE_COST) // TODO refactor this
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
   const [walletMaticBalance, setWalletMaticBalance] = useState(null)
@@ -58,7 +55,7 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitTo, commitJudge, screenTime, { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
+    args: [commitTo, commitJudge, screenTime, { value: (betAmountOptions[selectedBetAmount] == null ? "10" : ethers.utils.parseEther(betAmountOptions[selectedBetAmount])) }],
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
@@ -145,11 +142,6 @@ export default function Commit() {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
-  function stripDollarSign(string) {
-    if (!string) return "";
-    return string.replace(/\$/g, '');
-  }
-
   // commit logic related
   const closeModal = () => {
     setShowVideoEmbed(false);
@@ -181,6 +173,13 @@ export default function Commit() {
   // polygon stats
   // const priceApi = useFetch('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd')
   // const maticPrice = parseFloat(priceApi.data?.["matic-network"].usd)
+
+  const isCommitButtonEnabled = () => {
+    return videoWatched.every(v => v) &&
+      Boolean(address) &&
+      walletMaticBalance > parseFloat(CHALLENGE_COST) &&
+      screenTime > 0;
+  };
 
   // effects
   useEffect(() => {
@@ -485,7 +484,7 @@ export default function Commit() {
                   size="small"
                   shadowless
                   type="submit"
-                  suffix={"(" + (parseFloat(stripDollarSign(betAmountOptions[selectedBetAmount])) / ethPrice).toFixed(2) + " ETH) "}
+                  suffix={"(" + (parseFloat(betAmountOptions[selectedBetAmount]) / ethPrice).toFixed(2) + " ETH) "}
                   // disabled={!isCommitButtonEnabled()}
                   onClick={commitWrite}
                 >
@@ -557,11 +556,14 @@ export default function Commit() {
 
             {/*ethPrice: {ethPrice}*/}
 
-            {/* commitAmount: {commitAmount}
             <br></br>
-            commitJudge: {commitJudge}
+            socialTagNames[selectedTag]: {socialTagNames[selectedTag]}
             <br></br>
-            commitTo: {commitTo} */}
+            betAmountOptions[selectedBetAmount]: {betAmountOptions[selectedBetAmount]}
+            <br></br>
+            screenTime: {screenTime}
+            <br></br>
+            pickupGoal: {pickupGoal}
 
             {/* <br></br>
             <br></br>
