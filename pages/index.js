@@ -20,7 +20,7 @@ export default function Commit() {
 
   // first pass
   useEffect(() => {
-    getWalletMaticBalance()
+    getWalletEthBalance()
     setTimeout(() => {
       setLoadingState("loaded");
     }, 1000);
@@ -35,13 +35,13 @@ export default function Commit() {
   // state
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
-  const [walletMaticBalance, setWalletMaticBalance] = useState(null)
+  const [walletEthBalance, setWalletEthBalance] = useState(null)
   const [showVideoEmbed, setShowVideoEmbed] = useState(false);
   const [videoWatched, setVideoWatched] = useState([false, false, false]);
   const [videoEmbedUrl, setVideoEmbedUrl] = useState(null);
   const [showText, setShowText] = useState(false);
   const [userEmail, setUserEmail] = useState("null@null.com");
-  const [screenTime, setScreenTime] = useState(null);
+  const [appPickups, setAppPickups] = useState(null);
   const [pickupGoal, setPickupGoal] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
   const [selectedBetAmount, setSelectedBetAmount] = useState(null);
@@ -56,7 +56,7 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitTo, commitJudge, screenTime, { value: (betAmountOptions[selectedBetAmount] == null ? "10" : ethers.utils.parseEther(betAmountOptions[selectedBetAmount])) }],
+    args: [commitTo, commitJudge, appPickups, { value: (betAmountOptions[selectedBetAmount] == null ? "10" : ethers.utils.parseEther(betAmountOptions[selectedBetAmount])) }],
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
@@ -77,8 +77,8 @@ export default function Commit() {
     async onSettled() {
       setHasCommited(true)
       await handleSaveCommitment(userEmail, chain);
-      // send an email only on Polygon Mainnet
-      if (chain?.id == 137) {
+      // send an email only on ETH Mainnet
+      if (chain?.id == 1) {
         sendAnEmail(userEmail);
       }
     },
@@ -86,12 +86,12 @@ export default function Commit() {
 
   // functions
   const handleSaveCommitment = async (email, chain) => {
-    if (chain?.id !== 137 && chain?.id !== 80001) {
-      console.log('Not on Polygon, skipping Supabase write.');
+    if (chain?.id !== 1 && chain?.id !== 5) {
+      console.log('Not on ETH, skipping Supabase write.');
       return;
     }
   
-    const environment = chain?.id === 137 ? 'prod' : 'dev';
+    const environment = chain?.id === 1 ? 'prod' : 'dev';
   
     try {
       const response = await fetch('/api/save_commitment', {
@@ -128,10 +128,10 @@ export default function Commit() {
     return number.toLocaleString('en-US', options);
   }
 
-  async function getWalletMaticBalance() {
+  async function getWalletEthBalance() {
     try {
-      const balanceMatic = await provider.getBalance(address)
-      setWalletMaticBalance(parseFloat((Number(ethers.utils.formatEther(balanceMatic)))))
+      const balanceEth = await provider.getBalance(address)
+      setWalletEthBalance(parseFloat((Number(ethers.utils.formatEther(balanceEth)))))
     } catch (err) {
       console.error("Error getting wallet balance:", err);
       return null;
@@ -178,13 +178,13 @@ export default function Commit() {
   const isCommitButtonEnabled = () => {
     return videoWatched.every(v => v) &&
       Boolean(address) &&
-      walletMaticBalance > parseFloat(CHALLENGE_COST) &&
-      screenTime > 0;
+      walletEthBalance > parseFloat(CHALLENGE_COST) &&
+      appPickups > 0;
   };
 
   // effects
   useEffect(() => {
-    getWalletMaticBalance()
+    getWalletEthBalance()
   }, [address])
 
   useEffect(() => {
@@ -293,7 +293,7 @@ export default function Commit() {
                 return toast.error('Switch chains')
               }
               // sufficient balance?
-              if (walletMaticBalance < parseFloat(betAmountOptions[selectedBetAmount])) {
+              if (walletEthBalance < parseFloat(betAmountOptions[selectedBetAmount])) {
                 return toast.error('Not enough funds')
               }
 
@@ -374,13 +374,13 @@ export default function Commit() {
                           e.preventDefault();
                         }
                       }}
-                      onChange={(e) => setScreenTime((e.target.value))}
+                      onChange={(e) => setAppPickups((e.target.value))}
                     />
                   </div>
                 </div>
               )}
 
-              {screenTime &&
+              {appPickups &&
                 <div className="flex flex-row mb-2 -mt-2 text-xs md:text-sm" style={{ direction: 'ltr' }}>
                   <div className="flex items-center w-3/5">
                     <Typography className="font-semibold">
@@ -547,8 +547,8 @@ export default function Commit() {
                       className="flex align-center mt-6 mb-5 sm:mb-0 justify-center rounded-lg hover:cursor-pointer"
                       style={{ background: "#bae6fd", zIndex: 2, fontSize: "1.2rem", padding: "5px" }}
                       as="a"
-                      href={`https://${chain?.id === 80001 ? 'mumbai.' : ''
-                        }polygonscan.com/tx/${commitWriteData.hash}`}
+                      href={`https://${chain?.id === 5 ? 'goerli.' : ''
+                        }etherscan.com/tx/${commitWriteData.hash}`}
                       target="_blank"
                       rel="noreferrer"
                     >
@@ -577,7 +577,7 @@ export default function Commit() {
             <br></br>
             betAmountOptions[selectedBetAmount]: {betAmountOptions[selectedBetAmount]}
             <br></br>
-            screenTime: {screenTime}
+            appPickups: {appPickups}
             <br></br>
             pickupGoal: {pickupGoal}
 
