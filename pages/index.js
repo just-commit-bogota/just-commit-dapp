@@ -85,13 +85,6 @@ export default function Commit() {
       }
     },
   })
-  
-  const isCommitButtonEnabled = () => {
-    return videoWatched.every(v => v) &&
-      Boolean(address) &&
-      walletMaticBalance > parseFloat(CHALLENGE_COST) &&
-      screenTime > 0;
-  };
 
   // functions
   const handleSaveCommitment = async (email, chain) => {
@@ -152,6 +145,11 @@ export default function Commit() {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
+  function stripDollarSign(string) {
+    if (!string) return "";
+    return string.replace(/\$/g, '');
+  }
+
   // commit logic related
   const closeModal = () => {
     setShowVideoEmbed(false);
@@ -177,9 +175,12 @@ export default function Commit() {
     }
   };
 
+  // eth stats
+  const priceApi = useFetch('https://gas.best/stats')
+  const ethPrice = parseFloat(priceApi.data?.ethPrice)
   // polygon stats
-  const priceApi = useFetch('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd')
-  const maticPrice = parseFloat(priceApi.data?.["matic-network"].usd)
+  // const priceApi = useFetch('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd')
+  // const maticPrice = parseFloat(priceApi.data?.["matic-network"].usd)
 
   // effects
   useEffect(() => {
@@ -281,6 +282,8 @@ export default function Commit() {
             className="form"
 
             // Toast Checks
+            // (walletMaticBalance > parseFloat(CHALLENGE_COST))
+            //  Boolean(address) && walletMaticBalance > parseFloat(CHALLENGE_COST) && screenTime > 0;
             onSubmit={async (e) => {
               e.preventDefault()
             }}>
@@ -425,67 +428,15 @@ export default function Commit() {
                   </div>
                 </>
               )}
-              
-              {showVideoEmbed && (
-                <LoomModal closeModal={closeModal} videoEmbedUrl={videoEmbedUrl} />
-              )}
-              {/* <Checkbox
-                label={
-                  <PopupButton
-                    id="IfnJtCQO"
-                    onSubmit={() => {
-                      setTypeformCompleted(true);
-                    }}
-                  >
-                    <button className="permanent-underline">
-                      Fill Out The Form
-                    </button>
-                  </PopupButton>
-                }
-                checked={typeformCompleted}
-                onClick={() => toast.error("Complete the Typeform")}
-              /> */}
 
-              {screenTime &&
-                <div>
-                  <div
-                    className="flex justify-center"
-                    style={{ direction: 'ltr' }}
-                  >
-                    <div
-                      className="flex justify-center"
-                      style={{ direction: 'ltr', color: '#3B3B3B', fontSize: '16px', fontWeight: 'bold' }}>
-                      {"(1 MATIC = "}
-                      {formatCurrency(!priceApi.isLoading && formatCurrency(maticPrice, "USD"))})
-                    </div>
-                  </div>
-                  <br />
-                  <br />
-                </div>
-              }
             </div>
 
-            {screenTime &&
-            (!(walletMaticBalance > parseFloat(CHALLENGE_COST))) && 
-              <>
-                <div
-                  className="flex justify-center"
-                  style={{ direction: 'ltr', color: '#D0312D', fontSize: '16px', fontWeight: 'bold' }}>
-                    &gt; {CHALLENGE_COST} MATIC (+ gas) to Commit
-                </div>
-                <br />
-                <br />
-              </>
-            }
-
            {/* Commit Button */}
-           {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) &&
-            (walletMaticBalance > parseFloat(CHALLENGE_COST)) &&
-            isCommitButtonEnabled() && (
+           {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) && selectedBetAmount !== null && (
               <>
-                <div className="flex justify-center text-sm hover:cursor-pointer" style={{ direction: "ltr" }}>
+                <div className="flex justify-center text-sm hover:cursor-pointer mt-6" style={{ direction: "ltr" }}>
                   <Input
-                    label="Your Email (For Weekly Reminders)"
+                    label="Your Email (To Get A Reminder)"
                     placeholder="daniel@belfort.com"
                     // error={ userEmail && !userEmail.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/) ? ' ' : '' }
                     onChange={(e) => setUserEmail(e.target.value)}
@@ -509,7 +460,7 @@ export default function Commit() {
                     height: "2.8rem",
                     marginTop: "2rem",
                     marginBottom: "0rem",
-                    backgroundColor: isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
+                    backgroundColor: "rgb(29 210 151)", // isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
                     borderRadius: 12,
                     color: "white",
                     transition: "transform 0.2s ease-in-out",
@@ -517,9 +468,8 @@ export default function Commit() {
                   size="small"
                   shadowless
                   type="submit"
-                  suffix={"(" + commitAmount + " MATIC) "}
-                  // suffix= {"(" + formatCurrency(100, "USD") + ")"} // {!priceApi.isLoading && "(" + formatCurrency(maticPrice * commitAmount, "USD") + ")"}
-                  disabled={!isCommitButtonEnabled()}
+                  suffix={"(" + (parseFloat(stripDollarSign(betAmountOptions[selectedBetAmount])) / ethPrice).toFixed(2) + " ETH) "}
+                  // disabled={!isCommitButtonEnabled()}
                   onClick={commitWrite}
                 >
                   Commit
@@ -588,7 +538,7 @@ export default function Commit() {
             block.timestamp * 1000: {Math.floor(Date.now() / 1000) * 1000}
             <br></br>*/}
 
-            {/* userEmail: {userEmail} */}
+            {/*ethPrice: {ethPrice}*/}
 
             {/* commitAmount: {commitAmount}
             <br></br>
