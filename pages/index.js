@@ -167,8 +167,7 @@ export default function Commit() {
   };
   const videoLinks = [
     'https://www.youtube.com/embed/_XTX4aZFEZQ',
-    'https://www.youtube.com/embed/F4qlKB6_tRk',
-    'https://www.youtube.com/embed/F4qlKB6_tRk',
+    'https://www.youtube.com/embed/5sVuX8LljIg',
   ];
   const handleWatchVideoClick = (index) => {
     const videoLink = videoLinks[index];
@@ -405,17 +404,11 @@ export default function Commit() {
                     </Typography>
                     <a
                       data-tooltip-id="my-tooltip"
-                      data-tooltip-place="right"
-                      onClick={() => {
-                        handleWatchVideoClick(1)
-                      }}
+                      data-tooltip-content="What do you want to get that number down to?"
+                      data-tooltip-place="top"
                     >
-                      <Tag
-                        style={{ background: '#1DD297' }}
-                        size="large"
-                        className="hover:scale-110 cursor-pointer ml-4 mr-4"
-                      >
-                        <b style={{ color: 'white' }}>?</b>
+                      <Tag className="ml-4 mr-4 hover:cursor-pointer" style={{ background: "#1DD297" }} size="large">
+                        <b style={{ color: "white" }}>?</b>
                       </Tag>
                     </a>
                   </div>
