@@ -46,7 +46,7 @@ export default function Commit() {
   const [selectedBetAmount, setSelectedBetAmount] = useState(null);
 
   // smart contract data
-  const { chain } = useNetwork()
+  const { chain, chains } = useNetwork()
   const { address } = useAccount()
   const provider = useProvider()
 
@@ -280,10 +280,22 @@ export default function Commit() {
             className="form"
 
             // Toast Checks
-            // (walletMaticBalance > parseFloat(CHALLENGE_COST))
-            //  Boolean(address) && walletMaticBalance > parseFloat(CHALLENGE_COST) && screenTime > 0;
             onSubmit={async (e) => {
               e.preventDefault()
+
+              // is wallet connected?
+              if (!address) {
+                return toast.error('Connect your wallet')
+              }
+              // are you on the right network?
+              if (!chains.some((c) => c.id === chain.id)) {
+                return toast.error('Switch chains')
+              }
+              // sufficient balance?
+              if (walletMaticBalance < parseFloat(betAmountOptions[selectedBetAmount])) {
+                return toast.error('Not enough funds')
+              }
+
             }}>
 
             <div className="flex flex-col w-full gap-6 mt-0" style={{ direction: 'rtl' }}>
@@ -492,7 +504,7 @@ export default function Commit() {
               </>
             )}
 
-            <Toaster toastOptions={{ duration: 2000 }} />
+            <Toaster position="bottom-center" toastOptions={{ duration: 2000 }} />
             <Tooltip id="my-tooltip"
               style={{ backgroundColor: "#1DD297", color: "#ffffff", fontWeight: 500 }}
             />
