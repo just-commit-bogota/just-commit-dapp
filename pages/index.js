@@ -56,7 +56,7 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitTo, commitJudge, appPickups, { value: (betAmountOptions[selectedBetAmount] == null ? "10" : ethers.utils.parseEther(betAmountOptions[selectedBetAmount])) }],
+    args: [commitTo, commitJudge, appPickups, pickupGoal, socialTagNames[selectedTag], { value: (betAmountOptions[selectedBetAmount] == null ? "10" : ethers.utils.parseEther(betAmountOptions[selectedBetAmount])) }],
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
@@ -176,10 +176,9 @@ export default function Commit() {
   // const maticPrice = parseFloat(priceApi.data?.["matic-network"].usd)
 
   const isCommitButtonEnabled = () => {
-    return videoWatched.every(v => v) &&
-      Boolean(address) &&
-      walletEthBalance > parseFloat(CHALLENGE_COST) &&
-      appPickups > 0;
+    return Boolean(address) &&
+    chains.some((c) => c.id === chain.id) && 
+    walletEthBalance > parseFloat(betAmountOptions[selectedBetAmount] / ethPrice);
   };
 
   // effects
@@ -293,7 +292,7 @@ export default function Commit() {
                 return toast.error('Switch chains')
               }
               // sufficient balance?
-              if (walletEthBalance < parseFloat(betAmountOptions[selectedBetAmount])) {
+              if (walletEthBalance < parseFloat(betAmountOptions[selectedBetAmount] / ethPrice)) {
                 return toast.error('Not enough funds')
               }
 
@@ -492,7 +491,7 @@ export default function Commit() {
                     height: "2.8rem",
                     marginTop: "0rem",
                     marginBottom: "0rem",
-                    backgroundColor: "rgb(29 210 151)", // isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
+                    backgroundColor: isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
                     borderRadius: 12,
                     color: "white",
                     transition: "transform 0.2s ease-in-out",
@@ -580,7 +579,13 @@ export default function Commit() {
             appPickups: {appPickups}
             <br></br>
             pickupGoal: {pickupGoal}
-
+            <br></br>
+            betAmountOptions[selectedBetAmount] / ethPrice: {betAmountOptions[selectedBetAmount] / ethPrice}
+            <br></br>
+            walletEthBalance: {walletEthBalance}
+            <br></br>
+            isCommitButtonEnabled: {isCommitButtonEnabled}
+            
             {/* <br></br>
             <br></br>
             maticPrice * commitAmount: {typeof(maticPrice * commitAmount)}
