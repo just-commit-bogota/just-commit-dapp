@@ -56,7 +56,25 @@ export default function Commit() {
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitTo, commitJudge, appPickups, pickupGoal, socialTagNames[selectedTag], { value: (betAmountOptions[selectedBetAmount] == null ? "10" : ethers.utils.parseEther(betAmountOptions[selectedBetAmount])) }],
+    args: [
+      commitTo, 
+      commitJudge, 
+      appPickups, 
+      pickupGoal, 
+      socialTagNames[selectedTag],
+      { 
+        value: (
+          betAmountOptions[selectedBetAmount] !== undefined &&
+          typeof betAmountOptions[selectedBetAmount] === 'number' &&
+          ethPrice !== undefined &&
+          typeof ethPrice === 'number'
+        ) ? 
+          ethers.utils.parseEther(
+            (betAmountOptions[selectedBetAmount] / ethPrice).toString()
+          ) : 
+          ethers.utils.parseEther("0.01") // TEMPORARY
+      }
+    ],
   })
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
