@@ -250,7 +250,7 @@ export default function Commit() {
                       <Tag
                         style={{ background: '#1DD297' }}
                         size="large"
-                        className="hover:scale-125 cursor-pointer mt-6"
+                        className="hover:scale-150 cursor-pointer mt-6"
                       >
                         <b style={{ color: 'white' }}>?</b>
                       </Tag>

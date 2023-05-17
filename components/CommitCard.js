@@ -8,6 +8,7 @@ import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from
 import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
 import Countdown from '../components/Countdown.js'
+import VideoModal from "../components/VideoModal.js";
 import Image from 'next/image'
 import toast, { Toaster } from 'react-hot-toast'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
@@ -23,6 +24,7 @@ export default function CommitCard({ ...props }) {
   const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
+  const [showVideoModal, setShowVideoModal] = useState(false);
   const [isApproved, setIsApproved] = useState(false)
 
   // function to resolve ENS name on ETH mainnet
@@ -159,8 +161,8 @@ export default function CommitCard({ ...props }) {
       })}>
         <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px" }}>
           <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
-            <div className="text-sm block">
-              <span>&lt;</span> {`${parseInt(props.pickupGoal)} ${props.appName} pickups/day on avg in a week`}
+            <div className="text-sm block mr-2">
+              <span>&lt;</span> {`${parseInt(props.pickupGoal)} ${props.appName} pickups per day on avg in a week`}
             </div>
             <div className="flex space-x-2" style={{ whiteSpace: "nowrap" }}>
               <div className="span flex text-sm text-slate-400 gap-2 opacity-80" style={{ whiteSpace: "nowrap" }}>
@@ -202,46 +204,68 @@ export default function CommitCard({ ...props }) {
             {/* card is active */}
             {props.status == "Pending" &&
               <>
-                <div className="flex flex-col" style={{ alignItems: "center" }}>
-                  <div className="flex">
+                <div className="flex flex-row gap-1" style={{ alignItems: "center" }}>
+                  <div className="flex flex-row items-center">
                     {(() => {
                       return (
-                        <FileInput maxSize={20} onChange={(file) => uploadFile(file)}>
-                          {(context) =>
-                            (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ? (
-                              <div className="flex flex-col" style={{ alignItems: "center" }}>
-                                <Spinner />
-                                <div className="heartbeat text-xs">(Don&#39;t Refresh)</div>
-                              </div>
-                            ) : context.name && triggerProveContractFunctions ? (
-                              <div>
-                                <a
-                                  className="text-4xl hover:cursor-pointer"
-                                  href="#"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    location.reload();
-                                  }}
-                                >
-                                  &nbsp;🔁&nbsp;
-                                </a>
-                              </div>
-                            ) : (
-                              <div>
-                                <Tag
-                                  className="text-2xl hover:cursor-pointer"
-                                  tone="accent"
-                                  variation="primary"
-                                  size="large"
-                                >
-                                  &nbsp;📷&nbsp;
-                                </Tag>
-                              </div>
-                            )
-                          }
-                        </FileInput>
+                        <div className="flex flex-row items-center">
+                          <FileInput maxSize={20} onChange={(file) => uploadFile(file)}>
+                            {(context) =>
+                              (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ? (
+                                <div className="flex flex-col" style={{ alignItems: "center" }}>
+                                  <Spinner />
+                                  <div className="heartbeat text-xs">(Don&#39;t Refresh)</div>
+                                </div>
+                              ) : context.name && triggerProveContractFunctions ? (
+                                <div>
+                                  <a
+                                    className="text-4xl hover:cursor-pointer"
+                                    href="#"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      location.reload();
+                                    }}
+                                  >
+                                    &nbsp;🔁&nbsp;
+                                  </a>
+                                </div>
+                              ) : (
+                                <div>
+                                  <Tag
+                                    className="text-2xl hover:cursor-pointer"
+                                    tone="accent"
+                                    variation="primary"
+                                    size="large"
+                                  >
+                                    &nbsp;📷&nbsp;
+                                  </Tag>
+                                </div>
+                              )
+                            }
+                          </FileInput>
+                          <a
+                            data-tooltip-id="my-tooltip"
+                            data-tooltip-place="right"
+                            onClick={() => {
+                              setShowVideoModal(true);
+                            }}
+                          >
+                            <Tag
+                              style={{ background: '#1DD297' }}
+                              size="large"
+                              className="hover:scale-110 cursor-pointer ml-2"
+                            >
+                              <b style={{ color: 'white' }}>?</b>
+                            </Tag>
+                          </a>
+                        </div>
                       );
                     })()}
+                    {showVideoModal &&
+                      <VideoModal
+                        closeModal={() => setShowVideoModal(false)}
+                        videoEmbedUrl={'https://www.youtube.com/embed/5sVuX8LljIg'}
+                        />}
                   </div>
                 </div>
               </>

@@ -25,6 +25,7 @@ const VideoModal = ({ closeModal, videoEmbedUrl }) => {
     >
       <div
         style={{
+          position: 'fixed',
           width: '80%',
           height: '80%',
           backgroundColor: 'white',
