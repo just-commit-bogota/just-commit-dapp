@@ -431,10 +431,11 @@ export default function Commit() {
 
             </div>
 
-           {/* Commit Button */}
+           {/* Commit Button Section */}
            {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) && selectedBetAmount !== null && (
               <>
                 <div className="flex justify-center text-sm hover:cursor-pointer mt-6" style={{ direction: "ltr" }}>
+                  {/* Email Input */}
                   <Input
                     label="Your Email (To Get A Reminder)"
                     placeholder="daniel@belfort.com"
@@ -453,12 +454,28 @@ export default function Commit() {
                     }
                   />
                 </div>
-              
+                {/* ETH Conversion Tag */}
+                <div className="flex justify-center mt-2 mb-2">
+                  <a
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-place="right"
+                    data-tooltip-content={"1 ETH 🟰 " + formatCurrency(ethPrice, "USD")}
+                  >
+                    <Tag
+                      style={{ background: '#1DD297' }}
+                      size="large"
+                      className="cursor-pointer"
+                    >
+                      <b style={{ color: 'white' }}>?</b>
+                    </Tag>
+                  </a>
+                </div>
+                {/* Commit Button */}
                 <ButtonThorin
                   style={{
                     width: "90%",
                     height: "2.8rem",
-                    marginTop: "2rem",
+                    marginTop: "0rem",
                     marginBottom: "0rem",
                     backgroundColor: "rgb(29 210 151)", // isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
                     borderRadius: 12,
