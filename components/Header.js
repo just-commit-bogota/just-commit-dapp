@@ -180,7 +180,7 @@ export default function Header({ currentPage }) {
             </Link>
             <div className="flex items-center text-xs sm:text-base justify-end mr-2 gap-6">
               <ConnectButton accountStatus="address" className="hover:shadow-lg" />
-              <a href={`https://${chain?.id === 80001 ? 'mumbai.' : ''}polygonscan.io/address/${CONTRACT_ADDRESS}`}
+              <a href={`https://${chain?.id === 80001 ? 'mumbai.' : ''}polygonscan.com/address/${CONTRACT_ADDRESS}`}
                 target="_blank" rel="noopener noreferrer">
                 <span style={{ fontSize: '1.5em' }}>📜</span>
               </a> 
