@@ -169,7 +169,7 @@ export default function Commit() {
   };
   const videoLinks = [
     'https://www.youtube.com/embed/_XTX4aZFEZQ',
-    'https://www.youtube.com/embed/_XTX4aZFEZQ',
+    'https://www.youtube.com/embed/eIPuWFOont0',
     'https://www.youtube.com/embed/5sVuX8LljIg',
   ];
   const handleWatchVideoClick = (index) => {
