@@ -9,8 +9,6 @@ import { ThemeProvider } from 'styled-components'
 import { ThorinGlobalStyles, lightTheme as lightThemeENS } from '@ensdomains/thorin'
 
 const { chains, provider } = configureChains(
-  // [chain.polygon, chain.mainnet], // to ENS reverse resolve
-
   [chain.polygon], // APP or BETA
   //[chain.polygonMumbai], // DEV
 

@@ -1,6 +1,6 @@
-export const CONTRACT_ADDRESS = "0x3159598A4F5E5c5FbA61f16881Edbb5D5bF933d0" // APP
+export const CONTRACT_ADDRESS = "0x2373e48F529F7Bf4c691793B2F9f22200e53bB4c" // APP
 //export const CONTRACT_ADDRESS = "" // BETA
-//export const CONTRACT_ADDRESS = "" // DEV
+//xport const CONTRACT_ADDRESS = "0x94b90E835B3494E5315a42bF473BE54D61e7C362" // DEV
 
 export const CONTRACT_OWNER = "0xb44691c50339de6d882e1d6db4ebe5e3d670baad"
 
@@ -58,8 +58,20 @@ export const ABI = [
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "screenTime",
+				"name": "appPickups",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "pickupGoal",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "appName",
+				"type": "string"
 			},
 			{
 				"indexed": false,
@@ -178,8 +190,18 @@ export const ABI = [
 			},
 			{
 				"internalType": "uint256",
-				"name": "screenTime",
+				"name": "appPickups",
 				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "pickupGoal",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "appName",
+				"type": "string"
 			}
 		],
 		"name": "createCommit",
@@ -230,8 +252,18 @@ export const ABI = [
 					},
 					{
 						"internalType": "uint256",
-						"name": "screenTime",
+						"name": "appPickups",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "pickupGoal",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "appName",
+						"type": "string"
 					},
 					{
 						"internalType": "uint256",
@@ -265,25 +297,6 @@ export const ABI = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "timestamp",
-				"type": "uint256"
-			}
-		],
-		"name": "getDifferenceToNextMonday",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "pure",
 		"type": "function"
 	},
 	{

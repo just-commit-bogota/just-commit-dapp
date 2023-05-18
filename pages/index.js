@@ -10,9 +10,8 @@ import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContra
 import Header from '../components/Header.js';
 import Spinner from "../components/Spinner.js";
 import SocialTags from "../components/SocialTags.js";
-import LoomModal from "../components/LoomModal.js";
+import VideoModal from "../components/VideoModal.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
-import { ConnectButton } from '@rainbow-me/rainbowkit'
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { sendAnEmail } from "../utils/emailService";
@@ -27,40 +26,61 @@ export default function Commit() {
     }, 1000);
   }, [])
 
-  // challenge cost
-  const CHALLENGE_COST = '100'
-  //const justCommitServices = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.09) : (CHALLENGE_COST * 0.09).toFixed(1);
-  //const gasCosts = CHALLENGE_COST == '100' ? (CHALLENGE_COST * 0.01) : (CHALLENGE_COST * 0.01).toFixed(1);
-
+  // variables
   const commitTo = CONTRACT_OWNER
   const commitJudge = CONTRACT_OWNER
-  const socialTagNames = ["insta", "tiktok", "twitter", "youtube", "snap"];
+  const socialTagNames = ["insta", "tiktok", "twitter", "airchat", "snap"];
+  const betAmountOptions = ["0", "10", "100"];
 
   // state
-  const [commitAmount, setCommitAmount] = useState(CHALLENGE_COST) // TODO refactor this
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
-  const [walletMaticBalance, setWalletMaticBalance] = useState(null)
+  const [walletMaticBalance, setwalletMaticBalance] = useState(null)
   const [showVideoEmbed, setShowVideoEmbed] = useState(false);
   const [videoWatched, setVideoWatched] = useState([false, false, false]);
   const [videoEmbedUrl, setVideoEmbedUrl] = useState(null);
   const [showText, setShowText] = useState(false);
   const [userEmail, setUserEmail] = useState("null@null.com");
-  const [screenTime, setScreenTime] = useState(null);
+  const [appPickups, setAppPickups] = useState(null);
+  const [pickupGoal, setPickupGoal] = useState(5);
   const [selectedTag, setSelectedTag] = useState(null);
+  const [selectedBetAmount, setSelectedBetAmount] = useState(null);
+  const [args, setArgs] = useState([]);
+
+  // // eth stats
+  // const priceApi = useFetch('https://gas.best/stats')
+  // const maticPrice = parseFloat(priceApi.data?.maticPrice)
+  // polygon stats
+  const priceApi = useFetch('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd')
+  const maticPrice = parseFloat(priceApi.data?.["matic-network"].usd)
 
   // smart contract data
-  const { chain } = useNetwork()
+  const { chain, chains } = useNetwork()
   const { address } = useAccount()
   const provider = useProvider()
 
   // smart contract functions
+  useEffect(() => {
+    if (selectedBetAmount !== null && maticPrice) {
+        setArgs([
+          commitTo, 
+          commitJudge, 
+          appPickups, 
+          pickupGoal, 
+          socialTagNames[selectedTag],
+          { 
+            value: ethers.utils.parseEther((betAmountOptions[selectedBetAmount] / maticPrice).toString()) 
+          }
+        ]);
+    }
+  }, [selectedBetAmount, maticPrice]);
   const { config: createCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [commitTo, commitJudge, screenTime, { value: ((commitAmount == "") ? null : ethers.utils.parseEther(commitAmount)) }],
-  })
+    args,
+    enabled: args.length > 0, // enable the contract call when arguments are available
+  });
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
     onSettled() {
@@ -86,14 +106,6 @@ export default function Commit() {
       }
     },
   })
-  
-  const isCommitButtonEnabled = () => {
-    return videoWatched.every(v => v) &&
-      Boolean(address) &&
-      walletMaticBalance > parseFloat(CHALLENGE_COST) &&
-      screenTime > 0;
-  };
-
 
   // functions
   const handleSaveCommitment = async (email, chain) => {
@@ -142,7 +154,7 @@ export default function Commit() {
   async function getWalletMaticBalance() {
     try {
       const balanceMatic = await provider.getBalance(address)
-      setWalletMaticBalance(parseFloat((Number(ethers.utils.formatEther(balanceMatic)))))
+      setwalletMaticBalance(parseFloat((Number(ethers.utils.formatEther(balanceMatic)))))
     } catch (err) {
       console.error("Error getting wallet balance:", err);
       return null;
@@ -160,9 +172,8 @@ export default function Commit() {
   };
   const videoLinks = [
     'https://www.youtube.com/embed/_XTX4aZFEZQ',
-    'https://www.youtube.com/embed/F4qlKB6_tRk',
-    'https://www.youtube.com/embed/74bsRJkmYeo',
-    'https://www.youtube.com/embed/Tujo3tx0QTE',
+    'https://www.youtube.com/embed/eIPuWFOont0',
+    'https://www.youtube.com/embed/5sVuX8LljIg',
   ];
   const handleWatchVideoClick = (index) => {
     const videoLink = videoLinks[index];
@@ -180,9 +191,11 @@ export default function Commit() {
     }
   };
 
-  // polygon stats
-  const priceApi = useFetch('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd')
-  const maticPrice = parseFloat(priceApi.data?.["matic-network"].usd)
+  const isCommitButtonEnabled = () => {
+    return Boolean(address) &&
+    chains.some((c) => c.id === chain.id) && 
+    walletMaticBalance > parseFloat(betAmountOptions[selectedBetAmount] / maticPrice);
+  };
 
   // effects
   useEffect(() => {
@@ -219,9 +232,8 @@ export default function Commit() {
 
                 <Card className="flex flex-col self-center justify-center bg-white shadow-lg rounded-lg p-6 md:w-3/6" style={{ alignItens: ''}}>
                   <Typography className="font-semibold md:font-normal text-xs md:text-lg" style={{ lineHeight: '1.5em', fontWeight: '' }}>
-                    Just Commit is a 1-month challenge designed to
-                    help you remove the surplus screen-time
-                    from the leisure app you most use.
+                    Just Commit is a 1-month game challenge that is designed to
+                    help you use an app on your phone less often.
                   </Typography>
                 </Card>
 
@@ -237,7 +249,7 @@ export default function Commit() {
                       <Tag
                         style={{ background: '#1DD297' }}
                         size="large"
-                        className="hover:scale-125 cursor-pointer mt-6"
+                        className="hover:scale-150 cursor-pointer mt-6"
                       >
                         <b style={{ color: 'white' }}>?</b>
                       </Tag>
@@ -253,7 +265,7 @@ export default function Commit() {
                       fontSize: '0.6em',
                     }}
                   >
-                    Get ready to feel more...{' '}
+                    Start to feel more...{' '}
                     <span
                       className=""
                       style={{
@@ -273,12 +285,13 @@ export default function Commit() {
               </div>
             }
           />
-          {loadingState === 'loading' && <Skeleton height={100} borderRadius={20} />}
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            {loadingState === 'loading' && <Skeleton height={100} width={460} borderRadius={20} />}
+          </div>
         </div>
 
         {
           loadingState === 'loaded' &&
-
 
           <form
             id="form"
@@ -287,7 +300,28 @@ export default function Commit() {
             // Toast Checks
             onSubmit={async (e) => {
               e.preventDefault()
+
+              // is wallet connected?
+              if (!address) {
+                toast.error('Connect your wallet', { id: 'wallet' });
+                return;
+              }
+              // are you on the right network?
+              if (!chains.some((c) => c.id === chain.id)) {
+                toast.error('Switch chains', { id: 'network' });
+                return;
+              }
+              // sufficient balance?
+              if (walletMaticBalance < parseFloat(betAmountOptions[selectedBetAmount] / maticPrice)) {
+                toast.error('Not enough funds', { id: 'funds' });
+                return;
+              }
+
             }}>
+
+            {showVideoEmbed && (
+              <VideoModal closeModal={closeModal} videoEmbedUrl={videoEmbedUrl} />
+            )}
 
             <div className="flex flex-col w-full gap-6 mt-0" style={{ direction: 'rtl' }}>
               <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
@@ -304,36 +338,23 @@ export default function Commit() {
               </div>
 
               {videoWatched[0] && (
-                <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
-                  <div style={{ fontSize: '1.5em' }}>{videoWatched[1] ? '✅' : '→'}</div>
-                  <div
-                    className="permanent-underline hover:scale-105"
-                    style={{ fontSize: '1.2em' }}
-                    onClick={() => {
-                      handleWatchVideoClick(1);
-                    }}
-                  >
-                    <Typography style={{ cursor: 'pointer' }}>What is Just Commit?</Typography>
+                <>
+                  <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
+                    <div style={{ fontSize: '1.5em' }}>{videoWatched[1] ? '✅' : '→'}</div>
+                    <div
+                      className="permanent-underline hover:scale-105"
+                      style={{ fontSize: '1.2em' }}
+                      onClick={() => {
+                        handleWatchVideoClick(1);
+                      }}
+                    >
+                      <Typography style={{ cursor: 'pointer' }}>How does this work?</Typography>
+                    </div>
                   </div>
-                </div>
-
+               </>
               )}
+
               {videoWatched[1] && (
-                <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
-                  <div style={{ fontSize: '1.5em' }}>{videoWatched[2] ? '✅' : '→'}</div>
-                  <div
-                    className="permanent-underline hover:scale-105"
-                    style={{ fontSize: '1.2em' }}
-                    onClick={() => {
-                      handleWatchVideoClick(2);
-                    }}
-                  >
-                    <Typography style={{ cursor: 'pointer' }}>How does this work?</Typography>
-                  </div>
-                </div>
-              )}
-
-              {videoWatched[2] && (
                 <>
                   <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
                     <div style={{ fontSize: '1.5em' }}>{selectedTag !== null ? '✅' : '⬇️'}</div>
@@ -341,228 +362,129 @@ export default function Commit() {
                       style={{ fontSize: '1.2em' }}
                       onClick={() => {}}
                     >
-                      <Typography>Select Leisure App</Typography>
+                      <Typography>Select App</Typography>
                     </div>
                   </div>
-                  <div className="flex justify-center" style={{ direction: 'ltr'}}>
+                  <div className="flex justify-center mt-2" style={{ direction: 'ltr'}}>
                     <SocialTags
                       selectedTag={selectedTag}
                       setSelectedTag={setSelectedTag}
                       socialTagNames={socialTagNames}
+                      isStyled={false}
                     />
                   </div>
                 </>
               )}
             
               {selectedTag !== null && (
-                <div className="mt-2 mb-2 text-xs" style={{ direction: 'ltr' }}>
-                  <Input
-                    className="custom-input"
-                    label={`Daily Average Minutes Spent on ${capitalizeFirstLetter(socialTagNames[selectedTag])} Last Week`}
-                    placeholder="100"
-                    min={1}
-                    maxLength={3}
-                    step={1}
-                    inputMode="numeric"
-                    onKeyDown={(e) => {
-                      if (!/^\d*$/.test(e.key) && e.key !== 'Backspace') {
-                        e.preventDefault();
-                      }
-                    }}
-                    onChange={(e) => setScreenTime((e.target.value))}
-                    labelSecondary={
-                      <a
-                        data-tooltip-id="my-tooltip"
-                        data-tooltip-place="right"
-                        onClick={() => {
-                          handleWatchVideoClick(3)
-                        }}
+                <div className="flex flex-row mb-2 text-xs md:text-sm" style={{ direction: 'ltr' }}>
+                  <div className="flex items-center w-3/5">
+                    <Typography className="font-semibold">
+                      {`Number of times you picked up ${capitalizeFirstLetter(socialTagNames[selectedTag])} on a daily average last week?`}
+                    </Typography>
+                    <a
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-place="right"
+                      onClick={() => {
+                        handleWatchVideoClick(2)
+                      }}
+                    >
+                      <Tag
+                        style={{ background: '#1DD297' }}
+                        size="large"
+                        className="hover:scale-110 cursor-pointer ml-4 mr-4"
                       >
-                        <Tag
-                          style={{ background: '#1DD297' }}
-                          size="large"
-                          className="hover:scale-110 cursor-pointer"
-                        >
-                          <b style={{ color: 'white' }}>↗</b>
-                        </Tag>
-                      </a>
-                    }
-                  />
+                        <b style={{ color: 'white' }}>↗</b>
+                      </Tag>
+                    </a>
+                  </div>
+                  <div className="w-2/5">
+                    <Input
+                      className="custom-input w-full"
+                      placeholder="42"
+                      min={1}
+                      maxLength={3}
+                      step={1}
+                      inputMode="numeric"
+                      onKeyDown={(e) => {
+                        if (!/^\d*$/.test(e.key) && e.key !== 'Backspace') {
+                          e.preventDefault();
+                        }
+                      }}
+                      onChange={(e) => setAppPickups((e.target.value))}
+                    />
+                  </div>
                 </div>
               )}
 
-              {screenTime &&
-                <div className="flex flex-col" style={{ direction: 'ltr' }}>
-                  <table className="">
-                    <thead>
-                      <tr>
-                        <th className="text-center">Week #</th>
-                        <th className="text-center">Minutes Goal</th>
-                        <th className="text-center">At Stake</th>
-                      </tr>
-                    </thead>
-                    <br></br>
-                    <tbody style={{ lineHeight: '25px' }}>
-                      <tr>
-                        <td className="text-center">1</td>
-                        <td className="text-center">
-                          {screenTime === null
-                            ? <span>? <span className="text-xs"><b>(↓25%)</b></span></span>
-                            : <><span>&lt; {Math.floor(screenTime * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
-                          }
-                        </td>
-                        <td className="flex flex-row justify-center items-center">
-                          <div className="flex flex-col">
-                            <img className="h-4" src="./polygon-logo-tilted.svg" />
-                          </div>
-                          &nbsp;{Math.floor(commitAmount * 0.25)}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="text-center">2</td>
-                        <td className="text-center">
-                          {screenTime === null
-                            ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
-                            : <><span>&lt; {Math.floor(screenTime * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
-                          }
-                        </td>
-                        <td className="flex flex-row justify-center items-center">
-                          <div className="flex flex-col">
-                            <img className="h-4" src="./polygon-logo-tilted.svg" />
-                          </div>
-                          &nbsp;{Math.floor(commitAmount * 0.25)}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="text-center">3</td>
-                        <td className="text-center">
-                          {screenTime === null
-                            ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
-                            : <><span>&lt; {Math.floor(screenTime * 0.75 * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
-                          }
-                        </td>
-                        <td className="flex flex-row justify-center items-center">
-                          <div className="flex flex-col">
-                            <img className="h-4" src="./polygon-logo-tilted.svg" />
-                          </div>
-                          &nbsp;{Math.floor(commitAmount * 0.25)}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="text-center">4</td>
-                        <td className="text-center">
-                          {screenTime === null
-                            ? <span>? <span className="text-xs justify-end"><b>(↓25%)</b></span></span>
-                            : <><span>&lt;  {Math.floor(screenTime * 0.75 * 0.75 * 0.75 * 0.75)}</span> <span className="text-xs"><b>(↓25%)</b></span></>
-                          }
-                        </td>
-                        <td className="flex flex-row justify-center items-center">
-                          <div className="flex flex-col">
-                            <img className="h-4" src="./polygon-logo-tilted.svg" />
-                          </div>
-                          &nbsp;{Math.floor(commitAmount * 0.25)}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+              {appPickups &&
+                <div className="flex flex-row mb-2 -mt-2 text-xs md:text-sm" style={{ direction: 'ltr' }}>
+                  <div className="flex items-center w-3/5">
+                    <Typography className="font-semibold">
+                      {`Your daily average pickup goal for ${capitalizeFirstLetter(socialTagNames[selectedTag])} during the challenge →`}
+                    </Typography>
+                    <a
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content="You can't change this."
+                      data-tooltip-place="top"
+                    >
+                      <Tag className="ml-4 mr-4 hover:cursor-pointer" style={{ background: "#1DD297" }} size="large">
+                        <b style={{ color: "white" }}>?</b>
+                      </Tag>
+                    </a>
+                  </div>
+                  <div className="w-2/5">
+                    <Input
+                      className="custom-input w-full"
+                      disabled={true}
+                      placeholder="5"
+                      min={1}
+                      maxLength={2}
+                      step={1}
+                      inputMode="numeric"
+                      onKeyDown={(e) => {
+                        if (!/^\d*$/.test(e.key) && e.key !== 'Backspace') {
+                          e.preventDefault();
+                        }
+                      }}
+                      onChange={(e) => setPickupGoal((e.target.value))}
+                    />
+                  </div>
                 </div>
               }
 
-              {showVideoEmbed && (
-                <LoomModal closeModal={closeModal} videoEmbedUrl={videoEmbedUrl} />
-              )}
-              {/* <Checkbox
-                label={
-                  <PopupButton
-                    id="IfnJtCQO"
-                    onSubmit={() => {
-                      setTypeformCompleted(true);
-                    }}
-                  >
-                    <button className="permanent-underline">
-                      Fill Out The Form
-                    </button>
-                  </PopupButton>
-                }
-                checked={typeformCompleted}
-                onClick={() => toast.error("Complete the Typeform")}
-              /> */}
-
-              {screenTime && videoWatched[1] && videoWatched[2] &&
-                <div>
-                  {/* <br />
-                  <br />
-                  <div className="flex items-center gap-3 justify-center -mt-4 mb-5 hover:cursor-pointer" style={{ direction: "ltr" }}>
-                    <a
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-place="top"
-                      data-tooltip-content={`+ JC Services Rendered: ${justCommitServices} MATIC`}
-                    >
-                      <Tag
-                        style={{ background: '#1DD297' }}
-                        size="large"
-                      >
-                        <b style={{ color: 'white' }}>⚡</b>
-                      </Tag>
-                    </a>
-                    <a
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-place="top"
-                      data-tooltip-content={`+ Gas Fees (Sent Back To You): ${gasCosts} MATIC`}
-                    >
-                      <Tag
-                        style={{ background: '#1DD297' }}
-                        size="large"
-                      >
-                        <b style={{ color: 'white' }}>⛽</b>
-                      </Tag>
-                    </a>
-                  </div> */}
-                  <div
-                    className="flex justify-center"
-                    style={{ direction: 'ltr' }}
-                  >
+              {appPickups && (
+                <>
+                  <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
+                    <div style={{ fontSize: '1.5em' }}>{selectedBetAmount !== null ? '✅' : '⬇️'}</div>
                     <div
-                      className="flex justify-center"
-                      style={{ direction: 'ltr', color: '#3B3B3B', fontSize: '16px', fontWeight: 'bold' }}>
-                      {"(1 MATIC = "}
-                      {formatCurrency(!priceApi.isLoading && formatCurrency(maticPrice, "USD"))})
+                      style={{ fontSize: '1.2em' }}
+                      onClick={() => {}}
+                    >
+                      <Typography>Bet On Yourself</Typography>
                     </div>
                   </div>
-                  <br />
-                  <div
-                    className="flex justify-center cursor-pointer"
-                    style={{ direction: 'ltr' }}
-                  >
-                    <ConnectButton className="" showBalance={true} accountStatus="none" />
+                  <div className="flex justify-center mt-2" style={{ direction: 'ltr'}}>
+                    <SocialTags className=""
+                      // hacky solution. not proud, but it works.
+                      selectedTag={selectedBetAmount}
+                      setSelectedTag={setSelectedBetAmount}
+                      socialTagNames={betAmountOptions}
+                      isStyled={true}
+                    />
                   </div>
-                  <br />
-                  <br />
-                </div>
-              }
+                </>
+              )}
+
             </div>
 
-            {screenTime &&
-            (!(walletMaticBalance > parseFloat(CHALLENGE_COST))) && 
+           {/* Commit Button Section */}
+            {selectedBetAmount !== null && (
               <>
-                <div
-                  className="flex justify-center"
-                  style={{ direction: 'ltr', color: '#D0312D', fontSize: '16px', fontWeight: 'bold' }}>
-                    &gt; {CHALLENGE_COST} MATIC (+ gas) to Commit
-                </div>
-                <br />
-                <br />
-              </>
-            }
-
-           {/* Commit Button */}
-           {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) &&
-            (walletMaticBalance > parseFloat(CHALLENGE_COST)) &&
-            isCommitButtonEnabled() && (
-              <>
-                <div className="flex justify-center text-sm hover:cursor-pointer" style={{ direction: "ltr" }}>
+                <div className="flex justify-center text-sm hover:cursor-pointer mt-6" style={{ direction: "ltr" }}>
+                  {/* Email Input */}
                   <Input
-                    label="Your Email (For Weekly Reminders)"
+                    label="Your Email (To Get A Reminder)"
                     placeholder="daniel@belfort.com"
                     // error={ userEmail && !userEmail.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/) ? ' ' : '' }
                     onChange={(e) => setUserEmail(e.target.value)}
@@ -572,39 +494,56 @@ export default function Commit() {
                         data-tooltip-content="Optional."
                         data-tooltip-place="top"
                       >
-                        <Tag className="" style={{ background: "#1DD297" }} size="large">
+                        <Tag style={{ background: "#1DD297" }} size="large">
                           <b style={{ color: "white" }}>?</b>
                         </Tag>
                       </a>
                     }
                   />
                 </div>
-              
-                <ButtonThorin
-                  style={{
-                    width: "90%",
-                    height: "2.8rem",
-                    marginTop: "2rem",
-                    marginBottom: "0rem",
-                    backgroundColor: isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
-                    borderRadius: 12,
-                    color: "white",
-                    transition: "transform 0.2s ease-in-out",
-                  }}
-                  size="small"
-                  shadowless
-                  type="submit"
-                  suffix={"(" + commitAmount + " MATIC) "}
-                  // suffix= {"(" + formatCurrency(100, "USD") + ")"} // {!priceApi.isLoading && "(" + formatCurrency(maticPrice * commitAmount, "USD") + ")"}
-                  disabled={!isCommitButtonEnabled()}
-                  onClick={commitWrite}
-                >
-                  Commit
-                </ButtonThorin>
+                {/* MATIC Conversion Tag */}
+                <div className="flex justify-center mt-2 mb-2">
+                  <a
+                    data-tooltip-id="my-tooltip"
+                    data-tooltip-place="right"
+                    data-tooltip-content={"1 MATIC 🟰 " + formatCurrency(maticPrice, "USD")}
+                  >
+                    <Tag
+                      style={{ background: '#1DD297' }}
+                      size="large"
+                      className="cursor-pointer"
+                    >
+                      <b style={{ color: 'white' }}>?</b>
+                    </Tag>
+                  </a>
+                </div>
+                {/* Commit Button */}
+                {!((isWriteLoading || isWaitLoading)) && !hasCommitted && (
+                  <ButtonThorin
+                    style={{
+                      width: "90%",
+                      height: "2.8rem",
+                      marginTop: "0rem",
+                      marginBottom: "0rem",
+                      backgroundColor: isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
+                      borderRadius: 12,
+                      color: "white",
+                      transition: "transform 0.2s ease-in-out",
+                    }}
+                    size="small"
+                    shadowless
+                    type="submit"
+                    suffix={"(" + (parseFloat(betAmountOptions[selectedBetAmount]) / maticPrice).toFixed(0) + " MATIC) "}
+                    // disabled={!isCommitButtonEnabled()}
+                    onClick={isCommitButtonEnabled() ? commitWrite : undefined}
+                  >
+                    Commit
+                  </ButtonThorin>
+                )}
               </>
             )}
 
-            <Toaster toastOptions={{ duration: 2000 }} />
+            <Toaster position="bottom-center" toastOptions={{ duration: 2000 }} />
             <Tooltip id="my-tooltip"
               style={{ backgroundColor: "#1DD297", color: "#ffffff", fontWeight: 500 }}
             />
@@ -639,7 +578,7 @@ export default function Commit() {
                 <div className="flex justify-end w-full">
                   <div className="flex" style={{ width: "52px" }}>
                     <ButtonThorin
-                      className="flex align-center mt-6 mb-5 sm:mb-0 justify-center rounded-lg hover:cursor-pointer"
+                      className="flex align-center mt-6 mb-5 ml-5 sm:mb-0 justify-center rounded-lg hover:cursor-pointer"
                       style={{ background: "#bae6fd", zIndex: 2, fontSize: "1.2rem", padding: "5px" }}
                       as="a"
                       href={`https://${chain?.id === 80001 ? 'mumbai.' : ''
@@ -665,14 +604,25 @@ export default function Commit() {
             block.timestamp * 1000: {Math.floor(Date.now() / 1000) * 1000}
             <br></br>*/}
 
-            {/* userEmail: {userEmail} */}
+            {/*maticPrice: {maticPrice}*/}
 
-            {/* commitAmount: {commitAmount}
+            {/*
             <br></br>
-            commitJudge: {commitJudge}
+            socialTagNames[selectedTag]: {socialTagNames[selectedTag]}
             <br></br>
-            commitTo: {commitTo} */}
-
+            betAmountOptions[selectedBetAmount]: {betAmountOptions[selectedBetAmount]}
+            <br></br>
+            appPickups: {appPickups}
+            <br></br>
+            pickupGoal: {pickupGoal}
+            <br></br>
+            betAmountOptions[selectedBetAmount] / maticPrice: {betAmountOptions[selectedBetAmount] / maticPrice}
+            <br></br>
+            walletMaticBalance: {walletMaticBalance}
+            <br></br>
+            isCommitButtonEnabled: {isCommitButtonEnabled}
+            */}
+            
             {/* <br></br>
             <br></br>
             maticPrice * commitAmount: {typeof(maticPrice * commitAmount)}

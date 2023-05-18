@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-const LoomModal = ({ closeModal, videoEmbedUrl }) => {
+const VideoModal = ({ closeModal, videoEmbedUrl }) => {
 
   const handleCloseClick = (e) => {
     e.stopPropagation();
@@ -25,10 +25,10 @@ const LoomModal = ({ closeModal, videoEmbedUrl }) => {
     >
       <div
         style={{
+          position: 'relative',
           width: '80%',
           height: '80%',
           backgroundColor: 'white',
-          position: 'relative',
           borderRadius: '10px',
         }}
         onClick={(e) => e.stopPropagation()}
@@ -37,11 +37,12 @@ const LoomModal = ({ closeModal, videoEmbedUrl }) => {
           onClick={handleCloseClick}
           style={{
             position: 'absolute',
-            top: '10px',
-            right: '10px',
+            top: '-60px',  // Adjust this to position button vertically
+            right: '-35px', // Adjust this to position button horizontally
             backgroundColor: 'transparent',
+            color: 'white',
             border: 'none',
-            fontSize: '1.5em',
+            fontSize: '4em',  // Increase this to make button larger
             cursor: 'pointer',
           }}
         >
@@ -65,4 +66,4 @@ const LoomModal = ({ closeModal, videoEmbedUrl }) => {
   );
 };
 
-export default LoomModal;
+export default VideoModal;

@@ -8,6 +8,7 @@ import { usePrepareContractWrite, useContractWrite, useWaitForTransaction } from
 import moment from 'moment/moment';
 import Spinner from "../components/Spinner.js";
 import Countdown from '../components/Countdown.js'
+import VideoModal from "../components/VideoModal.js";
 import Image from 'next/image'
 import toast, { Toaster } from 'react-hot-toast'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
@@ -23,17 +24,18 @@ export default function CommitCard({ ...props }) {
   const [triggerProveContractFunctions, setTriggerProveContractFunctions] = useState(false)
   const [triggerJudgeContractFunctions, setTriggerJudgeContractFunctions] = useState(false)
   const [uploadClicked, setUploadClicked] = useState(false)
+  const [showVideoModal, setShowVideoModal] = useState(false);
   const [isApproved, setIsApproved] = useState(false)
 
-  // function to resolve ENS name on ETH mainnet
-  const { data: ensName } = useEnsName({
-    address: props.commitFrom,
-    chainId: 1, // ETH Mainnet
-    staleTime: 0,
-    onError(err) {
-      console.log(err)
-    },
-  })
+  // // function to resolve ENS name on ETH mainnet
+  // const { data: ensName } = useEnsName({
+  //   address: props.commitFrom,
+  //   chainId: 1, // ETH Mainnet
+  //   staleTime: 0,
+  //   onError(err) {
+  //     console.log(err)
+  //   },
+  // })
 
   // prepare
   const { config: proveCommitConfig } = usePrepareContractWrite({
@@ -85,6 +87,16 @@ export default function CommitCard({ ...props }) {
     }
   })
 
+  const closeModal = () => {
+    setShowVideoModal(false);
+  };
+  
+  const handleKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      closeModal();
+    }
+  };
+  
   // FUNCTIONS
 
   // upload the pic
@@ -148,6 +160,13 @@ export default function CommitCard({ ...props }) {
     return (urlPrefix + filename.replace(/ /g, "%20"))
   }
 
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   return (
     <>
       <div style={{ borderRadius: "12px" }} className={classNames({
@@ -159,15 +178,17 @@ export default function CommitCard({ ...props }) {
       })}>
         <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px" }}>
           <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
-            <div className="text-sm block">
-              <span>&lt;</span> {`${parseInt(props.screenTime)} daily avg minutes this week`}
+            <div className="text-xs md:text-sm block mr-2">
+              <span>&le;</span> {`${parseInt(props.pickupGoal)} ${props.appName} pickups per day (avg/week)`}
             </div>
             <div className="flex space-x-2" style={{ whiteSpace: "nowrap" }}>
               <div className="span flex text-sm text-slate-400 gap-2 opacity-80" style={{ whiteSpace: "nowrap" }}>
                 {
                   // active
                   props.status === "Pending" ? (
-                    <><Countdown status={props.status} endsAt={props.endsAt} judgeDeadline={props.judgeDeadline} /></>
+                    <div className="text-xs self-center">
+                      <Countdown status={props.status} endsAt={props.endsAt} judgeDeadline={props.judgeDeadline} />
+                    </div>
                   ) : // waiting or verify
                   props.status === "Waiting" ? (
                     <>
@@ -200,30 +221,11 @@ export default function CommitCard({ ...props }) {
             {/* card is active */}
             {props.status == "Pending" &&
               <>
-                <div className="flex flex-col" style={{ alignItems: "center" }}>
-                  <div className="flex">
+                <div className="flex flex-row gap-1" style={{ alignItems: "center" }}>
+                  <div className="flex flex-row items-center">
                     {(() => {
-                      const shouldLock = (props.endsAt - Date.now()) > (9999 * 60 * 60 * 1000); // change "24" to "9999" for testing
-                
-                      if (shouldLock) {
-                        return (
-                          <>
-                            <a
-                              data-tooltip-id="my-tooltip"
-                              data-tooltip-place="top"
-                              data-tooltip-content="Unlocks 1d before deadline"
-                            >
-                             <Tag
-                                style={{ background: '#ffffff' }}
-                                size="large"
-                              >
-                                <span className="text-2xl">&nbsp;🔒&nbsp;</span>
-                              </Tag>
-                            </a>
-                          </>
-                        );
-                      } else {
-                        return (
+                      return (
+                        <div className="flex flex-row items-center">
                           <FileInput maxSize={20} onChange={(file) => uploadFile(file)}>
                             {(context) =>
                               (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ? (
@@ -258,9 +260,24 @@ export default function CommitCard({ ...props }) {
                               )
                             }
                           </FileInput>
-                        );
-                      }
-                    })()}
+                          <a
+                            data-tooltip-id="my-tooltip"
+                            data-tooltip-place="right"
+                            onClick={() => {
+                              setShowVideoModal(true);
+                            }}
+                          >
+                            <Tag
+                              style={{ background: '#1DD297' }}
+                              size="large"
+                              className="hover:scale-110 cursor-pointer ml-2"
+                            >
+                              <b style={{ color: 'white' }}>?</b>
+                            </Tag>
+                          </a>
+                        </div>
+                      );
+                    })()}        
                   </div>
                 </div>
               </>
@@ -357,7 +374,7 @@ export default function CommitCard({ ...props }) {
               borderRadius: "6px",
             }}>
               <div className="flex flex-row" style={{ justifyContent: "space-between", marginBottom: 0 }}>
-                <b>&nbsp;Challenger →</b>
+                <b>&nbsp;Committer →</b>
                 {props.commitFrom === address
                   ? "Me"
                   : ensName || props.commitFrom.slice(0, 5) + '…' + props.commitFrom.slice(-4)}
@@ -370,7 +387,7 @@ export default function CommitCard({ ...props }) {
                 <img className="h-6" src="./polygon-logo-tilted.svg" />
               </div>
               <div className="flex flex-col font-semibold align-center justify-center text-l ml-1">
-                {parseFloat(props.stakeAmount).toFixed(2) % 1 === 0 ? parseInt(props.stakeAmount) : parseFloat(props.stakeAmount).toFixed(2)}
+                {parseFloat(props.stakeAmount).toFixed(3) % 1 === 0 ? parseInt(props.stakeAmount) : parseFloat(props.stakeAmount).toFixed(0)}
               </div>
             </div>
 
@@ -395,6 +412,12 @@ export default function CommitCard({ ...props }) {
         */}
 
       </div>
+      {showVideoModal &&
+        <VideoModal
+          closeModal={() => setShowVideoModal(false)}
+          videoEmbedUrl={'https://www.youtube.com/embed/M1F_Ja6L_QQ'}
+        />
+      }  
     </>
   )
 }
