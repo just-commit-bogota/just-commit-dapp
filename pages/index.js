@@ -169,6 +169,7 @@ export default function Commit() {
   };
   const videoLinks = [
     'https://www.youtube.com/embed/_XTX4aZFEZQ',
+    'https://www.youtube.com/embed/_XTX4aZFEZQ',
     'https://www.youtube.com/embed/5sVuX8LljIg',
   ];
   const handleWatchVideoClick = (index) => {
@@ -329,11 +330,28 @@ export default function Commit() {
                     handleWatchVideoClick(0);
                   }}
                 >
-                  <Typography style={{ cursor: 'pointer' }}>How does this work?</Typography>
+                  <Typography style={{ cursor: 'pointer' }}>Why am I here?</Typography>
                 </div>
               </div>
 
               {videoWatched[0] && (
+                <>
+                  <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
+                    <div style={{ fontSize: '1.5em' }}>{videoWatched[1] ? '✅' : '→'}</div>
+                    <div
+                      className="permanent-underline hover:scale-105"
+                      style={{ fontSize: '1.2em' }}
+                      onClick={() => {
+                        handleWatchVideoClick(1);
+                      }}
+                    >
+                      <Typography style={{ cursor: 'pointer' }}>How does this work?</Typography>
+                    </div>
+                  </div>
+               </>
+              )}
+
+              {videoWatched[1] && (
                 <>
                   <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
                     <div style={{ fontSize: '1.5em' }}>{selectedTag !== null ? '✅' : '⬇️'}</div>
@@ -365,7 +383,7 @@ export default function Commit() {
                       data-tooltip-id="my-tooltip"
                       data-tooltip-place="right"
                       onClick={() => {
-                        handleWatchVideoClick(1)
+                        handleWatchVideoClick(2)
                       }}
                     >
                       <Tag
@@ -400,11 +418,11 @@ export default function Commit() {
                 <div className="flex flex-row mb-2 -mt-2 text-xs md:text-sm" style={{ direction: 'ltr' }}>
                   <div className="flex items-center w-3/5">
                     <Typography className="font-semibold">
-                      {`What is your daily average pickup goal for ${capitalizeFirstLetter(socialTagNames[selectedTag])} in the challenge?`}
+                      {`Your daily average pickup goal for ${capitalizeFirstLetter(socialTagNames[selectedTag])} in the challenge:`}
                     </Typography>
                     <a
                       data-tooltip-id="my-tooltip"
-                      data-tooltip-content="What do you want to get that number down to?"
+                      data-tooltip-content="You can't change this."
                       data-tooltip-place="top"
                     >
                       <Tag className="ml-4 mr-4 hover:cursor-pointer" style={{ background: "#1DD297" }} size="large">
