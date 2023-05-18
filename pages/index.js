@@ -533,7 +533,7 @@ export default function Commit() {
                     size="small"
                     shadowless
                     type="submit"
-                    suffix={"(" + (parseFloat(betAmountOptions[selectedBetAmount]) / maticPrice).toFixed(3) + " MATIC) "}
+                    suffix={"(" + (parseFloat(betAmountOptions[selectedBetAmount]) / maticPrice).toFixed(0) + " MATIC) "}
                     // disabled={!isCommitButtonEnabled()}
                     onClick={isCommitButtonEnabled() ? commitWrite : undefined}
                   >
