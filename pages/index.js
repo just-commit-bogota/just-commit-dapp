@@ -232,7 +232,7 @@ export default function Commit() {
 
                 <Card className="flex flex-col self-center justify-center bg-white shadow-lg rounded-lg p-6 md:w-3/6" style={{ alignItens: ''}}>
                   <Typography className="font-semibold md:font-normal text-xs md:text-lg" style={{ lineHeight: '1.5em', fontWeight: '' }}>
-                    Just Commit is a 1-month game challenge that is designed to
+                    Just Commit is a 1-month challenge that is designed to
                     help you use an app on your phone less often.
                   </Typography>
                 </Card>
