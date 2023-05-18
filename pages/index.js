@@ -29,7 +29,7 @@ export default function Commit() {
   // variables
   const commitTo = CONTRACT_OWNER
   const commitJudge = CONTRACT_OWNER
-  const socialTagNames = ["insta", "tiktok", "twitter", "youtube", "snap"];
+  const socialTagNames = ["insta", "tiktok", "twitter", "airchat", "snap"];
   const betAmountOptions = ["0", "10", "100"];
 
   // state
@@ -42,7 +42,7 @@ export default function Commit() {
   const [showText, setShowText] = useState(false);
   const [userEmail, setUserEmail] = useState("null@null.com");
   const [appPickups, setAppPickups] = useState(null);
-  const [pickupGoal, setPickupGoal] = useState(null);
+  const [pickupGoal, setPickupGoal] = useState(5);
   const [selectedTag, setSelectedTag] = useState(null);
   const [selectedBetAmount, setSelectedBetAmount] = useState(null);
   const [args, setArgs] = useState([]);
@@ -229,8 +229,8 @@ export default function Commit() {
 
                 <Card className="flex flex-col self-center justify-center bg-white shadow-lg rounded-lg p-6 md:w-3/6" style={{ alignItens: ''}}>
                   <Typography className="font-semibold md:font-normal text-xs md:text-lg" style={{ lineHeight: '1.5em', fontWeight: '' }}>
-                    Just Commit is a 1-month challenge that's designed to
-                    help you use any app on your phone less often.
+                    Just Commit is a 1-month game challenge that's designed to
+                    help you use an app on your phone less often.
                   </Typography>
                 </Card>
 
@@ -418,7 +418,7 @@ export default function Commit() {
                 <div className="flex flex-row mb-2 -mt-2 text-xs md:text-sm" style={{ direction: 'ltr' }}>
                   <div className="flex items-center w-3/5">
                     <Typography className="font-semibold">
-                      {`Your daily average pickup goal for ${capitalizeFirstLetter(socialTagNames[selectedTag])} in the challenge:`}
+                      {`Your daily average pickup goal for ${capitalizeFirstLetter(socialTagNames[selectedTag])} during the challenge →`}
                     </Typography>
                     <a
                       data-tooltip-id="my-tooltip"
@@ -433,9 +433,10 @@ export default function Commit() {
                   <div className="w-2/5">
                     <Input
                       className="custom-input w-full"
+                      disabled={true}
                       placeholder="5"
                       min={1}
-                      maxLength={3}
+                      maxLength={2}
                       step={1}
                       inputMode="numeric"
                       onKeyDown={(e) => {
@@ -449,7 +450,7 @@ export default function Commit() {
                 </div>
               }
 
-              {pickupGoal && (
+              {appPickups && (
                 <>
                   <div style={{ direction: 'ltr', display: 'flex', justifyContent: 'space-between' }}>
                     <div style={{ fontSize: '1.5em' }}>{selectedBetAmount !== null ? '✅' : '⬇️'}</div>
@@ -457,7 +458,7 @@ export default function Commit() {
                       style={{ fontSize: '1.2em' }}
                       onClick={() => {}}
                     >
-                      <Typography>Choose Bet Amount</Typography>
+                      <Typography>Bet On Yourself</Typography>
                     </div>
                   </div>
                   <div className="flex justify-center mt-2" style={{ direction: 'ltr'}}>

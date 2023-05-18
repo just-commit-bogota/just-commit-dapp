@@ -179,7 +179,7 @@ export default function CommitCard({ ...props }) {
         <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px" }}>
           <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
             <div className="text-xs md:text-sm block mr-2">
-              <span>&lt;</span> {`${parseInt(props.pickupGoal)} ${props.appName} pickups per day (avg/week)`}
+              <span>&le;</span> {`${parseInt(props.pickupGoal)} ${props.appName} pickups per day (avg/week)`}
             </div>
             <div className="flex space-x-2" style={{ whiteSpace: "nowrap" }}>
               <div className="span flex text-sm text-slate-400 gap-2 opacity-80" style={{ whiteSpace: "nowrap" }}>
@@ -415,7 +415,7 @@ export default function CommitCard({ ...props }) {
       {showVideoModal &&
         <VideoModal
           closeModal={() => setShowVideoModal(false)}
-          videoEmbedUrl={'https://www.youtube.com/embed/5sVuX8LljIg'}
+          videoEmbedUrl={'https://www.youtube.com/embed/M1F_Ja6L_QQ'}
         />
       }  
     </>
