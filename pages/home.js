@@ -113,7 +113,7 @@ export default function Home() {
         });
 
       } else {
-        toast("🚨 ETH wallet not detected.\n\n" +
+        toast("🚨 Crypto wallet not detected.\n\n" +
           "Solutions →\n\n" +
           "1. Download the Metamask extension\t(Desktop)\n\n" +
           "2. Use Metamask or the Brave broswer\t(Mobile)\n",

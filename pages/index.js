@@ -20,7 +20,7 @@ export default function Commit() {
 
   // first pass
   useEffect(() => {
-    getWalletEthBalance()
+    getWalletMaticBalance()
     setTimeout(() => {
       setLoadingState("loaded");
     }, 1000);
@@ -35,7 +35,7 @@ export default function Commit() {
   // state
   const [loadingState, setLoadingState] = useState('loading')
   const [hasCommitted, setHasCommited] = useState(false)
-  const [walletEthBalance, setWalletEthBalance] = useState(null)
+  const [walletMaticBalance, setwalletMaticBalance] = useState(null)
   const [showVideoEmbed, setShowVideoEmbed] = useState(false);
   const [videoWatched, setVideoWatched] = useState([false, false, false]);
   const [videoEmbedUrl, setVideoEmbedUrl] = useState(null);
@@ -47,9 +47,12 @@ export default function Commit() {
   const [selectedBetAmount, setSelectedBetAmount] = useState(null);
   const [args, setArgs] = useState([]);
 
-  // eth stats
-  const priceApi = useFetch('https://gas.best/stats')
-  const ethPrice = parseFloat(priceApi.data?.ethPrice)
+  // // eth stats
+  // const priceApi = useFetch('https://gas.best/stats')
+  // const maticPrice = parseFloat(priceApi.data?.maticPrice)
+  // polygon stats
+  const priceApi = useFetch('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd')
+  const maticPrice = parseFloat(priceApi.data?.["matic-network"].usd)
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -58,7 +61,7 @@ export default function Commit() {
 
   // smart contract functions
   useEffect(() => {
-    if (selectedBetAmount !== null && ethPrice) {
+    if (selectedBetAmount !== null && maticPrice) {
         setArgs([
           commitTo, 
           commitJudge, 
@@ -66,11 +69,11 @@ export default function Commit() {
           pickupGoal, 
           socialTagNames[selectedTag],
           { 
-            value: ethers.utils.parseEther((betAmountOptions[selectedBetAmount] / ethPrice).toString()) 
+            value: ethers.utils.parseEther((betAmountOptions[selectedBetAmount] / maticPrice).toString()) 
           }
         ]);
     }
-  }, [selectedBetAmount, ethPrice]);
+  }, [selectedBetAmount, maticPrice]);
   const { config: createCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
@@ -97,8 +100,8 @@ export default function Commit() {
     async onSettled() {
       setHasCommited(true)
       await handleSaveCommitment(userEmail, chain);
-      // send an email only on ETH Mainnet
-      if (chain?.id == 1) {
+      // send an email only on Polygon Mainnet
+      if (chain?.id == 137) {
         sendAnEmail(userEmail);
       }
     },
@@ -106,12 +109,12 @@ export default function Commit() {
 
   // functions
   const handleSaveCommitment = async (email, chain) => {
-    if (chain?.id !== 1 && chain?.id !== 5) {
-      console.log('Not on ETH, skipping Supabase write.');
+    if (chain?.id !== 137 && chain?.id !== 80001) {
+      console.log('Not on Polygon, skipping Supabase write.');
       return;
     }
   
-    const environment = chain?.id === 1 ? 'prod' : 'dev';
+    const environment = chain?.id === 137 ? 'prod' : 'dev';
   
     try {
       const response = await fetch('/api/save_commitment', {
@@ -148,10 +151,10 @@ export default function Commit() {
     return number.toLocaleString('en-US', options);
   }
 
-  async function getWalletEthBalance() {
+  async function getWalletMaticBalance() {
     try {
-      const balanceEth = await provider.getBalance(address)
-      setWalletEthBalance(parseFloat((Number(ethers.utils.formatEther(balanceEth)))))
+      const balanceMatic = await provider.getBalance(address)
+      setwalletMaticBalance(parseFloat((Number(ethers.utils.formatEther(balanceMatic)))))
     } catch (err) {
       console.error("Error getting wallet balance:", err);
       return null;
@@ -191,12 +194,12 @@ export default function Commit() {
   const isCommitButtonEnabled = () => {
     return Boolean(address) &&
     chains.some((c) => c.id === chain.id) && 
-    walletEthBalance > parseFloat(betAmountOptions[selectedBetAmount] / ethPrice);
+    walletMaticBalance > parseFloat(betAmountOptions[selectedBetAmount] / maticPrice);
   };
 
   // effects
   useEffect(() => {
-    getWalletEthBalance()
+    getWalletMaticBalance()
   }, [address])
 
   useEffect(() => {
@@ -309,7 +312,7 @@ export default function Commit() {
                 return;
               }
               // sufficient balance?
-              if (walletEthBalance < parseFloat(betAmountOptions[selectedBetAmount] / ethPrice)) {
+              if (walletMaticBalance < parseFloat(betAmountOptions[selectedBetAmount] / maticPrice)) {
                 toast.error('Not enough funds', { id: 'funds' });
                 return;
               }
@@ -498,12 +501,12 @@ export default function Commit() {
                     }
                   />
                 </div>
-                {/* ETH Conversion Tag */}
+                {/* MATIC Conversion Tag */}
                 <div className="flex justify-center mt-2 mb-2">
                   <a
                     data-tooltip-id="my-tooltip"
                     data-tooltip-place="right"
-                    data-tooltip-content={"1 ETH 🟰 " + formatCurrency(ethPrice, "USD")}
+                    data-tooltip-content={"1 MATIC 🟰 " + formatCurrency(maticPrice, "USD")}
                   >
                     <Tag
                       style={{ background: '#1DD297' }}
@@ -530,7 +533,7 @@ export default function Commit() {
                     size="small"
                     shadowless
                     type="submit"
-                    suffix={"(" + (parseFloat(betAmountOptions[selectedBetAmount]) / ethPrice).toFixed(3) + " ETH) "}
+                    suffix={"(" + (parseFloat(betAmountOptions[selectedBetAmount]) / maticPrice).toFixed(3) + " MATIC) "}
                     // disabled={!isCommitButtonEnabled()}
                     onClick={isCommitButtonEnabled() ? commitWrite : undefined}
                   >
@@ -578,8 +581,8 @@ export default function Commit() {
                       className="flex align-center mt-6 mb-5 ml-5 sm:mb-0 justify-center rounded-lg hover:cursor-pointer"
                       style={{ background: "#bae6fd", zIndex: 2, fontSize: "1.2rem", padding: "5px" }}
                       as="a"
-                      href={`https://${chain?.id === 5 ? 'goerli.' : ''
-                        }etherscan.io/tx/${commitWriteData.hash}`}
+                      href={`https://${chain?.id === 80001 ? 'mumbai.' : ''
+                        }polygonscan.com/tx/${commitWriteData.hash}`}
                       target="_blank"
                       rel="noreferrer"
                     >
@@ -601,7 +604,7 @@ export default function Commit() {
             block.timestamp * 1000: {Math.floor(Date.now() / 1000) * 1000}
             <br></br>*/}
 
-            {/*ethPrice: {ethPrice}*/}
+            {/*maticPrice: {maticPrice}*/}
 
             {/*
             <br></br>
@@ -613,9 +616,9 @@ export default function Commit() {
             <br></br>
             pickupGoal: {pickupGoal}
             <br></br>
-            betAmountOptions[selectedBetAmount] / ethPrice: {betAmountOptions[selectedBetAmount] / ethPrice}
+            betAmountOptions[selectedBetAmount] / maticPrice: {betAmountOptions[selectedBetAmount] / maticPrice}
             <br></br>
-            walletEthBalance: {walletEthBalance}
+            walletMaticBalance: {walletMaticBalance}
             <br></br>
             isCommitButtonEnabled: {isCommitButtonEnabled}
             */}

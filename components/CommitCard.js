@@ -27,15 +27,15 @@ export default function CommitCard({ ...props }) {
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [isApproved, setIsApproved] = useState(false)
 
-  // function to resolve ENS name on ETH mainnet
-  const { data: ensName } = useEnsName({
-    address: props.commitFrom,
-    chainId: 1, // ETH Mainnet
-    staleTime: 0,
-    onError(err) {
-      console.log(err)
-    },
-  })
+  // // function to resolve ENS name on ETH mainnet
+  // const { data: ensName } = useEnsName({
+  //   address: props.commitFrom,
+  //   chainId: 1, // ETH Mainnet
+  //   staleTime: 0,
+  //   onError(err) {
+  //     console.log(err)
+  //   },
+  // })
 
   // prepare
   const { config: proveCommitConfig } = usePrepareContractWrite({
@@ -384,7 +384,7 @@ export default function CommitCard({ ...props }) {
 
             <div className="flex flex-row p-1">
               <div className="flex flex-col align-center justify-center">
-                <img className="h-4" src="./ethereum-logo.png" />
+                <img className="h-6" src="./polygon-logo-tilted.svg" />
               </div>
               <div className="flex flex-col font-semibold align-center justify-center text-l ml-1">
                 {parseFloat(props.stakeAmount).toFixed(3) % 1 === 0 ? parseInt(props.stakeAmount) : parseFloat(props.stakeAmount).toFixed(3)}
