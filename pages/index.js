@@ -45,6 +45,11 @@ export default function Commit() {
   const [pickupGoal, setPickupGoal] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
   const [selectedBetAmount, setSelectedBetAmount] = useState(null);
+  const [args, setArgs] = useState([]);
+
+  // eth stats
+  const priceApi = useFetch('https://gas.best/stats')
+  const ethPrice = parseFloat(priceApi.data?.ethPrice)
 
   // smart contract data
   const { chain, chains } = useNetwork()
@@ -52,30 +57,27 @@ export default function Commit() {
   const provider = useProvider()
 
   // smart contract functions
+  useEffect(() => {
+    if (selectedBetAmount !== null && ethPrice) {
+        setArgs([
+          commitTo, 
+          commitJudge, 
+          appPickups, 
+          pickupGoal, 
+          socialTagNames[selectedTag],
+          { 
+            value: ethers.utils.parseEther((betAmountOptions[selectedBetAmount] / ethPrice).toString()) 
+          }
+        ]);
+    }
+  }, [selectedBetAmount, ethPrice]);
   const { config: createCommitConfig } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: ABI,
     functionName: "createCommit",
-    args: [
-      commitTo, 
-      commitJudge, 
-      appPickups, 
-      pickupGoal, 
-      socialTagNames[selectedTag],
-      { 
-        value: (
-          betAmountOptions[selectedBetAmount] !== undefined &&
-          typeof betAmountOptions[selectedBetAmount] === 'number' &&
-          ethPrice !== undefined &&
-          typeof ethPrice === 'number'
-        ) ? 
-          ethers.utils.parseEther(
-            (betAmountOptions[selectedBetAmount] / ethPrice).toString()
-          ) : 
-          ethers.utils.parseEther("0.01") // TEMPORARY
-      }
-    ],
-  })
+    args,
+    enabled: args.length > 0, // enable the contract call when arguments are available
+  });
   const { write: commitWrite, data: commitWriteData, isLoading: isWriteLoading } = useContractWrite({
     ...createCommitConfig,
     onSettled() {
@@ -185,13 +187,6 @@ export default function Commit() {
     }
   };
 
-  // eth stats
-  const priceApi = useFetch('https://gas.best/stats')
-  const ethPrice = parseFloat(priceApi.data?.ethPrice)
-  // polygon stats
-  // const priceApi = useFetch('https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd')
-  // const maticPrice = parseFloat(priceApi.data?.["matic-network"].usd)
-
   const isCommitButtonEnabled = () => {
     return Boolean(address) &&
     chains.some((c) => c.id === chain.id) && 
@@ -234,7 +229,7 @@ export default function Commit() {
                 <Card className="flex flex-col self-center justify-center bg-white shadow-lg rounded-lg p-6 md:w-3/6" style={{ alignItens: ''}}>
                   <Typography className="font-semibold md:font-normal text-xs md:text-lg" style={{ lineHeight: '1.5em', fontWeight: '' }}>
                     Just Commit is a 1-month challenge that's designed to
-                    help you use that leisure app on your phone less often.
+                    help you use any app on your phone less often.
                   </Typography>
                 </Card>
 
@@ -286,7 +281,9 @@ export default function Commit() {
               </div>
             }
           />
-          {loadingState === 'loading' && <Skeleton height={100} borderRadius={20} />}
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            {loadingState === 'loading' && <Skeleton height={100} width={460} borderRadius={20} />}
+          </div>
         </div>
 
         {
@@ -302,15 +299,18 @@ export default function Commit() {
 
               // is wallet connected?
               if (!address) {
-                return toast.error('Connect your wallet')
+                toast.error('Connect your wallet', { id: 'wallet' });
+                return;
               }
               // are you on the right network?
               if (!chains.some((c) => c.id === chain.id)) {
-                return toast.error('Switch chains')
+                toast.error('Switch chains', { id: 'network' });
+                return;
               }
               // sufficient balance?
               if (walletEthBalance < parseFloat(betAmountOptions[selectedBetAmount] / ethPrice)) {
-                return toast.error('Not enough funds')
+                toast.error('Not enough funds', { id: 'funds' });
+                return;
               }
 
             }}>
@@ -341,7 +341,7 @@ export default function Commit() {
                       style={{ fontSize: '1.2em' }}
                       onClick={() => {}}
                     >
-                      <Typography>Select Leisure App</Typography>
+                      <Typography>Select App</Typography>
                     </div>
                   </div>
                   <div className="flex justify-center mt-2" style={{ direction: 'ltr'}}>
@@ -373,14 +373,14 @@ export default function Commit() {
                         size="large"
                         className="hover:scale-110 cursor-pointer ml-4 mr-4"
                       >
-                        <b style={{ color: 'white' }}>?</b>
+                        <b style={{ color: 'white' }}>↗</b>
                       </Tag>
                     </a>
                   </div>
                   <div className="w-2/5">
                     <Input
                       className="custom-input w-full"
-                      placeholder="100"
+                      placeholder="42"
                       min={1}
                       maxLength={3}
                       step={1}
@@ -400,7 +400,7 @@ export default function Commit() {
                 <div className="flex flex-row mb-2 -mt-2 text-xs md:text-sm" style={{ direction: 'ltr' }}>
                   <div className="flex items-center w-3/5">
                     <Typography className="font-semibold">
-                      {`What is your daily average pickup goal for ${capitalizeFirstLetter(socialTagNames[selectedTag])} during the challenge?`}
+                      {`What is your daily average pickup goal for ${capitalizeFirstLetter(socialTagNames[selectedTag])} in the challenge?`}
                     </Typography>
                     <a
                       data-tooltip-id="my-tooltip"
@@ -415,7 +415,7 @@ export default function Commit() {
                   <div className="w-2/5">
                     <Input
                       className="custom-input w-full"
-                      placeholder="100"
+                      placeholder="5"
                       min={1}
                       maxLength={3}
                       step={1}
@@ -457,7 +457,7 @@ export default function Commit() {
             </div>
 
            {/* Commit Button Section */}
-           {(!((isWriteLoading || isWaitLoading)) && !hasCommitted) && selectedBetAmount !== null && (
+            {selectedBetAmount !== null && (
               <>
                 <div className="flex justify-center text-sm hover:cursor-pointer mt-6" style={{ direction: "ltr" }}>
                   {/* Email Input */}
@@ -472,7 +472,7 @@ export default function Commit() {
                         data-tooltip-content="Optional."
                         data-tooltip-place="top"
                       >
-                        <Tag className="" style={{ background: "#1DD297" }} size="large">
+                        <Tag style={{ background: "#1DD297" }} size="large">
                           <b style={{ color: "white" }}>?</b>
                         </Tag>
                       </a>
@@ -496,26 +496,28 @@ export default function Commit() {
                   </a>
                 </div>
                 {/* Commit Button */}
-                <ButtonThorin
-                  style={{
-                    width: "90%",
-                    height: "2.8rem",
-                    marginTop: "0rem",
-                    marginBottom: "0rem",
-                    backgroundColor: isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
-                    borderRadius: 12,
-                    color: "white",
-                    transition: "transform 0.2s ease-in-out",
-                  }}
-                  size="small"
-                  shadowless
-                  type="submit"
-                  suffix={"(" + (parseFloat(betAmountOptions[selectedBetAmount]) / ethPrice).toFixed(2) + " ETH) "}
-                  // disabled={!isCommitButtonEnabled()}
-                  onClick={commitWrite}
-                >
-                  Commit
-                </ButtonThorin>
+                {!((isWriteLoading || isWaitLoading)) && !hasCommitted && (
+                  <ButtonThorin
+                    style={{
+                      width: "90%",
+                      height: "2.8rem",
+                      marginTop: "0rem",
+                      marginBottom: "0rem",
+                      backgroundColor: isCommitButtonEnabled() ? "rgb(29 210 151)" : "rgb(29 210 151 / 36%)",
+                      borderRadius: 12,
+                      color: "white",
+                      transition: "transform 0.2s ease-in-out",
+                    }}
+                    size="small"
+                    shadowless
+                    type="submit"
+                    suffix={"(" + (parseFloat(betAmountOptions[selectedBetAmount]) / ethPrice).toFixed(3) + " ETH) "}
+                    // disabled={!isCommitButtonEnabled()}
+                    onClick={isCommitButtonEnabled() ? commitWrite : undefined}
+                  >
+                    Commit
+                  </ButtonThorin>
+                )}
               </>
             )}
 
@@ -554,11 +556,11 @@ export default function Commit() {
                 <div className="flex justify-end w-full">
                   <div className="flex" style={{ width: "52px" }}>
                     <ButtonThorin
-                      className="flex align-center mt-6 mb-5 sm:mb-0 justify-center rounded-lg hover:cursor-pointer"
+                      className="flex align-center mt-6 mb-5 ml-5 sm:mb-0 justify-center rounded-lg hover:cursor-pointer"
                       style={{ background: "#bae6fd", zIndex: 2, fontSize: "1.2rem", padding: "5px" }}
                       as="a"
                       href={`https://${chain?.id === 5 ? 'goerli.' : ''
-                        }etherscan.com/tx/${commitWriteData.hash}`}
+                        }etherscan.io/tx/${commitWriteData.hash}`}
                       target="_blank"
                       rel="noreferrer"
                     >
@@ -582,6 +584,7 @@ export default function Commit() {
 
             {/*ethPrice: {ethPrice}*/}
 
+            {/*
             <br></br>
             socialTagNames[selectedTag]: {socialTagNames[selectedTag]}
             <br></br>
@@ -596,6 +599,7 @@ export default function Commit() {
             walletEthBalance: {walletEthBalance}
             <br></br>
             isCommitButtonEnabled: {isCommitButtonEnabled}
+            */}
             
             {/* <br></br>
             <br></br>

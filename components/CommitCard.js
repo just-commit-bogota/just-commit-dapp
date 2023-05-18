@@ -178,8 +178,8 @@ export default function CommitCard({ ...props }) {
       })}>
         <div className="flex flex-col bg-white p-2.5" style={{ borderRadius: "12px" }}>
           <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
-            <div className="text-sm block mr-2">
-              <span>&lt;</span> {`${parseInt(props.pickupGoal)} ${props.appName} pickups per day on avg in a week`}
+            <div className="text-xs md:text-sm block mr-2">
+              <span>&lt;</span> {`${parseInt(props.pickupGoal)} ${props.appName} pickups per day (avg/week)`}
             </div>
             <div className="flex space-x-2" style={{ whiteSpace: "nowrap" }}>
               <div className="span flex text-sm text-slate-400 gap-2 opacity-80" style={{ whiteSpace: "nowrap" }}>
@@ -374,7 +374,7 @@ export default function CommitCard({ ...props }) {
               borderRadius: "6px",
             }}>
               <div className="flex flex-row" style={{ justifyContent: "space-between", marginBottom: 0 }}>
-                <b>&nbsp;Challenger →</b>
+                <b>&nbsp;Committer →</b>
                 {props.commitFrom === address
                   ? "Me"
                   : ensName || props.commitFrom.slice(0, 5) + '…' + props.commitFrom.slice(-4)}
@@ -387,7 +387,7 @@ export default function CommitCard({ ...props }) {
                 <img className="h-4" src="./ethereum-logo.png" />
               </div>
               <div className="flex flex-col font-semibold align-center justify-center text-l ml-1">
-                {parseFloat(props.stakeAmount).toFixed(2) % 1 === 0 ? parseInt(props.stakeAmount) : parseFloat(props.stakeAmount).toFixed(2)}
+                {parseFloat(props.stakeAmount).toFixed(3) % 1 === 0 ? parseInt(props.stakeAmount) : parseFloat(props.stakeAmount).toFixed(3)}
               </div>
             </div>
 

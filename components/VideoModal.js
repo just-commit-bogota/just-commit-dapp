@@ -38,7 +38,7 @@ const VideoModal = ({ closeModal, videoEmbedUrl }) => {
           style={{
             position: 'absolute',
             top: '-60px',  // Adjust this to position button vertically
-            right: '-60px', // Adjust this to position button horizontally
+            right: '-35px', // Adjust this to position button horizontally
             backgroundColor: 'transparent',
             color: 'white',
             border: 'none',
