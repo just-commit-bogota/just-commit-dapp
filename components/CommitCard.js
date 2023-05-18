@@ -387,7 +387,7 @@ export default function CommitCard({ ...props }) {
                 <img className="h-6" src="./polygon-logo-tilted.svg" />
               </div>
               <div className="flex flex-col font-semibold align-center justify-center text-l ml-1">
-                {parseFloat(props.stakeAmount).toFixed(3) % 1 === 0 ? parseInt(props.stakeAmount) : parseFloat(props.stakeAmount).toFixed(3)}
+                {parseFloat(props.stakeAmount).toFixed(3) % 1 === 0 ? parseInt(props.stakeAmount) : parseFloat(props.stakeAmount).toFixed(0)}
               </div>
             </div>
 
@@ -415,7 +415,7 @@ export default function CommitCard({ ...props }) {
       {showVideoModal &&
         <VideoModal
           closeModal={() => setShowVideoModal(false)}
-          videoEmbedUrl={'https://www.youtube.com/embed/eIPuWFOont0'}
+          videoEmbedUrl={'https://www.youtube.com/embed/M1F_Ja6L_QQ'}
         />
       }  
     </>
