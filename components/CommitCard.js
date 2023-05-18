@@ -415,7 +415,7 @@ export default function CommitCard({ ...props }) {
       {showVideoModal &&
         <VideoModal
           closeModal={() => setShowVideoModal(false)}
-          videoEmbedUrl={'https://www.youtube.com/embed/M1F_Ja6L_QQ'}
+          videoEmbedUrl={'https://www.youtube.com/embed/eIPuWFOont0'}
         />
       }  
     </>
