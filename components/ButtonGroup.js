@@ -46,7 +46,7 @@ const ButtonGroup = ({ setBetModality, setStartsAt }) => {
           }}
         />
       </div>
-       <Toaster toastOptions={{ duration: 2000 }} />
+      <Toaster toastOptions={{ duration: 2000 }} />
     </RadioButtonGroup>
   );
 };
