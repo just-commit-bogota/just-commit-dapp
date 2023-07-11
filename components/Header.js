@@ -66,15 +66,6 @@ export default function Header({ currentPage }) {
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       </a>,
                   },
-                  {
-                    label:
-                      <a href="https://discord.gg/7863Wtv4hX"
-                        target="_blank" rel="noopener noreferrer">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        Discord ↗
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      </a>,
-                  },
                 ]}
               />
             </div>
@@ -106,9 +97,6 @@ export default function Header({ currentPage }) {
                 className="underline-on-hover text-l"
               >
                 FAQ ↗
-              </a>
-              <a href="https://discord.gg/7863Wtv4hX" target="_blank" rel="noopener noreferrer" className="underline-on-hover text-l">
-                Discord ↗
               </a>
             </div>
             <Link href="/">

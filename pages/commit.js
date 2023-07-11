@@ -27,7 +27,7 @@ export default function Commit() {
 
   // state
   const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState("")
+  const [commitTo, setCommitTo] = useState("0x3e2cd6ca1f18d27fe1bbeb986914e98d5dd08bb0")
   const [commitJudge, setCommitJudge] = useState([CONTRACT_OWNER])
   const [commitAmount, setCommitAmount] = useState('0')
   const [endsAt, setEndsAt] = useState((72 * 3600 * 1000) + Date.now())
@@ -252,7 +252,7 @@ export default function Commit() {
                   }
                 }}
                 inputMode="numeric"
-                units={((endsAt - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
+                units={((endsAt - Date.now()) / 3600 / 1000) > 1 ? 'months' : 'month'} // change back to hours
                 error={((endsAt - Date.now()) / 3600 / 1000) > 168 ? "1 week maximum" : null}
                 onChange={(e) => setEndsAt((e.target.value * 3600 * 1000) + Date.now())}
                 labelSecondary={
@@ -273,10 +273,10 @@ export default function Commit() {
               />
 
               <div className="flex flex-row items-baseline gap-2">
-                <div className="w-7/12 lg:w-6/12">
+                <div className="w-full lg:w-12/12">
                   <Input
                     style={{ paddingLeft: "0.18rem", paddingRight: "0.18rem" }}
-                    label="Wager"
+                    label="Looking For"
                     placeholder="5"
                     onKeyDown={(e) => {
                       if (!/^(?:(\d{1,3})|(\d{0,2}\.?\d{0,1})|(\d{1}\.\d{0,2}))$/.test(e.target.value + e.key) && e.key !== 'Backspace') {
@@ -333,7 +333,7 @@ export default function Commit() {
                     )}
                   />
                 </div>
-                <div className="w-5/12 lg:w-6/12 mb-6">
+                {/* <div className="w-5/12 lg:w-6/12 mb-6">
                   {betModality == "solo" &&
                     (<Select
                       ref={selectRef}
@@ -368,7 +368,7 @@ export default function Commit() {
                       }
                     />)
                   }
-                </div>
+                </div> */}
               </div>
             </div>
 
