@@ -31,15 +31,15 @@ export default function CommitCard({ ...props }) {
   const [uploadClicked, setUploadClicked] = useState(false)
   const [isApproved, setIsApproved] = useState(false)
 
-  // function to resolve ENS name on ETH mainnet
-  const { data: ensName } = useEnsName({
-    address: props.commitFrom,
-    chainId: 1, // ETH Mainnet
-    staleTime: 0,
-    onError(err) {
-      console.log(err)
-    },
-  })
+  // // function to resolve ENS name on ETH mainnet
+  // const { data: ensName } = useEnsName({
+  //   address: props.commitFrom,
+  //   chainId: 1, // ETH Mainnet
+  //   staleTime: 0,
+  //   onError(err) {
+  //     console.log(err)
+  //   },
+  // })
 
   // prepare
   const { config: proveCommitConfig } = usePrepareContractWrite({
@@ -194,40 +194,46 @@ export default function CommitCard({ ...props }) {
               <>
                 <div className="flex flex-col" style={{ alignItems: "center" }}>
                   <div className="flex">
-                    <FileInput maxSize={20} onChange={(file) => uploadFile(file)}>
-                      {(context) =>
-                        (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ? (
-                          <div className="flex flex-col" style={{ alignItems: "center" }}>
-                            <Spinner />
-                            <div className="heartbeat text-xs">(Don&#39;t Refresh)</div>
-                          </div>
-                        ) : context.name && triggerProveContractFunctions ? (
-                          <div>
-                            <a
-                              className="text-4xl hover:cursor-pointer"
-                              href="#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                location.reload();
-                              }}
-                            >
-                              &nbsp;🔁&nbsp;
-                            </a>
-                          </div>
-                        ) :
-                          <div>
-                            <Tag
-                              className="text-2xl hover:cursor-pointer"
-                              tone="accent"
-                              variation="primary"
-                              size="large"
-                            >
-                              &nbsp;📷&nbsp;
-                            </Tag>
-                          </div>
-                      }
-                    </FileInput>
-
+                    {(() => {
+                      return (
+                        <div className="flex flex-row items-center">
+                          <FileInput maxSize={20} onChange={(file) => uploadFile(file)}>
+                            {(context) =>
+                              (uploadClicked || isProveWaitLoading || proveWrite.isLoading) ? (
+                                <div className="flex flex-col" style={{ alignItems: "center" }}>
+                                  <Spinner />
+                                  <div className="heartbeat text-xs">(Don&#39;t Refresh)</div>
+                                </div>
+                              ) : context.name && triggerProveContractFunctions ? (
+                                <div>
+                                  <a
+                                    className="text-4xl hover:cursor-pointer"
+                                    href="#"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      location.reload();
+                                    }}
+                                  >
+                                    &nbsp;🔁&nbsp;
+                                  </a>
+                                </div>
+                              ) : (
+                                <div>
+                                  <Tag
+                                    className="text-2xl hover:cursor-pointer"
+                                    tone="accent"
+                                    variation="primary"
+                                    size="large"
+                                  >
+                                    &nbsp;📷&nbsp;
+                                  </Tag>
+                                </div>
+                              )
+                            }
+                          </FileInput>
+                        </div>
+                      );
+                    })()}        
                   </div>
                 </div>
               </>
@@ -272,8 +278,7 @@ export default function CommitCard({ ...props }) {
 
                   {/* "to verify" buttons */}
 
-                  {/* TODO - is the props.commitJudge check done right? */}
-                  {props.commitJudge.includes(address) && props.judgeDeadline > Date.now() && !props.isCommitJudged && (
+                  {props.commitJudge == address && props.judgeDeadline > Date.now() && !props.isCommitJudged && (
                     <div>
                       <div className="flex flex-row gap-5 p-5" style={{ justifyContent: "space-between", marginBottom: "-30px" }}>
                         {
@@ -317,19 +322,19 @@ export default function CommitCard({ ...props }) {
           </div>
 
           {/* FOOTER */}
-          <div className="flex flex-row text-xs pt-2" style={{ justifyContent: "space-between" }}>
-            <div className="flex flex-col w-1/2 lg:w-1/2" style={{
+          <div className="flex flex-row text-xs" style={{ alignItems: "center", justifyContent: "space-evenly" }}>
+            <div className="flex flex-col w-1/2 min-h-min" style={{
               justifyContent: "space-between",
               borderLeft: "2px solid rgba(0, 0, 0, 0.18)",
               borderRight: "2px solid rgba(0, 0, 0, 0.18)",
               borderRadius: "6px",
             }}>
-              <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
-                <b>&nbsp;From </b>{ensName || props.commitFrom.slice(0, 5) + '…' + props.commitFrom.slice(-4)}&nbsp;
-              </div>
-              <div className="flex flex-row" style={{ justifyContent: "space-between" }}>
-                <b>&nbsp;To </b>justcommit.eth&nbsp;
-                {/*<b>&nbsp;To </b>{props.commitJudge.slice(0, 5)}...{props.commitJudge.slice(-4)}&nbsp;*/}
+              <div className="flex flex-row" style={{ justifyContent: "space-between", marginBottom: 0 }}>
+                <b>&nbsp;Committer →</b>
+                {props.commitFrom === address
+                  ? "Me"
+                  : ensName || props.commitFrom.slice(0, 5) + '…' + props.commitFrom.slice(-4)}
+                &nbsp;
               </div>
             </div>
 
@@ -338,28 +343,10 @@ export default function CommitCard({ ...props }) {
                 <img className="h-6" src="./polygon-logo-tilted.svg" />
               </div>
               <div className="flex flex-col font-semibold align-center justify-center text-l ml-1">
-                {parseFloat(props.stakeAmount).toFixed(2) % 1 === 0 ? parseInt(props.stakeAmount) : parseFloat(props.stakeAmount).toFixed(2)}
+                {parseFloat(props.stakeAmount).toFixed(3) % 1 === 0 ? parseInt(props.stakeAmount) : parseFloat(props.stakeAmount).toFixed(0)}
               </div>
             </div>
 
-            <div className="flex flex-col align-center justify-center text-lg">
-              {
-                CommitStatusEmoji[props.status]
-              }
-            </div>
-            <div className="flex flex-col w-1/10 font-medium align-center justify-center text-blue-600
-              text-l rounded-lg bg-sky-200 hover:bg-sky-400 hover:cursor-pointer">
-              <a onClick={() => { toast("⏳ Coming Soon...", { id: 'unique' }) }}>
-                {/*}
-              <a href={`https://${chain?.id === 5 ? 'goerli.' : ''
-                }etherscan.io/tx/${props.txnHash}`} // FIX 
-                target="_blank"
-                rel="noreferrer"
-              >
-              */}
-                &nbsp;&nbsp;&nbsp;🔎&nbsp;&nbsp;&nbsp;
-              </a>
-            </div>
           </div>
         </div>
 

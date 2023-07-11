@@ -276,7 +276,7 @@ export default function Commit() {
                 <div className="w-full lg:w-12/12">
                   <Input
                     style={{ paddingLeft: "0.18rem", paddingRight: "0.18rem" }}
-                    label="Looking For"
+                    label="Wager"
                     placeholder="5"
                     onKeyDown={(e) => {
                       if (!/^(?:(\d{1,3})|(\d{0,2}\.?\d{0,1})|(\d{1}\.\d{0,2}))$/.test(e.target.value + e.key) && e.key !== 'Backspace') {
