@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Header from "../components/Header.js"
-import { Link } from 'react-router-dom';
+import Link from 'next/link.js'
 import CommitCardList from "../components/CommitCardList.js"
 import { Placeholders } from "../components/Placeholders.js"
 import { Tag } from '@ensdomains/thorin'
@@ -9,6 +9,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import { useAccount, useProvider, useNetwork } from 'wagmi'
 import { ethers } from 'ethers'
 import { CONTRACT_ADDRESS, ABI } from '../contracts/CommitManager.ts';
+import Skeleton from "react-loading-skeleton";
 
 export default function Home() {
 
@@ -19,6 +20,7 @@ export default function Home() {
 
   // state
   const [allCommits, setAllCommits] = useState([])
+  const [loading, setLoading] = useState(true);
 
   // getter for all of the contract commits (always listening)
   const getAllCommits = async () => {
@@ -167,7 +169,7 @@ export default function Home() {
         <link rel="icon" type="image/png" sizes="16x16" href="./favicon.ico" />
       </Head>
 
-      <Header currentPage="commitments" />
+      <Header currentPage="index" />
 
       <div className="flex h-screen">
         <div className="w-8/10 mx-auto p-0 lg:p-10 mt-20">
@@ -187,7 +189,7 @@ export default function Home() {
         }}
         className="hover:cursor-pointer"
         onClick={() => {
-          window.location.href = "./commit"
+          window.location.href = "./home"
         }}
       >
         <Tag
