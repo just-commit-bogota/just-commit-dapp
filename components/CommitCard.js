@@ -31,15 +31,15 @@ export default function CommitCard({ ...props }) {
   const [uploadClicked, setUploadClicked] = useState(false)
   const [isApproved, setIsApproved] = useState(false)
 
-  // // function to resolve ENS name on ETH mainnet
-  // const { data: ensName } = useEnsName({
-  //   address: props.commitFrom,
-  //   chainId: 1, // ETH Mainnet
-  //   staleTime: 0,
-  //   onError(err) {
-  //     console.log(err)
-  //   },
-  // })
+  // function to resolve ENS name on ETH mainnet
+  const { data: ensName } = useEnsName({
+    address: props.commitFrom,
+    chainId: 1, // ETH Mainnet
+    staleTime: 0,
+    onError(err) {
+      console.log(err)
+    },
+  })
 
   // prepare
   const { config: proveCommitConfig } = usePrepareContractWrite({

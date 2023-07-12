@@ -5,6 +5,7 @@ import { ethers } from 'ethers'
 import { Tag, Input, Heading, FieldSet, Select, Typography, RadioButton, RadioButtonGroup, Button as ButtonThorin } from '@ensdomains/thorin'
 import toast, { Toaster } from 'react-hot-toast'
 import 'react-tooltip/dist/react-tooltip.css'
+import { Link } from 'react-router-dom';
 import { Tooltip } from 'react-tooltip';
 import { useAccount, useNetwork, useProvider, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from 'wagmi'
 import Header from '../components/Header.js';
@@ -12,7 +13,7 @@ import Spinner from "../components/Spinner.js";
 import { Placeholders } from "../components/Placeholders.js";
 import { CONTRACT_ADDRESS, CONTRACT_OWNER, ABI } from '../contracts/CommitManager.ts';
 
-export default function Commit() {
+export default function Home() {
 
   // first pass
   useEffect(() => {
@@ -22,12 +23,9 @@ export default function Commit() {
     }, 1000);
   }, [])
 
-  // hard-coded
-  const PurplePropHouseMultiSig = "0x3e2cd6ca1f18d27fe1bbeb986914e98d5dd08bb0"
-
   // state
   const [commitDescription, setCommitDescription] = useState('')
-  const [commitTo, setCommitTo] = useState("0x3e2cd6ca1f18d27fe1bbeb986914e98d5dd08bb0")
+  const [commitTo, setCommitTo] = useState("0xB44691c50339de6D882E1D6DB4EbE5E3d670BAAd") // hard-coded to JC address
   const [commitJudge, setCommitJudge] = useState([CONTRACT_OWNER])
   const [commitAmount, setCommitAmount] = useState('0')
   const [endsAt, setEndsAt] = useState((72 * 3600 * 1000) + Date.now())
@@ -132,7 +130,7 @@ export default function Commit() {
         <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16.ico" />
       </Head>
 
-      <Header currentPage="commit" />
+      <Header currentPage="home" />
 
       <div className="container container--flex h-screen items-stretch">
         <div className="mt-8" style={{ padding: "10px" }}>
@@ -252,7 +250,7 @@ export default function Commit() {
                   }
                 }}
                 inputMode="numeric"
-                units={((endsAt - Date.now()) / 3600 / 1000) > 1 ? 'months' : 'month'} // change back to hours
+                units={((endsAt - Date.now()) / 3600 / 1000) > 1 ? 'hours' : 'hour'}
                 error={((endsAt - Date.now()) / 3600 / 1000) > 168 ? "1 week maximum" : null}
                 onChange={(e) => setEndsAt((e.target.value * 3600 * 1000) + Date.now())}
                 labelSecondary={
@@ -273,9 +271,9 @@ export default function Commit() {
               />
 
               <div className="flex flex-row items-baseline gap-2">
-                <div className="w-full lg:w-12/12">
+                <div className="w-full">
                   <Input
-                    style={{ paddingLeft: "0.18rem", paddingRight: "0.18rem" }}
+                    style={{ }}
                     label="Wager"
                     placeholder="5"
                     onKeyDown={(e) => {
@@ -333,42 +331,6 @@ export default function Commit() {
                     )}
                   />
                 </div>
-                {/* <div className="w-5/12 lg:w-6/12 mb-6">
-                  {betModality == "solo" &&
-                    (<Select
-                      ref={selectRef}
-                      placeholder="Pick..."
-                      style={{ background: "rgba(246,246,248)", borderColor: "transparent", borderRadius: "14px" }}
-                      label="Recipient"
-                      required
-                      options={[
-                        {
-                          value: PurplePropHouseMultiSig,
-                          label:
-                            <Typography variant="label" className="ml-[-1px] lg:ml-2 lg:scale-110">
-                              Purple Prop House
-                            </Typography>,
-                          prefix: <div style={{ fontSize: '0.375 rem', width: '20px', height: '20px', background: '#8b62d2' }} />
-                        },
-                      ]}
-                      onChange={(e) => setCommitTo(e.target.value)}
-                    />)
-                  }
-                  {betModality == "1v1" &&
-                    (<Input
-                      label="Challenging"
-                      placeholder="0xb44691c50...baad"
-                      required
-                      onChange={(e) => { setCommitTo(e.target.value); }}
-                      error={
-                        commitTo != "" &&
-                          !/^0x[a-fA-F0-9]{40}$/.test(commitTo)
-                          ? "Invalid address"
-                          : null
-                      }
-                    />)
-                  }
-                </div> */}
               </div>
             </div>
 
